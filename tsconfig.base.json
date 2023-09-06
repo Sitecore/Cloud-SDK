@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
+    "rootDir": ".",
+    "baseUrl": ".",
+    "types": ["jest", "node"],
+    "paths": {
+      "@sitecore-cloudsdk/hello": ["packages/hello/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}
