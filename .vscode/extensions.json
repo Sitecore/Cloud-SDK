@@ -3,6 +3,13 @@
     "nrwl.angular-console",
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
-    "firsttris.vscode-jest-runner"
+    "firsttris.vscode-jest-runner",
+    "stevencl.adddoccomments",
+    "orta.vscode-jest",
+    "zengxingxin.sort-js-object-keys",
+    "dsznajder.es7-react-js-snippets",
+    "alexkrechik.cucumberautocomplete",
+    "vivaxy.vscode-conventional-commits",
+    "streetsidesoftware.code-spell-checker"
   ]
 }

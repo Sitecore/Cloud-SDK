@@ -1,27 +1,26 @@
 {
   "extends": ["../../.eslintrc.json"],
   "ignorePatterns": ["!**/*"],
+  "rules": {
+    "strict": ["error", "global"],
+    "spaced-comment": ["error", "always"] // Add space after comment
+  },
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "rules": {}
-    },
-    {
-      "files": ["*.json"],
-      "parser": "jsonc-eslint-parser",
+      "files": ["*.ts"],
       "rules": {
-        "@nx/dependency-checks": [
+        "max-len": ["error", { "code": 120, "ignoreStrings": true }]
+      }
+    },
+    {
+      "files": ["src/lib/utils/consts.ts"],
+      "rules": {
+        "@typescript-eslint/naming-convention": [
           "error",
           {
-            "ignoredFiles": ["{projectRoot}/rollup.config.{js,ts,mjs,mts}"]
+            "selector": "variable",
+            "format": ["UPPER_CASE"],
+            "modifiers": ["const", "exported"]
           }
         ]
       }

@@ -3,7 +3,10 @@
 # compiled output
 dist
 tmp
-/out-tsc
+
+# stryker
+.stryker-tmp
+/reports
 
 # dependencies
 node_modules

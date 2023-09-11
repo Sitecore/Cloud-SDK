@@ -1,11 +1,69 @@
 {
+  "extends": ["eslint:recommended", "plugin:import/recommended", "plugin:import/typescript"],
+  "parser": "@typescript-eslint/parser",
   "root": true,
-  "ignorePatterns": ["**/*"],
-  "plugins": ["@nx"],
+  "ignorePatterns": ["**/*config*", "**/*.config.js", "**/*config*", "**/*.config.ts"],
+  "plugins": ["@nx", "header", "@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
+        "header/header": [
+          2,
+          "line",
+          [
+            " © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S."
+          ]
+        ],
+        "indent": ["error", 2],
+        "import/no-default-export": "error",
+        "import/no-unresolved": "off",
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"],
+            "custom": {
+              "regex": "^I[A-Z]",
+              "match": true
+            }
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "class",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "method",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "property",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "enum",
+            "format": ["PascalCase"]
+          }
+        ],
+        "@typescript-eslint/member-ordering": [
+          "error",
+          {
+            "default": ["static-field", "instance-field", "static-method", "instance-method"]
+          }
+        ],
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "sort-keys": "error",
+        "@typescript-eslint/type-annotation-spacing": [
+          "error",
+          {
+            "before": true,
+            "after": true
+          }
+        ],
         "@nx/enforce-module-boundaries": [
           "error",
           {
@@ -27,16 +85,22 @@
       "rules": {}
     },
     {
+      "files": ["*.ts"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "tsdoc/syntax": "error"
+      }
+    },
+    {
       "files": ["*.js", "*.jsx"],
       "extends": ["plugin:@nx/javascript"],
       "rules": {}
     },
     {
-      "files": ["*.spec.ts", "*.spec.tsx", "*.spec.js", "*.spec.jsx"],
-      "env": {
-        "jest": true
-      },
-      "rules": {}
+      "files": ["*spec.ts"],
+      "rules": {
+        "header/header": "off"
+      }
     }
   ]
 }
