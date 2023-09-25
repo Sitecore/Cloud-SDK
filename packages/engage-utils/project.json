@@ -1,0 +1,65 @@
+{
+  "name": "engage-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/engage-utils/src",
+  "projectType": "library",
+  "targets": {
+    "build-rollup": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/engage-utils",
+        "main": "packages/engage-utils/src/index.ts",
+        "tsConfig": "packages/engage-utils/tsconfig.lib.json",
+        "project": "packages/engage-utils/package.json",
+        "compiler": "swc",
+        "rollupConfig": "packages/engage-utils/rollup.config.js"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run engage-utils:build-rollup",
+          "tsc --project ./packages/engage-utils/tsconfig.types.json",
+          "npx ts-node tools/scripts/copy-assets.ts engage-utils",
+          "npx ts-node tools/scripts/rename-types-folder.ts engage-utils"
+        ],
+        "parallel": false
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs engage-utils {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/engage-utils/**/*.ts", "packages/engage-utils/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/engage-utils/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "stryker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx stryker run ./packages/engage-utils/stryker.conf.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

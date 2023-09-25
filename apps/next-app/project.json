@@ -4,7 +4,7 @@
   "sourceRoot": "apps/next-app",
   "projectType": "application",
   "targets": {
-    "build": {
+    "build-xxx": {
       "executor": "@nx/next:build",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",

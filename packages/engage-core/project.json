@@ -1,0 +1,65 @@
+{
+  "name": "engage-core",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/engage-core/src",
+  "projectType": "library",
+  "targets": {
+    "build-rollup": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/engage-core",
+        "main": "packages/engage-core/src/index.ts",
+        "tsConfig": "packages/engage-core/tsconfig.lib.json",
+        "project": "packages/engage-core/package.json",
+        "compiler": "swc",
+        "rollupConfig": "packages/engage-core/rollup.config.js"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run engage-core:build-rollup",
+          "tsc --project ./packages/engage-core/tsconfig.types.json",
+          "npx ts-node tools/scripts/copy-assets.ts engage-core",
+          "npx ts-node tools/scripts/rename-types-folder.ts engage-core"
+        ],
+        "parallel": false
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs engage-core {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/engage-core/**/*.ts", "packages/engage-core/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/engage-core/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "stryker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx stryker run ./packages/engage-core/stryker.conf.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

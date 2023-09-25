@@ -1,0 +1,24 @@
+{
+  "name": "@sitecore-cloudsdk/engage-utils",
+  "version": "0.0.6",
+  "dependencies": {},
+  "main": "./cjs/index.cjs",
+  "module": "./esm/index.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/index.mjs",
+      "require": "./cjs/index.cjs",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://npm.sitecore.com/test/"
+  },
+  "files": [
+    "esm",
+    "cjs",
+    "types",
+    "README.md"
+  ]
+}

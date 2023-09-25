@@ -1,0 +1,44 @@
+// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+
+import { API_VERSION, LIBRARY_VERSION } from '../consts';
+
+/**
+ * A function that gets the guest ref from CDP.
+ * @param browserId - The browser id of the client
+ * @param targetURL - The target url from the settings
+ * @param clientKey - The client key
+ * @returns - A promise that resolves with the guest ref
+ * @throws - Will throw an error if the clientKey/browser id is invalid
+ */
+export async function getGuestId(browserId: string, targetURL: string, clientKey: string): Promise<string> {
+  // eslint-disable-next-line max-len
+  const url = `${targetURL}/${API_VERSION}/browser/${browserId}/show.json?client_key=${clientKey}&api_token=${clientKey}`;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const response = await fetch(url, { headers: { 'X-Library-Version': LIBRARY_VERSION } });
+  const data = await response.json();
+
+  if (!response.ok) {
+    const { error_msg: errorMsg, moreInfo } = data as IGetGuestRefResponseError;
+
+    throw new Error(`${errorMsg}, for more info: ${moreInfo}`);
+  }
+
+  return (data as IGetGuestRefResponse).customer.ref;
+}
+
+interface IGetGuestRefCommon {
+  status: string;
+  version: string;
+  clientKey: string;
+}
+
+export interface IGetGuestRefResponse extends IGetGuestRefCommon {
+  ref: string;
+  customer: { ref: string };
+}
+
+export interface IGetGuestRefResponseError extends IGetGuestRefCommon {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  error_msg: string;
+  moreInfo: string;
+}
