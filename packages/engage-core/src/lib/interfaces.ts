@@ -10,3 +10,11 @@ export interface ICdpResponse {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   client_key: string;
 }
+
+/**
+ * Interface for supporting response IncomingMessage http node type
+ */
+export interface IInfer {
+  language: () => string | undefined;
+  pageName: () => string;
+}

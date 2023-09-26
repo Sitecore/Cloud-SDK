@@ -7,9 +7,9 @@ import { ISettingsParamsBrowser, ISettingsParamsServer } from './interfaces';
  */
 export function updatePointOfSale(pointOfSale: string, settings: ISettingsParamsBrowser | ISettingsParamsServer): void {
   if (pointOfSale && pointOfSale.trim().length > 0) {
-    if (window && window['Engage'] && window['Engage'].settings) {
+    if (window && window.Engage && window.Engage.settings) {
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      window['Engage'].settings.pointOfSale = pointOfSale;
+      window.Engage.settings.pointOfSale = pointOfSale;
     }
     settings.pointOfSale = pointOfSale;
   } else {

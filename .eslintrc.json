@@ -101,6 +101,12 @@
       "rules": {
         "header/header": "off"
       }
+    },
+    {
+      "files": ["*.spec.ts"],
+      "rules": {
+        "@nx/enforce-module-boundaries": "off"
+      }
     }
   ]
 }

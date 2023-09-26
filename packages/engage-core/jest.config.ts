@@ -12,6 +12,7 @@ const config: Config.InitialOptions = {
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
   coverageDirectory: '../../coverage/packages/engage-core',
+  coverageReporters: ['html-spa', ['text', { skipFull: true }]],
 };
 
 export default config;

@@ -4,15 +4,15 @@ import type { Config } from 'jest';
 import { resolve, join } from 'path';
 
 const config: Config = {
-  displayName: 'engage-utils',
+  displayName: 'events',
   preset: '../../jest.preset.js',
   transform: {
-    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: join(resolve(), 'packages', 'engage-utils', 'tsconfig.spec.json') }],
+    '^.+\\.[tj]s$': ['ts-jest', { tsconfig: join(resolve(), 'packages', 'events', 'tsconfig.spec.json') }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
   coverageReporters: ['html-spa', ['text', { skipFull: true }]],
-  coverageDirectory: '../../coverage/packages/engage-utils',
+  coverageDirectory: '../../coverage/packages/events',
   coverageThreshold: {
     global: {
       branches: 100,

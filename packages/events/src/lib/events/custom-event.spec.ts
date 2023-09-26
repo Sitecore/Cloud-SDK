@@ -1,0 +1,231 @@
+import { CustomEvent, ICustomEventInput } from './custom-event';
+import { EventApiClient } from '../cdp/EventApiClient';
+import * as Flatten from '../../../../engage-utils/src/lib/converters/flatten-object';
+import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
+import { MAX_EXT_ATTRIBUTES } from './consts';
+import * as InferCore from '../../../../engage-core/src/lib/infer/infer';
+
+jest.mock('../cdp/EventApiClient');
+jest.mock('../../../../engage-core/src/lib/infer/infer');
+describe('CustomEvent', () => {
+  const eventApiClient = new EventApiClient('http://test.com', 'v1.2');
+  const id = 'test_id';
+  const infer = new InferCore.Infer();
+  infer.language = jest.fn().mockImplementation(() => 'EN');
+  infer.pageName = jest.fn().mockImplementation(() => 'races');
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+  describe('constructor', () => {
+    let eventData: ICustomEventInput;
+    const type = 'CUSTOM_TYPE';
+    const settings: ISettings = {
+      clientKey: 'key',
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+        forceServerCookieMode: false,
+      },
+      includeUTMParameters: false,
+      targetURL: 'https://domain',
+    };
+
+    beforeEach(() => {
+      eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        pointOfSale: 'spinair.com',
+      };
+    });
+    it('should not call flatten object method when no extension data is passed', () => {
+      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
+      new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
+      expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
+    });
+    it('should send a custom event without ext attribute if extensionData is an empty object', () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const extensionData = {};
+      new CustomEvent({ eventApiClient, eventData, extensionData, id, infer, settings, type }).send();
+      expect(sendEventSpy).toHaveBeenCalledWith(expect.not.objectContaining({ ext: {} }));
+    });
+
+    it('should not call flatten object method when no extension data is passed', () => {
+      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
+      new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
+      expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should send a custom event without ext attribute if extensionData is an empty object', () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const extensionData = {};
+      new CustomEvent({ eventApiClient, eventData, extensionData, id, infer, settings, type }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expect.not.objectContaining({ ext: {} }));
+    });
+
+    it('should send a custom event with flattened ext attributes', () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22, za: undefined };
+      new CustomEvent({ eventApiClient, eventData, extensionData, id, infer, settings, type }).send();
+
+      const expectedExt = {
+        ext: {
+          /* eslint-disable @typescript-eslint/naming-convention */
+          test_a_b: 'b',
+          test_c: 11,
+          /* eslint-enable @typescript-eslint/naming-convention */
+          testz: 22,
+        },
+      };
+      expect(sendEventSpy).toHaveBeenCalledWith(expect.objectContaining(expectedExt));
+    });
+
+    it('should throw an error when more than 50 ext attributes are passed', () => {
+      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extensionData: { [key: string]: string } = {};
+      for (let i = 0; i < 51; i++) {
+        extensionData[`key${i}`] = `value${i}`;
+      }
+      expect(() => {
+        new CustomEvent({ eventApiClient, eventData, extensionData, id, infer, settings, type });
+      }).toThrowError(extErrorMessage);
+    });
+
+    it('should not throw an error when no more than 50 ext attributes are passed', () => {
+      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extensionData: { [key: string]: string } = {};
+      for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
+        extensionData[`key${i}`] = `value${i}`;
+      }
+      expect(() => {
+        new CustomEvent({ eventApiClient, eventData, extensionData, id, infer, settings, type });
+      }).not.toThrowError(extErrorMessage);
+    });
+  });
+
+  describe('send', () => {
+    const settings: ISettings = {
+      clientKey: 'key',
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+        forceServerCookieMode: false,
+      },
+      includeUTMParameters: false,
+      targetURL: 'https://domain',
+    };
+
+    beforeEach(() => {
+      const mockFetch = Promise.resolve({
+        json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      });
+      global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    it('should send the event with top level attributes', async () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        pointOfSale: 'spinair.com',
+        testAttr1: 'test',
+        testAttr2: true,
+        testAttr3: 22,
+      };
+      const type = 'CUSTOM_TYPE';
+      const expectedExt = {
+        testAttr1: 'test',
+        testAttr2: true,
+        testAttr3: 22,
+      };
+
+      new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
+      expect(sendEventSpy).toHaveBeenCalledWith(expect.objectContaining(expectedExt));
+    });
+
+    it('should not call flatten object method when no extension data is passed', async () => {
+      const eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        pointOfSale: 'spinair.com',
+      };
+      const type = 'CUSTOM_TYPE';
+      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
+      expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
+      expect(infer.language).toHaveBeenCalledTimes(1);
+      expect(infer.pageName).toHaveBeenCalledTimes(1);
+    });
+
+    it('should send the event without the ext object', async () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        pointOfSale: 'spinair.com',
+      };
+      const type = 'CUSTOM_TYPE';
+      const expectedData = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        browser_id: id,
+        channel: 'WEB',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_key: 'key',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        pos: 'spinair.com',
+        type: 'CUSTOM_TYPE',
+      };
+
+      new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData);
+      expect(infer.language).toHaveBeenCalledTimes(0);
+      expect(infer.pageName).toHaveBeenCalledTimes(0);
+    });
+
+    it('should send the event without infer', async () => {
+      const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
+      const eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        pointOfSale: 'spinair.com',
+      };
+      const type = 'CUSTOM_TYPE';
+      const expectedData = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        browser_id: id,
+        channel: 'WEB',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_key: 'key',
+        currency: 'EUR',
+        language: undefined,
+        page: '',
+        pos: 'spinair.com',
+        type: 'CUSTOM_TYPE',
+      };
+
+      new CustomEvent({ eventApiClient, eventData, id, settings, type }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData);
+      expect(infer.language).toHaveBeenCalledTimes(0);
+      expect(infer.pageName).toHaveBeenCalledTimes(0);
+    });
+  });
+});
