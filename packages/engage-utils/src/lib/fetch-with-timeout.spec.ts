@@ -48,16 +48,6 @@ describe('fetchWithTimeout', () => {
     );
   });
 
-  it('should throw an error if the timeout value is invalid (zero)', async () => {
-    const url = 'https://example.com/api/data';
-    const timeout = 0; // Negative timeout value
-    const fetchOptions = {};
-
-    await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
-    );
-  });
-
   it('should throw an error if the timeout value is not an integer', async () => {
     const timeout = 5000.5; // Non-integer timeout value
 

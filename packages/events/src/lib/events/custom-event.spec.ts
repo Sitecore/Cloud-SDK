@@ -1,16 +1,34 @@
 import { CustomEvent, ICustomEventInput } from './custom-event';
 import { EventApiClient } from '../cdp/EventApiClient';
-import * as Flatten from '../../../../engage-utils/src/lib/converters/flatten-object';
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { MAX_EXT_ATTRIBUTES } from './consts';
-import * as InferCore from '../../../../engage-core/src/lib/infer/infer';
+import * as core from '@sitecore-cloudsdk/engage-core';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
 
 jest.mock('../cdp/EventApiClient');
-jest.mock('../../../../engage-core/src/lib/infer/infer');
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
 describe('CustomEvent', () => {
   const eventApiClient = new EventApiClient('http://test.com', 'v1.2');
   const id = 'test_id';
-  const infer = new InferCore.Infer();
+  const infer = new core.Infer();
   infer.language = jest.fn().mockImplementation(() => 'EN');
   infer.pageName = jest.fn().mockImplementation(() => 'races');
   beforeEach(() => {
@@ -19,7 +37,7 @@ describe('CustomEvent', () => {
   describe('constructor', () => {
     let eventData: ICustomEventInput;
     const type = 'CUSTOM_TYPE';
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -42,7 +60,7 @@ describe('CustomEvent', () => {
       };
     });
     it('should not call flatten object method when no extension data is passed', () => {
-      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
       new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
@@ -55,7 +73,7 @@ describe('CustomEvent', () => {
     });
 
     it('should not call flatten object method when no extension data is passed', () => {
-      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
       new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
@@ -110,7 +128,7 @@ describe('CustomEvent', () => {
   });
 
   describe('send', () => {
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -125,7 +143,7 @@ describe('CustomEvent', () => {
 
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+        json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
       });
       global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     });
@@ -163,7 +181,7 @@ describe('CustomEvent', () => {
         pointOfSale: 'spinair.com',
       };
       const type = 'CUSTOM_TYPE';
-      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       new CustomEvent({ eventApiClient, eventData, id, infer, settings, type }).send();
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(infer.language).toHaveBeenCalledTimes(1);

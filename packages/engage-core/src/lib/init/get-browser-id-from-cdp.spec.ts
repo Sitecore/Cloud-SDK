@@ -2,8 +2,17 @@ import { LIBRARY_VERSION } from '../consts';
 import { ICdpResponse } from '../interfaces';
 import { getBrowserIdFromCdp } from './get-browser-id-from-cdp';
 import * as generateBrowserIdUrl from './generate-browser-id-url';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as Utils from '../../../../engage-utils/src/lib/fetch-with-timeout';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('getBrowserIdFromCdp', () => {
   const generateCreateBrowserIdUrlSpy = jest.spyOn(generateBrowserIdUrl, 'generateCreateBrowserIdUrl');
@@ -30,7 +39,7 @@ describe('getBrowserIdFromCdp', () => {
       json: () => Promise.resolve(mockResponse as ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    const fetchWithTimeoutSpy = jest.spyOn(Utils, 'fetchWithTimeout');
+    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
 
     const res = await getBrowserIdFromCdp(clientKey, target, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();

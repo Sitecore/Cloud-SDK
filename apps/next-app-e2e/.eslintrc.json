@@ -4,7 +4,19 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {}
+      "rules": {
+        "@next/next/no-html-link-for-pages": ["error", "apps/next-app/pages"],
+        "import/no-default-export": 0,
+        "header/header": "off",
+        "sort-keys": 0,
+        "@typescript-eslint/naming-convention": 0
+      }
+    },
+    {
+      "files": ["*.*"],
+      "rules": {
+        "@next/next/no-html-link-for-pages": "off"
+      }
     }
   ]
 }

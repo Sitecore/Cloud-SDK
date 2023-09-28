@@ -1,9 +1,28 @@
 import { ICdpResponse, ISettingsParamsBrowser } from '@sitecore-cloudsdk/engage-core';
-import * as GetBrowserId from '../../../../engage-core/src/lib/init/get-browser-id';
-import * as CreateSettings from '../../../../engage-core/src/lib/settings/create-settings';
-import * as CookieExists from '../../../../engage-utils/src/lib/cookies/cookie-exists';
 import { init } from '../browser/initializer';
 import { LIBRARY_VERSION } from '../consts';
+import * as core from '@sitecore-cloudsdk/engage-core';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('form function', () => {
   const settingsParams: ISettingsParamsBrowser = {
@@ -31,9 +50,9 @@ describe('form function', () => {
 
   it('should send the form event without CDP optional attributes', async () => {
     /* eslint-disable @typescript-eslint/naming-convention */
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as ICdpResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 

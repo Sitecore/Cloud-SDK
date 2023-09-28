@@ -103,9 +103,9 @@
       }
     },
     {
-      "files": ["*.spec.ts"],
+      "files": ["apps/**/*.ts", "apps/**/*.tsx"], // Matches TypeScript files in the "apps" folder and its subdirectories
       "rules": {
-        "@nx/enforce-module-boundaries": "off"
+        "header/header": "off" // Turn off the "header/header" rule for these files
       }
     }
   ]

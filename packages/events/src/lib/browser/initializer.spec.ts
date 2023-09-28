@@ -3,38 +3,47 @@ import { CustomEvent, IdentityEvent, IIdentityEventAttributesInput, PageViewEven
 import { IEventAttributesInput } from '../events/common-interfaces';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { EventQueue } from '../eventStorage/eventStorage';
+import packageJson from '../../../package.json';
+import { LIBRARY_VERSION } from '../consts';
 
-import * as GetBrowserId from '../../../../engage-core/src/lib/init/get-browser-id';
-import * as CreateCookie from '../../../../engage-core/src/lib/cookie/create-cookie';
-import * as CookieExists from '../../../../engage-utils/src/lib/cookies/cookie-exists';
-import * as CreateSettings from '../../../../engage-core/src/lib/settings/create-settings';
-import * as UpdatePointOfSale from '../../../../engage-core/src/lib/settings/update-point-of-sale';
-import * as InferCore from '../../../../engage-core/src/lib/infer/infer';
-import * as GetGuestId from '../../../../engage-core/src/lib/init/get-guest-id';
-
-jest.mock('../../../../engage-core/src/lib/infer/infer');
-jest.mock('../../../../engage-core/src/lib/init/get-guest-id');
 jest.mock('../eventStorage/eventStorage');
 jest.mock('../events');
-// jest.mock('../events/identity-event');
 
-const settingsParams: ISettingsParamsBrowser = {
+import * as core from '@sitecore-cloudsdk/engage-core';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+const settingsParams: core.ISettingsParamsBrowser = {
   clientKey: 'key',
   cookieDomain: 'cDomain',
   targetURL: 'https://domain',
 };
 
-import packageJson from '../../../package.json';
-import { API_VERSION, ICdpResponse, ISettingsParamsBrowser } from '@sitecore-cloudsdk/engage-core';
-import { LIBRARY_VERSION } from '../consts';
-
 describe('initializer', () => {
   const { window } = global;
   const id = 'test_id';
-  const eventApiClient = new EventApiClient('https://domain', API_VERSION);
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as ICdpResponse) });
+  const eventApiClient = new EventApiClient('https://domain', core.API_VERSION);
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  jest.spyOn(CreateCookie, 'createCookie').mock;
+  jest.spyOn(core, 'createCookie').mock;
   const settingsObj = {
     clientKey: 'key',
     cookieSettings: {
@@ -53,9 +62,9 @@ describe('initializer', () => {
   });
 
   it('should try to create a cookie if it does not exist', () => {
-    jest.spyOn(CreateCookie, 'createCookie').mock;
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(false);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(core, 'createCookie').mock;
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -70,13 +79,13 @@ describe('initializer', () => {
 
     init(settingsParams);
 
-    expect(CreateCookie.createCookie).toHaveBeenCalledTimes(1);
+    expect(core.createCookie).toHaveBeenCalledTimes(1);
   });
 
   it('should not try to create a cookie if it already exists', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -91,7 +100,7 @@ describe('initializer', () => {
 
     init(settingsParams);
 
-    expect(CreateCookie.createCookie).toHaveBeenCalledTimes(0);
+    expect(core.createCookie).toHaveBeenCalledTimes(0);
   });
   it('should return an object with available functionality', async () => {
     const eventData: IEventAttributesInput = {
@@ -103,9 +112,10 @@ describe('initializer', () => {
       pointOfSale: 'spinair.com',
     };
 
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
 
     const events = await init(settingsParams);
 
@@ -134,7 +144,7 @@ describe('initializer', () => {
       eventApiClient,
       eventData,
       id,
-      infer: expect.any(InferCore.Infer),
+      infer: expect.any(core.Infer),
       searchParams: '',
       settings: { ...settingsObj },
     });
@@ -145,13 +155,13 @@ describe('initializer', () => {
       eventApiClient,
       eventData: { ...eventData },
       id,
-      infer: expect.any(InferCore.Infer),
+      infer: expect.any(core.Infer),
       settings: { ...settingsObj },
       type: 'TEST_TYPE',
     });
 
     events.getGuestId();
-    expect(GetGuestId.getGuestId).toBeCalledTimes(1);
+    expect(core.getGuestId).toHaveBeenCalledTimes(1);
 
     events.form('1234', 'SUBMITTED', 'spinair.com');
     expect(CustomEvent).toBeCalledTimes(2);
@@ -171,8 +181,8 @@ describe('initializer', () => {
 
   it('should invoke enqueueEvent when addToEventQueue is called', async () => {
     const enqueueEventSpy = jest.spyOn(EventQueue.prototype, 'enqueueEvent');
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -198,7 +208,7 @@ describe('initializer', () => {
     events.addToEventQueue('TEST_TYPE', { ...eventData });
 
     expect(EventQueue).toHaveBeenCalledTimes(1);
-    expect(EventQueue).toHaveBeenCalledWith(sessionStorage, eventApiClient, expect.any(InferCore.Infer));
+    expect(EventQueue).toHaveBeenCalledWith(sessionStorage, eventApiClient, expect.any(core.Infer));
     expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
     expect(enqueueEventSpy).toHaveBeenCalledWith({
       eventData: eventData,
@@ -222,8 +232,8 @@ describe('initializer', () => {
 
   it('should invoke sendAllEvents when processEventQueue is called', async () => {
     const sendAllEventsSpy = jest.spyOn(EventQueue.prototype, 'sendAllEvents');
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -251,7 +261,7 @@ describe('initializer', () => {
     events.processEventQueue();
 
     expect(EventQueue).toHaveBeenCalledTimes(1);
-    expect(EventQueue).toHaveBeenCalledWith(sessionStorage, eventApiClient, expect.any(InferCore.Infer));
+    expect(EventQueue).toHaveBeenCalledWith(sessionStorage, eventApiClient, expect.any(core.Infer));
     expect(sendAllEventsSpy).toHaveBeenCalledTimes(1);
   });
 
@@ -265,8 +275,8 @@ describe('initializer', () => {
   });
 
   it('should return an object with available functionality when calling CustomEvent', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -287,9 +297,9 @@ describe('initializer', () => {
       pointOfSale: 'spinair.com',
     };
 
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
 
     const events = await init(settingsParams);
 
@@ -299,15 +309,15 @@ describe('initializer', () => {
       eventApiClient,
       eventData: { ...eventData },
       id,
-      infer: expect.any(InferCore.Infer),
+      infer: expect.any(core.Infer),
       settings: { ...settingsObj },
       type: 'TEST_TYPE',
     });
   });
 
   it('should return an object with available functionality when calling identity', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -347,9 +357,9 @@ describe('initializer', () => {
       title: '',
     };
 
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
 
     const events = await init(settingsParams);
 
@@ -359,14 +369,14 @@ describe('initializer', () => {
       eventApiClient,
       eventData: { ...eventData, identifiers: [{ id: 'id', provider: 'email' }] },
       id,
-      infer: expect.any(InferCore.Infer),
+      infer: expect.any(core.Infer),
       settings: { ...settingsObj },
     });
   });
 
   it('should invoke get browser id method when calling the getBrowserId method', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -378,16 +388,16 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
     const events = await init(settingsParams);
     events.getBrowserId();
-    expect(GetBrowserId.getBrowserId).toHaveBeenCalledTimes(2);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(2);
   });
 
   it('should return the browser id when calling the getBrowserId method', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -399,16 +409,16 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
     const events = await init(settingsParams);
     events.getBrowserId();
-    expect(GetBrowserId.getBrowserId).toHaveReturnedWith(id);
+    expect(core.getBrowserId).toHaveReturnedWith(id);
   });
 
   it('should return the browser id when calling the getBrowserId method from the window Engage property', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -420,19 +430,19 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { test: 'test' } as any;
     expect(global.window.Engage).toBeDefined();
     await init(settingsParams);
     if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-    expect(GetBrowserId.getBrowserId).toHaveBeenCalledTimes(2);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(2);
   });
 
   it('should return the browser id when calling the getBrowserId method from the window while Engage property is missing from the window', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -444,13 +454,13 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = undefined as any;
     expect(global.window.Engage).toBeUndefined();
     await init(settingsParams);
     if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-    expect(GetBrowserId.getBrowserId).toHaveBeenCalledTimes(2);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(2);
   });
 
   it('adds method to get ID to window Engage property when engage is on window', async () => {
@@ -477,7 +487,7 @@ describe('initializer', () => {
   });
 
   it('should invoke updatePointOfSale when updatePointOfSale is called', async () => {
-    const updatePointOfSaleSpy = jest.spyOn(UpdatePointOfSale, 'updatePointOfSale');
+    const updatePointOfSaleSpy = jest.spyOn(core, 'updatePointOfSale');
 
     const events = await init(settingsParams);
     events.updatePointOfSale('newPointOfSale');
@@ -498,8 +508,8 @@ describe('initializer', () => {
     });
   });
   it('should add the library version to window.Engage object', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -511,7 +521,7 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = undefined as any;
     expect(global.window.Engage).toBeUndefined();
@@ -520,8 +530,8 @@ describe('initializer', () => {
     expect(global.window.Engage.versions).toEqual({ events: LIBRARY_VERSION });
   });
   it('should expand the window.Engage object', async () => {
-    jest.spyOn(CookieExists, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(CreateSettings, 'createSettings').mockReturnValue({
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -533,7 +543,7 @@ describe('initializer', () => {
       includeUTMParameters: true,
       targetURL: 'https://domain',
     });
-    jest.spyOn(GetBrowserId, 'getBrowserId').mockReturnValue(id);
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
     await init(settingsParams);

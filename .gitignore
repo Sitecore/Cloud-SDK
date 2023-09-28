@@ -3,10 +3,9 @@
 # compiled output
 dist
 tmp
-
+reports
 # stryker
 .stryker-tmp
-reports
 
 # dependencies
 node_modules

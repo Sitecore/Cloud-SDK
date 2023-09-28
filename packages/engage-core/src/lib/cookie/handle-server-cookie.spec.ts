@@ -2,14 +2,18 @@ import { ISettings } from '../settings/interfaces';
 import { handleServerCookie } from './handle-server-cookie';
 import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
 import * as HandleHttpCookie from './handle-http-cookie';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '../../../../engage-utils/src/lib/interfaces';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as IsNextJsMiddlewareRequest from '../../../../engage-utils/src/lib/typeguards/is-next-js-middleware-request';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as IsNextJsMiddlewareResponse from '../../../../engage-utils/src/lib/typeguards/is-next-js-middleware-response';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as CookieServerSide from '../../../../engage-utils/src/lib/cookies/get-cookie-server-side';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
 describe('handleServerCookie', () => {
   const mockFetchResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -23,12 +27,12 @@ describe('handleServerCookie', () => {
   });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
-  const isNextJsMiddlewareRequest = jest.spyOn(IsNextJsMiddlewareRequest, 'isNextJsMiddlewareRequest');
-  const isNextJsMiddlewareResponse = jest.spyOn(IsNextJsMiddlewareResponse, 'isNextJsMiddlewareResponse');
+  const isNextJsMiddlewareRequest = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
+  const isNextJsMiddlewareResponse = jest.spyOn(utils, 'isNextJsMiddlewareResponse');
 
   const handleNextJsMiddlewareCookie = jest.spyOn(HandleNextJsMiddlewareCookie, 'handleNextJsMiddlewareCookie');
   const handleHttpCookie = jest.spyOn(HandleHttpCookie, 'handleHttpCookie');
-  const getCookieServerSide = jest.spyOn(CookieServerSide, 'getCookieServerSide');
+  const getCookieServerSide = jest.spyOn(utils, 'getCookieServerSide');
 
   const options: ISettings = {
     clientKey: 'key',
@@ -51,13 +55,13 @@ describe('handleServerCookie', () => {
     jest.clearAllMocks();
   });
   it('should call handleNextJsMiddlewareCookie when request is a isNextJsMiddlewareRequest', async () => {
-    const request: TRequest = {
+    const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const response: IMiddlewareNextResponse = {
+    const response: utils.IMiddlewareNextResponse = {
       cookies: {
         set: jest.fn(),
       },
@@ -77,7 +81,7 @@ describe('handleServerCookie', () => {
   });
 
   it('should call handleHttpCookie when request is an HTTP Request', async () => {
-    const request: TRequest = {
+    const request: utils.TRequest = {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'content-language': 'EN',
@@ -87,7 +91,7 @@ describe('handleServerCookie', () => {
       url: 'test',
     };
 
-    const response: IHttpResponse = {
+    const response: utils.IHttpResponse = {
       setHeader: jest.fn(),
     };
 
@@ -103,13 +107,13 @@ describe('handleServerCookie', () => {
   });
 
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when forceServerCookieMode is false', async () => {
-    const request: TRequest = {
+    const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const response = {} as unknown as IMiddlewareNextResponse | IHttpResponse;
+    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
     options.cookieSettings.forceServerCookieMode = false;
 
     await handleServerCookie(request, response, options);
@@ -119,13 +123,13 @@ describe('handleServerCookie', () => {
   });
 
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie', async () => {
-    const request: TRequest = {
+    const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const response = {} as unknown as IMiddlewareNextResponse | IHttpResponse;
+    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
 
     await handleServerCookie(request, response, options);
 
@@ -136,7 +140,7 @@ describe('handleServerCookie', () => {
   });
 
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when request is not isNextJsMiddlewareRequest or isHttpRequest', async () => {
-    const request: TRequest = {
+    const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
@@ -145,7 +149,7 @@ describe('handleServerCookie', () => {
 
     const response = {
       cookies: {},
-    } as unknown as IMiddlewareNextResponse;
+    } as unknown as utils.IMiddlewareNextResponse;
 
     await handleServerCookie(request, response, options);
 

@@ -14,6 +14,7 @@
     "paths": {
       "@sitecore-cloudsdk/engage-core": ["packages/engage-core/src/index.ts"],
       "@sitecore-cloudsdk/engage-utils": ["packages/engage-utils/src/index.ts"],
+      "@sitecore-cloudsdk/personalize": ["packages/personalize/src/index.ts"],
       "@sitecore-cloudsdk/events": ["packages/events/src/index.ts"]
     }
   },

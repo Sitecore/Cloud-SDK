@@ -1,13 +1,21 @@
-import { TRequest } from '@sitecore-cloudsdk/engage-utils';
-import * as HTTPTypeguard from '../../../../engage-utils/src/lib/typeguards/is-http-request';
-import * as MiddlewareTypeguard from '../../../../engage-utils/src/lib/typeguards/is-next-js-middleware-request';
 import { getBrowserIdFromRequest } from './get-browser-id-from-request';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('getBrowserIdFromRequest', () => {
   const cookieName = 'BID_pqsDATA3lw12v5a9rrHPW1c4hET73GxQ';
 
-  const isMiddlewareRequestSpy = jest.spyOn(MiddlewareTypeguard, 'isNextJsMiddlewareRequest');
-  const isHttpRequestSpy = jest.spyOn(HTTPTypeguard, 'isHttpRequest');
+  const isMiddlewareRequestSpy = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
+  const isHttpRequestSpy = jest.spyOn(utils, 'isHttpRequest');
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -141,7 +149,7 @@ describe('getBrowserIdFromRequest', () => {
   });
 
   it('should not call any functions if request is not of type isMiddlewareRequest or isHttpRequest', async () => {
-    const request = {} as unknown as TRequest;
+    const request = {} as unknown as utils.TRequest;
 
     const result = getBrowserIdFromRequest(request, cookieName);
 

@@ -1,24 +1,41 @@
 /* eslint-disable multiline-comment-style */
 import { IdentityEvent, IIdentityEventAttributesInput } from './identity-event';
 import { EventApiClient } from '../cdp/EventApiClient';
-import * as Flatten from '../../../../engage-utils/src/lib/converters/flatten-object';
-import * as IsShortISODateString from '../../../../engage-utils/src/lib/validators/is-iso-date-string';
-import { Infer } from '../../../../engage-core/src/lib/infer/infer';
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { MAX_EXT_ATTRIBUTES } from './consts';
-jest.mock('../../../../engage-core/src/lib/infer/infer');
+import * as core from '@sitecore-cloudsdk/engage-core';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('Test Identity', () => {
   let data: IIdentityEventAttributesInput;
-  let settingsMock: ISettings;
+  let settingsMock: core.ISettings;
   const eventApiClient = new EventApiClient('http://testurl', 'v1.2');
   const id = 'test_id';
-  const infer = new Infer();
-  const isShortISODateStringSpy = jest.spyOn(IsShortISODateString, 'isISODateString');
+  const infer = new core.Infer();
+  const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -388,7 +405,7 @@ describe('Test Identity', () => {
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -412,7 +429,7 @@ describe('Test Identity', () => {
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -456,7 +473,7 @@ describe('Test Identity', () => {
       ],
       pointOfSale: 'spinair.com',
     };
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -504,7 +521,7 @@ describe('Test Identity', () => {
       ],
       pointOfSale: 'spinair.com',
     };
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -533,7 +550,7 @@ describe('Test Identity', () => {
   });
 
   it('should not call flatten object method when no extension data is passed', () => {
-    const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+    const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
     const eventData = {
       channel: 'WEB',
       city: 'city',
@@ -550,7 +567,7 @@ describe('Test Identity', () => {
       ],
       pointOfSale: 'spinair.com',
     };
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -586,7 +603,7 @@ describe('Test Identity', () => {
       ],
       pointOfSale: 'spinair.com',
     };
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',

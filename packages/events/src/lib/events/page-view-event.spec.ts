@@ -3,17 +3,36 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { EventApiClient } from '../cdp/EventApiClient';
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
-import { Infer } from '../../../../engage-core/src/lib/infer/infer';
-import * as Flatten from '../../../../engage-utils/src/lib/converters/flatten-object';
 import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { MAX_EXT_ATTRIBUTES } from './consts';
-jest.mock('../../../../engage-core/src/lib/infer/infer');
+import * as core from '@sitecore-cloudsdk/engage-core';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('PageViewEvent', () => {
   const eventApiClient = new EventApiClient('http://testurl', 'v1.2');
   const fetchCallSpy = jest.spyOn(EventApiClient.prototype, 'send');
   const id = 'test_id';
-  const infer = new Infer();
+  const infer = new core.Infer();
   let expectedBasicAttributes = {};
   let eventData: IPageViewEventInput = {
     channel: 'WEB',
@@ -290,7 +309,7 @@ describe('PageViewEvent', () => {
       expect(getPageVariantIdSpy).toHaveReturnedWith(null);
     });
     it('should not call flatten object method when no extension data is passed', async () => {
-      const flattenObjectSpy = jest.spyOn(Flatten, 'flattenObject');
+      const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', {
         value: {
           search: '',

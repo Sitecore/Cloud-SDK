@@ -1,13 +1,21 @@
-import { ISettings } from '@sitecore-cloudsdk/engage-core';
 import { BaseEvent } from './base-event';
-import * as InferCore from '../../../../engage-core/src/lib/infer/infer';
+import * as core from '@sitecore-cloudsdk/engage-core';
 
-jest.mock('../../../../engage-core/src/lib/infer/infer');
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
 describe('BaseEvent', () => {
   const id = 'test_id';
-  const infer = new InferCore.Infer();
+  const infer = new core.Infer();
   describe('pointOfSale', () => {
-    const settings: ISettings = {
+    const settings: core.ISettings = {
       clientKey: 'key',
       cookieSettings: {
         cookieDomain: 'cDomain',

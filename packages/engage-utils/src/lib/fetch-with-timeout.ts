@@ -16,7 +16,7 @@ export async function fetchWithTimeout(
     [key: string]: unknown;
   }
 ): Promise<null | unknown> {
-  if (!Number.isInteger(timeout) || timeout <= 0)
+  if (!Number.isInteger(timeout) || timeout < 0)
     throw new Error(
       '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
     );

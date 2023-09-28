@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-cloudsdk/engage-utils",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "dependencies": {},
   "main": "./cjs/index.cjs",
   "module": "./esm/index.mjs",

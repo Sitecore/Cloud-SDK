@@ -1,21 +1,29 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable multiline-comment-style */
 import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
-import * as InferCore from '../../../../engage-core/src/lib/infer/infer';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { ICustomEventInput, CustomEvent } from '../events/custom-event';
-
 import { EventQueue, QueueEventPayload } from './eventStorage';
 jest.mock('../events/custom-event');
 
+import * as core from '@sitecore-cloudsdk/engage-core';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
 describe('Event Storage', () => {
   const eventApiClient = new EventApiClient('http://test.com', 'v1.2');
-  const inferLanguageSpy = jest.spyOn(InferCore.Infer.prototype, 'language');
-  const inferPageSpy = jest.spyOn(InferCore.Infer.prototype, 'pageName');
+  const inferLanguageSpy = jest.spyOn(core.Infer.prototype, 'language');
+  const inferPageSpy = jest.spyOn(core.Infer.prototype, 'pageName');
 
   let eventData: ICustomEventInput;
   const id = 'test_id';
-  const infer = new InferCore.Infer();
+  const infer = new core.Infer();
 
   const settings: ISettings = {
     clientKey: 'key',

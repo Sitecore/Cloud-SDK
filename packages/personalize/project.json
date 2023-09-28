@@ -1,0 +1,66 @@
+{
+  "name": "personalize",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/personalize/src",
+  "projectType": "library",
+  "targets": {
+    "build-rollup": {
+      "executor": "@nx/rollup:rollup",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/personalize",
+        "main": "packages/personalize/src/index.ts",
+        "tsConfig": "packages/personalize/tsconfig.lib.json",
+        "project": "packages/personalize/package.json",
+        "compiler": "swc",
+        "rollupConfig": "packages/personalize/rollup.config.js",
+        "external": ["@sitecore-cloudsdk/engage-utils", "@sitecore-cloudsdk/engage-core"]
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run personalize:build-rollup",
+          "tsc --project ./packages/personalize/tsconfig.types.json",
+          "npx ts-node tools/scripts/copy-assets.ts personalize",
+          "npx ts-node tools/scripts/rename-types-folder.ts personalize"
+        ],
+        "parallel": false
+      }
+    },
+    "publish": {
+      "command": "node tools/scripts/publish.mjs personalize {args.ver} {args.tag}",
+      "dependsOn": ["build"]
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["packages/personalize/**/*.ts", "packages/personalize/package.json"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "packages/personalize/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "stryker": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["npx stryker run ./packages/personalize/stryker.conf.js"],
+        "parallel": false
+      }
+    }
+  },
+  "tags": []
+}

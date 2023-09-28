@@ -9,10 +9,10 @@ import { isHttpRequest } from './lib/typeguards/is-http-request';
 import { isHttpResponse } from './lib/typeguards/is-http-response';
 import { getCookie } from './lib/cookies/get-cookie';
 import { getCookieServerSide } from './lib/cookies/get-cookie-server-side';
+import { cookieExists } from './lib/cookies/cookie-exists';
 import { flattenObject, INestedObject, IFlattenedObject } from './lib/converters/flatten-object';
 import { isShortISODateString } from './lib/validators/is-short-iso-date-string';
 import { isValidEmail } from './lib/validators/is-valid-email';
-import { cookieExists } from './lib/cookies/cookie-exists';
 
 // Types
 import type {
@@ -37,10 +37,19 @@ export {
   getCookie,
   SameSiteProperties,
   getCookieServerSide,
+  cookieExists,
   flattenObject,
   isShortISODateString,
   isValidEmail,
-  cookieExists,
 };
-export type { TRequest, IMiddlewareNextResponse, IHttpResponse, IHttpRequest, IMiddlewareRequest };
-export type { ICookie, ICookieProperties, INestedObject, BasicTypes, IFlattenedObject };
+export type {
+  INestedObject,
+  TRequest,
+  IMiddlewareNextResponse,
+  BasicTypes,
+  IHttpResponse,
+  IHttpRequest,
+  IMiddlewareRequest,
+  IFlattenedObject,
+};
+export type { ICookie, ICookieProperties };

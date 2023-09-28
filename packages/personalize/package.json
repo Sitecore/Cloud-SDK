@@ -1,0 +1,28 @@
+{
+  "name": "@sitecore-cloudsdk/personalize",
+  "version": "0.0.1",
+  "dependencies": {},
+  "main": "./cjs/src/index.cjs",
+  "module": "./esm/src/index.mjs",
+  "types": "./types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./esm/src/index.mjs",
+      "require": "./cjs/src/index.cjs",
+      "types": "./types/index.d.ts"
+    }
+  },
+  "peerDependencies": {
+    "@sitecore-cloudsdk/engage-core": "^0.0.9",
+    "@sitecore-cloudsdk/engage-utils": "^0.0.9"
+  },
+  "publishConfig": {
+    "registry": "https://npm.sitecore.com/test/"
+  },
+  "files": [
+    "esm",
+    "cjs",
+    "types",
+    "README.md"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-cloudsdk/events",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {},
   "main": "./cjs/src/index.cjs",
   "module": "./esm/src/index.mjs",
@@ -13,7 +13,8 @@
     }
   },
   "peerDependencies": {
-    "@sitecore-cloudsdk/engage-core": "^0.0.8"
+    "@sitecore-cloudsdk/engage-core": "^0.0.9",
+    "@sitecore-cloudsdk/engage-utils": "^0.0.9"
   },
   "publishConfig": {
     "registry": "https://npm.sitecore.com/test/"

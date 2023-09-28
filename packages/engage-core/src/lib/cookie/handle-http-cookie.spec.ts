@@ -1,12 +1,18 @@
 import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/engage-utils';
 import { handleHttpCookie } from './handle-http-cookie';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as ServerSide from '../../../../engage-utils/src/lib/cookies/get-cookie-server-side';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import * as CookieString from '../../../../engage-utils/src/lib/cookies/create-cookie-string';
 import * as Cdp from '../init/get-browser-id-from-cdp';
+import * as utils from '@sitecore-cloudsdk/engage-utils';
+
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 describe('httpCookieHandler', () => {
   const options = {
@@ -27,8 +33,8 @@ describe('httpCookieHandler', () => {
     options.cookieSettings.cookieDomain
   );
 
-  const getCookieServerSideSpy = jest.spyOn(ServerSide, 'getCookieServerSide');
-  const createCookieStringSpy = jest.spyOn(CookieString, 'createCookieString');
+  const getCookieServerSideSpy = jest.spyOn(utils, 'getCookieServerSide');
+  const createCookieStringSpy = jest.spyOn(utils, 'createCookieString');
 
   afterEach(() => {
     jest.clearAllMocks();
