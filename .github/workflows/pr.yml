@@ -1,6 +1,68 @@
 name: Pull Request
 
 on:
+  pull_request:
+    branches: ['master']
   workflow_dispatch:
 
-
+jobs:
+  lint-and-build:
+    strategy:
+      matrix:
+        node: [16, 18]
+      fail-fast: true
+    runs-on: ubuntu-latest
+    name: Lint & Build on Node v${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: 'npm'
+      - run: npm ci
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run Linting
+        run: npx nx affected --target=lint --base=remotes/origin/master --head=HEAD
+      - name: Build Packages
+        run: npx nx affected --target=build --base=remotes/origin/master --head=HEAD
+      # - name: Build Apps
+      #   run: npm run build-apps
+  unit-test:
+    runs-on: ubuntu-latest
+    name: Run unit tests
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run Test
+        run: npx nx affected --target=test --base=remotes/origin/master --head=HEAD
+  mutation-tests:
+    strategy:
+      matrix:
+        mutation-package:
+          - engage-core
+          - engage-utils
+          - events
+          - personalize
+    runs-on: ubuntu-latest
+    name: Run mutation tests for ${{ matrix.mutation-package }} package
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+      - run: npm ci
+      - name: Run Mutation Tests
+        run: npx stryker run ./packages/${{ matrix.mutation-package }}/stryker.conf.js
