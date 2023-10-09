@@ -1,24 +1,29 @@
 {
   "name": "@sitecore-cloudsdk/engage-utils",
-  "version": "0.0.9",
-  "dependencies": {},
-  "main": "./cjs/index.cjs",
-  "module": "./esm/index.mjs",
-  "types": "./types/index.d.ts",
+  "version": "0.0.12",
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "types": "dist/esm/src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./esm/index.mjs",
-      "require": "./cjs/index.cjs",
-      "types": "./types/index.d.ts"
+      "types": {
+        "require": "./dist/cjs/src/index.d.ts",
+        "default": "./dist/esm/src/index.d.ts"
+      },
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js"
     }
   },
   "publishConfig": {
     "registry": "https://npm.sitecore.com/test/"
   },
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:es",
+    "build:cjs": "tsc -b tsconfig.cjs.json",
+    "build:es": "tsc -b ."
+  },
   "files": [
-    "esm",
-    "cjs",
-    "types",
+    "dist",
     "README.md"
   ]
 }

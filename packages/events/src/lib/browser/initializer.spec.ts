@@ -5,6 +5,7 @@ import { EventApiClient } from '../cdp/EventApiClient';
 import { EventQueue } from '../eventStorage/eventStorage';
 import packageJson from '../../../package.json';
 import { LIBRARY_VERSION } from '../consts';
+import '../../global.d.ts';
 
 jest.mock('../eventStorage/eventStorage');
 jest.mock('../events');

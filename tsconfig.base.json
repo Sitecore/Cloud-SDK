@@ -1,6 +1,10 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "outDir": ".",
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
@@ -8,15 +12,14 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "strict": true,
-    "rootDir": ".",
     "baseUrl": ".",
     "types": ["jest", "node"],
     "paths": {
       "@sitecore-cloudsdk/engage-core": ["packages/engage-core/src/index.ts"],
       "@sitecore-cloudsdk/engage-utils": ["packages/engage-utils/src/index.ts"],
-      "@sitecore-cloudsdk/personalize": ["packages/personalize/src/index.ts"],
-      "@sitecore-cloudsdk/events": ["packages/events/src/index.ts"]
+      "@sitecore-cloudsdk/events": ["packages/events/src/index.ts"],
+      "@sitecore-cloudsdk/personalize": ["packages/personalize/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": ["tmp"]
 }

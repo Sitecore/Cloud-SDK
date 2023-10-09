@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "composite": true
+  },
+  "files": [],
+  "include": [],
+  "references": [
+    { "path": "./packages/engage-utils/tsconfig.cjs.json" },
+    { "path": "./packages/engage-core/tsconfig.cjs.json" },
+    { "path": "./packages/events/tsconfig.cjs.json" },
+    { "path": "./packages/personalize/tsconfig.cjs.json" },
+  ]
+}

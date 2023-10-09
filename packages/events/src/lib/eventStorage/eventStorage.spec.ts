@@ -1,3 +1,4 @@
+/* eslint-disable  @typescript-eslint/no-explicit-any */
 import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { ICustomEventInput, CustomEvent } from '../events/custom-event';

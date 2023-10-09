@@ -4,6 +4,7 @@ import * as utils from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
 import { Personalizer } from '../../personalization/personalizer';
+import '../../global.d.ts';
 
 jest.mock('../../personalization/personalizer');
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
@@ -152,8 +153,7 @@ describe('initializer', () => {
 
     it('should add the library version to window.Engage object', async () => {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      global.window.Engage = undefined as any;
-      expect(global.window.Engage).toBeUndefined();
+      expect(global.window.Engage.versions).toBeUndefined();
       await init(settingsParams);
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({ personalize: LIBRARY_VERSION });

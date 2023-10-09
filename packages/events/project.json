@@ -4,31 +4,6 @@
   "sourceRoot": "packages/events/src",
   "projectType": "library",
   "targets": {
-    "build-rollup": {
-      "executor": "@nx/rollup:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/events",
-        "main": "packages/events/src/index.ts",
-        "tsConfig": "packages/events/tsconfig.lib.json",
-        "project": "packages/events/package.json",
-        "compiler": "swc",
-        "rollupConfig": "packages/events/rollup.config.js",
-        "external": ["@sitecore-cloudsdk/engage-utils", "@sitecore-cloudsdk/engage-core"]
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "nx run events:build-rollup",
-          "tsc --project ./packages/events/tsconfig.types.json",
-          "npx ts-node tools/scripts/copy-assets.ts events",
-          "npx ts-node tools/scripts/rename-types-folder.ts events"
-        ],
-        "parallel": false
-      }
-    },
     "publish": {
       "command": "node tools/scripts/publish.mjs events {args.ver} {args.tag}",
       "dependsOn": ["build"]

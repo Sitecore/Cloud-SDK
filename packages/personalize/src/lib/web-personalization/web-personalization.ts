@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { ISettingsParamsBrowser } from '@sitecore-cloudsdk/engage-core';
-import { appendScriptWithAttributes } from '../../utils/appendScriptWithAttributes';
+import { appendScriptWithAttributes } from '../utils/appendScriptWithAttributes';
 
 /**
  * Adds the functionality in order the web experiences library to work.
@@ -10,7 +10,7 @@ import { appendScriptWithAttributes } from '../../utils/appendScriptWithAttribut
  * or any other plugin
  */
 // eslint-disable-next-line import/no-default-export
-export default function webPersonalization(
+export function webPersonalization(
   pluginConfiguration: boolean | IWebPersonalizationConfig,
   requiredSettings: ISettingsParamsBrowser
 ) {

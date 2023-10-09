@@ -1,11 +1,8 @@
 {
-  "extends": "../../tsconfig.base",
+  "extends": ".",
   "compilerOptions": {
-    "composite": true,
-    "rootDir": ".",
-    "outDir": "./dist/esm",
-    "declaration": true,
-    "resolveJsonModule": true
+    "module": "commonjs",
+    "outDir": "./dist/cjs"
   },
   "include": ["src/**/*", "package.json"],
   "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"],

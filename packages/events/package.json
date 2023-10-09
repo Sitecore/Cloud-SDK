@@ -1,28 +1,33 @@
 {
   "name": "@sitecore-cloudsdk/events",
-  "version": "0.0.3",
-  "dependencies": {},
-  "main": "./cjs/src/index.cjs",
-  "module": "./esm/src/index.mjs",
-  "types": "./types/index.d.ts",
+  "version": "0.0.7",
+  "main": "dist/cjs/src/index.js",
+  "module": "dist/esm/src/index.js",
+  "types": "dist/esm/src/index.d.ts",
   "exports": {
     ".": {
-      "import": "./esm/src/index.mjs",
-      "require": "./cjs/src/index.cjs",
-      "types": "./types/index.d.ts"
+      "types": {
+        "require": "./dist/cjs/src/index.d.ts",
+        "default": "./dist/esm/src/index.d.ts"
+      },
+      "import": "./dist/esm/src/index.js",
+      "require": "./dist/cjs/src/index.js"
     }
   },
-  "peerDependencies": {
-    "@sitecore-cloudsdk/engage-core": "^0.0.9",
-    "@sitecore-cloudsdk/engage-utils": "^0.0.9"
+  "dependencies": {
+    "@sitecore-cloudsdk/engage-core": "^0.0.12",
+    "@sitecore-cloudsdk/engage-utils": "^0.0.12"
   },
   "publishConfig": {
     "registry": "https://npm.sitecore.com/test/"
   },
+  "scripts": {
+    "build": "npm run build:cjs && npm run build:es",
+    "build:cjs": "tsc -b tsconfig.cjs.json",
+    "build:es": "tsc -b ."
+  },
   "files": [
-    "esm",
-    "cjs",
-    "types",
+    "dist",
     "README.md"
   ]
 }

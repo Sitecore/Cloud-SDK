@@ -9,10 +9,11 @@ import {
   getBrowserId,
 } from '@sitecore-cloudsdk/engage-core';
 import { cookieExists } from '@sitecore-cloudsdk/engage-utils';
-import { loadPlugins } from '../../extensions/load-plugins';
 import { LIBRARY_VERSION } from '../../consts';
 import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
 import { CallFlowCDPClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-cdp-client';
+import { webPersonalization } from '../../web-personalization/web-personalization';
+
 
 export type ISettingsParamsBrowserPersonalize = {
   webPersonalization?: boolean | IWebPersonalizationConfig;
@@ -44,7 +45,9 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
 
   window.Engage ??= {};
 
-  await loadPlugins(settingsInput);
+  if (settingsInput.webPersonalization) {
+    webPersonalization(settingsInput.webPersonalization, settings);
+  }
 
   window.Engage = {
     ...window.Engage,

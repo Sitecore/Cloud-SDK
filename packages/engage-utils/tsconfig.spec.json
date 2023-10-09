@@ -11,5 +11,8 @@
     "src/**/*.spec.ts",
     "src/**/*.d.ts",
     "src/lib/converters/base-64-converter.node.sdddadpec.ts"
+  ],
+  "exclude": [
+    "dist/"
   ]
 }

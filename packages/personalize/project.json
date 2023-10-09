@@ -4,31 +4,6 @@
   "sourceRoot": "packages/personalize/src",
   "projectType": "library",
   "targets": {
-    "build-rollup": {
-      "executor": "@nx/rollup:rollup",
-      "outputs": ["{options.outputPath}"],
-      "options": {
-        "outputPath": "dist/packages/personalize",
-        "main": "packages/personalize/src/index.ts",
-        "tsConfig": "packages/personalize/tsconfig.lib.json",
-        "project": "packages/personalize/package.json",
-        "compiler": "swc",
-        "rollupConfig": "packages/personalize/rollup.config.js",
-        "external": ["@sitecore-cloudsdk/engage-utils", "@sitecore-cloudsdk/engage-core"]
-      }
-    },
-    "build": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "nx run personalize:build-rollup",
-          "tsc --project ./packages/personalize/tsconfig.types.json",
-          "npx ts-node tools/scripts/copy-assets.ts personalize",
-          "npx ts-node tools/scripts/rename-types-folder.ts personalize"
-        ],
-        "parallel": false
-      }
-    },
     "publish": {
       "command": "node tools/scripts/publish.mjs personalize {args.ver} {args.tag}",
       "dependsOn": ["build"]
