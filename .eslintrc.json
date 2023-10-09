@@ -99,7 +99,8 @@
     {
       "files": ["*spec.ts"],
       "rules": {
-        "header/header": "off"
+        "header/header": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     },
     {

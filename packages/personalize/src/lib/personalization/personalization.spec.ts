@@ -58,10 +58,9 @@ describe('Test Personalizer Class', () => {
       expect(() => action()).rejects.toThrowError(errorMessage);
       expect(validateSpy).toHaveBeenCalledTimes(1);
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
+
     beforeEach(() => {
       const mockFetch = Promise.resolve({
         json: () => Promise.resolve({ status: 'OK' } as unknown),
@@ -99,9 +98,7 @@ describe('Test Personalizer Class', () => {
 
   describe('Test Personalizer getInteractiveExperienceData method and private calls', () => {
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mapPersonalizeInputToCDPDataSpy = jest.spyOn(Personalizer.prototype as any, 'mapPersonalizeInputToCDPData');
     const sendCallFlowSpy = jest.spyOn(CallFlowCDPClient.prototype, 'sendCallFlowsRequest');
 
@@ -228,9 +225,7 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('Test sanitizeInput', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const flattenObjectSpy = jest.spyOn(flatten as any, 'flattenObject');
     let expected: IPersonalizerInput;
     beforeEach(() => {
@@ -374,7 +369,6 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('Test mapPersonalizeInputToCDPData functionality and APICall', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mapPersonalizeInputToCDPDataSpy = jest.spyOn(Personalizer.prototype as any, 'mapPersonalizeInputToCDPData');
     const sendCallFlowSpy = jest.spyOn(CallFlowCDPClient.prototype, 'sendCallFlowsRequest');
 

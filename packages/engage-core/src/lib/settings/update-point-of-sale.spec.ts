@@ -37,7 +37,6 @@ describe('updatePointOfSale', () => {
   });
 
   it('should update point of sale with the new value in settings and in global window when exists', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { settings: expectedSettings } as any;
 
     updatePointOfSale('spinair.com', settings);
@@ -46,7 +45,6 @@ describe('updatePointOfSale', () => {
   });
   it('should throw error when providing empty string', () => {
     expectedSettings.pointOfSale = 'spinair.com';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { settings: expectedSettings } as any;
 
     expect(() => {
@@ -59,7 +57,6 @@ describe('updatePointOfSale', () => {
 
   it('should throw error when providing empty space string', () => {
     expectedSettings.pointOfSale = 'spinair.com';
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { settings: expectedSettings } as any;
 
     expect(() => {

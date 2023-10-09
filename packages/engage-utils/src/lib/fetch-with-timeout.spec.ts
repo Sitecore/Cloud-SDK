@@ -66,7 +66,6 @@ describe('fetchWithTimeout', () => {
     let result;
     try {
       result = await fetchWithTimeout(url, timeout, fetchOptions);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       expect(result).toBeUndefined();
       expect(error).toBeInstanceOf(Error);
@@ -132,7 +131,6 @@ describe('fetchWithTimeout', () => {
     let result;
     try {
       result = await fetchWithTimeout(url, timeout, fetchOptions);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       expect(result).toBeUndefined();
       expect(error).toBeInstanceOf(Error);

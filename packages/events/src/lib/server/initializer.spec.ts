@@ -143,7 +143,6 @@ describe('initializer', () => {
       settings: { ...settingsObj },
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const newMock = { ...mockRequest, headers: { host: 'localhost:3000' } } as any;
     eventsServer.pageView(eventData, newMock);
     expect(typeof eventsServer.pageView).toBe('function');

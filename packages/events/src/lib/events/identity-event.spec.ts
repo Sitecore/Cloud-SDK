@@ -361,7 +361,6 @@ describe('Test Identity', () => {
   });
 
   it('Should check if attributeCheckAndValidation is called when IdentityEvent is Created', () => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const attributeCheckAndValidationSpy = jest.spyOn(IdentityEvent.prototype as any, 'validateAttributes');
     new IdentityEvent({
       eventApiClient,
@@ -370,6 +369,7 @@ describe('Test Identity', () => {
       infer,
       settings: settingsMock,
     });
+
     expect(attributeCheckAndValidationSpy).toHaveBeenCalledTimes(1);
   });
 

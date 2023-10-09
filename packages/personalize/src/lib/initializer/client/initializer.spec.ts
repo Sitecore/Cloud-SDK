@@ -152,9 +152,12 @@ describe('initializer', () => {
     });
 
     it('should add the library version to window.Engage object', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      expect(global.window.Engage.versions).toBeUndefined();
+      global.window.Engage = undefined as any;
+      expect(global.window.Engage).toBeUndefined();
+
+
       await init(settingsParams);
+
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({ personalize: LIBRARY_VERSION });
     });
@@ -173,9 +176,9 @@ describe('initializer', () => {
     });
 
     it('should expand the window.Engage object', async () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
       await init(settingsParams);
+
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({
         personalize: LIBRARY_VERSION,

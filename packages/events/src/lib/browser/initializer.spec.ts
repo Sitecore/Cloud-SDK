@@ -433,7 +433,6 @@ describe('initializer', () => {
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { test: 'test' } as any;
     expect(global.window.Engage).toBeDefined();
     await init(settingsParams);
@@ -456,8 +455,8 @@ describe('initializer', () => {
       targetURL: 'https://domain',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = undefined as any;
+
     expect(global.window.Engage).toBeUndefined();
     await init(settingsParams);
     if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
@@ -523,8 +522,8 @@ describe('initializer', () => {
       targetURL: 'https://domain',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = undefined as any;
+
     expect(global.window.Engage).toBeUndefined();
     await init(settingsParams);
     expect(global.window.Engage.versions).toBeDefined();
@@ -545,9 +544,9 @@ describe('initializer', () => {
       targetURL: 'https://domain',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
     await init(settingsParams);
+
     expect(global.window.Engage.versions).toBeDefined();
     expect(global.window.Engage.versions).toEqual({
       events: LIBRARY_VERSION,

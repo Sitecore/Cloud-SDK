@@ -1,0 +1,25 @@
+// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import React from 'react';
+import Link from 'next/link';
+interface ITemplatesHeaderProps {
+  prev: string;
+  next: string;
+}
+function TemplatesHeader({ prev, next }: ITemplatesHeaderProps) {
+  return (
+    <header style={{ marginBottom: 16 }}>
+      <h2>Web Experiences Templates</h2>
+      <div style={{ display: 'flex', maxWidth: '600px' }}>
+        <Link href='/'>← Back to home</Link>
+        <div style={{ flex: 'auto' }} />
+        <div style={{ alignItems: 'center', display: 'flex', justifyContent: 'center' }}>
+          <Link href={prev}>← Prev</Link>
+          <span style={{ padding: '0 8px' }}>{' | '}</span>
+          <Link href={next}>Next →</Link>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default TemplatesHeader;
