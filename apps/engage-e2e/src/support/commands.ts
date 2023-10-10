@@ -1,0 +1,115 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import eventsPackageJson from '../../../../packages/events/package.json';
+import personalizePackageJson from '../../../../packages/personalize/package.json';
+
+export {};
+
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace Cypress {
+    interface Chainable {
+      assertRequest(expectedReq: any, request: any): void;
+      waitForRequest(alias: string): any;
+      waitForResponse(alias: string): any;
+      convertToSnakeCase(str: string): string;
+      writeLocal(fileName: string, content: any): void;
+      readLocal(fileName: string): any;
+      visit(url: string, options: string): void;
+      requestGuestContext(): any;
+    }
+  }
+}
+
+//Overwrites cy.visit to check if the current baseurl belongs to cdn app in order to add the respective .html extension
+Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
+  originalFn(url, options);
+  //Overwriting cy.visit behaves faster than the original function so a cy.wait is necessary
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(600);
+});
+
+//Returns the request made for the latest alias during a run
+Cypress.Commands.add('waitForRequest', (alias) => {
+  cy.wait(alias);
+  cy.get(`${alias}.all`).then((aliasList) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lastEventRequest: any = aliasList[aliasList.length - 1];
+    return cy.wrap(lastEventRequest.request);
+  });
+});
+
+//Returns the response from CDP
+Cypress.Commands.add('waitForResponse', (alias) => {
+  cy.wait(alias);
+  cy.get(`${alias}.all`).then((aliasList) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const lastEventResponse: any = aliasList[aliasList.length - 1];
+    return cy.wrap(lastEventResponse.response);
+  });
+});
+
+Cypress.Commands.add('writeLocal', (fileName, content) => {
+  cy.writeFile(`src/fixtures/local/${fileName}`, content);
+});
+
+Cypress.Commands.add('readLocal', (fileName) => {
+  let value: any;
+  cy.readFile(`src/fixtures/local/${fileName}`).then((content) => (value = content));
+  return value;
+});
+
+Cypress.Commands.add('assertRequest', (request, expectedReq) => {
+  Object.keys(expectedReq).forEach((key) => {
+    const actualAttr =
+      request.body[
+        key.replace(/[A-Z]/g, (c) => {
+          return '_' + c.toLowerCase();
+        })
+      ];
+    const expectedAttr = expectedReq[key];
+    //As we cannot pass null from test level, we pass it as a string
+    if (expectedAttr !== 'null') {
+      return expect(actualAttr).to.eql(expectedAttr);
+    } else {
+      expect(actualAttr).to.eql(null);
+    }
+    // eslint-disable-next-line max-len
+    const expectedPackageVersion = request.url.includes('events') ? eventsPackageJson.version : personalizePackageJson.version;
+
+    expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
+  });
+});
+
+Cypress.Commands.add('requestGuestContext', () => {
+  const authorization = `Basic ${Cypress.env('GUEST_API_TOKEN')}`;
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(1500);
+  cy.getCookie(Cypress.env('COOKIE_NAME'))
+    .should('exist')
+    .then((c) => {
+      const options = {
+        method: 'GET',
+        url: `${Cypress.env('HOSTNAME')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`,
+        headers: {
+          authorization,
+        },
+        timeout: 6000,
+      };
+
+      cy.request(options)
+        .as('guestContext')
+        .then((response) => {
+          cy
+            .waitUntil(() => expect(response.body.items[0].sessions[0].events[0]).to.exist)
+            .then(() => {
+              return response.body.items[0].sessions[0].events[0];
+            }),
+            {
+              errorMsg: 'Event not returned from CDP',
+              timeout: 15000,
+              interval: 100,
+            };
+        });
+    });
+});

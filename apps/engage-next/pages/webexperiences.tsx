@@ -1,3 +1,4 @@
+// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import Link from 'next/link';
 
 export function WebExperiences() {

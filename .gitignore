@@ -40,6 +40,11 @@ testem.log
 .DS_Store
 Thumbs.db
 
+# cypress
+**/src/fixtures/local
+**/cypress/results/
+**/cypress/downloads/
+
 # Next.js
 .next
 

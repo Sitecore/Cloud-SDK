@@ -66,3 +66,45 @@ jobs:
       - run: npm ci
       - name: Run Mutation Tests
         run: npx stryker run ./packages/${{ matrix.mutation-package }}/stryker.conf.js
+  events-e2e-tests:
+    name: Run Events E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Run E2E Tests
+        run: npx nx run engage-e2e:engage-next-events
+      - name: Generate Events E2E Test Report
+        if: always()
+        run: npm run generate-e2e-report
+      - name: Upload Events E2E Test Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-report
+          path: apps/e2e-tests/cypress/results/  
+  personalize-e2e-tests:
+    name: Run Personalize E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Run E2E Tests
+        run: npx nx run engage-e2e:engage-next-personalize
+      - name: Generate Personalize E2E Test Report
+        if: always()
+        run: npm run generate-e2e-report
+      - name: Upload Personalize E2E Test Report
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: e2e-report
+          path: apps/e2e-tests/cypress/results/
