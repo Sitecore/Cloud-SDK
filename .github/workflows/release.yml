@@ -1,0 +1,4 @@
+name: Publish all libraries to NPM
+
+on:
+  workflow_dispatch:
