@@ -1,0 +1,7 @@
+name: Smoke Test Events to multiple browsers
+on:
+  workflow_dispatch:
+
+jobs:
+    chrome-events-test:
+      runs-on: ubuntu-latest

@@ -1,0 +1,7 @@
+name: Smoke Test Personalize to multiple browsers
+on:
+  workflow_dispatch:
+
+jobs:
+    chrome-personalize-test:
+      runs-on: ubuntu-latest
