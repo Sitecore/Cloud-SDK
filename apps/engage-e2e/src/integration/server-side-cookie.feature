@@ -1,6 +1,5 @@
 Feature: Developer is setting for the creation of a server-set cookie  
 
-@Smoke-Test
 Scenario Outline: Cookie is not created when an invalid cookieDomain is given
     Given a server cookie is requested to be created at '/about' page with '<domain>' domain
     Then the '<domain>' domain cookie is not created
@@ -13,7 +12,6 @@ Scenario Outline: Cookie is not created when an invalid cookieDomain is given
         | foo            |
         | /              |
 
-@Smoke-Test
 Scenario Outline: Cookie is created when a valid cookieDomain is given
     Given a server cookie is requested to be created at '/about' page with '<domain>' domain
     Then a server cookie is created with '<expected_domain>' domain
@@ -23,6 +21,7 @@ Scenario Outline: Cookie is created when a valid cookieDomain is given
         |                | localhost       | 
         | localhost      | localhost       |     
 
+@Smoke-Test-Events
 Scenario: create a server site cookie when no cookie exists on a page
     Given no cookie is created on the '/' page
     When a server cookie is created on the '/' page
@@ -43,7 +42,7 @@ Scenario: Error is thrown if no browser id is retrieved
     Given '/' page is loaded with forceServerCookieMode true and a wrong targetURL parameter
     Then an error is thrown: '[IE-0004] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer requests cookie from server using handleCookie with timeOut and CDP fails to respond
     Given the handleCookie function is triggered from '/server-side-props-view-event' page with timeout: '<timeout>' 
     Then an error is thrown: '[IE-0003] Timeout exceeded. The server did not respond within the allotted time.'
@@ -53,17 +52,16 @@ Scenario: Developer requests cookie from server using handleCookie with timeOut 
         |    0    | 
         |    1    |      
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer requests cookie from server using handleCookie with timeOut and CDP responds timely
     Given the handleCookie function is triggered from '/server-side-props-view-event' page with timeout: '5000' 
     Then no error is thrown
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer requests cookie from server with invalid timeout input
     Given the handleCookie function is triggered from '/server-side-props-view-event' page with timeout: '-10' 
     Then an error is thrown: '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
 
-@Smoke-Test
 Scenario: Developer requests cookie from server using handleCookie without specifying timeout
 Given Engage is initialized in server visiting '/server-side-props-custom-event' page 
 Then no error is thrown

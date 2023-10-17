@@ -1,6 +1,5 @@
 Feature: User sends identity events to CDP
 
-@Smoke-Test
 Scenario: Developer sends identity event from server
     Given the '/identity' page is loaded with query parameters
         | pointOfSale   | email         |
@@ -64,7 +63,7 @@ Scenario: Developer sends IDENTITY event with empty ext object
     When the 'sendIdentityWithEmptyExt' button is clicked
     Then the event is sent without ext
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario Outline: Developer creates identity event with ext attributes
     Given the '/identity' page is loaded with query parameters
        | extAttributesNumber | nested                   |

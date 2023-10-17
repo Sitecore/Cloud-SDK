@@ -43,7 +43,7 @@ Scenario Outline: Init is called with a baseURLOverride value passed in webPerso
         | {"baseURLOverride":"customSetWebFlowTarget"} | customSetWebFlowTarget |
         | {"baseURLOverride": "undefined"}             | default                |
 
-@Smoke-Test
+@Smoke-Test-Personalize
 Scenario: webExperiences SDK is integrated with Engage and popup is triggered
     Given the '/webexperiences' page is loaded with query parameters
         | webPersonalizationSettings | pointOfSaleFromSettings |

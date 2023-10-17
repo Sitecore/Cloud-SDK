@@ -21,7 +21,7 @@ Scenario Outline: Developer creates custom event with ext attributes
         | {"a":"a","b":1,"c":true} |
         | {"a":"a","b":1,"c":true} |
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario Outline: Developer enqueues multiple events
     Given the '/eventqueue' page is loaded with query parameters
         | type         | addMultiToQueue |

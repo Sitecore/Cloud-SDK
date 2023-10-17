@@ -86,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
-          path: apps/e2e-tests/cypress/results/  
+          path: apps/engage-e2e/cypress/results/  
   personalize-e2e-tests:
     name: Run Personalize E2E
     runs-on: ubuntu-latest
@@ -107,4 +107,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
-          path: apps/e2e-tests/cypress/results/
+          path: apps/engage-e2e/cypress/results/

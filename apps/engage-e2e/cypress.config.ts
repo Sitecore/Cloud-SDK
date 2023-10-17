@@ -7,6 +7,7 @@ import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild
 const mochawesome = '../../node_modules/mochawesome';
 const cypressJsonConfig = {
   defaultCommandTimeout: 10000,
+  modifyObstructiveCode: false,
   experimentalWebKitSupport: true,
   fileServerFolder: '.',
   fixturesFolder: './src/fixtures',
@@ -40,6 +41,13 @@ const cypressJsonConfig = {
         plugins: [createEsbuildPlugin(config)],
       })
     );
+
+    on('before:browser:launch', (browser, launchOptions) => {
+      if (browser.family === 'firefox') {
+        launchOptions.preferences['network.proxy.testing_localhost_is_secure_when_hijacked'] = true
+      }
+      return launchOptions
+    })
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;

@@ -1,6 +1,6 @@
 Feature: Send Custom events unique to an organization
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer sends custom event from server
     Given the '/customevent' page is loaded
     And the 'sendEventFromServer' button is clicked
@@ -22,7 +22,6 @@ Scenario Outline: Developer creates custom event
         }
     """
 
-@Smoke-Test
 Scenario Outline: Developer creates custom event with ext object containing nested attributes
     Given the '/customevent' page is loaded 
     When the event parameters are: 
@@ -50,7 +49,8 @@ Scenario Outline: Developer creates custom event with ext object containing nest
             }
         }
     """
-@Smoke-Test
+
+@Smoke-Test-Events
 Scenario Outline: Developer creates custom event with up to 50 ext attributes
     Given the '/customevent' page is loaded 
     When the event parameters are: 

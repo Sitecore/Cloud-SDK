@@ -47,7 +47,7 @@
         }
       }
     },
-    "next-e2e-us": {
+    "engage-events-smoke-test": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
         "cypressConfig": "apps/engage-e2e/cypress.config.ts",
@@ -56,7 +56,8 @@
         "customServerPath": "server.js",
         "testingType": "e2e",
         "env": {
-          "TAGS": "@Next-US"
+          "TAGS": 
+            "@Smoke-Test-Events"
         }
       },
       "configurations": {
@@ -65,16 +66,29 @@
         }
       }
     },
-    "engage-smoke-tests": {
+    "engage-events-smoke-test-all-browsers": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "nx run engage-e2e:engage-events-smoke-test --browser=firefox",
+          "nx run engage-e2e:engage-events-smoke-test --browser=chrome",
+          "nx run engage-e2e:engage-events-smoke-test --browser=edge",
+          "nx run engage-e2e:engage-events-smoke-test --browser=webkit",
+          "nx run engage-e2e:engage-events-smoke-test --browser=electron"
+        ],
+        "parallel": false
+      }
+    },
+    "engage-personalize-smoke-test": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
         "cypressConfig": "apps/engage-e2e/cypress.config.ts",
         "devServerTarget": "engage-next:serve:development",
-        "baseUrl": "http://localhost:3000",
+        "baseUrl": "http://localhost:4200",
         "customServerPath": "server.js",
         "testingType": "e2e",
         "env": {
-          "TAGS": "@Smoke-Tests"
+          "TAGS": "@Smoke-Test-Personalize"
         }
       },
       "configurations": {
@@ -83,15 +97,14 @@
         }
       }
     },
-    "smoke-test-all-browsers": {
+    "engage-personalize-smoke-test-all-browsers": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run engage-e2e:smoke-test --browser=firefox",
-          "nx run engage-e2e:smoke-test --browser=chrome",
-          "nx run engage-e2e:smoke-test --browser=edge",
-          "nx run engage-e2e:smoke-test --browser=webkit",
-          "nx run engage-e2e:smoke-test --browser=electron"
+          "nx run engage-e2e:engage-personalize-smoke-test --browser=firefox",
+          "nx run engage-e2e:engage-personalize-smoke-test --browser=chrome",
+          "nx run engage-e2e:engage-personalize-smoke-test --browser=edge",
+          "nx run engage-e2e:engage-personalize-smoke-test --browser=webkit"
         ],
         "parallel": false
       }

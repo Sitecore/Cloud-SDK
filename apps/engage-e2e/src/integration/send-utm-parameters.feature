@@ -1,5 +1,6 @@
 Feature: Send UTM parameters for every event with configuration setting
 
+@Smoke-Test-Events
 Scenario: Enabled Utm Parameters with parameters in the URL sent from the server
     Given the '/' page is loaded with query parameters
         | includeUTMParameters | UTM_medium | UTM_source   | utm_campaign   | utm_content       | 

@@ -1,6 +1,6 @@
 Feature: Clear Event Queue from Session Storage
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer calls clearEventQueue when event is added in the queue
     Given the '/eventqueue' page is loaded with query parameters
         | type         | 

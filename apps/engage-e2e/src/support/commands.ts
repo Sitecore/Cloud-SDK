@@ -88,13 +88,14 @@ Cypress.Commands.add('requestGuestContext', () => {
   cy.getCookie(Cypress.env('COOKIE_NAME'))
     .should('exist')
     .then((c) => {
+      console.log('test');
       const options = {
         method: 'GET',
         url: `${Cypress.env('HOSTNAME')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`,
         headers: {
           authorization,
         },
-        timeout: 6000,
+        timeout: 15000,
       };
 
       cy.request(options)

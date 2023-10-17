@@ -1,4 +1,4 @@
-name: Smoke Test Events to multiple browsers
+name: Smoke Test Personalize to multiple browsers
 on:
   workflow_run:
     workflows: ['Pull Request']
@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  chrome-events-test:
+  chrome-personalize-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,18 +18,18 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
-      - name: Run Chrome Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=chrome
+      - name: Run Chrome Personalize Smoke Test
+        run: npx nx run engage-e2e:engage-personalize-smoke-test --browser=chrome
       - name: Generate Next Regression Chrome Test Report
         if: always()
         run: npm run generate-e2e-report
-      - name: Upload Chrome Events Smoke Test Report
+      - name: Upload Chrome Personalize Smoke Test Report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: cypress-next-regression-chrome-report
           path: apps/engage-e2e/cypress/results/
-  edge-events-test:
+  edge-personalize-test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v3
@@ -40,18 +40,18 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
-      - name: Run Edge Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=edge
+      - name: Run Edge Personalize Smoke Test
+        run: npx nx run engage-e2e:engage-personalize-smoke-test --browser=edge
       - name: Generate Next Regression Edge Test Report
         if: always()
         run: npm run generate-e2e-report
-      - name: Upload Edge Events Smoke Test Report
+      - name: Upload Edge Personalize Smoke Test Report
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: cypress-next-regression-edge-report
           path: apps/engage-e2e/cypress/results/
-  firefox-events-test:
+  firefox-personalize-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -62,12 +62,12 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
-      - name: Run Firefox Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=firefox
-      - name: Generate npx nx run engage-e2e:engage-events-smoke-test
+      - name: Run Firefox Personalize Smoke Test
+        run: npx nx run engage-e2e:engage-personalize-smoke-test --browser=firefox
+      - name: Generate Next Regression Firefox Test Report
         if: always()
         run: npm run generate-e2e-report
-      - name: Upload Firefox Events Smoke Test Report
+      - name: Upload Firefox Personalize Smoke Test Report
         if: always()
         uses: actions/upload-artifact@v3
         with:

@@ -5,7 +5,6 @@
     "outDir": "../../dist/out-tsc",
     "allowJs": true,
     "types": ["cypress", "node"],
-    "module": "Node16",
     "resolveJsonModule": true,
     "paths": {
       "@badeball/cypress-cucumber-preprocessor/*": ["./node_modules/@badeball/cypress-cucumber-preprocessor/dist/subpath-entrypoints/*"]

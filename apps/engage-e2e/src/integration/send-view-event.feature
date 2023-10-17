@@ -1,6 +1,5 @@
 Feature: Send a VIEW event to CDP
 
-@Smoke-Test
 Scenario: Developer sends a view event from server
     Given the '/' page is loaded with query parameters
         | pointOfSale | 
@@ -20,7 +19,7 @@ Scenario: Developer uses pageView to send a VIEW event when it's loaded
     Then the event is sent with 'VIEW' type
     And the 'pageVariantId' ext property is undefined
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer uses pageView to send a VIEW event with both query parameters and eventData have the variantId parameter
     Given the '/' page is loaded with query parameters
         | variantid |

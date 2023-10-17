@@ -1,6 +1,6 @@
 Feature: Process Event Queue in Session Storage in order to finally send them to CDP
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer processes an enqueued event
     Given the '/eventqueue' page is loaded with query parameters
         | type         |

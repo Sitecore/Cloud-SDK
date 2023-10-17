@@ -1,6 +1,6 @@
 Feature: User retrieves the version of the library
 
-@Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer retrieves Events version from the window object
     Given the '/' page is loaded
     When the "getVersionLibFromWindowEvents" button is clicked
@@ -11,7 +11,7 @@ Scenario: Developer retrieves Events version by calling engage.version
     When the "getVersionLibFromEvents" button is clicked
     Then the expected 'events' version is returned
 
-    @Smoke-Test
+@Smoke-Test-Events
 Scenario: Developer retrieves Personalize version from the window object
     Given the '/' page is loaded
     When the "getVersionLibFromWindowPersonalize" button is clicked
