@@ -3,6 +3,7 @@ import {
   API_VERSION,
   ICdpResponse,
   ISettingsParamsServer,
+  TARGET_URL,
   createSettings,
   getBrowserIdFromRequest,
   handleServerCookie,
@@ -27,7 +28,7 @@ import { LIBRARY_VERSION } from '../consts';
  */
 export function initServer(settingsInput: ISettingsParamsServer): EventsServer {
   const settings = createSettings(settingsInput);
-  const eventApiClient = new EventApiClient(settings.targetURL, API_VERSION);
+  const eventApiClient = new EventApiClient(TARGET_URL, API_VERSION);
 
   return {
     event: (type, eventData, request, extensionData) => {
@@ -42,7 +43,7 @@ export function initServer(settingsInput: ISettingsParamsServer): EventsServer {
       }).send();
     },
     handleCookie: async (request, response, timeout) => {
-      if (!settings.cookieSettings.forceServerCookieMode) return;
+      if (!settingsInput.enableServerCookie) return;
       await handleServerCookie(request, response, settings, timeout);
     },
     identity: (eventData, request, extensionData) => {

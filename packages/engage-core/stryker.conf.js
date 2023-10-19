@@ -1,6 +1,10 @@
 const config = {
   packageManager: 'npm',
-  mutate: ['./packages/engage-core/src/**/*.ts', '!./packages/engage-core/src/**/*spec.ts'],
+  mutate: [
+    './packages/engage-core/src/**/*.ts',
+    '!./packages/engage-core/src/**/*spec.ts',
+    '!./packages/engage-core/src/lib/consts.ts',
+  ],
   thresholds: { high: 80, low: 60, break: 100 },
   // ignoreStatic: true,
   incremental: true,

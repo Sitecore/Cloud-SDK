@@ -17,8 +17,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
   }, [router.pathname]);
 
   return (
-    <EventsProvider>
-      <PersonalizeProvider>
+    <PersonalizeProvider>
+      <EventsProvider>
         <Head>
           <title>Welcome to engage-next!</title>
         </Head>
@@ -26,8 +26,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
           <Navbar />
           <Component {...pageProps} />
         </main>
-      </PersonalizeProvider>
-    </EventsProvider>
+      </EventsProvider>
+    </PersonalizeProvider>
   );
 }
 

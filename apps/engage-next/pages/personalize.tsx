@@ -196,10 +196,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
-    forceServerCookieMode:
-      typeof context.query.forceServerCookieMode === 'string' &&
-      context.query.forceServerCookieMode.toLowerCase() === 'true',
-    targetURL: `https://${process.env.TARGET_URL}`,
+    enableServerCookie:
+      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
+    contextId: 'N/A',
+    siteId: 'N/A',
   });
 
   let cdpResponse;

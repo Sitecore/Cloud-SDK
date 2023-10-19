@@ -27,9 +27,9 @@ Scenario: create a server site cookie when no cookie exists on a page
     When a server cookie is created on the '/' page
     Then the server cookie contains the browserID returned from the API call
 
-Scenario: A cookie already exists on the page, forceServerCookieMode doesn't create a new cookie but updates TTL
+Scenario: A cookie already exists on the page, enableServerCookie doesn't create a new cookie but updates TTL
     Given a server cookie is created on the '/' page
-    When '/' page is loaded again with forceServerCookieMode parameter
+    When '/' page is loaded again with enableServerCookie parameter
     Then the server updates the TTL of the server cookie according to the settings
 
 Scenario: a cookie exists on the page another cookie won't be set when about page is visited directly
@@ -39,7 +39,7 @@ Scenario: a cookie exists on the page another cookie won't be set when about pag
 
 Scenario: Error is thrown if no browser id is retrieved
     # Artificial way to make the get cookie from cdp fail by passing a valid random url
-    Given '/' page is loaded with forceServerCookieMode true and a wrong targetURL parameter
+    Given '/' page is loaded with enableServerCookie true and an invalid ClientKey parameter
     Then an error is thrown: '[IE-0004] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
 
 @Smoke-Test-Events

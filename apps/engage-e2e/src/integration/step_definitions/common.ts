@@ -52,11 +52,26 @@ defineStep('the {string} page is loaded', (page: string) => {
   );
   cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
   cy.visit(page);
-  cy.wait('@initialCall', {timeout: 30000});
+
+  cy.wait('@initialCall', { timeout: 30000 });
+
   cy.location().should((loc) => {
     expect(loc.pathname).to.eq(page);
   });
   cy.get('body').should('be.visible');
+});
+
+defineStep('the {string} string is printed in {string} element', (message: string, element: string) => {
+  const selector = `[data-testid="${element}"]`;
+
+  cy.get(selector).should('be.visible').contains(message);
+});
+
+defineStep('the {string} page is loaded without init function', (page: string) => {
+  cy.visit(page);
+  cy.location().should((loc) => {
+    expect(`${loc.pathname}${loc.search}`).to.eq(page);
+  });
 });
 
 defineStep('the {string} page is loaded with query parameters:', (page: string, params: string) => {
@@ -119,7 +134,9 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
       cy.stub(win.console, 'warn').as('consoleWarn');
     },
   });
-  cy.wait('@initialCall', {timeout: 30000});
+
+  cy.wait('@initialCall', { timeout: 30000 });
+
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
   cy.get('body')

@@ -34,28 +34,28 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 
 const settingsParams: core.ISettingsParamsBrowser = {
   clientKey: 'key',
+  contextId: '123',
   cookieDomain: 'cDomain',
-  targetURL: 'https://domain',
+  siteId: '456',
 };
 
 describe('initializer', () => {
   const { window } = global;
   const id = 'test_id';
-  const eventApiClient = new EventApiClient('https://domain', core.API_VERSION);
+  const eventApiClient = new EventApiClient(core.TARGET_URL, core.API_VERSION);
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   jest.spyOn(core, 'createCookie').mock;
   const settingsObj = {
     clientKey: 'key',
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '456',
   };
   afterEach(() => {
     jest.clearAllMocks();
@@ -67,18 +67,17 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
 
-    init(settingsParams);
+    init({ ...settingsParams, enableBrowserCookie: true });
 
     expect(core.createCookie).toHaveBeenCalledTimes(1);
   });
@@ -88,18 +87,17 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
 
-    init(settingsParams);
+    init({ ...settingsParams, enableBrowserCookie: true });
 
     expect(core.createCookie).toHaveBeenCalledTimes(0);
   });
@@ -185,15 +183,14 @@ describe('initializer', () => {
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     const eventData: IEventAttributesInput = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -217,15 +214,14 @@ describe('initializer', () => {
       id: 'test_id',
       settings: {
         clientKey: 'key',
+        contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'name',
           cookiePath: '/',
-          forceServerCookieMode: false,
         },
-        includeUTMParameters: true,
-        targetURL: 'https://domain',
+        siteId: '456',
       },
       type: 'TEST_TYPE',
     });
@@ -236,15 +232,14 @@ describe('initializer', () => {
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     const eventData: IEventAttributesInput = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -279,15 +274,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     const eventData: IEventAttributesInput = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -320,15 +314,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     const eventData: IIdentityEventAttributesInput = {
       channel: 'WEB',
@@ -379,15 +372,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
@@ -400,15 +392,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
@@ -421,15 +412,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
@@ -444,15 +434,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     global.window.Engage = undefined as any;
@@ -495,31 +484,29 @@ describe('initializer', () => {
     expect(updatePointOfSaleSpy).toHaveBeenCalledTimes(1);
     expect(updatePointOfSaleSpy).toHaveBeenCalledWith('newPointOfSale', {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
       pointOfSale: 'newPointOfSale',
-      targetURL: 'https://domain',
+      siteId: '456',
     });
   });
   it('should add the library version to window.Engage object', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     global.window.Engage = undefined as any;
@@ -533,15 +520,14 @@ describe('initializer', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
     jest.spyOn(core, 'createSettings').mockReturnValue({
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     });
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;

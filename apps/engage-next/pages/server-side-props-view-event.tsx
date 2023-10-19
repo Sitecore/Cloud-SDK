@@ -21,21 +21,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     pointOfSale: 'spinair.com',
   };
 
+  const timeout =
+    typeof context.query.timeout === 'string' && context.query.timeout ? +context.query.timeout : undefined;
   const eventsServer = initServer({
     clientKey: process.env.CLIENT_KEY || '',
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
-    forceServerCookieMode: true,
-    targetURL: `https://${process.env.TARGET_URL}`,
+    enableServerCookie: true,
+    contextId: 'N/A',
+    siteId: 'N/A',
   });
 
-  const timeout = context.query.timeout;
-  await eventsServer.handleCookie(
-    context.req,
-    context.res,
-    typeof timeout === 'string' ? parseInt(timeout) : undefined
-  );
+  await eventsServer.handleCookie(context.req, context.res, timeout);
 
   let cdpResponse;
   if (eventsServer) {

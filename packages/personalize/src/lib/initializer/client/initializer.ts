@@ -4,6 +4,7 @@ import {
   ISettingsParamsBrowser,
   IWebPersonalizationConfig,
   Infer,
+  TARGET_URL,
   createCookie,
   createSettings,
   getBrowserId,
@@ -13,7 +14,6 @@ import { LIBRARY_VERSION } from '../../consts';
 import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
 import { CallFlowCDPClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-cdp-client';
 import { webPersonalization } from '../../web-personalization/web-personalization';
-
 
 export type ISettingsParamsBrowserPersonalize = {
   webPersonalization?: boolean | IWebPersonalizationConfig;
@@ -34,11 +34,8 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
 
   const settings = createSettings(settingsInput);
 
-  if (
-    !settings.cookieSettings.forceServerCookieMode &&
-    !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)
-  ) {
-    createCookie(settings.targetURL, settings.clientKey, settings.cookieSettings);
+  if (settingsInput.enableBrowserCookie && !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)) {
+    createCookie(TARGET_URL, settings.clientKey, settings.cookieSettings);
   }
 
   const id = getBrowserId(settings.cookieSettings.cookieName);

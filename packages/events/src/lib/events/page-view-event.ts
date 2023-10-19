@@ -2,7 +2,7 @@
 import { BaseEvent } from './base-event';
 import { IEventAttributesInput } from './common-interfaces';
 import { IEventApiClient } from '../cdp/EventApiClient';
-import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from './consts';
+import { MAX_EXT_ATTRIBUTES } from './consts';
 import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
 
@@ -49,15 +49,15 @@ export class PageViewEvent extends BaseEvent {
    * Retrieves UTM parameters from the url query string
    * @returns - an object containing the UTM parameters if they exists
    */
-  private getUTMParameters() {
-    const utmParameters: IUtmParameters = {};
-    this.urlSearchParams.forEach((value: string, key: string) => {
-      const param = key.toLowerCase();
-      if (param.indexOf(UTM_PREFIX) === 0) utmParameters[param as keyof IUtmParameters] = value;
-    });
+  // private getUTMParameters() {
+  //   const utmParameters: IUtmParameters = {};
+  //   this.urlSearchParams.forEach((value: string, key: string) => {
+  //     const param = key.toLowerCase();
+  //     if (param.indexOf(UTM_PREFIX) === 0) utmParameters[param as keyof IUtmParameters] = value;
+  //   });
 
-    return utmParameters;
-  }
+  //   return utmParameters;
+  // }
 
   /**
    * Gets the variant ID from the url if not passed by the developer
@@ -100,10 +100,10 @@ export class PageViewEvent extends BaseEvent {
       type: 'VIEW',
     };
 
-    if (this.settings.includeUTMParameters) {
-      const utmParameters = this.getUTMParameters();
-      viewPayload = { ...viewPayload, ...utmParameters };
-    }
+    // if (this.settings.includeUTMParameters) {
+    //   const utmParameters = this.getUTMParameters();
+    //   viewPayload = { ...viewPayload, ...utmParameters };
+    // }
 
     const pageVariantId = this.getPageVariantId(
       this.eventData.pageVariantId,

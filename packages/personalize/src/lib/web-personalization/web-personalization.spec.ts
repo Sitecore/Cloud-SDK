@@ -1,8 +1,11 @@
-
-
 import * as appendScriptWithAttributesModule from '../utils/appendScriptWithAttributes';
 import { ISettingsParamsBrowserPersonalize, init } from '../initializer/client/initializer';
-import { IWebExperiencesSettings, IWebPersonalizationConfig } from '@sitecore-cloudsdk/engage-core';
+import {
+  ISettings,
+  IWebExperiencesSettings,
+  IWebPersonalizationConfig,
+  TARGET_URL,
+} from '@sitecore-cloudsdk/engage-core';
 import { webPersonalization } from './web-personalization';
 
 describe('webExperiencesPlugin', () => {
@@ -12,10 +15,24 @@ describe('webExperiencesPlugin', () => {
   let expectedSettings: IWebExperiencesSettings;
   const settingsParams: ISettingsParamsBrowserPersonalize = {
     clientKey: 'key',
+    contextId: '123',
     cookieDomain: 'cDomain',
     pointOfSale: 'test_pos',
-    targetURL: 'https://domain',
+    siteId: '465',
   };
+
+  const webPersonalizationSettings: ISettings = {
+    clientKey: 'key',
+    contextId: '132',
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 720,
+      cookieName: 'bid_key',
+    },
+    pointOfSale: 'test_pos',
+    siteId: '456',
+  };
+
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -24,7 +41,7 @@ describe('webExperiencesPlugin', () => {
       /* eslint-disable @typescript-eslint/naming-convention */
       client_key: 'key',
       pointOfSale: 'test_pos',
-      targetURL: 'https://domain',
+      targetURL: TARGET_URL,
       web_flow_config: { async: false, defer: false },
     };
   });
@@ -58,7 +75,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_target = webFlowTarget;
     const pluginSettings = true;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
   it('should return web_flow_config correct values when pass only asyncScriptLoading as false', async () => {
@@ -66,7 +83,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: false, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
   it('should return web_flow_config correct values when pass only deferScriptLoading as false', async () => {
@@ -74,7 +91,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
   it('should return web_flow_config correct values when pass deferScriptLoading as false and asyncScriptLoading as undefined', async () => {
@@ -82,7 +99,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
 
@@ -91,7 +108,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: false, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
 
@@ -100,7 +117,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
 
@@ -109,7 +126,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = 'customSetWebFlowTarget';
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
 
@@ -118,7 +135,7 @@ describe('webExperiencesPlugin', () => {
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
-    webPersonalization(pluginSettings, settingsParams);
+    webPersonalization(pluginSettings, webPersonalizationSettings);
     expect(global.window.Engage.settings).toEqual(expectedSettings);
   });
   it('should invoke the appropriate method to attach webExperiences script on the window document', async () => {
@@ -126,19 +143,21 @@ describe('webExperiencesPlugin', () => {
       async: true,
       src: `${webFlowTarget}/web-flow-libs/key/web-version.min.js`,
     };
-    webPersonalization(true, settingsParams);
+    webPersonalization(true, webPersonalizationSettings);
     expect(appendScriptWithAttributesSpy).toHaveBeenCalledWith(expectedAttributes);
   });
 
   it('should throw error if pointOfSale is undefined', async () => {
-    delete settingsParams.pointOfSale;
+    delete webPersonalizationSettings.pointOfSale;
 
-    expect(() => webPersonalization(true, settingsParams)).toThrowError('[MV-0003] "pointOfSale" is required.');
+    expect(() => webPersonalization(true, webPersonalizationSettings)).toThrowError(
+      '[MV-0003] "pointOfSale" is required.'
+    );
   });
   it('should throw error if bad pointOfSale', async () => {
-    settingsParams.pointOfSale = ' ';
-    expect(() => webPersonalization(true, settingsParams)).toThrowError('[MV-0009] "pointOfSale" cannot be empty.');
+    webPersonalizationSettings.pointOfSale = ' ';
+    expect(() => webPersonalization(true, webPersonalizationSettings)).toThrowError(
+      '[MV-0009] "pointOfSale" cannot be empty.'
+    );
   });
 });
-
-

@@ -5,48 +5,44 @@ describe('createSettings', () => {
   it('should store all provided settings', () => {
     const {
       clientKey,
-      cookieSettings: { cookieDomain, cookieExpiryDays, cookiePath, forceServerCookieMode, cookieName },
-      includeUTMParameters,
-      targetURL,
+      cookieSettings: { cookieDomain, cookieExpiryDays, cookiePath, cookieName },
       pointOfSale,
+      siteId,
+      contextId,
     } = createSettings({
       clientKey: 'key',
+      contextId: '0123',
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
       cookiePath: '/path',
-      forceServerCookieMode: true,
-      includeUTMParameters: false,
       pointOfSale: 'spinair.com',
-      targetURL: 'https://api',
+      siteId: '4567',
     });
 
-    expect(targetURL).toEqual('https://api');
     expect(clientKey).toEqual('key');
     expect(cookieDomain).toEqual('domain');
-    expect(forceServerCookieMode).toEqual(true);
-    expect(includeUTMParameters).toEqual(false);
     expect(cookieExpiryDays).toEqual(40);
     expect(cookiePath).toEqual('/path');
     expect(cookieName).toEqual(`${BID_PREFIX}key`);
     expect(pointOfSale).toEqual('spinair.com');
+    expect(siteId).toEqual('4567');
+    expect(contextId).toEqual('0123');
   });
 
   it('should hold default values for optional settings', () => {
     const {
-      cookieSettings: { cookieExpiryDays, cookiePath, forceServerCookieMode },
-      includeUTMParameters,
+      cookieSettings: { cookieExpiryDays, cookiePath },
       pointOfSale,
     } = createSettings({
       clientKey: 'key',
+      contextId: '0123',
       cookieDomain: 'domain',
       pointOfSale: undefined,
-      targetURL: 'https://api',
+      siteId: '4567',
     });
 
     expect(pointOfSale).toBeUndefined();
-    expect(forceServerCookieMode).toEqual(false);
     expect(cookieExpiryDays).toEqual(730);
     expect(cookiePath).toEqual('/');
-    expect(includeUTMParameters).toEqual(true);
   });
 });

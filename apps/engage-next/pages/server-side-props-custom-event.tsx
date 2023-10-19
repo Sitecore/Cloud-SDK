@@ -27,8 +27,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     clientKey: process.env.CLIENT_KEY || '',
     cookieDomain: typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toString() : 'localhost',
     cookieExpiryDays: 400,
-    forceServerCookieMode: true,
-    targetURL: `https://${process.env.TARGET_URL}`,
+    enableServerCookie: true,
+    contextId: 'N/A',
+    siteId: 'N/A',
   });
 
   await eventsServer.handleCookie(context.req, context.res);

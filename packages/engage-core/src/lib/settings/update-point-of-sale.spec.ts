@@ -9,12 +9,11 @@ describe('updatePointOfSale', () => {
   beforeEach(() => {
     settings = {
       clientKey: 'key',
+      contextId: '',
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
       cookiePath: '/path',
-      forceServerCookieMode: true,
-      includeUTMParameters: false,
-      targetURL: 'https://api',
+      siteId: '',
     };
 
     expectedSettings = {

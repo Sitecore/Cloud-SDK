@@ -1,6 +1,6 @@
 import { CallFlowCDPClient, ICdpCallFlowsBody } from './callflow-cdp-client';
 import { LIBRARY_VERSION } from '../consts';
-import { ISettings } from '@sitecore-cloudsdk/engage-core';
+import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
 
 describe('Test Base CallFlow Base Class', () => {
   let data: ICdpCallFlowsBody;
@@ -23,15 +23,14 @@ describe('Test Base CallFlow Base Class', () => {
 
     settingsMock = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
   });
 
@@ -52,7 +51,7 @@ describe('Test Base CallFlow Base Class', () => {
     };
     new CallFlowCDPClient(settingsMock).sendCallFlowsRequest(expectedBody).then(() => {
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith('https://domain/v2/callFlows', {
+      expect(fetch).toHaveBeenCalledWith(TARGET_URL + '/v2/callFlows', {
         body: JSON.stringify(expectedBody),
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'application/json', 'X-Library-Version': LIBRARY_VERSION },

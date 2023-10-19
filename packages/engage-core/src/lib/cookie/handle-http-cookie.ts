@@ -2,7 +2,7 @@
 
 import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/engage-utils';
 import { ISettings } from '../settings/interfaces';
-import { BID_PREFIX } from '../consts';
+import { BID_PREFIX, TARGET_URL } from '../consts';
 import { getBrowserIdFromCdp } from '../init/get-browser-id-from-cdp';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/engage-utils';
@@ -34,7 +34,7 @@ export async function handleHttpCookie(
     if (cookie) cookieValue = cookie.value;
   }
 
-  if (!cookieValue) cookieValue = await getBrowserIdFromCdp(options.targetURL, options.clientKey, timeout);
+  if (!cookieValue) cookieValue = await getBrowserIdFromCdp(TARGET_URL, options.clientKey, timeout);
 
   if (!cookieValue)
     throw new Error(

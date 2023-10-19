@@ -17,15 +17,14 @@ describe('BaseEvent', () => {
   describe('pointOfSale', () => {
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
     const eventData = {
       channel: 'WEB',

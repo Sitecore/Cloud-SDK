@@ -28,8 +28,10 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 
 const settingsParams: core.ISettingsParamsBrowser = {
   clientKey: 'key',
+  contextId: '123',
   cookieDomain: 'cDomain',
-  targetURL: 'https://domain',
+  enableBrowserCookie: true,
+  siteId: '456',
 };
 
 describe('initializer', () => {
@@ -40,15 +42,14 @@ describe('initializer', () => {
   jest.spyOn(core, 'createCookie').mock;
   const settingsObj = {
     clientKey: 'key',
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '456',
   };
   afterEach(() => {
     jest.clearAllMocks();
@@ -58,18 +59,7 @@ describe('initializer', () => {
   it('should try to create a cookie if it does not exist', () => {
     jest.spyOn(core, 'createCookie').mock;
     jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
-      cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'name',
-        cookiePath: '/',
-        forceServerCookieMode: false,
-      },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
-    });
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
 
     init(settingsParams);
 
@@ -78,18 +68,7 @@ describe('initializer', () => {
 
   it('should not try to create a cookie if it already exists', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
-      cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'name',
-        cookiePath: '/',
-        forceServerCookieMode: false,
-      },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
-    });
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
 
     init(settingsParams);
 
@@ -122,18 +101,7 @@ describe('initializer', () => {
 
   describe('window object', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
-      cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'name',
-        cookiePath: '/',
-        forceServerCookieMode: false,
-      },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
-    });
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
       await init(settingsParams);
@@ -154,7 +122,6 @@ describe('initializer', () => {
     it('should add the library version to window.Engage object', async () => {
       global.window.Engage = undefined as any;
       expect(global.window.Engage).toBeUndefined();
-
 
       await init(settingsParams);
 

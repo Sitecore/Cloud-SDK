@@ -26,14 +26,13 @@ export const PersonalizeProvider = ({ children }: { children: ReactNode }) => {
       clientKey: process.env.CLIENT_KEY || '',
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
-      forceServerCookieMode: getSettingFromUrlParams('forceServerCookieMode') === 'true',
-      includeUTMParameters: getSettingFromUrlParams('includeUTMParameters') === 'true',
+      enableBrowserCookie: true,
       pointOfSale: getSettingFromUrlParams('pointOfSaleFromSettings') || 'spinair.com',
-      targetURL: getSettingFromUrlParams('targetURL') ?? `https://${process.env.TARGET_URL}`,
       webPersonalization: webPersonalizationSettings,
+      contextId: 'N/A',
+      siteId: 'N/A',
     });
 
-    window.includeUTMParameters = getSettingFromUrlParams('includeUTMParameters') === 'true';
     setPersonalize(temp);
   }, []);
 

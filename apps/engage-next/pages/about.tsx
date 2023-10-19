@@ -37,15 +37,18 @@ export function About() {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const cookieDomain =
+    typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : undefined;
+
   const eventsServer = initServer({
     clientKey: process.env.CLIENT_KEY || '',
-    cookieDomain:
-      typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+    cookieDomain,
     cookieExpiryDays: 400,
-    forceServerCookieMode:
-      typeof context.query.forceServerCookieMode === 'string' &&
-      context.query.forceServerCookieMode.toLowerCase() === 'true',
-    targetURL: `https://${process.env.TARGET_URL}`,
+    enableServerCookie:
+      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
+    contextId: 'N/A',
+    siteId: 'N/A',
+    pointOfSale: 'spinair.com',
   });
 
   await eventsServer.handleCookie(context.req, context.res);

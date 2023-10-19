@@ -1,6 +1,11 @@
 const config = {
   packageManager: 'npm',
-  mutate: ['./packages/events/src/**/*.ts', '!./packages/events/src/**/*spec.ts'],
+  mutate: [
+    './packages/events/src/**/*.ts',
+    '!./packages/events/src/**/*spec.ts',
+    '!./packages/events/src/lib/events/consts.ts',
+    '!./packages/events/src/lib/consts.ts',
+  ],
   thresholds: { high: 80, low: 60, break: 100 },
   incremental: true,
   testRunner: 'jest',

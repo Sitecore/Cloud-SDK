@@ -27,12 +27,14 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 describe('form function', () => {
   const settingsParams: ISettingsParamsBrowser = {
     clientKey: 'key',
+    contextId: '123',
     cookieDomain: 'cDomain',
-    targetURL: 'https://domain',
+    siteId: '456',
   };
   const id = 'test_id';
   const settingsObj = {
     clientKey: 'key',
+    contextId: '132',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
@@ -40,8 +42,7 @@ describe('form function', () => {
       cookiePath: '/',
       forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '456',
   };
 
   afterEach(() => {
@@ -73,7 +74,7 @@ describe('form function', () => {
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith('https://domain/v1.2/events', {
+    expect(fetch).toHaveBeenCalledWith(`${core.TARGET_URL}/v1.2/events`, {
       body: expectedBody,
       headers: {
         'Content-Type': 'application/json',

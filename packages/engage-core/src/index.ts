@@ -16,7 +16,14 @@ export { validateSettings } from './lib/settings/validate-settings';
 export { getPointOfSale } from './lib/validators/get-point-of-sale';
 export { Infer } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
-export { API_VERSION, BID_PREFIX, DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS, LIBRARY_VERSION } from './lib/consts';
+export {
+  API_VERSION,
+  BID_PREFIX,
+  DAILY_SECONDS,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  LIBRARY_VERSION,
+  TARGET_URL,
+} from './lib/consts';
 
 export type { ICdpResponse, IInfer } from './lib/interfaces';
 export type {

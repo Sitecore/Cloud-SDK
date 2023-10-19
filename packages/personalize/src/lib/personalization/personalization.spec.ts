@@ -32,15 +32,14 @@ describe('Test Personalizer Class', () => {
 
     settingsMock = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
 
     personalizeHelper = new CallFlowCDPClient(settingsMock);
@@ -257,16 +256,16 @@ describe('Test Personalizer Class', () => {
 
       settingsMock = {
         clientKey: 'key',
+        contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
           cookiePath: '/',
-          forceServerCookieMode: false,
         },
-        includeUTMParameters: true,
+
         pointOfSale: 'test.com',
-        targetURL: 'https://domain',
+        siteId: '456',
       };
 
       const callFlowCDPClient = new CallFlowCDPClient(settingsMock);

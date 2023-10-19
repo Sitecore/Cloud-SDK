@@ -3,6 +3,7 @@ import { handleHttpCookie } from './handle-http-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import * as Cdp from '../init/get-browser-id-from-cdp';
 import * as utils from '@sitecore-cloudsdk/engage-utils';
+import { TARGET_URL } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
@@ -17,15 +18,14 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 describe('httpCookieHandler', () => {
   const options = {
     clientKey: 'key',
+    contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '',
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
@@ -79,7 +79,7 @@ describe('httpCookieHandler', () => {
 
     await handleHttpCookie(req, res, options);
 
-    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(options.targetURL, options.clientKey, undefined);
+    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(TARGET_URL, options.clientKey, undefined);
     expect(createCookieStringSpy).toHaveBeenCalledWith('bid_key', 'mock_bid_key_from_cdp', defaultCookieAttributes);
     expect(req.headers.cookie).toBe('bid_key=mock_bid_key_from_cdp');
   });

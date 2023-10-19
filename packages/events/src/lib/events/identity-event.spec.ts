@@ -57,15 +57,14 @@ describe('Test Identity', () => {
 
     settingsMock = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
   });
 
@@ -431,15 +430,14 @@ describe('Test Identity', () => {
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
     new IdentityEvent({
       eventApiClient,
@@ -475,15 +473,14 @@ describe('Test Identity', () => {
     };
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -523,15 +520,14 @@ describe('Test Identity', () => {
     };
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
@@ -569,15 +565,14 @@ describe('Test Identity', () => {
     };
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
 
     new IdentityEvent({ eventApiClient, eventData, id, infer, settings }).send();
@@ -605,15 +600,14 @@ describe('Test Identity', () => {
     };
     const settings: core.ISettings = {
       clientKey: 'key',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '456',
     };
     const extensionData = {};
     new IdentityEvent({ eventApiClient, eventData, extensionData, id, infer, settings }).send();

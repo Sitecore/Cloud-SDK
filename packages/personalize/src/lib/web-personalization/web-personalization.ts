@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettingsParamsBrowser } from '@sitecore-cloudsdk/engage-core';
+import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
 import { appendScriptWithAttributes } from '../utils/appendScriptWithAttributes';
 
 /**
@@ -12,7 +12,7 @@ import { appendScriptWithAttributes } from '../utils/appendScriptWithAttributes'
 // eslint-disable-next-line import/no-default-export
 export function webPersonalization(
   pluginConfiguration: boolean | IWebPersonalizationConfig,
-  requiredSettings: ISettingsParamsBrowser
+  requiredSettings: ISettings
 ) {
   if (!requiredSettings.pointOfSale) throw new Error('[MV-0003] "pointOfSale" is required.');
   if (requiredSettings.pointOfSale.trim().length === 0) throw new Error('[MV-0009] "pointOfSale" cannot be empty.');
@@ -22,7 +22,7 @@ export function webPersonalization(
     /* eslint-disable @typescript-eslint/naming-convention */
     client_key: requiredSettings.clientKey,
     pointOfSale: requiredSettings.pointOfSale,
-    targetURL: requiredSettings.targetURL,
+    targetURL: TARGET_URL,
     web_flow_config: {
       async:
         (pluginConfiguration as IWebPersonalizationConfig).asyncScriptLoading !== undefined

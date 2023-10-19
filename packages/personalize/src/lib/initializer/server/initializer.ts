@@ -22,7 +22,7 @@ export function initServer(settingsInput: ISettingsParamsServer): PersonalizeSer
 
   return {
     handleCookie: async (request, response, timeout) => {
-      if (!settings.cookieSettings.forceServerCookieMode) return;
+      if (!settingsInput.enableServerCookie) return;
       await handleServerCookie(request, response, settings, timeout);
     },
     personalize: (personalizeData, request, timeout) => {

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettings } from '@sitecore-cloudsdk/engage-core';
+import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
 import { INestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../consts';
 
@@ -19,7 +19,7 @@ export class CallFlowCDPClient implements IPersonalizeClient {
    * @returns - A promise that resolves with either the Sitecore CDP response object or unknown
    */
   async sendCallFlowsRequest(cdpCallFlowsBody: ICdpCallFlowsBody, timeout?: number) {
-    const requestUrl = `${this.settings.targetURL}/v2/callFlows`;
+    const requestUrl = `${TARGET_URL}/v2/callFlows`;
 
     const fetchOptions = {
       body: JSON.stringify(cdpCallFlowsBody),

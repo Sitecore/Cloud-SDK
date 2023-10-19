@@ -36,15 +36,14 @@ describe('handleServerCookie', () => {
 
   const options: ISettings = {
     clientKey: 'key',
+    contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: true,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '',
   };
 
   afterEach(() => {
@@ -104,22 +103,6 @@ describe('handleServerCookie', () => {
     expect(handleHttpCookie).toHaveBeenCalledWith(request, response, options, undefined);
     expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
     expect(isNextJsMiddlewareResponse).not.toHaveBeenCalled();
-  });
-
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when forceServerCookieMode is false', async () => {
-    const request: utils.TRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
-    options.cookieSettings.forceServerCookieMode = false;
-
-    await handleServerCookie(request, response, options);
-
-    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
-    expect(handleHttpCookie).not.toHaveBeenCalled();
   });
 
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie', async () => {

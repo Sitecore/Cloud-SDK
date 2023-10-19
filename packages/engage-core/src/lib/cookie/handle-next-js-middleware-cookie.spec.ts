@@ -1,8 +1,9 @@
 import * as Cdp from '../init/get-browser-id-from-cdp';
 import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
-import { IMiddlewareNextResponse, IMiddlewareRequest } from "@sitecore-cloudsdk/engage-utils"
+import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/engage-utils';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { TARGET_URL } from '../consts';
 
 describe('handleMiddlewareRequest', () => {
   const mockFetchResponse = {
@@ -17,15 +18,14 @@ describe('handleMiddlewareRequest', () => {
   });
   const options = {
     clientKey: 'key',
+    contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '',
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
@@ -86,7 +86,7 @@ describe('handleMiddlewareRequest', () => {
     const setSpy = jest.spyOn(req.cookies, 'set');
 
     await handleNextJsMiddlewareCookie(req, response, options);
-    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(options.targetURL, options.clientKey, undefined);
+    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(TARGET_URL, options.clientKey, undefined);
 
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);

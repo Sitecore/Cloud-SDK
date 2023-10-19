@@ -22,7 +22,7 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 });
 
 describe('initializer', () => {
-  const eventApiClient = new EventApiClient('https://domain', API_VERSION);
+  const eventApiClient = new EventApiClient(core.TARGET_URL, API_VERSION);
   const id = 'test_id';
   let mockRequest = {
     cookies: {
@@ -36,20 +36,20 @@ describe('initializer', () => {
   };
   const settingsParams: ISettingsParamsServer = {
     clientKey: 'key',
+    contextId: '123',
     cookieDomain: 'cDomain',
-    targetURL: 'https://domain',
+    siteId: '456',
   };
   const settingsObj = {
     clientKey: 'key',
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '456',
   };
 
   afterEach(() => {
@@ -170,7 +170,7 @@ describe('initializer', () => {
     jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
     jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
 
-    const eventsServer = initServer(settingsParams);
+    const eventsServer = initServer({ ...settingsParams, enableServerCookie: true });
     const eventData: IEventAttributesInput = {
       channel: 'WEB',
       currency: 'EUR',
@@ -209,12 +209,36 @@ describe('initializer', () => {
       settings: { ...settingsObj },
     });
 
-    settingsObj.cookieSettings.forceServerCookieMode = true;
     const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
 
     await eventsServer.handleCookie(req, res, 100);
 
     expect(handleServerCookieSpy).toHaveBeenCalledTimes(1);
     expect(handleServerCookieSpy).toHaveBeenCalledWith(req, res, settingsObj, 100);
+  });
+
+  it('should not call handleCookie if enableServerCookie is false', async () => {
+    jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+
+    const eventsServer = initServer({ ...settingsParams, enableServerCookie: false });
+
+    const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
+
+    await eventsServer.handleCookie(req, res, 100);
+
+    expect(handleServerCookieSpy).toHaveBeenCalledTimes(0);
+  });
+  it('should not call handleCookie if enableServerCookie is undefined', async () => {
+    jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
+    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+
+    const eventsServer = initServer(settingsParams);
+
+    const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
+
+    await eventsServer.handleCookie(req, res, 100);
+
+    expect(handleServerCookieSpy).toHaveBeenCalledTimes(0);
   });
 });

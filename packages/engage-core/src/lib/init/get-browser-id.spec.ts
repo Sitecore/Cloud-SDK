@@ -5,29 +5,27 @@ import { getBrowserId } from './get-browser-id';
 describe('getBrowserId', () => {
   let settings: ISettings = {
     clientKey: 'key',
+    contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'cookieName',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: true,
-    targetURL: 'https://domain',
+    siteId: '',
   };
 
   beforeEach(() => {
     settings = {
       clientKey: 'key',
+      contextId: '',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'cookieName',
         cookiePath: '/',
-        forceServerCookieMode: false,
       },
-      includeUTMParameters: true,
-      targetURL: 'https://domain',
+      siteId: '',
     };
   });
 

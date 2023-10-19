@@ -5,54 +5,60 @@ describe('validateSettings', () => {
     expect(() => {
       validateSettings({
         clientKey: '',
+        contextId: '',
         cookieDomain: '',
-        targetURL: '',
+        siteId: '',
       });
     }).toThrowError(`[MV-0001] "clientKey" is required.`);
 
     expect(() => {
       validateSettings({
         clientKey: 'key',
-        cookieDomain: '',
-        targetURL: '',
-      });
-    }).toThrowError(`[MV-0002] "targetURL" is required.`);
-
-    expect(() => {
-      validateSettings({
-        clientKey: 'key',
+        contextId: '',
         cookieDomain: '',
         pointOfSale: ' ',
-        targetURL: 'http://www.api.com',
+        siteId: '',
       });
     }).toThrowError(`[MV-0009] "pointOfSale" cannot be empty.`);
-  });
-
-  it('should not throw error when the string provided for targetURL corresponds to a valid url', () => {
-    expect(() => {
-      validateSettings({
-        clientKey: 'key',
-        cookieDomain: 'cDomain',
-        targetURL: 'http://www.api.com',
-      });
-    }).not.toThrowError(`[IV-0001] Incorrect value for "targetURL". Set the value to a valid URL string.`);
 
     expect(() => {
       validateSettings({
         clientKey: 'key',
-        cookieDomain: 'cDomain',
-        targetURL: 'https://www.api.com',
+        contextId: '',
+        cookieDomain: '',
+        pointOfSale: 'test',
+        siteId: '',
       });
-    }).not.toThrowError(`[IV-0001] Incorrect value for "targetURL". Set the value to a valid URL string.`);
-  });
+    }).toThrowError(`[MV-0001] "contextId" is required.`);
 
-  it("should throw error when the string provided for targetURL doesn't correspond to a valid url", () => {
     expect(() => {
       validateSettings({
         clientKey: 'key',
-        cookieDomain: 'cDomain',
-        targetURL: 'www.api.com',
+        contextId: ' ',
+        cookieDomain: '',
+        pointOfSale: 'test',
+        siteId: '',
       });
-    }).toThrowError(`[IV-0001] Incorrect value for "targetURL". Set the value to a valid URL string.`);
+    }).toThrowError(`[MV-0001] "contextId" is required.`);
+
+    expect(() => {
+      validateSettings({
+        clientKey: 'key',
+        contextId: '1234',
+        cookieDomain: '',
+        pointOfSale: 'test',
+        siteId: '',
+      });
+    }).toThrowError(`[MV-0002] "siteId" is required.`);
+
+    expect(() => {
+      validateSettings({
+        clientKey: 'key',
+        contextId: '1234',
+        cookieDomain: '',
+        pointOfSale: 'test',
+        siteId: ' ',
+      });
+    }).toThrowError(`[MV-0002] "siteId" is required.`);
   });
 });

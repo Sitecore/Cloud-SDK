@@ -25,12 +25,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const eventsServer = initServer({
     clientKey: process.env.CLIENT_KEY || '',
     cookieExpiryDays: 400,
-    forceServerCookieMode: requestUrl.searchParams?.get('forceServerCookieMode')?.toLowerCase() === 'true',
+    enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
     pointOfSale:
       (requestUrl.searchParams?.get('pointOfSaleFromSettings') !== 'null'
         ? requestUrl.searchParams?.get('pointOfSaleFromSettings')
         : null) ?? undefined,
-    targetURL: requestUrl.searchParams?.get('targetURL') ?? `https://${process.env.TARGET_URL}`,
+    contextId: 'N/A',
+    siteId: 'N/A',
   });
 
   const cdpResponse = await eventsServer.identity(event, req);

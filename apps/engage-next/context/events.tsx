@@ -18,14 +18,19 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
       clientKey: process.env.CLIENT_KEY || '',
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
-      forceServerCookieMode: getSettingFromUrlParams('forceServerCookieMode') === 'true',
-      includeUTMParameters: getSettingFromUrlParams('includeUTMParameters') === 'true',
+      enableBrowserCookie:
+        getSettingFromUrlParams('enableBrowserCookie') === 'true'
+          ? true
+          : getSettingFromUrlParams('enableServerCookie') === 'true'
+          ? false
+          : true,
       pointOfSale: getSettingFromUrlParams('pointOfSaleFromSettings') || undefined,
-      targetURL: getSettingFromUrlParams('targetURL') ?? `https://${process.env.TARGET_URL}`,
+      contextId: 'N/A',
+      siteId: 'N/A',
     });
     window.eventsTestingInstance = temp;
     window.events = temp;
-    window.includeUTMParameters = getSettingFromUrlParams('includeUTMParameters') === 'true';
+
     setEvents(temp);
   }, []);
 

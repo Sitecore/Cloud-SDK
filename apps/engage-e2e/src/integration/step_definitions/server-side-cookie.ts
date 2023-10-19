@@ -11,7 +11,7 @@ beforeEach(() => {
 
 defineStep('a server cookie is created on the {string} page', (page) => {
   cy.intercept(`${Cypress.config('baseUrl')}${page}*`).as('callToServer');
-  cy.visit(`${page}?forceServerCookieMode=true`);
+  cy.visit(`${page}?enableServerCookie=true`);
 
   //We waitUntil with a chained assertion since commands might be executed before cookie is set
   // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -28,17 +28,17 @@ defineStep('a server cookie is created on the {string} page', (page) => {
   });
 });
 
-defineStep('{string} page is loaded again with forceServerCookieMode parameter', (page: string) => {
-  cy.visit(`${page}?forceServerCookieMode=true&`);
+defineStep('{string} page is loaded again with enableServerCookie parameter', (page: string) => {
+  cy.visit(`${page}?enableServerCookie=true&`);
 });
 
-Given('{string} page is loaded with forceServerCookieMode true and a wrong targetURL parameter', (page: string) => {
+Given('{string} page is loaded with enableServerCookie true and an invalid ClientKey parameter', (page: string) => {
   cy.on('uncaught:exception', (error) => {
     errorMessage = error.message;
     return false;
   });
 
-  cy.visit(`${page}?forceServerCookieMode=true&targetURL=https://unknown-url-for-cookie-handler.zz`, {
+  cy.visit(`${page}?enableServerCookie=true&badClientKey=banana`, {
     failOnStatusCode: false,
   }).then(() => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -85,7 +85,7 @@ defineStep(
   'a server cookie is requested to be created at {string} page with {string} domain',
   (page: string, domain: string) => {
     cy.clearAllCookies();
-    cy.visit(`${page}?forceServerCookieMode=true&cookieDomain=${domain}`);
+    cy.visit(`${page}?enableServerCookie=true&cookieDomain=${domain}`);
   }
 );
 

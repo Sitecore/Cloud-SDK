@@ -8,16 +8,19 @@ import { initServer as initPersonalizeServer } from '@sitecore-cloudsdk/personal
 export async function middleware(request: NextRequest) {
   // Setting cookies on the response
   const response = NextResponse.next();
-  const forceServerCookieMode =
-    request?.nextUrl?.searchParams?.get('forceServerCookieMode')?.toLowerCase() === 'true' ||
+  const enableServerCookie =
+    request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
     request.nextUrl.pathname.startsWith('/middleware');
 
+  const badClientKey = request?.nextUrl?.searchParams?.get('badClientKey') ?? undefined;
+
   const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+    clientKey: badClientKey ?? (process.env.CLIENT_KEY || ''),
     cookieExpiryDays: 400,
-    forceServerCookieMode,
+    enableServerCookie,
     pointOfSale: 'spinair.com',
-    targetURL: request?.nextUrl?.searchParams?.get('targetURL') ?? `https://${process.env.TARGET_URL}`,
+    contextId: 'N/A',
+    siteId: 'N/A',
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -35,6 +38,7 @@ export async function middleware(request: NextRequest) {
     language: 'EN',
     pointOfSale: 'spinair.com',
   };
+
   if (!request.nextUrl.pathname.startsWith('/about') && !request.nextUrl.pathname.startsWith('/server-side-props')) {
     await eventsServer.handleCookie(request, response);
   }
@@ -65,10 +69,9 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     const personalizeServer = initPersonalizeServer({
       clientKey: process.env.CLIENT_KEY || '',
-      cookieExpiryDays: 400,
-      forceServerCookieMode,
       pointOfSale: 'spinair.com',
-      targetURL: request?.nextUrl?.searchParams?.get('targetURL') ?? `https://${process.env.TARGET_URL}`,
+      contextId: 'N/A',
+      siteId: 'N/A',
     });
 
     const personalizeData = {

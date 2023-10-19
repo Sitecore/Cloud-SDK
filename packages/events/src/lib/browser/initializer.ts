@@ -15,6 +15,7 @@ import {
   IInfer,
   ISettingsParamsBrowser,
   Infer,
+  TARGET_URL,
   createCookie,
   createSettings,
   getBrowserId,
@@ -25,12 +26,14 @@ import { INestedObject, cookieExists } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../consts';
 import { EventQueue, QueueEventPayload } from '../eventStorage/eventStorage';
 
+export type ISettingsParamsBrowserEvents = ISettingsParamsBrowser;
+
 /**
  * Initiates the Events library using the global settings added by the developer
  * @param settingsInput - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function init(settingsInput: ISettingsParamsBrowser): Promise<Events> {
+export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise<Events> {
   if (typeof window === 'undefined') {
     throw new Error(
       // eslint-disable-next-line max-len
@@ -40,16 +43,13 @@ export async function init(settingsInput: ISettingsParamsBrowser): Promise<Event
 
   const settings = createSettings(settingsInput);
 
-  if (
-    !settings.cookieSettings.forceServerCookieMode &&
-    !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)
-  ) {
-    await createCookie(settings.targetURL, settings.clientKey, settings.cookieSettings);
+  if (settingsInput.enableBrowserCookie && !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)) {
+    await createCookie(TARGET_URL, settings.clientKey, settings.cookieSettings);
   }
 
   const id = getBrowserId(settings.cookieSettings.cookieName);
 
-  const eventApiClient = new EventApiClient(settings.targetURL, API_VERSION);
+  const eventApiClient = new EventApiClient(TARGET_URL, API_VERSION);
 
   window.Engage = {
     ...window.Engage,
@@ -108,7 +108,7 @@ export async function init(settingsInput: ISettingsParamsBrowser): Promise<Event
       }).send();
     },
     getBrowserId: () => getBrowserId(settings.cookieSettings.cookieName),
-    getGuestId: () => getGuestId(id, settings.targetURL, settings.clientKey),
+    getGuestId: () => getGuestId(id, TARGET_URL, settings.clientKey),
     identity: (eventData, extensionData) =>
       new IdentityEvent({
         eventApiClient,

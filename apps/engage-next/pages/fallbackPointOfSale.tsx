@@ -2,6 +2,8 @@
 import { useRef, useState } from 'react';
 import { useEvents } from '../context/events';
 import { usePersonalize } from '../context/personalize';
+import { init } from '@sitecore-cloudsdk/personalize';
+import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 
 export function FallBackPointOfSale() {
   const responseRef = useRef<HTMLInputElement | null>(null);
@@ -66,6 +68,11 @@ export function FallBackPointOfSale() {
     }
   }
   async function callPersonalizeWithoutPointOfSale() {
+    const localPersonalize = await init({
+      clientKey: process.env.CLIENT_KEY || '',
+      contextId: 'N/A',
+      siteId: 'N/A',
+    });
     const data = {
       channel: 'WEB',
       currency: 'EUR',
@@ -73,7 +80,29 @@ export function FallBackPointOfSale() {
       friendlyId: 'personalizeintegrationtest',
       language: 'EN',
     };
-    const res = await personalize?.personalize(data);
+    const res = await localPersonalize?.personalize(data);
+
+    if (responseRef.current) {
+      responseRef.current.value = res ? JSON.stringify(res) : '';
+    }
+  }
+
+  async function callPersonalizeWithoutPointOfSaleWithFallback() {
+    const localPersonalize = await init({
+      clientKey: process.env.CLIENT_KEY || '',
+      contextId: 'N/A',
+      siteId: 'N/A',
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      pointOfSale: getSettingFromUrlParams('pointOfSaleFromSettings')!,
+    });
+    const data = {
+      channel: 'WEB',
+      currency: 'EUR',
+      email: 'test2@tst.com',
+      friendlyId: 'personalizeintegrationtest',
+      language: 'EN',
+    };
+    const res = await localPersonalize?.personalize(data);
 
     if (responseRef.current) {
       responseRef.current.value = res ? JSON.stringify(res) : '';
@@ -140,6 +169,11 @@ export function FallBackPointOfSale() {
           data-testid='callPersonalizeWithoutPointOfSale'
           onClick={callPersonalizeWithoutPointOfSale}>
           Call personalize without pointOfSale
+        </button>
+        <button
+          data-testid='callPersonalizeWithoutPointOfSaleWithFallback'
+          onClick={callPersonalizeWithoutPointOfSaleWithFallback}>
+          Call personalize without pointOfSale with fallback
         </button>
         <button
           data-testid='callPersonalizeWithPointOfSale'

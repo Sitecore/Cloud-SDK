@@ -7,19 +7,23 @@ export interface ISettings extends IBasicSettings {
   cookieSettings: ICookieSettings;
 }
 
-export interface ISettingsParamsBrowser extends IBasicSettings, ICookieSettingsInput {
-  webPersonalization?: boolean | IWebPersonalizationConfig;
+export interface ISettingsParamsBrowser extends ISettingsParams {
+  enableBrowserCookie?: boolean;
 }
 
-export interface ISettingsParamsServer extends IBasicSettings, ICookieSettingsInput {}
+export interface ISettingsParamsServer extends ISettingsParams {
+  enableServerCookie?: boolean;
+}
+
+export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {}
 
 /**
  * Properties for the global settings object
  */
 interface IBasicSettings {
   clientKey: string;
-  targetURL: string;
-  includeUTMParameters?: boolean;
+  contextId: string;
+  siteId: string;
   pointOfSale?: string;
 }
 
@@ -27,7 +31,6 @@ interface ICookieSettingsInput {
   cookiePath?: string;
   cookieExpiryDays?: number;
   cookieDomain?: string;
-  forceServerCookieMode?: boolean;
 }
 
 /**
@@ -38,7 +41,13 @@ export interface ICookieSettings {
   cookieDomain?: string;
   cookieExpiryDays: number;
   cookiePath?: string;
-  forceServerCookieMode: boolean;
+}
+
+/**
+ * Properties for the cookie object
+ */
+export interface ICookieSettingsBrowser extends ICookieSettings {
+  enableBrowserCookie: boolean;
 }
 
 /**

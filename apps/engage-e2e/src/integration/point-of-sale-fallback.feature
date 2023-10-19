@@ -1,4 +1,3 @@
-
 Feature: User calls CDP with pointOfSale parameter on request body or on settings fallback
 
 #-- CUSTOM EVENT --
@@ -62,35 +61,35 @@ Scenario: Developer sends an event with pointOfSale parameter & with fallback fr
     """
 
 # #-- PERSONALIZE --
-# Scenario: Developer calls personalize without pointOfSale parameter & without fallback from settings
-#     Given the '/fallbackPointOfSale' page is loaded
-#     When the 'callPersonalizeWithoutPointOfSale' button is clicked
-#     Then an error is thrown: '[MV-0003] "pointOfSale" is required.'
+Scenario: Developer calls personalize without pointOfSale parameter & without fallback from settings
+    Given the '/fallbackPointOfSale' page is loaded
+    When the 'callPersonalizeWithoutPointOfSale' button is clicked
+    Then an error is thrown: '[MV-0003] "pointOfSale" is required.'
 
-# Scenario: Developer calls personalize without pointOfSale parameter & with fallback from settings
-#     Given the '/fallbackPointOfSale' page is loaded with query parameters:
-#     """
-#      { "pointOfSaleFromSettings": "foo" }
-#     """
-#     When the 'callPersonalizeWithoutPointOfSale' button is clicked
-#     Then the 'personalize' request is sent with parameters:
-#     """
-#      { "pointOfSale": "foo" }
-#     """
-# Scenario: Developer calls personalize with pointOfSale parameter & without fallback from settings
-#     Given the '/fallbackPointOfSale' page is loaded
-#     When the 'callPersonalizeWithPointOfSale' button is clicked
-#     Then the 'personalize' request is sent with parameters:
-#     """
-#      { "pointOfSale": "spinair.com" }
-#     """
-# Scenario: Developer calls personalize with pointOfSale parameter & with fallback from settings
-#     Given the '/fallbackPointOfSale' page is loaded with query parameters:
-#     """
-#      { "pointOfSaleFromSettings": "foo" }
-#     """
-#     When the 'callPersonalizeWithPointOfSale' button is clicked
-#     Then the 'personalize' request is sent with parameters:
-#     """
-#      { "pointOfSale": "spinair.com" }
-#     """
+Scenario: Developer calls personalize without pointOfSale parameter & with fallback from settings
+    Given the '/fallbackPointOfSale' page is loaded with query parameters:
+    """
+     { "pointOfSaleFromSettings": "foo" }
+    """
+    When the 'callPersonalizeWithoutPointOfSaleWithFallback' button is clicked
+    Then the 'personalize' request is sent with parameters:
+    """
+     { "pointOfSale": "foo" }
+    """
+Scenario: Developer calls personalize with pointOfSale parameter & without fallback from settings
+    Given the '/fallbackPointOfSale' page is loaded
+    When the 'callPersonalizeWithPointOfSale' button is clicked
+    Then the 'personalize' request is sent with parameters:
+    """
+     { "pointOfSale": "spinair.com" }
+    """
+Scenario: Developer calls personalize with pointOfSale parameter & with fallback from settings
+    Given the '/fallbackPointOfSale' page is loaded with query parameters:
+    """
+     { "pointOfSaleFromSettings": "foo" }
+    """
+    When the 'callPersonalizeWithPointOfSale' button is clicked
+    Then the 'personalize' request is sent with parameters:
+    """
+     { "pointOfSale": "spinair.com" }
+    """

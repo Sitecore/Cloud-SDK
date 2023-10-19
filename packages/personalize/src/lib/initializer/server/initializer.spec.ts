@@ -29,8 +29,9 @@ describe('initializer', () => {
   const id = 'test_id';
   const settingsParams: core.ISettingsParamsServer = {
     clientKey: 'key',
+    contextId: '123',
     cookieDomain: 'cDomain',
-    targetURL: 'https://domain',
+    siteId: '456',
   };
   const req = {
     cookies: {
@@ -70,7 +71,7 @@ describe('initializer', () => {
   });
   jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
   it('should return an object with available functionality', async () => {
-    settingsParams.forceServerCookieMode = true;
+    settingsParams.enableServerCookie = true;
     const serverEngage = initServer(settingsParams);
 
     expect(typeof serverEngage.version).toBe('string');
@@ -91,7 +92,7 @@ describe('initializer', () => {
   });
 
   it('should return an object with available functionality but not call handleServerCookieSpy when ', async () => {
-    settingsParams.forceServerCookieMode = false;
+    settingsParams.enableServerCookie = false;
     const serverEngage = initServer(settingsParams);
 
     expect(typeof serverEngage.version).toBe('string');

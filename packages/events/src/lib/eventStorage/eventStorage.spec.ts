@@ -28,15 +28,14 @@ describe('Event Storage', () => {
 
   const settings: ISettings = {
     clientKey: 'key',
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
-      forceServerCookieMode: false,
     },
-    includeUTMParameters: false,
-    targetURL: 'https://domain',
+    siteId: '456',
   };
 
   const type = 'CUSTOM_TYPE';

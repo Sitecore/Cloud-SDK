@@ -15,6 +15,12 @@ const links = [
   { text: 'Middleware View Event', path: '/middleware-view-event', testId: 'middlewareViewEventPage' },
   { text: 'Middleware Custom Event', path: '/middleware-custom-event', testId: 'middlewareCustomEventPage' },
   { text: 'Middleware Identity Event', path: '/middleware-identity-event', testId: 'middlewareIdentityEventPage' },
+  { text: 'Edge Proxy Settings Events', path: '/edge-proxy-settings-events', testId: 'edgeProxySettingsEventsPage' },
+  {
+    text: 'Edge Proxy Settings Personalize',
+    path: '/edge-proxy-settings-personalize',
+    testId: 'edgeProxySettingsPersonalizePage',
+  },
   {
     text: 'ServerSideProps View Event',
     path: '/server-side-props-view-event',

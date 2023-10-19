@@ -1,12 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IMiddlewareNextResponse, IMiddlewareRequest } from "@sitecore-cloudsdk/engage-utils";
-import { ISettings } from "../settings/interfaces";
-import { BID_PREFIX } from "../consts";
-import { getBrowserIdFromCdp } from "../init/get-browser-id-from-cdp";
-import { getBrowserIdFromMiddlewareRequest } from "./get-browser-id-from-middleware-request";
-import { getDefaultCookieAttributes } from "./get-default-cookie-attributes";
-
+import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/engage-utils';
+import { ISettings } from '../settings/interfaces';
+import { BID_PREFIX, TARGET_URL } from '../consts';
+import { getBrowserIdFromCdp } from '../init/get-browser-id-from-cdp';
+import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 /**
  * Handles the Middleware Request and sets a cookie with the provided 'cookieName' and 'cookieValue'.
@@ -31,7 +30,7 @@ export async function handleNextJsMiddlewareCookie(
 
   const cookieValue =
     getBrowserIdFromMiddlewareRequest(request, cookieName) ??
-    (await getBrowserIdFromCdp(options.targetURL, options.clientKey, timeout));
+    (await getBrowserIdFromCdp(TARGET_URL, options.clientKey, timeout));
 
   if (!cookieValue)
     throw new Error(
