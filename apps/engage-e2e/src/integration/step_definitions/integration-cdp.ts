@@ -6,7 +6,6 @@ import { Utils } from '../../support/utils';
 const expectedEventData = {
   channel: 'WEB',
   clientKey: Cypress.env('CLIENT_KEY'),
-  pointOfSale: 'spinair.com',
   type: '',
 };
 

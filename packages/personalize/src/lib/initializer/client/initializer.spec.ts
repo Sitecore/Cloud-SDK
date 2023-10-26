@@ -27,7 +27,6 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 });
 
 const settingsParams: core.ISettingsParamsBrowser = {
-  clientKey: 'key',
   contextId: '123',
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
@@ -40,14 +39,14 @@ describe('initializer', () => {
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   const id = 'test_id';
   jest.spyOn(core, 'createCookie').mock;
-  const settingsObj = {
-    clientKey: 'key',
+  const settingsObj: core.ISettings = {
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -56,21 +55,21 @@ describe('initializer', () => {
     global.window ??= Object.create(window);
   });
 
-  it('should try to create a cookie if it does not exist', () => {
+  it('should try to create a cookie if it does not exist', async() => {
     jest.spyOn(core, 'createCookie').mock;
     jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    init(settingsParams);
+    await init(settingsParams);
 
     expect(core.createCookie).toHaveBeenCalledTimes(1);
   });
 
-  it('should not try to create a cookie if it already exists', () => {
+  it('should not try to create a cookie if it already exists', async() => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    init(settingsParams);
+    await init(settingsParams);
 
     expect(core.createCookie).toHaveBeenCalledTimes(0);
   });
@@ -86,7 +85,7 @@ describe('initializer', () => {
 
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
     const engage = await init(settingsParams);
 
@@ -101,7 +100,7 @@ describe('initializer', () => {
 
   describe('window object', () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
       await init(settingsParams);

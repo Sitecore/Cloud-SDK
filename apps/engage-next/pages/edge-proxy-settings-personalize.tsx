@@ -5,20 +5,21 @@ import { GetServerSidePropsContext } from 'next';
 
 export function EdgeProxySettings({ serverResponse }: { serverResponse: string }) {
   const handleInvalidContextId = async () => {
-    await init({ clientKey: 'key', contextId: ' ', siteId: '456' });
+    await init({ contextId: ' ', siteId: '456' });
   };
   const handleUndefinedContextId = async () => {
-    await init({ clientKey: 'key', siteId: '456' } as ISettingsParamsBrowser);
+    await init({ siteId: '456' } as ISettingsParamsBrowser);
   };
   const handleInvalidSiteId = async () => {
-    await init({ clientKey: 'key', contextId: '123', siteId: ' ' });
+    await init({ contextId: '123', siteId: ' ' });
   };
   const handleUndefinedSiteId = async () => {
-    await init({ clientKey: 'key', contextId: '123' } as ISettingsParamsBrowser);
+    await init({ contextId: '123' } as ISettingsParamsBrowser);
   };
   const handleHappyPath = async () => {
-    await init({ clientKey: 'key', contextId: '123', siteId: '456' });
+    await init({ contextId: process.env.CONTEXT_ID as string, siteId: process.env.SITE_ID as string });
   };
+
 
   return (
     <div>
@@ -86,11 +87,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const siteId = attributeToTest === 'siteid' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
 
   try {
-    initServer({
-      clientKey: 'key',
+    await initServer({
       contextId,
       siteId,
-      pointOfSale: 'spinair.com',
     } as ISettingsParamsServer);
 
     return {

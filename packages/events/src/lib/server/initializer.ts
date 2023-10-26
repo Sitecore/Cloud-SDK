@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  API_VERSION,
   ICdpResponse,
   ISettingsParamsServer,
   TARGET_URL,
@@ -26,9 +25,9 @@ import { LIBRARY_VERSION } from '../consts';
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export function initServer(settingsInput: ISettingsParamsServer): EventsServer {
-  const settings = createSettings(settingsInput);
-  const eventApiClient = new EventApiClient(TARGET_URL, API_VERSION);
+export async function initServer(settingsInput: ISettingsParamsServer): Promise<EventsServer> {
+  const settings = await createSettings(settingsInput);
+  const eventApiClient = new EventApiClient(TARGET_URL, settings.contextId, settings.siteId);
 
   return {
     event: (type, eventData, request, extensionData) => {

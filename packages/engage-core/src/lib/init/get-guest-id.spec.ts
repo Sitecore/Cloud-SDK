@@ -1,10 +1,9 @@
 /* eslint-disable max-len */
-import { API_VERSION, LIBRARY_VERSION } from '../consts';
+import { API_VERSION, LIBRARY_VERSION, TARGET_URL } from '../consts';
 import { getGuestId, IGetGuestRefResponse, IGetGuestRefResponseError } from './get-guest-id';
 
 describe('getGuestId', () => {
-  const targetURL = 'https://test_url.com';
-  const clientKey = 'client_key';
+  const contextId = 'contextId';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -18,7 +17,7 @@ describe('getGuestId', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
-    const response = await getGuestId(bid, targetURL, clientKey);
+    const response = await getGuestId(bid, contextId);
     expect(response).toBe(expectedResponse);
   });
 
@@ -30,8 +29,8 @@ describe('getGuestId', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
 
-    const expectedUrl = `${targetURL}/${API_VERSION}/browser/${bid}/show.json?client_key=${clientKey}&api_token=${clientKey}`;
-    await getGuestId(bid, targetURL, clientKey);
+    const expectedUrl = `${TARGET_URL}/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${contextId}&client_key=&api_token=`;
+    await getGuestId(bid, contextId);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
@@ -54,6 +53,6 @@ describe('getGuestId', () => {
     const bid = 'bid';
 
     const expectedErrorMessage = `${expectedMsg}, for more info: ${expectedMoreInfo}`;
-    expect(() => getGuestId(bid, targetURL, clientKey)).rejects.toThrowError(expectedErrorMessage);
+    expect(() => getGuestId(bid, contextId)).rejects.toThrowError(expectedErrorMessage);
   });
 });

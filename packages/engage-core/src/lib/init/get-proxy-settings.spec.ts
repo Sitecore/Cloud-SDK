@@ -1,7 +1,8 @@
-import { LIBRARY_VERSION } from '../consts';
+/* eslint-disable @typescript-eslint/naming-convention */
+import { LIBRARY_VERSION, TARGET_URL } from '../consts';
 import { ICdpResponse } from '../interfaces';
-import { getBrowserIdFromCdp } from './get-browser-id-from-cdp';
-import * as generateBrowserIdUrl from './generate-browser-id-url';
+import { getProxySettings } from './get-proxy-settings';
+import * as constructGetProxySettingsUrl from './construct-get-proxy-settings-url';
 import * as utils from '@sitecore-cloudsdk/engage-utils';
 
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
@@ -14,14 +15,9 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   };
 });
 
-describe('getBrowserIdFromCdp', () => {
-  const generateCreateBrowserIdUrlSpy = jest.spyOn(generateBrowserIdUrl, 'generateCreateBrowserIdUrl');
-  const clientKey = 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ';
-  const target = 'api-engage-eu.sitecorecloud.io';
-  const spyParams = {
-    api: target,
-    clientKey: clientKey,
-  };
+describe('getProxySettings', () => {
+  const constructBrowserIdUrlSpy = jest.spyOn(constructGetProxySettingsUrl, 'constructGetProxySettingsUrl');
+  const contextId = '83d8199c-2837-4c29-a8ab-1bf234fea2d1';
   const mockResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
@@ -41,10 +37,10 @@ describe('getBrowserIdFromCdp', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
 
-    const res = await getBrowserIdFromCdp(clientKey, target, 3000);
+    const res = await getProxySettings(contextId, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
-      'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ/v1.2/browser/create.json?client_key=api-engage-eu.sitecorecloud.io&message={}',
+      `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       3000,
       {
         headers: {
@@ -55,7 +51,7 @@ describe('getBrowserIdFromCdp', () => {
     );
 
     expect(fetch).toHaveBeenCalledWith(
-      'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ/v1.2/browser/create.json?client_key=api-engage-eu.sitecorecloud.io&message={}',
+      `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -64,9 +60,9 @@ describe('getBrowserIdFromCdp', () => {
         signal: new AbortController().signal,
       }
     );
-    expect(res).toEqual(mockResponse.ref);
+    expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key});
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(generateCreateBrowserIdUrlSpy).toHaveBeenCalledWith(spyParams.clientKey, spyParams.api);
+    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(contextId);
   });
 
   it('should resolve with an appropriate response object', () => {
@@ -74,11 +70,11 @@ describe('getBrowserIdFromCdp', () => {
       json: () => Promise.resolve(mockResponse as ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    getBrowserIdFromCdp(clientKey, target).then((ref) => {
-      expect(ref).toEqual(mockResponse.ref);
+    getProxySettings(contextId).then((res) => {
+      expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key});
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ/v1.2/browser/create.json?client_key=api-engage-eu.sitecorecloud.io&message={}',
+        `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
         {
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -86,7 +82,7 @@ describe('getBrowserIdFromCdp', () => {
           },
         }
       );
-      expect(generateCreateBrowserIdUrlSpy).toHaveBeenCalledWith(spyParams.clientKey, spyParams.api);
+      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(contextId);
     });
   });
 
@@ -94,8 +90,8 @@ describe('getBrowserIdFromCdp', () => {
     const mockFetch = Promise.reject('Error');
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    getBrowserIdFromCdp(clientKey, target).then((ref) => {
-      expect(ref).toEqual('');
+    getProxySettings(contextId).then((res) => {
+      expect(res).toEqual({ browserId: '', clientKey: '' });
     });
   });
 });

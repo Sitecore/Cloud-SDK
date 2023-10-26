@@ -19,21 +19,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     lastName: 'Doe',
   };
 
-  if (requestUrl.searchParams?.get('pointOfSale') !== 'null')
-    event.pointOfSale = requestUrl.searchParams?.get('pointOfSale') || undefined;
-
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieExpiryDays: 400,
     enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    pointOfSale:
-      (requestUrl.searchParams?.get('pointOfSaleFromSettings') !== 'null'
-        ? requestUrl.searchParams?.get('pointOfSaleFromSettings')
-        : null) ?? undefined,
-    contextId: 'N/A',
-    siteId: 'N/A',
+    contextId: process.env.CONTEXT_ID || '',
+    siteId: process.env.SITE_ID || '',
   });
 
+  console.log(event);
   const cdpResponse = await eventsServer.identity(event, req);
   res.status(200).json(cdpResponse);
 }

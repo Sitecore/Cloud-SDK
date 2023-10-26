@@ -12,31 +12,26 @@ export async function middleware(request: NextRequest) {
     request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
     request.nextUrl.pathname.startsWith('/middleware');
 
-  const badClientKey = request?.nextUrl?.searchParams?.get('badClientKey') ?? undefined;
+  const badContextId = request?.nextUrl?.searchParams?.get('badContextId') ?? undefined;
 
-  const eventsServer = initServer({
-    clientKey: badClientKey ?? (process.env.CLIENT_KEY || ''),
+  const eventsServer = await initServer({
     cookieExpiryDays: 400,
     enableServerCookie,
-    pointOfSale: 'spinair.com',
-    contextId: 'N/A',
-    siteId: 'N/A',
+    contextId: badContextId ?? (process.env.CONTEXT_ID || ''),
+    siteId: process.env.SITE_ID || '',
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
     channel: 'WEB',
-    currency: 'EUR',
-    language: 'EN',
+    currency: 'EUR'
   };
 
   const identityEventData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'testMiddleware@test.com',
-    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }],
-    language: 'EN',
-    pointOfSale: 'spinair.com',
+    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }]
   };
 
   if (!request.nextUrl.pathname.startsWith('/about') && !request.nextUrl.pathname.startsWith('/server-side-props')) {
@@ -67,20 +62,17 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
-    const personalizeServer = initPersonalizeServer({
-      clientKey: process.env.CLIENT_KEY || '',
-      pointOfSale: 'spinair.com',
-      contextId: 'N/A',
-      siteId: 'N/A',
+    const personalizeServer = await initPersonalizeServer({
+      cookieExpiryDays: 400,
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
     });
 
     const personalizeData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
-      friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      friendlyId: 'personalizeintegrationtest'
     };
 
     const personalizeRes = await personalizeServer.personalize(personalizeData, request);

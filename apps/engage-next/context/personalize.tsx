@@ -23,14 +23,13 @@ export const PersonalizeProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const temp = await init({
-      clientKey: process.env.CLIENT_KEY || '',
+
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie: true,
-      pointOfSale: getSettingFromUrlParams('pointOfSaleFromSettings') || 'spinair.com',
-      webPersonalization: webPersonalizationSettings,
-      contextId: 'N/A',
-      siteId: 'N/A',
+      contextId: process.env.CONTEXT_ID || '',
+      webPersonalization: false,
+      siteId: process.env.SITE_ID || ''
     });
 
     setPersonalize(temp);

@@ -15,7 +15,8 @@ beforeEach(() => {
   cy.window().then((win) => {
     win.sessionStorage.clear();
   });
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
+  // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/pageview-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/identity-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/custom-event*`).as('sendTriggerEvent');
@@ -47,10 +48,12 @@ Then('api server event request responds with status code {string}', (expectedSta
 });
 
 defineStep('the {string} page is loaded', (page: string) => {
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows`).as(
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
     'personalizeRequest'
   );
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
   cy.visit(page);
 
   cy.wait('@initialCall', { timeout: 30000 });
@@ -75,10 +78,12 @@ defineStep('the {string} page is loaded without init function', (page: string) =
 });
 
 defineStep('the {string} page is loaded with query parameters:', (page: string, params: string) => {
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows`).as(
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
     'personalizeRequest'
   );
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
 
   let searchString = '';
   const parameters = JSON.parse(params);
@@ -101,10 +106,12 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
 
 //Visit page with the provided query parameters
 defineStep('the {string} page is loaded with query parameters', (page: string, datatable: any) => {
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows`).as(
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
     'personalizeRequest'
   );
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
   const attributesArray: { key: string; value: string }[] = [];
   const attributes = datatable.hashes()[0];
   let searchString = '';
@@ -298,10 +305,6 @@ defineStep('ext contains {string} attributes', (numberOfAttributes: string) => {
   cy.wait('@eventRequest').then(({ request }) => {
     expect(Object.keys(request.body['ext']).length).to.equal(Number(numberOfAttributes));
   });
-});
-
-defineStep('pointOfSale from settings is updated to {string}', (pointOfSaleFromSettings: string) => {
-  cy.get('[data-testid="updatePointOfSaleInput"]').clear().type(pointOfSaleFromSettings);
 });
 
 Then('CDP API responds with {string} status code', (expectedStatus: string) => {

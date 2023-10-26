@@ -18,8 +18,7 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
 
     const event: IPageViewEventInput = {
       channel: 'WEB',
-      currency: 'EUR',
-      pointOfSale: 'spinair.com',
+      currency: 'EUR'
     };
 
     if (eventAttributes.get('variantid')) {
@@ -80,10 +79,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const event: Record<string, unknown> = {
     channel: 'WEB',
-    currency: 'EUR',
+    currency: 'EUR'
   };
-
-  event.pointOfSale = eventAttributes.get('pointOfSale') || 'spinair.com';
 
   if (eventAttributes.get('variantid')) {
     event['variantid'] = eventAttributes.get('variantid');
@@ -100,15 +97,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
+    contextId: process.env.CONTEXT_ID || '',
     enableServerCookie:
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    contextId: 'N/A',
-    siteId: 'N/A',
+    siteId: process.env.SITE_ID || '',
   });
 
   let cdpResponse;

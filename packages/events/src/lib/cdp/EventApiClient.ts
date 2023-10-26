@@ -1,12 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ICdpResponse } from '@sitecore-cloudsdk/engage-core';
+import { API_VERSION, ICdpResponse } from '@sitecore-cloudsdk/engage-core';
 import type { IBasePayload, IPageViewEventPayload, IIdentityEventPayload, ICustomEventPayload } from '../events';
 import { LIBRARY_VERSION } from '../consts';
 
 export class EventApiClient implements IEventApiClient {
   private readonly eventUrl: string;
-  constructor(private targetURL: string, private apiVersion: string) {
-    this.eventUrl = `${this.targetURL}/${this.apiVersion}/events`;
+  constructor(private targetURL: string, contextId: string, siteId: string) {
+    this.eventUrl = `${this.targetURL}/events/${API_VERSION}/events?sitecoreContextId=${contextId}&siteId=${siteId}`;
   }
 
   /**

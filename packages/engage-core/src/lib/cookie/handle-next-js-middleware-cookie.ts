@@ -1,15 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/engage-utils';
-import { ISettings } from '../settings/interfaces';
-import { BID_PREFIX, TARGET_URL } from '../consts';
-import { getBrowserIdFromCdp } from '../init/get-browser-id-from-cdp';
-import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { IMiddlewareNextResponse, IMiddlewareRequest } from "@sitecore-cloudsdk/engage-utils";
+import { ISettings } from "../settings/interfaces";
+import { getProxySettings } from "../init/get-proxy-settings";
+import { getBrowserIdFromMiddlewareRequest } from "./get-browser-id-from-middleware-request";
+import { getDefaultCookieAttributes } from "./get-default-cookie-attributes";
 
 /**
  * Handles the Middleware Request and sets a cookie with the provided 'cookieName' and 'cookieValue'.
- * If 'cookieValue' is not present in the request, it fetches it using the 'getBrowserIdFromCdp' function
+ * If 'cookieValue' is not present in the request, it fetches it using the 'getProxySettings' function
  * and stores it in the request's cookies with the specified 'defaultCookieAttributes'.
  *
  * @param request - The Middleware Request object.
@@ -17,7 +16,7 @@ import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
  * @param options - The settings object containing configuration options.
  * @param defaultCookieAttributes - The default attributes for the cookie.
  *
- * @throws [IE-0004] - This exception is thrown in the case getBrowserIdFromCdp wasn't able to retrieve a browser id.
+ * @throws [IE-0004] - This exception is thrown in the case getProxySettings wasn't able to retrieve a browser id and client key.
  *
  */
 export async function handleNextJsMiddlewareCookie(
@@ -26,11 +25,11 @@ export async function handleNextJsMiddlewareCookie(
   options: ISettings,
   timeout?: number
 ) {
-  const cookieName = BID_PREFIX + options.clientKey;
+  const { cookieName } = options.cookieSettings;
 
   const cookieValue =
     getBrowserIdFromMiddlewareRequest(request, cookieName) ??
-    (await getBrowserIdFromCdp(TARGET_URL, options.clientKey, timeout));
+    (await getProxySettings(options.contextId, timeout)).browserId;
 
   if (!cookieValue)
     throw new Error(

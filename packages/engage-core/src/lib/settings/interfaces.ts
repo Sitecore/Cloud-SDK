@@ -21,10 +21,8 @@ export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {}
  * Properties for the global settings object
  */
 interface IBasicSettings {
-  clientKey: string;
   contextId: string;
   siteId: string;
-  pointOfSale?: string;
 }
 
 interface ICookieSettingsInput {
@@ -41,6 +39,7 @@ export interface ICookieSettings {
   cookieDomain?: string;
   cookieExpiryDays: number;
   cookiePath?: string;
+  cookieTempValue: string;
 }
 
 /**

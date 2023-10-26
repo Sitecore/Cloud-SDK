@@ -10,8 +10,8 @@ const { composePlugins, withNx } = require('@nx/next');
 const nextConfig = {
   env: {
     /* eslint-disable @typescript-eslint/naming-convention */
-    CLIENT_KEY: process.env.CLIENT_KEY_SECRET || '',
-    TARGET_URL: process.env.TARGET_DOMAIN || '',
+    CONTEXT_ID: process.env.CONTEXT_ID || '',
+    SITE_ID: process.env.SITE_ID || ''
     /* eslint-enable @typescript-eslint/naming-convention */
   },
   nx: {

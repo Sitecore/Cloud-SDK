@@ -34,10 +34,11 @@ Cypress.on('test:after:run', (test, runnable) => {
 
 //beforeEach hook as a workaround to not bypass CORS errors on preflight OPTIONS requests to callFlows and events
 beforeEach(() => {
-  cy.intercept('OPTIONS', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows`).as(
+  // eslint-disable-next-line max-len
+  cy.intercept('OPTIONS', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
     'personalizeOPTIONS'
   );
-  cy.intercept('OPTIONS', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as(
+  cy.intercept('OPTIONS', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
     'eventOPTIONS'
   );
 });

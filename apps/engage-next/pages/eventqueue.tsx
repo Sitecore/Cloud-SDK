@@ -22,8 +22,7 @@ export function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      language: 'EN'
     };
 
     eventAttributes.delete('nested');
@@ -57,8 +56,7 @@ export function EventToQueue() {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: `testEvent${index}`,
-        pointOfSale: 'spinair.com',
+        page: `testEvent${index}`
       };
       events?.addToEventQueue(type, eventTwo, extensionData);
     }
@@ -68,8 +66,7 @@ export function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      language: 'EN'
     };
 
     events?.addToEventQueue(type, event);

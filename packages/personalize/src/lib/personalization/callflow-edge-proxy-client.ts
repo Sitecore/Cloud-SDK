@@ -4,7 +4,7 @@ import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
 import { INestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../consts';
 
-export class CallFlowCDPClient implements IPersonalizeClient {
+export class CallFlowEdgeProxyClient implements IPersonalizeClient {
   /**
    * A helper class which handles the functionality for sending CALLFLOW requests
    * @param personalizeData - The mandatory payload to be send to Sitecore CDP
@@ -19,7 +19,7 @@ export class CallFlowCDPClient implements IPersonalizeClient {
    * @returns - A promise that resolves with either the Sitecore CDP response object or unknown
    */
   async sendCallFlowsRequest(cdpCallFlowsBody: ICdpCallFlowsBody, timeout?: number) {
-    const requestUrl = `${TARGET_URL}/v2/callFlows`;
+    const requestUrl = `${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${this.settings.contextId}&siteId=${this.settings.siteId}`;
 
     const fetchOptions = {
       body: JSON.stringify(cdpCallFlowsBody),

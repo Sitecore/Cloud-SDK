@@ -16,21 +16,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const event = {
     channel: 'WEB',
     currency: 'EUR',
-    language: 'EN',
-    page: 'serverSideProps-view',
-    pointOfSale: 'spinair.com',
+    page: 'serverSideProps-view'
   };
 
   const timeout =
     typeof context.query.timeout === 'string' && context.query.timeout ? +context.query.timeout : undefined;
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
+    contextId: process.env.CONTEXT_ID || '',
     enableServerCookie: true,
-    contextId: 'N/A',
-    siteId: 'N/A',
+    siteId: process.env.SITE_ID || '',
   });
 
   await eventsServer.handleCookie(context.req, context.res, timeout);

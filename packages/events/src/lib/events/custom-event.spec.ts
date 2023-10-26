@@ -26,7 +26,7 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 });
 
 describe('CustomEvent', () => {
-  const eventApiClient = new EventApiClient('http://test.com', 'v1.2');
+  const eventApiClient = new EventApiClient('http://test.com', 'key', 'site');
   const id = 'test_id';
   const infer = new core.Infer();
   infer.language = jest.fn().mockImplementation(() => 'EN');
@@ -38,13 +38,13 @@ describe('CustomEvent', () => {
     let eventData: ICustomEventInput;
     const type = 'CUSTOM_TYPE';
     const settings: core.ISettings = {
-      clientKey: 'key',
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -54,8 +54,7 @@ describe('CustomEvent', () => {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: 'races',
-        pointOfSale: 'spinair.com',
+        page: 'races'
       };
     });
     it('should not call flatten object method when no extension data is passed', () => {
@@ -128,13 +127,13 @@ describe('CustomEvent', () => {
 
   describe('send', () => {
     const settings: core.ISettings = {
-      clientKey: 'key',
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -156,7 +155,6 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pointOfSale: 'spinair.com',
         testAttr1: 'test',
         testAttr2: true,
         testAttr3: 22,
@@ -175,8 +173,7 @@ describe('CustomEvent', () => {
     it('should not call flatten object method when no extension data is passed', async () => {
       const eventData = {
         channel: 'WEB',
-        currency: 'EUR',
-        pointOfSale: 'spinair.com',
+        currency: 'EUR'
       };
       const type = 'CUSTOM_TYPE';
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
@@ -192,8 +189,7 @@ describe('CustomEvent', () => {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: 'races',
-        pointOfSale: 'spinair.com',
+        page: 'races'
       };
       const type = 'CUSTOM_TYPE';
       const expectedData = {
@@ -201,11 +197,11 @@ describe('CustomEvent', () => {
         browser_id: id,
         channel: 'WEB',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        client_key: 'key',
+        client_key: '',
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pos: 'spinair.com',
+        pos: '',
         type: 'CUSTOM_TYPE',
       };
 
@@ -220,8 +216,7 @@ describe('CustomEvent', () => {
       const sendEventSpy = jest.spyOn(EventApiClient.prototype, 'send');
       const eventData = {
         channel: 'WEB',
-        currency: 'EUR',
-        pointOfSale: 'spinair.com',
+        currency: 'EUR'
       };
       const type = 'CUSTOM_TYPE';
       const expectedData = {
@@ -229,11 +224,11 @@ describe('CustomEvent', () => {
         browser_id: id,
         channel: 'WEB',
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        client_key: 'key',
+        client_key: '',
         currency: 'EUR',
         language: undefined,
         page: '',
-        pos: 'spinair.com',
+        pos: '',
         type: 'CUSTOM_TYPE',
       };
 

@@ -11,20 +11,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     referrer: 'https://www.google.com/',
   };
 
-  const searchParams = new URLSearchParams(requestUrl.searchParams);
-
-  event.pointOfSale = searchParams.get('pointOfSale') ?? 'spinair.com';
-
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieExpiryDays: 400,
     enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    pointOfSale:
-      (requestUrl.searchParams?.get('pointOfSaleFromSettings') !== 'null'
-        ? requestUrl.searchParams?.get('pointOfSaleFromSettings')
-        : null) ?? undefined,
-    contextId: 'N/A',
-    siteId: 'N/A',
+    contextId: process.env.CONTEXT_ID || '',
+    siteId: process.env.SITE_ID || '',
   });
 
   const cdpResponse = await eventsServer.pageView(event, req);

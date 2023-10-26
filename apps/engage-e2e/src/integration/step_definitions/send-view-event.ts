@@ -4,7 +4,8 @@
 import { When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 beforeEach(() => {
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
+  // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
 });
 
 defineStep('the pageView function is called', (datatable: any) => {
@@ -21,7 +22,8 @@ defineStep('the pageView function is called', (datatable: any) => {
 
 // Scenario: Developer uses pageView to send a VIEW event with referrer
 When('the {string} page is loaded with a different document.referrer hostname', (page: string) => {
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -47,7 +49,8 @@ Then('the event is sent with the referrer', () => {
 
 // Scenario: Developer uses pageView to send a VIEW event without referrer
 When('the {string} page is loaded with the same document.referrer hostname', (page: string) => {
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -130,7 +133,8 @@ When('a cookie exists on the page', () => {
 });
 
 Then('the bid value set in the cookie for the user is returned', () => {
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/${Cypress.env('API_VERSION')}/events`).as('eventRequest');
+  // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
   cy.waitForRequest('@eventRequest').then((request: any) => {
     expect(request.body.browser_id).not.be.empty;
   });

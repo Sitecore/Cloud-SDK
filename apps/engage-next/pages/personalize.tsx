@@ -11,8 +11,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
     channel: 'WEB',
     currency: 'EUR',
     language: 'EN',
-    page: 'personalize',
-    pointOfSale: 'spinair.com',
+    page: 'personalize'
   });
 
   function getParamsValue(paramsValue: string) {
@@ -187,19 +186,17 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
     friendlyId: 'personalizeintegrationtest',
-    language: 'EN',
-    pointOfSale: 'spinair.com',
+    language: 'EN'
   };
 
-  const personalizeServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const personalizeServer = await initServer({
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
+    contextId: process.env.CONTEXT_ID || '',
     enableServerCookie:
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    contextId: 'N/A',
-    siteId: 'N/A',
+    siteId: process.env.SITE_ID || '',
   });
 
   let cdpResponse;

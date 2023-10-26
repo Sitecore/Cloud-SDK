@@ -6,14 +6,11 @@ export { getDefaultCookieAttributes } from './lib/cookie/get-default-cookie-attr
 export { handleHttpCookie } from './lib/cookie/handle-http-cookie';
 export { handleNextJsMiddlewareCookie } from './lib/cookie/handle-next-js-middleware-cookie';
 export { handleServerCookie } from './lib/cookie/handle-server-cookie';
-export { generateCreateBrowserIdUrl } from './lib/init/generate-browser-id-url';
 export { getBrowserId } from './lib/init/get-browser-id';
-export { getBrowserIdFromCdp } from './lib/init/get-browser-id-from-cdp';
+export { getProxySettings } from './lib/init/get-proxy-settings';
 export { getGuestId } from './lib/init/get-guest-id';
 export { createSettings } from './lib/settings/create-settings';
-export { updatePointOfSale } from './lib/settings/update-point-of-sale';
 export { validateSettings } from './lib/settings/validate-settings';
-export { getPointOfSale } from './lib/validators/get-point-of-sale';
 export { Infer } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export {

@@ -14,14 +14,11 @@ export function webPersonalization(
   pluginConfiguration: boolean | IWebPersonalizationConfig,
   requiredSettings: ISettings
 ) {
-  if (!requiredSettings.pointOfSale) throw new Error('[MV-0003] "pointOfSale" is required.');
-  if (requiredSettings.pointOfSale.trim().length === 0) throw new Error('[MV-0009] "pointOfSale" cannot be empty.');
-
   const webFlowTarget = 'https://d35vb5cccm4xzp.cloudfront.net';
   const webExperienceSettings: IWebExperiencesSettings = {
     /* eslint-disable @typescript-eslint/naming-convention */
-    client_key: requiredSettings.clientKey,
-    pointOfSale: requiredSettings.pointOfSale,
+    client_key: requiredSettings.contextId,
+    pointOfSale: '',
     targetURL: TARGET_URL,
     web_flow_config: {
       async:

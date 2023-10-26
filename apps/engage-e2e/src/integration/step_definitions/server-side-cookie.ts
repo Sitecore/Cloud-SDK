@@ -38,7 +38,7 @@ Given('{string} page is loaded with enableServerCookie true and an invalid Clien
     return false;
   });
 
-  cy.visit(`${page}?enableServerCookie=true&badClientKey=banana`, {
+  cy.visit(`${page}?enableServerCookie=true&badContextId=banana`, {
     failOnStatusCode: false,
   }).then(() => {
     // eslint-disable-next-line cypress/no-unnecessary-waiting

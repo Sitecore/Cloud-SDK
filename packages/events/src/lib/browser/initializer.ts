@@ -10,7 +10,6 @@ import {
 import { ExtensionData } from '../events/common-interfaces';
 import { EventApiClient } from '../cdp/EventApiClient';
 import {
-  API_VERSION,
   ICdpResponse,
   IInfer,
   ISettingsParamsBrowser,
@@ -19,8 +18,7 @@ import {
   createCookie,
   createSettings,
   getBrowserId,
-  getGuestId,
-  updatePointOfSale,
+  getGuestId
 } from '@sitecore-cloudsdk/engage-core';
 import { INestedObject, cookieExists } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../consts';
@@ -41,15 +39,15 @@ export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise
     );
   }
 
-  const settings = createSettings(settingsInput);
+  const settings = await createSettings(settingsInput);
 
   if (settingsInput.enableBrowserCookie && !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)) {
-    await createCookie(TARGET_URL, settings.clientKey, settings.cookieSettings);
+    await createCookie(settings.contextId, settings.cookieSettings);
   }
 
   const id = getBrowserId(settings.cookieSettings.cookieName);
 
-  const eventApiClient = new EventApiClient(TARGET_URL, API_VERSION);
+  const eventApiClient = new EventApiClient(TARGET_URL, settings.contextId, settings.siteId);
 
   window.Engage = {
     ...window.Engage,
@@ -88,7 +86,7 @@ export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise
         settings,
         type,
       }).send(),
-    form: (formId, interactionType, pointOfSale) => {
+    form: (formId, interactionType) => {
       const undefinedInfer = {
         language: () => undefined,
         pageName: () => undefined,
@@ -96,7 +94,7 @@ export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise
 
       return new CustomEvent({
         eventApiClient,
-        eventData: { pointOfSale },
+        eventData: {},
         extensionData: {
           formId,
           interactionType: interactionType.toUpperCase(),
@@ -108,7 +106,7 @@ export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise
       }).send();
     },
     getBrowserId: () => getBrowserId(settings.cookieSettings.cookieName),
-    getGuestId: () => getGuestId(id, TARGET_URL, settings.clientKey),
+    getGuestId: () => getGuestId(id, settings.contextId),
     identity: (eventData, extensionData) =>
       new IdentityEvent({
         eventApiClient,
@@ -129,7 +127,6 @@ export async function init(settingsInput: ISettingsParamsBrowserEvents): Promise
         settings,
       }).send(),
     processEventQueue: () => queue.sendAllEvents(),
-    updatePointOfSale: (pointOfSale) => updatePointOfSale(pointOfSale, settings),
     version: LIBRARY_VERSION,
   };
 }
@@ -167,11 +164,9 @@ export interface Events {
    * A function that sends a form event to SitecoreCloud API
    * @param formId - The required form ID string
    * @param interactionType - The required interaction type string. Possible values: "VIEWED", "SUBMITTED"
-   * @param pointOfSale - The optional pointOfSale string. If you did not specify pointOfSale in the
-   *  settings object, you must specify it here
    * @returns The response object that Sitecore CDP returns or null
    */
-  form: (formId: string, interactionType: 'VIEWED' | 'SUBMITTED', pointOfSale?: string) => Promise<ICdpResponse | null>;
+  form: (formId: string, interactionType: 'VIEWED' | 'SUBMITTED') => Promise<ICdpResponse | null>;
 
   /**
    * A function that sends an IDENTITY event to SitecoreCloud API
@@ -196,12 +191,6 @@ export interface Events {
    * Clears the queue upon completion.
    */
   processEventQueue: () => void;
-
-  /**
-   * A function that updates the point of sale.
-   * @param pointOfSale - The new point of sale
-   */
-  updatePointOfSale: (pointOfSale: string) => void;
 
   /**
    * A function that returns the browser id.

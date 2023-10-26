@@ -35,13 +35,13 @@ describe('handleServerCookie', () => {
   const getCookieServerSide = jest.spyOn(utils, 'getCookieServerSide');
 
   const options: ISettings = {
-    clientKey: 'key',
     contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '',
   };

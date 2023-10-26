@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IInfer, getPointOfSale } from '@sitecore-cloudsdk/engage-core';
-import { ICdpCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-cdp-client';
+import { IInfer } from '@sitecore-cloudsdk/engage-core';
+import { ICdpCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
 import { INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
 
 export class Personalizer {
@@ -43,8 +43,7 @@ export class Personalizer {
       channel: personalizerInput.channel,
       currency: personalizerInput.currency,
       friendlyId: personalizerInput.friendlyId,
-      language: personalizerInput.language,
-      pointOfSale: getPointOfSale(personalizerInput.pointOfSale || this.personalizeClient.settings.pointOfSale),
+      language: personalizerInput.language
     };
 
     if (
@@ -69,14 +68,14 @@ export class Personalizer {
   private mapPersonalizeInputToCDPData(input: IPersonalizerInput): ICdpCallFlowsBody {
     const mappedData: ICdpCallFlowsBody = {
       channel: input.channel,
-      clientKey: this.personalizeClient.settings.clientKey,
+      clientKey: '',
       currencyCode: input.currency,
       email: input.email,
       friendlyId: input.friendlyId,
       identifiers: input.identifier,
       language: input.language ?? this.infer?.language(),
       params: input.params,
-      pointOfSale: input.pointOfSale as string,
+      pointOfSale: '',
     };
 
     return mappedData;
@@ -100,8 +99,7 @@ export interface IPersonalizerInput {
   friendlyId: string;
   identifier?: IPersonalizeIdentifierInput;
   language?: string;
-  params?: IPersonalizeInputParams;
-  pointOfSale?: string;
+  params?: IPersonalizeInputParams
 }
 
 /**

@@ -11,6 +11,12 @@ export interface ICdpResponse {
   client_key: string;
 }
 
+
+export interface IProxySettings {
+  browserId: string;
+  clientKey: string;
+}
+
 /**
  * Interface for supporting response IncomingMessage http node type
  */

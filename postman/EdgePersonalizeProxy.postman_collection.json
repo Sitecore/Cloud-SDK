@@ -1,0 +1,336 @@
+{
+	"info": {
+		"_postman_id": "247054d6-8002-43cf-8535-bda1c7097b72",
+		"name": "EdgePersonalizeProxy",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get BrowserID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"//Set Staging auth token",
+							"const jsonData = pm.response.json();",
+							"pm.collectionVariables.set(\"BrowserId\", jsonData.ref);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/browser/create.json?sitecoreContextId={{ContextId}}&client_key=",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"browser",
+						"create.json"
+					],
+					"query": [
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						},
+						{
+							"key": "client_key",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send event with GET",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-sitecore-current-session-id",
+						"value": "8f2fee57-8e87-45d3-ae55-54a88d12dfd3",
+						"type": "text",
+						"disabled": true
+					},
+					{
+						"key": "sitecoreContextId",
+						"value": "",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/event/create.json?sitecoreContextId={{ContextId}}&client_key=&message={\"channel\":\"WEB\",\"type\":\"VIEW\",\"language\":\"EN\",\"currency\":\"USD\",\"page\":\"/support\",\"pos\":\"\",\"browser_id\":\"{{BrowserId}}\"}",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"event",
+						"create.json"
+					],
+					"query": [
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						},
+						{
+							"key": "siteId",
+							"value": "playwebsite",
+							"disabled": true
+						},
+						{
+							"key": "client_key",
+							"value": ""
+						},
+						{
+							"key": "message",
+							"value": "{\"channel\":\"WEB\",\"type\":\"VIEW\",\"language\":\"EN\",\"currency\":\"USD\",\"page\":\"/support\",\"pos\":\"\",\"browser_id\":\"{{BrowserId}}\"}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send event with POST",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"WATCHED_PRODUCT\",\n    \"watched_product_id\": \"PSPAMMWSSRCJ-BL-L\",\n    \"browser_id\": \"{{BrowserId}}\",\n    \"channel\": \"WEB\",\n    \"client_key\": \"\",\n    \"currency\": \"EUR\",\n    \"language\": \"EN\",\n    \"page\": \"Home Page\",\n    \"pos\": \"spinair.com\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/events?sitecoreContextId={{ContextId}}",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"events"
+					],
+					"query": [
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Send event with POST & siteId",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-sitecore-contextid",
+						"value": "{{ContextId}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"client_key\": \"\",\r\n    \"channel\": \"WEB\",\r\n    \"type\": \"VIEW\",\r\n    \"language\": \"EN\",\r\n    \"currency\": \"USD\",\r\n    \"page\": \"/support\",\r\n    \"pos\": \"\",\r\n    \"browser_id\": \"{{BrowserId}}\",\r\n    \"ext\": {\r\n        \"customersExt\": \"hello\",\r\n        \"uuid\": \"dsads\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/events?siteId={{SiteId}}&sitecoreContextId={{ContextId}}",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"events"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "{{SiteId}}"
+						},
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Call flow",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "x-sitecore-contextid",
+						"value": "{{ContextId}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"clientKey\": \"\",\r\n    \"channel\": \"WEB\",\r\n    \"language\": \"en\",\r\n    \"currencyCode\": \"USD\",\r\n    \"pointOfSale\": \"default\",\r\n    \"browserId\": \"{{BrowserId}}\",\r\n    \"friendlyId\": \"embedded_61104cd5396c4e478b42f9ff50f4c35b_en\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{targetURL}}/personalize/v2/callFlows?siteId=resource-cdp",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v2",
+						"callFlows"
+					],
+					"query": [
+						{
+							"key": "siteId",
+							"value": "resource-cdp"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST problematic",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"type\": \"VIEW\",\n    \"browser_id\": \"{{BrowserId}}\",\n    \"channel\": \"WEB\",\n    \"client_key\": \"\",\n    \"language\": \"EN\",\n    \"page\": \"Home Page\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/events?sitecoreContextId={{ContextId}}",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"events"
+					],
+					"query": [
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET GuestID",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "x-sitecore-contextid",
+						"value": "{{ContextId}}",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "{{targetURL}}/personalize/v1.2/browser/{{BrowserId}}/show.json?sitecoreContextId={{ContextId}}&client_key=&api_token=",
+					"host": [
+						"{{targetURL}}"
+					],
+					"path": [
+						"personalize",
+						"v1.2",
+						"browser",
+						"{{BrowserId}}",
+						"show.json"
+					],
+					"query": [
+						{
+							"key": "sitecoreContextId",
+							"value": "{{ContextId}}"
+						},
+						{
+							"key": "client_key",
+							"value": ""
+						},
+						{
+							"key": "api_token",
+							"value": ""
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ContextId",
+			"value": ""
+		},
+		{
+			"key": "targetURL",
+			"value": ""
+		},
+		{
+			"key": "BrowserId",
+			"value": ""
+		},
+		{
+			"key": "SiteId",
+			"value": ""
+		}
+	]
+}

@@ -17,19 +17,19 @@ describe('EventApiClient', () => {
       /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
       channel: 'WEB',
-      client_key: 'key',
+      client_key: '',
       currency: 'EUR',
       ext: {
         a: 'test',
       },
       language: 'EN',
       page: 'races',
-      pos: 'spinair.com',
+      pos: '',
       type: 'CUSTOM_TYPE',
     };
 
-    const eventApiClient = new EventApiClient('http://testurl', 'v1.2');
-    const expectedUrl = 'http://testurl/v1.2/events';
+    const eventApiClient = new EventApiClient('http://testurl', '123', 'site');
+    const expectedUrl = 'http://testurl/events/v1.2/events?sitecoreContextId=123&siteId=site';
     const expectedBody = JSON.stringify(eventData);
 
     eventApiClient.send(eventData);
@@ -65,7 +65,7 @@ describe('EventApiClient', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    const response = await new EventApiClient('http://testurl', 'v1.2').send(eventData);
+    const response = await new EventApiClient('http://testurl', '123', '').send(eventData);
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(response).toEqual(null);
   });

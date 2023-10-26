@@ -49,7 +49,6 @@ export function Identity() {
       lastName: formData.lastname.value,
       mobile: formData.mobile.value,
       phone: formData.phone.value,
-      pointOfSale: 'spinair.com',
       postalCode: formData.postal_code.value,
       state: formData.state.value,
       street: formData.street.value ? [formData.street.value] : [],
@@ -73,8 +72,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      language: 'EN'
     };
 
     events?.identity(event, {});
@@ -86,8 +84,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      language: 'EN'
     };
 
     events?.identity(event);
@@ -102,8 +99,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN',
-      pointOfSale: 'spinair.com',
+      language: 'EN'
     };
 
     eventAttributes.delete('nested');
@@ -121,9 +117,8 @@ export function Identity() {
   };
 
   const sendRequestToNextApi = () => {
-    const pointOfSale = getParamsFromUrl('pointOfSale') ?? 'spinair.com';
     const email = getParamsFromUrl('email') ?? 'test@test.com';
-    fetch(`/api/identity-event?pointOfSale=${pointOfSale}&email=${email}`);
+    fetch(`/api/identity-event?email=${email}`);
   };
 
   return (

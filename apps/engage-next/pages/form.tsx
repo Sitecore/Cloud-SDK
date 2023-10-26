@@ -11,9 +11,8 @@ export function FormEvent() {
   const sendEvent = async () => {
     const formId = getParamsFromUrl('formId') ?? '';
     const interactionType = getParamsFromUrl('interactionType') as unknown as 'VIEWED' | 'SUBMITTED';
-    const pointOfSale = getParamsFromUrl('pointOfSale') || undefined;
 
-    await events?.form(formId, interactionType, pointOfSale);
+    await events?.form(formId, interactionType);
   };
 
   return (

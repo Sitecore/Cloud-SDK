@@ -12,6 +12,7 @@ const links = [
   { text: 'Get Guest Id', path: '/getGuestId', testId: 'getguestIdPage' },
   { text: 'Web Experiences', path: '/webexperiences', testId: 'webExperiencesPage' },
   { text: 'Form Event', path: '/form', testId: 'formEventPage' },
+  { text: 'Event Queue', path: '/eventqueue',  testId: 'eventQueuePage' },
   { text: 'Middleware View Event', path: '/middleware-view-event', testId: 'middlewareViewEventPage' },
   { text: 'Middleware Custom Event', path: '/middleware-custom-event', testId: 'middlewareCustomEventPage' },
   { text: 'Middleware Identity Event', path: '/middleware-identity-event', testId: 'middlewareIdentityEventPage' },
@@ -35,8 +36,7 @@ const links = [
     text: 'ServerSideProps Identity Event',
     path: '/server-side-props-identity-event',
     testId: 'serverSidePropsIdentityEventPage',
-  },
-  { text: 'Fallback PointOfSale', path: '/fallbackPointOfSale', testId: 'fallbackPointOfSale' },
+  }
 ];
 
 function Navbar() {

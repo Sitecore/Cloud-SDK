@@ -1,4 +1,4 @@
-import { CallFlowCDPClient, ICdpCallFlowsBody } from './callflow-cdp-client';
+import { CallFlowEdgeProxyClient, ICdpCallFlowsBody } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
 import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
 
@@ -14,21 +14,21 @@ describe('Test Base CallFlow Base Class', () => {
 
     data = {
       channel: 'WEB',
-      clientKey: 'key',
+      clientKey: '',
       currencyCode: 'EUR',
       friendlyId: 'personalizeintegrationtest',
       language: 'EN',
-      pointOfSale: 'spinair.com',
+      pointOfSale: '',
     };
 
     settingsMock = {
-      clientKey: 'key',
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -47,11 +47,11 @@ describe('Test Base CallFlow Base Class', () => {
       currencyCode: 'EUR',
       friendlyId: 'personalizeintegrationtest',
       language: 'EN',
-      pointOfSale: 'spinair.com',
+      pointOfSale: '',
     };
-    new CallFlowCDPClient(settingsMock).sendCallFlowsRequest(expectedBody).then(() => {
+    new CallFlowEdgeProxyClient(settingsMock).sendCallFlowsRequest(expectedBody).then(() => {
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(TARGET_URL + '/v2/callFlows', {
+      expect(fetch).toHaveBeenCalledWith(`${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.contextId}&siteId=${settingsMock.siteId}`, {
         body: JSON.stringify(expectedBody),
         // eslint-disable-next-line @typescript-eslint/naming-convention
         headers: { 'Content-Type': 'application/json', 'X-Library-Version': LIBRARY_VERSION },
@@ -64,7 +64,7 @@ describe('Test Base CallFlow Base Class', () => {
     const mockFetch = Promise.resolve({ json: () => Promise.resolve('banana') });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    const sendCallFlowSpy = jest.spyOn(CallFlowCDPClient.prototype, 'sendCallFlowsRequest');
+    const sendCallFlowSpy = jest.spyOn(CallFlowEdgeProxyClient.prototype, 'sendCallFlowsRequest');
 
     data.email = 'test';
     data.identifiers = {
@@ -76,7 +76,7 @@ describe('Test Base CallFlow Base Class', () => {
       customString: 'example value',
     };
 
-    const response = await new CallFlowCDPClient(settingsMock).sendCallFlowsRequest(data);
+    const response = await new CallFlowEdgeProxyClient(settingsMock).sendCallFlowsRequest(data);
 
     expect(response).toEqual('banana');
     expect(sendCallFlowSpy).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('Test Base CallFlow Base Class', () => {
       customString: 'example value',
     };
 
-    const response = await new CallFlowCDPClient(settingsMock).sendCallFlowsRequest(data);
+    const response = await new CallFlowEdgeProxyClient(settingsMock).sendCallFlowsRequest(data);
     expect(response).toEqual(null);
   });
 });

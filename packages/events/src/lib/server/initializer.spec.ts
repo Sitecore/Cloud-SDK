@@ -3,7 +3,7 @@ import { IEventAttributesInput } from '../events/common-interfaces';
 import { CustomEvent, IdentityEvent, PageViewEvent } from '../events';
 import { EventApiClient } from '../cdp/EventApiClient';
 import packageJson from '../../../package.json';
-import { API_VERSION, ICdpResponse, ISettingsParamsServer } from '@sitecore-cloudsdk/engage-core';
+import { ICdpResponse, ISettingsParamsServer } from '@sitecore-cloudsdk/engage-core';
 import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../consts';
 
@@ -22,7 +22,7 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 });
 
 describe('initializer', () => {
-  const eventApiClient = new EventApiClient(core.TARGET_URL, API_VERSION);
+  const eventApiClient = new EventApiClient(core.TARGET_URL, '123', '456');
   const id = 'test_id';
   let mockRequest = {
     cookies: {
@@ -35,19 +35,18 @@ describe('initializer', () => {
     ip: undefined,
   };
   const settingsParams: ISettingsParamsServer = {
-    clientKey: 'key',
     contextId: '123',
     cookieDomain: 'cDomain',
     siteId: '456',
   };
-  const settingsObj = {
-    clientKey: 'key',
+  const settingsObj: core.ISettings = {
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -93,9 +92,9 @@ describe('initializer', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
     jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    const eventsServer = initServer(settingsParams);
+    const eventsServer = await initServer(settingsParams);
     const eventData: IEventAttributesInput = {
       channel: 'WEB',
       currency: 'EUR',
@@ -168,9 +167,9 @@ describe('initializer', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
     jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    const eventsServer = initServer({ ...settingsParams, enableServerCookie: true });
+    const eventsServer = await initServer({ ...settingsParams, enableServerCookie: true });
     const eventData: IEventAttributesInput = {
       channel: 'WEB',
       currency: 'EUR',
@@ -219,9 +218,9 @@ describe('initializer', () => {
 
   it('should not call handleCookie if enableServerCookie is false', async () => {
     jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    const eventsServer = initServer({ ...settingsParams, enableServerCookie: false });
+    const eventsServer = await initServer({ ...settingsParams, enableServerCookie: false });
 
     const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
 
@@ -231,9 +230,9 @@ describe('initializer', () => {
   });
   it('should not call handleCookie if enableServerCookie is undefined', async () => {
     jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
-    const eventsServer = initServer(settingsParams);
+    const eventsServer = await initServer(settingsParams);
 
     const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
 

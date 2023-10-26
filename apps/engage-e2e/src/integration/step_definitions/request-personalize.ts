@@ -8,7 +8,8 @@ let statusCode: number;
 beforeEach(() => {
   statusCode = 0;
   cy.intercept('GET', `http://localhost:4200/api/personalize*`).as('personalizeRequestFromApi');
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows`).as(
+  // eslint-disable-next-line max-len
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
     'personalizeRequest'
   );
 });

@@ -6,11 +6,7 @@ import { ISettingsParams } from './interfaces';
  * A validation function for the required global settings
  */
 export function validateSettings(settings: ISettingsParams) {
-  const { clientKey, pointOfSale, contextId, siteId } = settings;
-
-  if (!clientKey) throw new Error(`[MV-0001] "clientKey" is required.`);
-
-  if (pointOfSale && pointOfSale.trim().length === 0) throw new Error('[MV-0009] "pointOfSale" cannot be empty.');
+  const { contextId, siteId } = settings;
 
   if (!contextId || contextId.trim().length === 0) throw new Error(`[MV-0001] "contextId" is required.`);
 

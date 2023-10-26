@@ -1,11 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getPointOfSale } from '@sitecore-cloudsdk/engage-core';
 import type { IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { IEventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
   private readonly browserId: string;
-  private readonly pointOfSale: string;
   private readonly language: string | undefined;
   private readonly page: string;
   /**
@@ -21,7 +19,6 @@ export class BaseEvent {
     id: string,
     private infer?: IInfer
   ) {
-    this.pointOfSale = getPointOfSale(this.baseEventData.pointOfSale || settings.pointOfSale);
     this.browserId = id;
     this.language = this.baseEventData.language ?? this.infer?.language();
     this.page = this.baseEventData.page ?? (this.infer ? this.infer.pageName() : '');
@@ -37,11 +34,11 @@ export class BaseEvent {
       browser_id: this.browserId,
       channel: this.baseEventData.channel,
       /* eslint-disable @typescript-eslint/naming-convention */
-      client_key: this.settings.clientKey,
+      client_key: '',
       currency: this.baseEventData.currency,
       language: this.language,
       page: this.page,
-      pos: this.pointOfSale,
+      pos: '',
     };
   }
 }

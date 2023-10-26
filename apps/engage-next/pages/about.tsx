@@ -8,9 +8,7 @@ export function About() {
 
   const [eventData, seteventData] = useState<IPageViewEventInput>({
     channel: 'WEB',
-    currency: 'EUR',
-    language: 'EN',
-    pointOfSale: 'spinair.com',
+    currency: 'EUR'
   });
   return (
     <div>
@@ -40,15 +38,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookieDomain =
     typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : undefined;
 
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieDomain,
     cookieExpiryDays: 400,
     enableServerCookie:
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    contextId: 'N/A',
-    siteId: 'N/A',
-    pointOfSale: 'spinair.com',
+    contextId: process.env.CONTEXT_ID || '',
+    siteId: process.env.SITE_ID || '',
   });
 
   await eventsServer.handleCookie(context.req, context.res);

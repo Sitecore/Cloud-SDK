@@ -6,7 +6,7 @@ import {
   getBrowserIdFromRequest,
   handleServerCookie,
 } from '@sitecore-cloudsdk/engage-core';
-import { CallFlowCDPClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-cdp-client';
+import { CallFlowEdgeProxyClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-edge-proxy-client';
 import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
 import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../../consts';
@@ -16,9 +16,9 @@ import { LIBRARY_VERSION } from '../../consts';
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export function initServer(settingsInput: ISettingsParamsServer): PersonalizeServer {
-  const settings = createSettings(settingsInput);
-  const callFlowCDPClient = new CallFlowCDPClient(settings);
+export async function initServer(settingsInput: ISettingsParamsServer): Promise<PersonalizeServer> {
+  const settings = await createSettings(settingsInput);
+  const callFlowCDPClient = new CallFlowEdgeProxyClient(settings);
 
   return {
     handleCookie: async (request, response, timeout) => {

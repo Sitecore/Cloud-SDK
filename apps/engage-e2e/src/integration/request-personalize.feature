@@ -125,60 +125,57 @@ Scenario Outline: Developer requests personalize with valid parameters
         | personalizeintegrationtest | personalize@test.com |                      |
         | personalizeintegrationtest |                      | personalize@test.com | 
 
-    # @Next-US
-    # Examples:
-    #     | friendlyId                   | email                               | identifier                          |
-    #     | personalizeintegrationtest_2 | test_personalize_callflows@test.com |                                     |
-    #     | personalizeintegrationtest_2 |                                     | test_personalize_callflows@test.com |
 
-# Scenario: Developer requests personalize with customParams
-#     Given the '/personalize' page is loaded
-#     When personalize parameters are: 
-#     """
-#         {
-#             "friendlyId": "personalizeintegrationtest", 
-#             "params": {"customString": "example"}
-#         }
-#     """
-#     And the 'requestPersonalizeFromClient' button is clicked
-#     Then a personalize request is sent with parameters:
-#     """
-#         {
-#             "friendlyId": "personalizeintegrationtest", 
-#             "params": {"customString": "example"}
-#         }
-#     """
-#     Then we display the callflow's content to UI: 
-#     """
-#         {"Key":"value"}
-#     """
+Scenario: Developer requests personalize with customParams
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"customString": "example"}
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"customString": "example"}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
 
-# Scenario Outline: Developer requests personalize with invalid parameters
-#     Given the '/personalize' page is loaded
-#     When personalize parameters are: 
-#     """
-#         {
-#             "friendlyId": "<friendlyId>", 
-#             "email": "<email>", 
-#             "identifier": "<identifier>" 
-#         }
-#     """
-#     And the 'requestPersonalizeFromClient' button is clicked
-#     Then a personalize request is sent with parameters:
-#     """
-#         {
-#             "friendlyId": "<friendlyId>", 
-#             "email": "<email>", 
-#             "identifier": "<identifier>"
-#         }
-#     """
-#     But Personalize API responds with '400' status code   
+Scenario Outline: Developer requests personalize with invalid parameters
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "<friendlyId>", 
+            "email": "<email>", 
+            "identifier": "<identifier>" 
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "friendlyId": "<friendlyId>", 
+            "email": "<email>", 
+            "identifier": "<identifier>"
+        }
+    """
+    But Personalize API responds with '400' status code   
 
-#     Examples:
-#         | FriendlyId                 | Email                      | Identifier     |
-#         | personalizeintegrationtest |                            | testIdentifier |
-#         | personalizeintegrationtest | test_personalize_1@tst.com | testIdentifier |
-#         | 123414                     | test_personalize_1@tst.com | testIdentifier |
+    Examples:
+        | friendlyId                 | email                      | identifier     |
+        | personalizeintegrationtest |                            | testIdentifier |
+        | personalizeintegrationtest | test_personalize_1@tst.com | testIdentifier |
+        | 123414                     | test_personalize_1@tst.com | testIdentifier |
 
 Scenario: Developer requests personalize without the mandatory friendlyId parameter
     Given the '/personalize' page is loaded
@@ -190,7 +187,8 @@ Scenario: Developer requests personalize without the mandatory friendlyId parame
 #     When personalize parameters are: 
 #     """
 #         {
-#             "friendlyId": "personalizeintegrationtest" 
+#             "friendlyId": "personalizeintegrationtest",
+#             "email": "personalize@test.com"
 #         }
 #     """
 #     And the 'requestPersonalizeWithUndefinedLanguage' button is clicked
@@ -199,13 +197,14 @@ Scenario: Developer requests personalize without the mandatory friendlyId parame
 #         {"Key":"value"}
 #     """
 
-# Scenario: Developer requests personalize with empty string language
-#     Given the '/personalize' page is loaded
-#     When personalize parameters are: 
-#     """
-#         {
-#             "friendlyId": "personalizeintegrationtest"
-#         }
-#     """
-#     And the 'requestPersonalizeWithEmptyStringLanguage' button is clicked
-#     But Personalize API responds with '400' status code   
+Scenario: Developer requests personalize with empty string language
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest",
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeWithEmptyStringLanguage' button is clicked
+    But Personalize API responds with '400' status code   

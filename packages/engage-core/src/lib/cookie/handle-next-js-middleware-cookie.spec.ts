@@ -1,9 +1,9 @@
-import * as Cdp from '../init/get-browser-id-from-cdp';
+import * as GetProxySettings from '../init/get-proxy-settings';
 import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
 import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/engage-utils';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { TARGET_URL } from '../consts';
+import { ISettings } from '../settings/interfaces';
 
 describe('handleMiddlewareRequest', () => {
   const mockFetchResponse = {
@@ -16,14 +16,14 @@ describe('handleMiddlewareRequest', () => {
   const mockFetch = Promise.resolve({
     json: () => Promise.resolve(mockFetchResponse),
   });
-  const options = {
-    clientKey: 'key',
-    contextId: '',
+  const options: ISettings = {
+    contextId: 'context_id',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'name',
+      cookieName: 'bid_key',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '',
   };
@@ -69,9 +69,10 @@ describe('handleMiddlewareRequest', () => {
     expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
   });
 
+
   it('should set the browser ID from getBrowserIdFromCdp when getBrowserIdFromMiddlewareRequest returns undefined', async () => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
-    const getBrowserIdFromCdpSpy = jest.spyOn(Cdp, 'getBrowserIdFromCdp');
+    const getProxySettings = jest.spyOn(GetProxySettings, 'getProxySettings');
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const cookieName = 'bid_key';
 
@@ -86,7 +87,7 @@ describe('handleMiddlewareRequest', () => {
     const setSpy = jest.spyOn(req.cookies, 'set');
 
     await handleNextJsMiddlewareCookie(req, response, options);
-    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(TARGET_URL, options.clientKey, undefined);
+    expect(getProxySettings).toHaveBeenCalledWith(options.contextId, undefined);
 
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);

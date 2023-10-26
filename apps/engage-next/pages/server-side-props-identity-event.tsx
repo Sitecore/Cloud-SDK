@@ -17,19 +17,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     channel: 'WEB',
     currency: 'EUR',
     email: 'testServerSideProps@test.com',
-    identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }],
-    language: 'EN',
-    pointOfSale: 'spinair.com',
+    identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }]
   };
 
-  const eventsServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const eventsServer = await initServer({
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
+    contextId: process.env.CONTEXT_ID || '',
     enableServerCookie: true,
-    contextId: 'N/A',
-    siteId: 'N/A',
+    siteId: process.env.SITE_ID || '',
   });
 
   await eventsServer.handleCookie(context.req, context.res);

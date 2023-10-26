@@ -116,9 +116,6 @@ export class Utils {
     if (!testData.language) {
       baseEventData.language = 'EN';
     }
-    if (!testData.pointOfSale || !testData.pos) {
-      baseEventData.pointOfSale = 'spinair.com';
-    }
 
     if (testData.baseDataEventAttr) {
       Object.entries(testData.baseDataEventAttr).forEach(([key, value]) => {

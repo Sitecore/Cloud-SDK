@@ -4,28 +4,28 @@ import { getBrowserId } from './get-browser-id';
 
 describe('getBrowserId', () => {
   let settings: ISettings = {
-    clientKey: 'key',
-    contextId: '',
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'cookieName',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
-    siteId: '',
+    siteId: '456',
   };
 
   beforeEach(() => {
     settings = {
-      clientKey: 'key',
-      contextId: '',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'cookieName',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
-      siteId: '',
+      siteId: '456',
     };
   });
 

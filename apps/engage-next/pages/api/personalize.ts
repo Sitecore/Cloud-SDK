@@ -11,19 +11,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     language: 'EN',
   };
 
-  if (requestUrl.searchParams?.get('pointOfSale') !== 'null')
-    event.pointOfSale = requestUrl.searchParams?.get('pointOfSale') ?? 'spinair.com';
-
-  const personalizeServer = initServer({
-    clientKey: process.env.CLIENT_KEY || '',
+  const personalizeServer = await initServer({
     cookieExpiryDays: 400,
     enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    pointOfSale:
-      (requestUrl.searchParams?.get('pointOfSaleFromSettings') !== 'null'
-        ? requestUrl.searchParams?.get('pointOfSaleFromSettings')
-        : null) ?? undefined,
-    contextId: 'N/A',
-    siteId: 'N/A',
+    contextId: process.env.CONTEXT_ID || '',
+    siteId: process.env.SITE_ID || '',
   });
 
   const timeoutParam = requestUrl.searchParams.get('timeout');

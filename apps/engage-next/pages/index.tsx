@@ -5,7 +5,6 @@ import { usePersonalize } from '../context/personalize';
 import { useState } from 'react';
 import styles from './HomePage.module.css';
 import { IPageViewEventInput } from '@sitecore-cloudsdk/events';
-import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
 export function Index() {
   const events = useEvents();
@@ -13,22 +12,13 @@ export function Index() {
 
   const [eventData, seteventData] = useState<IPageViewEventInput>({
     channel: 'WEB',
-    currency: 'EUR',
-    pointOfSale: 'spinair.com',
+    currency: 'EUR'
   });
   const [bid, setBID] = useState('Click a button above to retrieve browser ID');
   const [version, setVersion] = useState('Click a button above to retrieve version');
 
   const sendRequestToNextApi = async () => {
-    const searchParams = new URLSearchParams(window.location.search);
-
-    let serverData = eventData;
-
-    if (searchParams.has('pointOfSale')) {
-      serverData = { ...eventData, pointOfSale: getParamsFromUrl('pointOfSale') ?? '' };
-    } else {
-      serverData = { ...eventData, pointOfSale: 'spinair.com' };
-    }
+    const serverData = eventData;
 
     const queryString = Object.keys(serverData)
       .map((key) => key + '=' + serverData[key as keyof typeof serverData])

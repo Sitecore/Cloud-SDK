@@ -8,9 +8,7 @@ export function CustomEvent() {
   let event = {
     channel: 'WEB',
     currency: 'EUR',
-    language: 'EN',
-    page: 'customevent',
-    pointOfSale: 'spinair.com',
+    page: 'customevent'
   };
 
   const [type, setType] = useState('');
@@ -37,7 +35,7 @@ export function CustomEvent() {
   };
 
   const sendRequestToNextApi = () => {
-    fetch(`/api/custom-event?pointOfSale=spinair.com`);
+    fetch(`/api/custom-event`);
   };
   return (
     <div>

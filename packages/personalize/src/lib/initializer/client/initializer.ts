@@ -4,7 +4,6 @@ import {
   ISettingsParamsBrowser,
   IWebPersonalizationConfig,
   Infer,
-  TARGET_URL,
   createCookie,
   createSettings,
   getBrowserId,
@@ -12,7 +11,7 @@ import {
 import { cookieExists } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../../consts';
 import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
-import { CallFlowCDPClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-cdp-client';
+import { CallFlowEdgeProxyClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-edge-proxy-client';
 import { webPersonalization } from '../../web-personalization/web-personalization';
 
 export type ISettingsParamsBrowserPersonalize = {
@@ -32,10 +31,10 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
     );
   }
 
-  const settings = createSettings(settingsInput);
+  const settings = await createSettings(settingsInput);
 
   if (settingsInput.enableBrowserCookie && !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)) {
-    createCookie(TARGET_URL, settings.clientKey, settings.cookieSettings);
+    createCookie(settings.contextId, settings.cookieSettings);
   }
 
   const id = getBrowserId(settings.cookieSettings.cookieName);
@@ -57,7 +56,7 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
 
   const infer = new Infer();
 
-  const callFlowCDPClient = new CallFlowCDPClient(settings);
+  const callFlowCDPClient = new CallFlowEdgeProxyClient(settings);
 
   return {
     personalize: (personalizeData, timeout) => {

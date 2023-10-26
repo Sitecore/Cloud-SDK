@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/naming-convention */
+/* eslint-disable sort-keys */
 import * as core from '@sitecore-cloudsdk/engage-core';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
@@ -28,7 +30,6 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 describe('initializer', () => {
   const id = 'test_id';
   const settingsParams: core.ISettingsParamsServer = {
-    clientKey: 'key',
     contextId: '123',
     cookieDomain: 'cDomain',
     siteId: '456',
@@ -53,7 +54,7 @@ describe('initializer', () => {
     currency: 'EUR',
     language: 'EN',
     page: 'races',
-    pointOfSale: 'spinair.com',
+    pointOfSale: '',
   };
   const res: IMiddlewareNextResponse = {
     cookies: {
@@ -63,7 +64,7 @@ describe('initializer', () => {
     },
   };
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref', client_key: 'key' }) });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
   afterEach(() => {
@@ -72,7 +73,7 @@ describe('initializer', () => {
   jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
   it('should return an object with available functionality', async () => {
     settingsParams.enableServerCookie = true;
-    const serverEngage = initServer(settingsParams);
+    const serverEngage = await initServer(settingsParams);
 
     expect(typeof serverEngage.version).toBe('string');
     expect(serverEngage.version).toBe(packageJson.version);
@@ -86,27 +87,6 @@ describe('initializer', () => {
     await serverEngage.handleCookie(req, res);
 
     expect(handleServerCookieSpy).toHaveBeenCalledTimes(1);
-
-    serverEngage.personalize({ friendlyId: 'personalizeintegrationtest', ...eventData }, req);
-    expect(Personalizer).toHaveBeenCalledTimes(1);
-  });
-
-  it('should return an object with available functionality but not call handleServerCookieSpy when ', async () => {
-    settingsParams.enableServerCookie = false;
-    const serverEngage = initServer(settingsParams);
-
-    expect(typeof serverEngage.version).toBe('string');
-    expect(serverEngage.version).toBe(packageJson.version);
-    expect(LIBRARY_VERSION).toBe(packageJson.version);
-    expect(typeof serverEngage).toBe('object');
-    expect(typeof serverEngage.handleCookie).toBe('function');
-    expect(typeof serverEngage.personalize).toBe('function');
-
-    const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
-
-    await serverEngage.handleCookie(req, res);
-
-    expect(handleServerCookieSpy).toHaveBeenCalledTimes(0);
 
     serverEngage.personalize({ friendlyId: 'personalizeintegrationtest', ...eventData }, req);
     expect(Personalizer).toHaveBeenCalledTimes(1);

@@ -1,4 +1,3 @@
-import { TARGET_URL } from '../consts';
 import { ICdpResponse } from '../interfaces';
 import { ISettings } from '../settings/interfaces';
 import { createCookie } from './create-cookie';
@@ -12,43 +11,45 @@ describe('createCookie', () => {
 
   beforeEach(() => {
     settings = {
-      clientKey: 'key',
-      contextId: '',
+      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
-      siteId: '',
+      siteId: '456',
     };
 
     const mockFetch = Promise.resolve({
       json: () =>
         Promise.resolve({
-          ref: 'ref',
+          ref: 'bid_value',
         } as ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
   });
   it('should resolve with a response containing the ref', async () => {
-    const expected = { ref: 'ref' };
-    createCookie(TARGET_URL, settings.clientKey, {
+    const expected = { ref: 'bid_value' };
+    createCookie(settings.contextId, {
       cookieExpiryDays: settings.cookieSettings.cookieExpiryDays,
       cookieName: settings.cookieSettings.cookieName,
+      cookieTempValue: 'bid_value'
     }).then((res) => {
       expect(res).toEqual(expected.ref);
     });
   });
 
   it('should create a client side cookie with the right name and value', async () => {
-    const expected = `${settings.cookieSettings.cookieName}=ref`;
+    const expected = `${settings.cookieSettings.cookieName}=bid_value`;
 
-    await createCookie(TARGET_URL, settings.clientKey, {
+    await createCookie(settings.contextId, {
       cookieExpiryDays: settings.cookieSettings.cookieExpiryDays,
       cookieName: settings.cookieSettings.cookieName,
+      cookieTempValue: 'bid_value'
     });
-    jest.spyOn(document, 'cookie', 'get').mockImplementationOnce(() => 'bid_name=ref');
+    jest.spyOn(document, 'cookie', 'get').mockImplementationOnce(() => 'bid_name=bid_value');
     expect(document.cookie).toContain(expected);
   });
 });

@@ -33,7 +33,6 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 });
 
 const settingsParams: core.ISettingsParamsBrowser = {
-  clientKey: 'key',
   contextId: '123',
   cookieDomain: 'cDomain',
   siteId: '456',
@@ -42,18 +41,18 @@ const settingsParams: core.ISettingsParamsBrowser = {
 describe('initializer', () => {
   const { window } = global;
   const id = 'test_id';
-  const eventApiClient = new EventApiClient(core.TARGET_URL, core.API_VERSION);
+  const eventApiClient = new EventApiClient(core.TARGET_URL, '123', '456');
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   jest.spyOn(core, 'createCookie').mock;
-  const settingsObj = {
-    clientKey: 'key',
+  const settingsObj: core.ISettings = {
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -62,42 +61,42 @@ describe('initializer', () => {
     global.window ??= Object.create(window);
   });
 
-  it('should try to create a cookie if it does not exist', () => {
+  it('should try to create a cookie if it does not exist', async() => {
     jest.spyOn(core, 'createCookie').mock;
     jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
 
-    init({ ...settingsParams, enableBrowserCookie: true });
+    await init({ ...settingsParams, enableBrowserCookie: true });
 
     expect(core.createCookie).toHaveBeenCalledTimes(1);
   });
 
-  it('should not try to create a cookie if it already exists', () => {
+  it('should not try to create a cookie if it already exists', async() => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
 
-    init({ ...settingsParams, enableBrowserCookie: true });
+    await init({ ...settingsParams, enableBrowserCookie: true });
 
     expect(core.createCookie).toHaveBeenCalledTimes(0);
   });
@@ -106,14 +105,12 @@ describe('initializer', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
+      page: 'races'
     };
 
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
     jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
 
     const events = await init(settingsParams);
@@ -126,7 +123,6 @@ describe('initializer', () => {
     expect(typeof events.identity).toBe('function');
     expect(typeof events.getGuestId).toBe('function');
 
-    expect(typeof events.updatePointOfSale).toBe('function');
     expect(typeof events.addToEventQueue).toBe('function');
     expect(typeof events.processEventQueue).toBe('function');
     expect(typeof events.clearEventQueue).toBe('function');
@@ -145,7 +141,7 @@ describe('initializer', () => {
       id,
       infer: expect.any(core.Infer),
       searchParams: '',
-      settings: { ...settingsObj },
+      settings: { ...settingsObj }
     });
 
     events.event('TEST_TYPE', { ...eventData });
@@ -162,11 +158,11 @@ describe('initializer', () => {
     events.getGuestId();
     expect(core.getGuestId).toHaveBeenCalledTimes(1);
 
-    events.form('1234', 'SUBMITTED', 'spinair.com');
+    events.form('1234', 'SUBMITTED');
     expect(CustomEvent).toBeCalledTimes(2);
     expect(CustomEvent).toHaveBeenLastCalledWith({
       eventApiClient,
-      eventData: { pointOfSale: 'spinair.com' },
+      eventData: { },
       extensionData: { formId: '1234', interactionType: 'SUBMITTED' },
       id,
       infer: expect.objectContaining({
@@ -181,14 +177,14 @@ describe('initializer', () => {
   it('should invoke enqueueEvent when addToEventQueue is called', async () => {
     const enqueueEventSpy = jest.spyOn(EventQueue.prototype, 'enqueueEvent');
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -196,9 +192,7 @@ describe('initializer', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
+      page: 'races'
     };
 
     const events = await init(settingsParams);
@@ -213,13 +207,13 @@ describe('initializer', () => {
       extentionData: undefined,
       id: 'test_id',
       settings: {
-        clientKey: 'key',
         contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'name',
           cookiePath: '/',
+          cookieTempValue: 'bid_value'
         },
         siteId: '456',
       },
@@ -230,14 +224,14 @@ describe('initializer', () => {
   it('should invoke sendAllEvents when processEventQueue is called', async () => {
     const sendAllEventsSpy = jest.spyOn(EventQueue.prototype, 'sendAllEvents');
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -245,7 +239,6 @@ describe('initializer', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
       page: 'races',
       pointOfSale: 'spinair.com',
     };
@@ -272,14 +265,14 @@ describe('initializer', () => {
 
   it('should return an object with available functionality when calling CustomEvent', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -287,14 +280,12 @@ describe('initializer', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
+      page: 'races'
     };
 
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
     const events = await init(settingsParams);
 
@@ -312,14 +303,14 @@ describe('initializer', () => {
 
   it('should return an object with available functionality when calling identity', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -353,7 +344,7 @@ describe('initializer', () => {
 
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
 
     const events = await init(settingsParams);
 
@@ -370,14 +361,14 @@ describe('initializer', () => {
 
   it('should invoke get browser id method when calling the getBrowserId method', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -390,14 +381,14 @@ describe('initializer', () => {
 
   it('should return the browser id when calling the getBrowserId method', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -410,14 +401,14 @@ describe('initializer', () => {
 
   it('should return the browser id when calling the getBrowserId method from the window Engage property', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -432,14 +423,14 @@ describe('initializer', () => {
 
   it('should return the browser id when calling the getBrowserId method from the window while Engage property is missing from the window', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -475,36 +466,16 @@ describe('initializer', () => {
     );
   });
 
-  it('should invoke updatePointOfSale when updatePointOfSale is called', async () => {
-    const updatePointOfSaleSpy = jest.spyOn(core, 'updatePointOfSale');
-
-    const events = await init(settingsParams);
-    events.updatePointOfSale('newPointOfSale');
-
-    expect(updatePointOfSaleSpy).toHaveBeenCalledTimes(1);
-    expect(updatePointOfSaleSpy).toHaveBeenCalledWith('newPointOfSale', {
-      clientKey: 'key',
-      contextId: '123',
-      cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'name',
-        cookiePath: '/',
-      },
-      pointOfSale: 'newPointOfSale',
-      siteId: '456',
-    });
-  });
   it('should add the library version to window.Engage object', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });
@@ -518,14 +489,14 @@ describe('initializer', () => {
   });
   it('should expand the window.Engage object', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue({
-      clientKey: 'key',
+    jest.spyOn(core, 'createSettings').mockResolvedValue({
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     });

@@ -18,7 +18,7 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 });
 
 describe('Event Storage', () => {
-  const eventApiClient = new EventApiClient('http://test.com', 'v1.2');
+  const eventApiClient = new EventApiClient('http://test.com', '123', '456');
   const inferLanguageSpy = jest.spyOn(core.Infer.prototype, 'language');
   const inferPageSpy = jest.spyOn(core.Infer.prototype, 'pageName');
 
@@ -27,13 +27,13 @@ describe('Event Storage', () => {
   const infer = new core.Infer();
 
   const settings: ISettings = {
-    clientKey: 'key',
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };

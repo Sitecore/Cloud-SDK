@@ -29,24 +29,23 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 });
 
 describe('PageViewEvent', () => {
-  const eventApiClient = new EventApiClient('http://testurl', 'v1.2');
+  const eventApiClient = new EventApiClient('http://testurl', '123', '456');
   const fetchCallSpy = jest.spyOn(EventApiClient.prototype, 'send');
   const id = 'test_id';
   const infer = new core.Infer();
-  let expectedBasicAttributes = {};
+  let expectedBasicAttributes = {
+  };
   let eventData: IPageViewEventInput = {
     channel: 'WEB',
     currency: 'EUR',
-    language: 'EN',
-    page: 'races',
-    pointOfSale: 'spinair.com',
+    page: 'races'
   };
   let settings: ISettings = {
-    clientKey: 'key',
     contextId: '123',
     cookieSettings: {
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -74,29 +73,27 @@ describe('PageViewEvent', () => {
     expectedBasicAttributes = {
       browser_id: id,
       channel: 'WEB',
-      client_key: 'key',
+      client_key: '',
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pos: 'spinair.com',
+      pos: ''
     };
 
     eventData = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
+      page: 'races'
     };
 
     settings = {
-      clientKey: 'key',
       contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
+        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };

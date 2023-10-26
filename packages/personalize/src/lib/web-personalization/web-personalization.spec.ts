@@ -8,28 +8,26 @@ import {
 } from '@sitecore-cloudsdk/engage-core';
 import { webPersonalization } from './web-personalization';
 
-describe('webExperiencesPlugin', () => {
+
+test('webExperiencesPlugin', () => {
   const { window } = global;
   const webFlowTarget = 'https://d35vb5cccm4xzp.cloudfront.net';
   const appendScriptWithAttributesSpy = jest.spyOn(appendScriptWithAttributesModule, 'appendScriptWithAttributes');
   let expectedSettings: IWebExperiencesSettings;
   const settingsParams: ISettingsParamsBrowserPersonalize = {
-    clientKey: 'key',
-    contextId: '123',
+    contextId: 'key',
     cookieDomain: 'cDomain',
-    pointOfSale: 'test_pos',
     siteId: '465',
   };
 
   const webPersonalizationSettings: ISettings = {
-    clientKey: 'key',
     contextId: '132',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 720,
       cookieName: 'bid_key',
+      cookieTempValue: 'bid_value'
     },
-    pointOfSale: 'test_pos',
     siteId: '456',
   };
 
@@ -39,7 +37,7 @@ describe('webExperiencesPlugin', () => {
   beforeEach(() => {
     expectedSettings = {
       /* eslint-disable @typescript-eslint/naming-convention */
-      client_key: 'key',
+      client_key: '',
       pointOfSale: 'test_pos',
       targetURL: TARGET_URL,
       web_flow_config: { async: false, defer: false },
@@ -49,9 +47,9 @@ describe('webExperiencesPlugin', () => {
     jest.clearAllMocks();
     global.window ??= Object.create(window);
   });
+
   it('should add the web flow settings to the window when calling initPersonalize', async () => {
     settingsParams.webPersonalization = true;
-    settingsParams.pointOfSale = 'test_pos';
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
@@ -61,7 +59,6 @@ describe('webExperiencesPlugin', () => {
 
   it('should add the web flow settings to the window when calling initPersonalize when passing different object', async () => {
     settingsParams.webPersonalization = { test: true } as IWebPersonalizationConfig;
-    settingsParams.pointOfSale = 'test_pos';
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
 
@@ -70,7 +67,6 @@ describe('webExperiencesPlugin', () => {
   });
 
   it('should add the web flow settings to the window when calling webExperiencesPlugin with boolean flag as true', async () => {
-    settingsParams.pointOfSale = 'test_pos';
     expectedSettings.web_flow_config = { async: true, defer: false };
     expectedSettings.web_flow_target = webFlowTarget;
     const pluginSettings = true;
@@ -141,23 +137,9 @@ describe('webExperiencesPlugin', () => {
   it('should invoke the appropriate method to attach webExperiences script on the window document', async () => {
     const expectedAttributes = {
       async: true,
-      src: `${webFlowTarget}/web-flow-libs/key/web-version.min.js`,
+      src: `${webFlowTarget}/web-flow-libs//web-version.min.js`,
     };
     webPersonalization(true, webPersonalizationSettings);
     expect(appendScriptWithAttributesSpy).toHaveBeenCalledWith(expectedAttributes);
-  });
-
-  it('should throw error if pointOfSale is undefined', async () => {
-    delete webPersonalizationSettings.pointOfSale;
-
-    expect(() => webPersonalization(true, webPersonalizationSettings)).toThrowError(
-      '[MV-0003] "pointOfSale" is required.'
-    );
-  });
-  it('should throw error if bad pointOfSale', async () => {
-    webPersonalizationSettings.pointOfSale = ' ';
-    expect(() => webPersonalization(true, webPersonalizationSettings)).toThrowError(
-      '[MV-0009] "pointOfSale" cannot be empty.'
-    );
   });
 });

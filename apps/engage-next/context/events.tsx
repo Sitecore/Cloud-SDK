@@ -15,7 +15,6 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
   const loadEvents = useCallback(async () => {
     // eslint-disable-next-line max-len, prefer-const
     const temp = await init({
-      clientKey: process.env.CLIENT_KEY || '',
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie:
@@ -24,9 +23,8 @@ export const EventsProvider = ({ children }: { children: ReactNode }) => {
           : getSettingFromUrlParams('enableServerCookie') === 'true'
           ? false
           : true,
-      pointOfSale: getSettingFromUrlParams('pointOfSaleFromSettings') || undefined,
-      contextId: 'N/A',
-      siteId: 'N/A',
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || ''
     });
     window.eventsTestingInstance = temp;
     window.events = temp;

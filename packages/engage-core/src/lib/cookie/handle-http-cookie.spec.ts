@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/engage-utils';
 import { handleHttpCookie } from './handle-http-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import * as Cdp from '../init/get-browser-id-from-cdp';
-import * as utils from '@sitecore-cloudsdk/engage-utils';
-import { TARGET_URL } from '../consts';
+import * as GetProxySettings from '../init/get-proxy-settings';
+import * as Utils from '@sitecore-cloudsdk/engage-utils';
+import { ISettings } from '../settings/interfaces';
 
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
@@ -16,14 +17,14 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 });
 
 describe('httpCookieHandler', () => {
-  const options = {
-    clientKey: 'key',
-    contextId: '',
+  const options: ISettings = {
+    contextId: 'context_id',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'name',
+      cookieName: 'bid_name',
       cookiePath: '/',
+      cookieTempValue: 'bid_value'
     },
     siteId: '',
   };
@@ -33,8 +34,8 @@ describe('httpCookieHandler', () => {
     options.cookieSettings.cookieDomain
   );
 
-  const getCookieServerSideSpy = jest.spyOn(utils, 'getCookieServerSide');
-  const createCookieStringSpy = jest.spyOn(utils, 'createCookieString');
+  const getCookieServerSideSpy = jest.spyOn(Utils, 'getCookieServerSide');
+  const createCookieStringSpy = jest.spyOn(Utils, 'createCookieString');
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -57,8 +58,8 @@ describe('httpCookieHandler', () => {
 
     await handleHttpCookie(req, res, options);
 
-    expect(getCookieServerSideSpy).toHaveBeenCalledWith(req.headers.cookie, 'bid_key');
-    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_key', '123456789', defaultCookieAttributes);
+    expect(getCookieServerSideSpy).toHaveBeenCalledWith(req.headers.cookie, 'bid_name');
+    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_name', '123456789', defaultCookieAttributes);
     expect(req.headers.cookie).toBe('bid_key=123456789');
     expect(res.setHeader).toHaveBeenCalledWith('Set-Cookie', 'bid_key=123456789');
   });
@@ -71,23 +72,23 @@ describe('httpCookieHandler', () => {
       setHeader: jest.fn(),
     };
 
-    const mockBrowserId = 'mock_bid_key_from_cdp';
-    const getBrowserIdFromCdpSpy = jest.spyOn(Cdp, 'getBrowserIdFromCdp');
-    getBrowserIdFromCdpSpy.mockResolvedValue(mockBrowserId);
 
-    createCookieStringSpy.mockReturnValue('bid_key=mock_bid_key_from_cdp');
+    const getProxySettings = jest.spyOn(GetProxySettings, 'getProxySettings');
+    getProxySettings.mockResolvedValue({ browserId: 'bid_value', clientKey: 'bid_name'});
+
+    createCookieStringSpy.mockReturnValue('bid_name=mock_bid_name_from_edge_proxy');
 
     await handleHttpCookie(req, res, options);
 
-    expect(getBrowserIdFromCdpSpy).toHaveBeenCalledWith(TARGET_URL, options.clientKey, undefined);
-    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_key', 'mock_bid_key_from_cdp', defaultCookieAttributes);
-    expect(req.headers.cookie).toBe('bid_key=mock_bid_key_from_cdp');
+    expect(getProxySettings).toHaveBeenCalledWith(options.contextId, undefined);
+    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_name', 'bid_value', defaultCookieAttributes);
+    expect(req.headers.cookie).toBe('bid_name=mock_bid_name_from_edge_proxy');
   });
 
   it('should set the request header cookie when getCookieServerSide returns undefined but there is a cookie in the request headers', async () => {
     getCookieServerSideSpy.mockReturnValue(undefined);
-    const getBrowserIdFromCdpSpy = jest.spyOn(Cdp, 'getBrowserIdFromCdp');
-    getBrowserIdFromCdpSpy.mockReturnValueOnce(Promise.resolve('123456789'));
+    const getProxySettings = jest.spyOn(GetProxySettings, 'getProxySettings');
+    getProxySettings.mockReturnValueOnce(Promise.resolve({ browserId: '123456789', clientKey:'key' }));
     const req: IHttpRequest = {
       headers: {
         cookie: 'bid_key=123456789',
@@ -104,7 +105,7 @@ describe('httpCookieHandler', () => {
     expect(req.headers.cookie).toBe('bid_key=123456789; bid_key=mock_bid_key_from_cdp');
   });
 
-  it('should throw error if getBrowserIdFromCdp returns a falsy value', async () => {
+  it('should throw error if getProxySettings returns a falsy value', async () => {
     const req: IHttpRequest = {
       headers: {
         cookie: '',
@@ -113,8 +114,8 @@ describe('httpCookieHandler', () => {
     const response: IHttpResponse = {
       setHeader: jest.fn(),
     };
-    const getBrowserIdFromCdpSpy = jest.spyOn(Cdp, 'getBrowserIdFromCdp');
-    getBrowserIdFromCdpSpy.mockReturnValueOnce(Promise.resolve(''));
+    const getProxySettings = jest.spyOn(GetProxySettings, 'getProxySettings');
+    getProxySettings.mockReturnValueOnce(Promise.resolve({ browserId: '', clientKey: ''}));
 
     expect(async () => await handleHttpCookie(req, response, options)).rejects.toThrow(
       '[IE-0004] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'

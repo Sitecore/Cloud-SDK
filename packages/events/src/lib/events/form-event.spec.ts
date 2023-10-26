@@ -26,21 +26,19 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 
 describe('form function', () => {
   const settingsParams: ISettingsParamsBrowser = {
-    clientKey: 'key',
     contextId: '123',
     cookieDomain: 'cDomain',
     siteId: '456',
   };
   const id = 'test_id';
-  const settingsObj = {
-    clientKey: 'key',
-    contextId: '132',
+  const settingsObj: core.ISettings = {
+    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      forceServerCookieMode: false,
+      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -53,12 +51,12 @@ describe('form function', () => {
     /* eslint-disable @typescript-eslint/naming-convention */
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockReturnValue(settingsObj);
+    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as ICdpResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     const engage = await init(settingsParams);
-    engage.form('1234', 'SUBMITTED', 'spinair.com');
+    engage.form('1234', 'SUBMITTED');
 
     const expectedBody = JSON.stringify({
       type: 'FORM',
@@ -69,12 +67,12 @@ describe('form function', () => {
       },
       // eslint-disable-next-line sort-keys
       browser_id: 'test_id',
-      client_key: 'key',
-      pos: 'spinair.com',
+      client_key: '',
+      pos: '',
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(fetch).toHaveBeenCalledWith(`${core.TARGET_URL}/v1.2/events`, {
+    expect(fetch).toHaveBeenCalledWith(`${core.TARGET_URL}/events/v1.2/events?sitecoreContextId=123&siteId=456`, {
       body: expectedBody,
       headers: {
         'Content-Type': 'application/json',
