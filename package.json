@@ -1,7 +1,7 @@
 {
   "name": "@sitecore-cloudsdk/source",
   "version": "0.0.0",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "scripts": {
     "mutation-tests": "nx affected --target=stryker",
     "unit-tests": "nx affected --target=test",
@@ -9,7 +9,8 @@
     "build": "nx affected --target=build",
     "build-all": "tsc --build",
     "clean-past-e2e-reports": "rm -r apps/engage-e2e/cypress/results/",
-    "generate-e2e-report": "mochawesome-merge apps/engage-e2e/cypress/results/*.json --o apps/engage-e2e/cypress/results/reports/test-results.json && marge apps/engage-e2e/cypress/results/reports/test-results.json --reportDir apps/engage-e2e/cypress/results/reports/ --inline && rm apps/engage-e2e/cypress/results/*.json"
+    "generate-e2e-report": "mochawesome-merge apps/engage-e2e/cypress/results/*.json --o apps/engage-e2e/cypress/results/reports/test-results.json && marge apps/engage-e2e/cypress/results/reports/test-results.json --reportDir apps/engage-e2e/cypress/results/reports/ --inline && rm apps/engage-e2e/cypress/results/*.json",
+    "prepare": "husky install"
   },
   "private": true,
   "dependencies": {
@@ -25,6 +26,7 @@
     "@commitlint/cli": "^17.7.1",
     "@commitlint/config-conventional": "^17.7.0",
     "@jest/types": "^29.6.3",
+    "@jscutlery/semver": "^3.4.1",
     "@nx/cypress": "16.8.0",
     "@nx/eslint-plugin": "16.8.0",
     "@nx/jest": "16.8.0",

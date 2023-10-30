@@ -56,8 +56,7 @@
         "customServerPath": "server.js",
         "testingType": "e2e",
         "env": {
-          "TAGS": 
-            "@Smoke-Test-Events"
+          "TAGS": "@Smoke-Test-Events"
         }
       },
       "configurations": {
@@ -116,8 +115,14 @@
         "lintFilePatterns": ["apps/engage-e2e/**/*.{js,ts}"],
         "quiet": false
       }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "conventional"
+      }
     }
   },
-  "tags": [],
+  "tags": ["apps"],
   "implicitDependencies": ["engage-next"]
 }

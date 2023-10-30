@@ -1,6 +1,7 @@
 {
   "name": "@sitecore-cloudsdk/personalize",
-  "version": "0.0.7",
+  "version": "0.0.0",
+  "license": "Apache-2.0",
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
   "types": "dist/esm/src/index.d.ts",
@@ -15,11 +16,8 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/engage-core": "^0.0.14",
-    "@sitecore-cloudsdk/engage-utils": "^0.0.14"
-  },
-  "publishConfig": {
-    "registry": "https://npm.sitecore.com/test/"
+    "@sitecore-cloudsdk/engage-core": "0.x",
+    "@sitecore-cloudsdk/engage-utils": "0.x"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",

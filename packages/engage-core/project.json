@@ -35,6 +35,12 @@
         "commands": ["npx stryker run ./packages/engage-core/stryker.conf.js"],
         "parallel": false
       }
+    },
+    "version": {
+      "executor": "@jscutlery/semver:version",
+      "options": {
+        "preset": "conventional"
+      }
     }
   },
   "tags": []
