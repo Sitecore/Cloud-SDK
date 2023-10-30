@@ -1,10 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { getGuestId } from '@sitecore-cloudsdk/events';
 import { useState } from 'react';
-import { useEvents } from '../context/events';
 
 export function Index() {
   const [label, setlabel] = useState('');
-  const events = useEvents();
 
   return (
     <div>
@@ -12,7 +11,7 @@ export function Index() {
       <button
         data-testid='getGuestId'
         onClick={async () => {
-          setlabel((await events?.getGuestId()) ?? '');
+          setlabel((await getGuestId()) ?? '');
         }}>
         get guest id
       </button>

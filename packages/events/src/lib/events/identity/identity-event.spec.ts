@@ -1,20 +1,10 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable multiline-comment-style */
 import { IdentityEvent, IIdentityEventAttributesInput } from './identity-event';
-import { EventApiClient } from '../cdp/EventApiClient';
-import { MAX_EXT_ATTRIBUTES } from './consts';
 import * as core from '@sitecore-cloudsdk/engage-core';
 import * as utils from '@sitecore-cloudsdk/engage-utils';
-
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
-
+import { MAX_EXT_ATTRIBUTES } from '../consts';
+import { EventApiClient } from '../../cdp/EventApiClient';
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
 
@@ -24,13 +14,21 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
 
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 describe('Test Identity', () => {
   let data: IIdentityEventAttributesInput;
   let settingsMock: core.ISettings;
   const eventApiClient = new EventApiClient('http://testurl', 'key', 'site');
   const id = 'test_id';
-  const infer = new core.Infer();
+
   const isShortISODateStringSpy = jest.spyOn(utils, 'isShortISODateString');
 
   beforeEach(() => {
@@ -44,7 +42,6 @@ describe('Test Identity', () => {
       currency: 'EUR',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -62,7 +59,6 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -80,7 +76,6 @@ describe('Test Identity', () => {
           eventApiClient,
           eventData: data,
           id,
-          infer,
           settings: settingsMock,
         })
     ).not.toThrow(`[MV-0004] "identifiers" is required.`);
@@ -103,7 +98,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     expect(data.street).toEqual([]);
@@ -115,7 +109,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     expect(data.street).toEqual(['']);
@@ -127,7 +120,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     expect(data.street).toEqual(['gennimata']);
@@ -139,7 +131,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     expect(data.street).toEqual(['gennimata', 'ntourma']);
@@ -159,7 +150,6 @@ describe('Test Identity', () => {
         eventApiClient,
         eventData: data,
         id,
-        infer,
         settings: settingsMock,
       });
     }).toThrowError(`[MV-0004] "identifiers" is required.`);
@@ -172,7 +162,6 @@ describe('Test Identity', () => {
       email: ' email@example.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -187,7 +176,6 @@ describe('Test Identity', () => {
         eventApiClient,
         eventData: data,
         id,
-        infer,
         settings: settingsMock,
       });
     }).toThrowError('[IV-0003] Incorrect value for "email". Set the value to a valid email address.');
@@ -199,7 +187,6 @@ describe('Test Identity', () => {
         eventApiClient,
         eventData: data,
         id,
-        infer,
         settings: settingsMock,
       });
     }).not.toThrowError(`[MV-0004] "identifiers" is required.`);
@@ -217,7 +204,6 @@ describe('Test Identity', () => {
       gender: 'male',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -229,7 +215,7 @@ describe('Test Identity', () => {
       page: 'identity',
       phone: '2310111111',
       pointOfSale: 'spinair.com',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+
       postalCode: '',
       state: 'macedonia',
       street: ['gennimata'],
@@ -247,7 +233,6 @@ describe('Test Identity', () => {
       gender: 'male',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: undefined,
           id: '',
           provider: 'email',
@@ -259,7 +244,7 @@ describe('Test Identity', () => {
       page: 'identity',
       phone: '+2310111111',
       pointOfSale: 'spinair.com',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+
       postal_code: '',
       state: 'Macedonia',
       street: ['Gennimata'],
@@ -271,7 +256,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     expect(data.email).not.toEqual(expectedData.email);
@@ -300,7 +284,6 @@ describe('Test Identity', () => {
       gender: 'male',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -312,7 +295,7 @@ describe('Test Identity', () => {
       page: 'identity',
       phone: '2310111111',
       pointOfSale: 'spinair.com',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+
       postalCode: '12345',
       state: 'macedonia',
       street: ['street'],
@@ -350,7 +333,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
     identity.send();
@@ -365,7 +347,6 @@ describe('Test Identity', () => {
       eventApiClient,
       eventData: data,
       id,
-      infer,
       settings: settingsMock,
     });
 
@@ -381,7 +362,6 @@ describe('Test Identity', () => {
         eventApiClient,
         eventData: data,
         id,
-        infer,
         settings: settingsMock,
       }).send();
     }).toThrowError(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
@@ -396,7 +376,6 @@ describe('Test Identity', () => {
         eventApiClient,
         eventData: data,
         id,
-        infer,
         settings: settingsMock,
       }).send();
     }).toThrowError(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
@@ -418,7 +397,6 @@ describe('Test Identity', () => {
       email: 'email@gmail.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -435,7 +413,6 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -444,10 +421,9 @@ describe('Test Identity', () => {
       eventData,
       extensionData,
       id,
-      infer,
       settings,
     }).send();
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+
     const expectedAttributes = { ext: { test_a_b: 'b', test_c: 11, testz: 22 } };
 
     expect(fetchCallSpy).toHaveBeenCalledWith(expect.objectContaining(expectedAttributes));
@@ -463,7 +439,6 @@ describe('Test Identity', () => {
       email: 'email@gmail.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -478,7 +453,6 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -494,7 +468,6 @@ describe('Test Identity', () => {
         eventData,
         extensionData,
         id,
-        infer,
         settings,
       }).send();
     }).toThrowError(extErrorMessage);
@@ -510,7 +483,6 @@ describe('Test Identity', () => {
       email: 'email@gmail.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -525,7 +497,6 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -539,7 +510,6 @@ describe('Test Identity', () => {
         eventData,
         extensionData,
         id,
-        infer,
         settings,
       }).send();
     }).not.toThrowError(extErrorMessage);
@@ -555,7 +525,6 @@ describe('Test Identity', () => {
       email: 'email@gmail.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -570,12 +539,11 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
 
-    new IdentityEvent({ eventApiClient, eventData, id, infer, settings }).send();
+    new IdentityEvent({ eventApiClient, eventData, id, settings }).send();
 
     expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
   });
@@ -590,7 +558,6 @@ describe('Test Identity', () => {
       email: 'email@gmail.com',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -605,12 +572,11 @@ describe('Test Identity', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
     const extensionData = {};
-    new IdentityEvent({ eventApiClient, eventData, extensionData, id, infer, settings }).send();
+    new IdentityEvent({ eventApiClient, eventData, extensionData, id, settings }).send();
 
     expect(sendEventSpy).toHaveBeenCalledWith(expect.not.objectContaining({ ext: {} }));
   });

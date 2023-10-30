@@ -3,6 +3,14 @@ import { handleServerCookie } from './handle-server-cookie';
 import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
 import * as HandleHttpCookie from './handle-http-cookie';
 import * as utils from '@sitecore-cloudsdk/engage-utils';
+import * as initCore from '../init/init-core-server';
+import * as getProxySettings from '../init/get-proxy-settings';
+import { BID_PREFIX } from '../consts';
+
+// Mock the 'initializer' module
+jest.mock('../init/init-core-server', () => ({
+  getSettingsServer: jest.fn(),
+}));
 
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
@@ -15,18 +23,6 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
 });
 
 describe('handleServerCookie', () => {
-  const mockFetchResponse = {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
-    ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
-    status: 'OK',
-    version: '1.2',
-  };
-  const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse),
-  });
-  global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-
   const isNextJsMiddlewareRequest = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
   const isNextJsMiddlewareResponse = jest.spyOn(utils, 'isNextJsMiddlewareResponse');
 
@@ -34,26 +30,36 @@ describe('handleServerCookie', () => {
   const handleHttpCookie = jest.spyOn(HandleHttpCookie, 'handleHttpCookie');
   const getCookieServerSide = jest.spyOn(utils, 'getCookieServerSide');
 
-  const options: ISettings = {
+  let options: ISettings = {
     contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'name',
+      cookieName: '',
       cookiePath: '/',
-      cookieTempValue: 'bid_value'
     },
     siteId: '',
   };
+
+  beforeEach(() => {
+    options = {
+      contextId: '',
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: '',
+        cookiePath: '/',
+      },
+      siteId: '',
+    };
+  });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  beforeEach(() => {
-    jest.clearAllMocks();
-  });
   it('should call handleNextJsMiddlewareCookie when request is a isNextJsMiddlewareRequest', async () => {
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: 'c_key' });
     const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
@@ -68,11 +74,20 @@ describe('handleServerCookie', () => {
 
     isNextJsMiddlewareRequest.mockReturnValueOnce(true);
     isNextJsMiddlewareResponse.mockReturnValueOnce(true);
+    const getSettingsServerSpy = jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
 
-    await handleServerCookie(request, response, options, undefined);
+    await handleServerCookie(request, response, undefined);
 
-    expect(handleNextJsMiddlewareCookie).toHaveBeenCalledWith(request, response, options, undefined);
-
+    expect(handleNextJsMiddlewareCookie).toHaveBeenCalledWith(
+      request,
+      response,
+      {
+        ...options,
+        cookieSettings: { ...options.cookieSettings, cookieName: `${BID_PREFIX}c_key` },
+      },
+      'value'
+    );
+    expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
     expect(isNextJsMiddlewareRequest).toHaveBeenCalledTimes(1);
     expect(isNextJsMiddlewareResponse).toHaveBeenCalledTimes(1);
 
@@ -80,6 +95,8 @@ describe('handleServerCookie', () => {
   });
 
   it('should call handleHttpCookie when request is an HTTP Request', async () => {
+    const getSettingsServerSpy = jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: 'c_key' });
     const request: utils.TRequest = {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -98,14 +115,22 @@ describe('handleServerCookie', () => {
 
     isNextJsMiddlewareRequest.mockReturnValueOnce(false);
 
-    await handleServerCookie(request, response, options);
+    const expectedSettings = {
+      ...options,
+      cookieSettings: { ...options.cookieSettings, cookieName: `${BID_PREFIX}c_key` },
+    };
 
-    expect(handleHttpCookie).toHaveBeenCalledWith(request, response, options, undefined);
+    await handleServerCookie(request, response);
+
+    expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
+    expect(handleHttpCookie).toHaveBeenCalledWith(request, response, expectedSettings, 'value');
     expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
     expect(isNextJsMiddlewareResponse).not.toHaveBeenCalled();
   });
 
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie', async () => {
+  it('should not call if no client key is retrieved', async () => {
+    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: '' });
     const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
@@ -114,15 +139,48 @@ describe('handleServerCookie', () => {
     };
     const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
 
-    await handleServerCookie(request, response, options);
+    await handleServerCookie(request, response);
 
-    expect(isNextJsMiddlewareResponse).toHaveBeenCalled();
-    expect(isNextJsMiddlewareResponse).toHaveReturnedWith(false);
+    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
+    expect(handleHttpCookie).not.toHaveBeenCalled();
+  });
+
+  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when forceServerCookieMode is false', async () => {
+    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    const request: utils.TRequest = {
+      cookies: { get: jest.fn(), set: jest.fn() },
+      headers: {
+        get: jest.fn(),
+      },
+    };
+    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
+
+    await handleServerCookie(request, response);
+
+    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
+    expect(handleHttpCookie).not.toHaveBeenCalled();
+  });
+
+  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie', async () => {
+    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: '' });
+    const request: utils.TRequest = {
+      cookies: { get: jest.fn(), set: jest.fn() },
+      headers: {
+        get: jest.fn(),
+      },
+    };
+    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
+
+    await handleServerCookie(request, response);
+
+    expect(isNextJsMiddlewareResponse).not.toHaveBeenCalled();
     expect(handleHttpCookie).not.toHaveBeenCalled();
     expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
   });
 
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when request is not isNextJsMiddlewareRequest or isHttpRequest', async () => {
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: 'val' });
     const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
@@ -134,7 +192,7 @@ describe('handleServerCookie', () => {
       cookies: {},
     } as unknown as utils.IMiddlewareNextResponse;
 
-    await handleServerCookie(request, response, options);
+    await handleServerCookie(request, response);
 
     expect(isNextJsMiddlewareResponse).toHaveBeenCalled();
     expect(isNextJsMiddlewareResponse).toHaveReturnedWith(false);

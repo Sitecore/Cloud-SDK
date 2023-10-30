@@ -1,21 +1,12 @@
-import { init } from './initializer';
+import * as initPersonalize from './initializer';
 import * as core from '@sitecore-cloudsdk/engage-core';
-import * as utils from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../../consts';
-import packageJson from '../../../../package.json';
-import { Personalizer } from '../../personalization/personalizer';
+import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 import '../../global.d.ts';
 
 jest.mock('../../personalization/personalizer');
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('../../personalization/callflow-edge-proxy-client');
 
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 jest.mock('@sitecore-cloudsdk/engage-core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
 
@@ -26,7 +17,7 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
   };
 });
 
-const settingsParams: core.ISettingsParamsBrowser = {
+const settingsParams: initPersonalize.ISettingsParamsBrowserPersonalize = {
   contextId: '123',
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
@@ -35,81 +26,96 @@ const settingsParams: core.ISettingsParamsBrowser = {
 
 describe('initializer', () => {
   const { window } = global;
+  const id = 'test_id';
+
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  const id = 'test_id';
-  jest.spyOn(core, 'createCookie').mock;
-  const settingsObj: core.ISettings = {
+
+  jest.spyOn(core, 'initCore');
+  const getSettingsSpy = jest.spyOn(core, 'getSettings');
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+
+  getSettingsSpy.mockReturnValue({
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
-      cookieTempValue: 'bid_value'
     },
     siteId: '456',
-  };
+  });
+
   afterEach(() => {
     jest.clearAllMocks();
     global.window ??= Object.create(window);
   });
 
-  it('should try to create a cookie if it does not exist', async() => {
-    jest.spyOn(core, 'createCookie').mock;
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
-    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
-
-    await init(settingsParams);
-
-    expect(core.createCookie).toHaveBeenCalledTimes(1);
+  beforeEach(() => {
+    initPersonalize.setDependencies(null as unknown as initPersonalize.IBrowserPersonalizeSettings);
   });
 
-  it('should not try to create a cookie if it already exists', async() => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
+  describe('getDependencies', () => {
+    beforeEach(() => {
+      initPersonalize.setDependencies(null as unknown as initPersonalize.IBrowserPersonalizeSettings);
+    });
+    it('should throw error if settings are not initialized', () => {
+      expect(() => initPersonalize.getDependencies()).toThrow(
+        `[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`
+      );
+    });
+    it('should throw error if settings are not initialized v2', () => {
+      let settings;
+      expect(() => {
+        settings = initPersonalize.getDependencies();
+      }).toThrowError(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+      expect(settings).toBeUndefined();
+    });
 
-    await init(settingsParams);
-
-    expect(core.createCookie).toHaveBeenCalledTimes(0);
+    it('should throw error if settings are not initialized v3', () => {
+      expect(() => {
+        initPersonalize.setDependencies(null);
+        initPersonalize.getDependencies();
+      }).toThrowError(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+    });
   });
-  it('should return an object with available functionality', async () => {
-    const eventData = {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
-    };
+  describe('init', () => {
+    it('should call all the necessary functions if all properties are set correctly', async () => {
+      await initPersonalize.init(settingsParams);
+      const settings = initPersonalize.getDependencies();
 
-    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
+      expect(settings.settings.contextId).toBe('123');
+      expect(settings).toBeDefined();
+      expect(core.initCore).toHaveBeenCalledTimes(1);
+      expect(core.getSettings).toHaveBeenCalledTimes(1);
+      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
 
-    const engage = await init(settingsParams);
+      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
+    });
 
-    expect(typeof engage.version).toBe('string');
-    expect(engage.version).toBe(packageJson.version);
-    expect(LIBRARY_VERSION).toBe(packageJson.version);
-    expect(typeof engage.personalize).toBe('function');
+    it('should call all the necessary functions if all properties are set correctly', async () => {
+      await initPersonalize.init(settingsParams);
+      expect(core.initCore).toHaveBeenCalledTimes(1);
+      expect(core.getSettings).toHaveBeenCalledTimes(1);
+      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
 
-    engage.personalize({ friendlyId: 'personalizeintegrationtest', ...eventData });
-    expect(Personalizer).toHaveBeenCalledTimes(1);
+      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
+    });
   });
 
   describe('window object', () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-    jest.spyOn(core, 'createSettings').mockResolvedValue(settingsObj);
-    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+    beforeEach(() => {
+      initPersonalize.setDependencies(null as unknown as initPersonalize.IBrowserPersonalizeSettings);
+    });
+    settingsParams.webPersonalization = undefined;
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
-      await init(settingsParams);
+      await initPersonalize.init(settingsParams);
 
       if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
       expect(core.getBrowserId).toHaveBeenCalledTimes(2);
     });
     it('adds method to get ID to window Engage property when engage is on window', async () => {
-      await init(settingsParams);
+      await initPersonalize.init(settingsParams);
       expect(global.window.Engage).toBeDefined();
       /* eslint-disable @typescript-eslint/no-explicit-any */
       global.window.Engage = { test: 'test' } as any;
@@ -120,9 +126,10 @@ describe('initializer', () => {
 
     it('should add the library version to window.Engage object', async () => {
       global.window.Engage = undefined as any;
+
       expect(global.window.Engage).toBeUndefined();
 
-      await init(settingsParams);
+      await initPersonalize.init(settingsParams);
 
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({ personalize: LIBRARY_VERSION });
@@ -134,7 +141,7 @@ describe('initializer', () => {
       delete global.window;
 
       await expect(async () => {
-        await init(settingsParams);
+        await initPersonalize.init(settingsParams);
       }).rejects.toThrowError(
         // eslint-disable-next-line max-len
         `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
@@ -143,7 +150,7 @@ describe('initializer', () => {
 
     it('should expand the window.Engage object', async () => {
       global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
-      await init(settingsParams);
+      await initPersonalize.init(settingsParams);
 
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({

@@ -86,10 +86,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const siteId = attributeToTest === 'siteid' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
 
   try {
-    await initServer({
-      contextId,
-      siteId
-    } as ISettingsParamsServer);
+    await initServer(
+      {
+        contextId,
+        siteId,
+      } as ISettingsParamsServer,
+      context.req,
+      context.res
+    );
 
     return {
       props: {

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IInfer } from '@sitecore-cloudsdk/engage-core';
+import { language } from '@sitecore-cloudsdk/engage-core';
 import { ICdpCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
 import { INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
 
@@ -11,7 +11,7 @@ export class Personalizer {
    * @param infer - The source of methods to estimate language and page parameters
    */
 
-  constructor(private personalizeClient: IPersonalizeClient, private id: string, private infer?: IInfer) {}
+  constructor(private personalizeClient: IPersonalizeClient, private id: string) {}
 
   /**
    * A function to make a request to the Sitecore CDP /callFlows API endpoint
@@ -43,7 +43,7 @@ export class Personalizer {
       channel: personalizerInput.channel,
       currency: personalizerInput.currency,
       friendlyId: personalizerInput.friendlyId,
-      language: personalizerInput.language
+      language: personalizerInput.language,
     };
 
     if (
@@ -73,7 +73,7 @@ export class Personalizer {
       email: input.email,
       friendlyId: input.friendlyId,
       identifiers: input.identifier,
-      language: input.language ?? this.infer?.language(),
+      language: input.language ?? language(),
       params: input.params,
       pointOfSale: '',
     };
@@ -99,7 +99,7 @@ export interface IPersonalizerInput {
   friendlyId: string;
   identifier?: IPersonalizeIdentifierInput;
   language?: string;
-  params?: IPersonalizeInputParams
+  params?: IPersonalizeInputParams;
 }
 
 /**

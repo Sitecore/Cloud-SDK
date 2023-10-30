@@ -60,7 +60,7 @@ describe('getProxySettings', () => {
         signal: new AbortController().signal,
       }
     );
-    expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key});
+    expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(contextId);
   });
@@ -71,7 +71,7 @@ describe('getProxySettings', () => {
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     getProxySettings(contextId).then((res) => {
-      expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key});
+      expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
         `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,

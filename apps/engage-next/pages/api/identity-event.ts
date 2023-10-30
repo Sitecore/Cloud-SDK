@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { NextApiRequest, NextApiResponse } from 'next';
-import { initServer, IIdentityEventAttributesInput } from '@sitecore-cloudsdk/events';
+import { initServer, IIdentityEventAttributesInput, identityServer } from '@sitecore-cloudsdk/events';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -19,14 +19,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     lastName: 'Doe',
   };
 
-  const eventsServer = await initServer({
-    cookieExpiryDays: 400,
-    enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    contextId: process.env.CONTEXT_ID || '',
-    siteId: process.env.SITE_ID || '',
-  });
+  await initServer(
+    {
+      cookieExpiryDays: 400,
+      enableServerCookie: true,
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
+    },
+    req,
+    res
+  );
 
-  console.log(event);
-  const cdpResponse = await eventsServer.identity(event, req);
+  const cdpResponse = await identityServer(event, req);
   res.status(200).json(cdpResponse);
 }

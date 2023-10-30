@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BaseEvent } from './base-event';
-import { ExtensionData, IEventAttributesInput } from './common-interfaces';
-import { IEventApiClient } from '../cdp/EventApiClient';
-import { MAX_EXT_ATTRIBUTES } from './consts';
+import { BaseEvent } from '../base-event';
+import { ExtensionData, IEventAttributesInput } from '../common-interfaces';
+import { IEventApiClient } from '../../cdp/EventApiClient';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { isShortISODateString, isValidEmail, IFlattenedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
 import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
 
@@ -18,7 +18,7 @@ export class IdentityEvent extends BaseEvent {
    */
   constructor(args: IIdentityEventArguments) {
     const { channel, currency, pointOfSale, language, page } = args.eventData;
-    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id, args.infer);
+    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id);
 
     this.validateAttributes(args.eventData);
 

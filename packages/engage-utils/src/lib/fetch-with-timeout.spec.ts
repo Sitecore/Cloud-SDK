@@ -70,7 +70,7 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeUndefined();
       expect(error).toBeInstanceOf(Error);
       expect(abortError.name).toBe('AbortError');
-      expect(error.message).toBe('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
     }
   });
 
@@ -84,8 +84,8 @@ describe('fetchWithTimeout', () => {
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions).catch((error) => {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
-      expect(error.message).toBe('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
     });
 
     expect(result).toBeUndefined();
@@ -102,10 +102,10 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
   });
 
-  it('should catch an error with the appropriate message error if the fetch request failsddddddddddd', async () => {
+  it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
     const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
@@ -116,7 +116,7 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
   });
 
   it('should catch an error and return null if the fetch request fails', async () => {
@@ -124,10 +124,6 @@ describe('fetchWithTimeout', () => {
 
     global.fetch = jest.fn(() => Promise.reject());
 
-    // expect(async () => {
-    //   const result = await fetchWithTimeout(url, timeout, fetchOptions);
-    //   expect(result).toBeNull();
-    // }).not.toThrow('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
     let result;
     try {
       result = await fetchWithTimeout(url, timeout, fetchOptions);
@@ -151,7 +147,7 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeNull();
       expect(abortError.name.length).toBeGreaterThan(0);
       expect(abortError.name).toEqual('abc');
-    }).not.toThrow('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
   });
 
   //

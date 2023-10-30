@@ -1,10 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { useState } from 'react';
-import { useEvents } from '../context/events';
+import { event as eventClient } from '@sitecore-cloudsdk/events';
 
 export function CustomEvent() {
-  const events = useEvents();
-
   let event = {
     channel: 'WEB',
     currency: 'EUR',
@@ -31,7 +29,7 @@ export function CustomEvent() {
     if (topLevelAttributes) event = { ...event, ...JSON.parse(topLevelAttributes) };
     extensionData = getExtObject(ext, numberOfExtAttr);
 
-    events?.event(type, event, extensionData);
+    eventClient(type, event, extensionData);
   };
 
   const sendRequestToNextApi = () => {

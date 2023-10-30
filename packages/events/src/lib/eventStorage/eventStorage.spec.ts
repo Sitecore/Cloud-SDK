@@ -1,11 +1,19 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { EventApiClient } from '../cdp/EventApiClient';
-import { ICustomEventInput, CustomEvent } from '../events/custom-event';
+import { ICustomEventInput, CustomEvent } from '../events/custom-event/custom-event';
 import { EventQueue, QueueEventPayload } from './eventStorage';
-jest.mock('../events/custom-event');
-
 import * as core from '@sitecore-cloudsdk/engage-core';
+
+jest.mock('../events/custom-event/custom-event');
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
@@ -16,24 +24,21 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
-
 describe('Event Storage', () => {
   const eventApiClient = new EventApiClient('http://test.com', '123', '456');
-  const inferLanguageSpy = jest.spyOn(core.Infer.prototype, 'language');
-  const inferPageSpy = jest.spyOn(core.Infer.prototype, 'pageName');
+  const inferLanguageSpy = jest.spyOn(core, 'language');
+  const inferPageSpy = jest.spyOn(core, 'pageName');
 
   let eventData: ICustomEventInput;
   const id = 'test_id';
-  const infer = new core.Infer();
 
-  const settings: ISettings = {
+  const settings: core.ISettings = {
     contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
-      cookieTempValue: 'bid_value'
     },
     siteId: '456',
   };
@@ -57,7 +62,7 @@ describe('Event Storage', () => {
 
     global.sessionStorage.getItem = jest.fn();
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     jest.clearAllMocks();
@@ -78,7 +83,7 @@ describe('Event Storage', () => {
       settings,
       type,
     };
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     storage.enqueueEvent(queueEventPayload);
 
     expect(inferLanguageSpy).toHaveBeenCalledTimes(0);
@@ -103,7 +108,7 @@ describe('Event Storage', () => {
       type,
     };
     mockArray.push(queueEventPayload);
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     storage.enqueueEvent(queueEventPayload);
 
     expect(inferLanguageSpy).toHaveBeenCalledTimes(1);
@@ -126,7 +131,7 @@ describe('Event Storage', () => {
       type,
     };
     mockArray.push(queueEventPayload);
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     storage.enqueueEvent(queueEventPayload);
 
     expect(eventQueueSpy).toHaveBeenCalledTimes(1);
@@ -146,14 +151,13 @@ describe('Event Storage', () => {
       type,
     };
     mockArray.push(queueEventPayload);
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     storage.enqueueEvent(queueEventPayload);
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(CustomEvent).toHaveBeenNthCalledWith(1, {
       eventApiClient,
       eventData: eventData,
       id: id,
-      infer,
       settings: settings,
       type: type,
     });
@@ -175,7 +179,7 @@ describe('Event Storage', () => {
 
     storageMock.getItem = jest.fn().mockReturnValueOnce(JSON.stringify(mockArray));
 
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     const queueEventPayload: QueueEventPayload = { eventData, id, settings, type };
     mockArray.push(queueEventPayload);
     const eventQueueSpy = jest.spyOn(EventQueue.prototype as any, 'getEventQueue');
@@ -189,7 +193,7 @@ describe('Event Storage', () => {
   });
 
   it('sendAllEvents should send all stored events to CDP.', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as ICdpResponse);
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.ICdpResponse);
     const eventQueueSpy = jest.spyOn(EventQueue.prototype as any, 'getEventQueue');
 
     const mockArray: QueueEventPayload[] = [];
@@ -203,21 +207,21 @@ describe('Event Storage', () => {
 
     eventQueueSpy.mockReturnValueOnce(mockArray);
 
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
 
     storage.sendAllEvents();
     expect(eventQueueSpy).toHaveBeenCalledTimes(1);
   });
 
   it('clearQueue should call the removeItem from interface', () => {
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
     storage.clearQueue();
     expect(storageMock.removeItem).toHaveBeenCalledTimes(1);
     expect(storageMock.removeItem).toHaveBeenCalledWith('EventQueue');
   });
 
   it('sendAllEvents should send events in the queue and clear the queue', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as ICdpResponse);
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.ICdpResponse);
     const mockArray: QueueEventPayload[] = [];
 
     const queueEventPayloadTwo: QueueEventPayload = { eventData, id: 'testId2', settings, type };
@@ -228,7 +232,7 @@ describe('Event Storage', () => {
 
     storageMock.getItem = jest.fn().mockReturnValueOnce(JSON.stringify(mockArray));
 
-    const storage = new EventQueue(storageMock, eventApiClient, infer);
+    const storage = new EventQueue(storageMock, eventApiClient);
 
     await storage.sendAllEvents();
 
@@ -238,7 +242,6 @@ describe('Event Storage', () => {
       eventData: queueEventPayloadTwo.eventData,
       extensionData: queueEventPayloadTwo.extensionData,
       id: queueEventPayloadTwo.id,
-      infer,
       settings: queueEventPayloadTwo.settings,
       type: queueEventPayloadTwo.type,
     });
@@ -247,7 +250,6 @@ describe('Event Storage', () => {
       eventData: queueEventPayloadThree.eventData,
       extensionData: queueEventPayloadThree.extensionData,
       id: queueEventPayloadThree.id,
-      infer,
       settings: queueEventPayloadThree.settings,
       type: queueEventPayloadThree.type,
     });

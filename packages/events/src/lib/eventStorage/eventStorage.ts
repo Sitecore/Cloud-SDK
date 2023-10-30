@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { Infer } from '@sitecore-cloudsdk/engage-core';
+import { pageName, language } from '@sitecore-cloudsdk/engage-core';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { ICustomEventArguments, CustomEvent } from '../events';
 
@@ -11,7 +11,7 @@ export class EventQueue {
    * @param infer - The instance of the infer class
    */
   private key = 'EventQueue';
-  constructor(private storage: IStorage, private eventApiClient: EventApiClient, private infer: Infer) {}
+  constructor(private storage: IStorage, private eventApiClient: EventApiClient) {}
 
   /** Returns the stored array of data with type QueueEventPayload, or empty array if the given key does not exist. */
   private getEventQueue(): QueueEventPayload[] {
@@ -34,12 +34,11 @@ export class EventQueue {
    * Performs validation by creating a new CustomEvent.
    */
   enqueueEvent(queueEventPayload: QueueEventPayload) {
-    queueEventPayload.eventData.page = queueEventPayload.eventData.page ?? this.infer.pageName();
-    queueEventPayload.eventData.language = queueEventPayload.eventData.language ?? this.infer.language();
+    queueEventPayload.eventData.page = queueEventPayload.eventData.page ?? pageName();
+    queueEventPayload.eventData.language = queueEventPayload.eventData.language ?? language();
 
     new CustomEvent({
       eventApiClient: this.eventApiClient,
-      infer: this.infer,
       ...queueEventPayload,
     });
 
@@ -60,7 +59,6 @@ export class EventQueue {
         eventData: queueEventPayload.eventData,
         extensionData: queueEventPayload.extensionData,
         id: queueEventPayload.id,
-        infer: this.infer,
         settings: queueEventPayload.settings,
         type: queueEventPayload.type,
       }).send();

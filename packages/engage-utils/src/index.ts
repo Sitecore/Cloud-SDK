@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { createCookieString } from './lib/cookies/create-cookie-string';
-import { SameSiteProperties, ICookieProperties } from './lib/cookies/interfaces';
+import { ICookieProperties } from './lib/cookies/interfaces';
 import { fetchWithTimeout } from './lib/fetch-with-timeout';
 import { getCookieValueClientSide } from './lib/cookies/get-cookie-value-client-side';
 import { isNextJsMiddlewareRequest } from './lib/typeguards/is-next-js-middleware-request';
@@ -35,7 +35,6 @@ export {
   isHttpRequest,
   isHttpResponse,
   getCookie,
-  SameSiteProperties,
   getCookieServerSide,
   cookieExists,
   flattenObject,

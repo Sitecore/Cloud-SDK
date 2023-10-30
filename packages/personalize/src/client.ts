@@ -1,4 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-export * from './lib/initializer/client/initializer';
-export type { IPersonalizerInput } from './lib/personalization/personalizer';
+export { init } from './lib/initializer/client/initializer';
+export { personalize } from './lib/personalization/personalize';

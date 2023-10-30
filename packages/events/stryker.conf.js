@@ -7,8 +7,9 @@ const config = {
     '!./packages/events/src/lib/consts.ts',
   ],
   thresholds: { high: 80, low: 60, break: 100 },
-  incremental: true,
+  incremental: false,
   testRunner: 'jest',
+  htmlReporter: { fileName: 'reports/mutation/events/mutation.html' },
   reporters: ['html', 'clear-text', 'progress'],
   coverageAnalysis: 'off',
   jest: {

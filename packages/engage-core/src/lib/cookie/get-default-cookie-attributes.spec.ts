@@ -1,4 +1,3 @@
-import { SameSiteProperties } from '@sitecore-cloudsdk/engage-utils';
 import { DEFAULT_COOKIE_EXPIRY_DAYS, DAILY_SECONDS } from '../consts';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
@@ -11,7 +10,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: undefined,
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -20,7 +19,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: undefined,
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -30,7 +29,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: 'test',
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -40,7 +39,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: undefined,
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -50,7 +49,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: 'test',
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -60,7 +59,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: 'test',
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -69,7 +68,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: undefined,
       maxAge: DEFAULT_COOKIE_EXPIRY_DAYS * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });
@@ -79,7 +78,7 @@ describe('getDefaultCookieAttributes', () => {
       domain: undefined,
       maxAge: 10 * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     });
   });

@@ -1,29 +1,46 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import {
+  ISettings,
   ISettingsParamsBrowser,
   IWebPersonalizationConfig,
-  Infer,
-  createCookie,
-  createSettings,
   getBrowserId,
+  getSettings,
+  initCore,
 } from '@sitecore-cloudsdk/engage-core';
-import { cookieExists } from '@sitecore-cloudsdk/engage-utils';
 import { LIBRARY_VERSION } from '../../consts';
-import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
-import { CallFlowEdgeProxyClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-edge-proxy-client';
-import { webPersonalization } from '../../web-personalization/web-personalization';
+import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 
-export type ISettingsParamsBrowserPersonalize = {
-  webPersonalization?: boolean | IWebPersonalizationConfig;
-} & ISettingsParamsBrowser;
+let dependencies: IBrowserPersonalizeSettings | null = null;
+/**
+ * Sets the personalize settings to be used by the application.
+ *
+ * @param settings - The personalize settings to be set, or `null` to clear the settings.
+ */
+export function setDependencies(settings: IBrowserPersonalizeSettings | null) {
+  dependencies = settings;
+}
 
+/**
+ * Retrieves the browser personalize settings object.
+ *
+ * This function ensures that the browser personalize settings have been initialized and contain essential properties like `settings` and `callFlowCDPClient`.
+ *
+ * @returns The browser personalize settings object.
+ * @throws Error if the personalize settings haven't been initialized with the required properties.
+ */
+export function getDependencies(): IBrowserPersonalizeSettings {
+  if (!dependencies) {
+    throw Error(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+  }
+  return dependencies;
+}
 /**
  * Initiates the Engage library using the global settings added by the developer
  * @param settingsInput - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Promise<Personalize> {
+export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error(
       // eslint-disable-next-line max-len
@@ -31,60 +48,36 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
     );
   }
 
-  const settings = await createSettings(settingsInput);
+  await initCore(settingsInput);
 
-  if (settingsInput.enableBrowserCookie && !cookieExists(window.document.cookie, settings.cookieSettings.cookieName)) {
-    createCookie(settings.contextId, settings.cookieSettings);
-  }
-
-  const id = getBrowserId(settings.cookieSettings.cookieName);
+  const settings = getSettings();
+  const id = getBrowserId();
+  const callFlowEdgeProxyClient = new CallFlowEdgeProxyClient(settings);
 
   window.Engage ??= {};
 
-  if (settingsInput.webPersonalization) {
-    webPersonalization(settingsInput.webPersonalization, settings);
-  }
+  setDependencies({
+    callFlowEdgeProxyClient,
+    id,
+    settings,
+  });
 
   window.Engage = {
     ...window.Engage,
-    getBrowserId: () => getBrowserId(settings.cookieSettings.cookieName),
+    getBrowserId: () => getBrowserId(),
     versions: {
       ...window.Engage.versions,
       personalize: LIBRARY_VERSION,
     },
   };
-
-  const infer = new Infer();
-
-  const callFlowCDPClient = new CallFlowEdgeProxyClient(settings);
-
-  return {
-    personalize: (personalizeData, timeout) => {
-      return new Personalizer(callFlowCDPClient, id, infer).getInteractiveExperienceData(personalizeData, timeout);
-    },
-    version: LIBRARY_VERSION,
-  };
 }
 
-/**
- * Handles the library functionality
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface Personalize {
-  /**
-   * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
-   * @param personalizeData - The required/optional attributes in order to create a flow execution
-   * @param timeout - Optional timeout in milliseconds.
-   * Used to abort the request to execute an interactive experiment or web experiment.
-   * @returns A flow execution response
-   */
-  personalize: (
-    personalizeData: IPersonalizerInput,
-    timeout?: number
-  ) => Promise<unknown | null | IFailedCalledFlowsResponse>;
+export type ISettingsParamsBrowserPersonalize = {
+  webPersonalization?: boolean | IWebPersonalizationConfig;
+} & ISettingsParamsBrowser;
 
-  /**
-   * Returns version of the library.
-   */
-  version: string;
+export interface IBrowserPersonalizeSettings {
+  id: string;
+  settings: ISettings;
+  callFlowEdgeProxyClient: CallFlowEdgeProxyClient;
 }

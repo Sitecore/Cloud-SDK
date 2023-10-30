@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { initServer, IPersonalizerInput } from '@sitecore-cloudsdk/personalize';
+import { initServer, IPersonalizerInput, personalizeServer } from '@sitecore-cloudsdk/personalize';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -11,17 +11,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     language: 'EN',
   };
 
-  const personalizeServer = await initServer({
-    cookieExpiryDays: 400,
-    enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    contextId: process.env.CONTEXT_ID || '',
-    siteId: process.env.SITE_ID || '',
-  });
+  await initServer(
+    {
+      cookieExpiryDays: 400,
+      enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
+    },
+    req,
+    res
+  );
 
   const timeoutParam = requestUrl.searchParams.get('timeout');
   const timeout = timeoutParam !== 'null' && timeoutParam !== 'undefined' ? Number(timeoutParam) : undefined;
 
-  const cdpResponse = await personalizeServer.personalize(event, req, timeout);
+  const cdpResponse = await personalizeServer(event, req, timeout);
 
   res.status(200).json(cdpResponse);
 }

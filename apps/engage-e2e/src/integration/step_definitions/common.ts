@@ -101,7 +101,7 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
   cy.get('body')
     .should('be.visible')
     .then(() => cy.writeLocal(`error.txt`, errorMessage));
-    cy.get('body').should('be.visible');
+  cy.get('body').should('be.visible');
 });
 
 //Visit page with the provided query parameters
@@ -186,13 +186,13 @@ defineStep('the {string} button is clicked', (event: string) => {
 
   // eslint-disable-next-line cypress/unsafe-to-chain-command
   //We do not want Cypress to click on buttons before Engage is present in window object
-  cy.window().its('Engage').then(() => {
-    cy.get(selector)
-      .should('be.visible')
-      .click()
-      .then(() => cy.writeLocal(`error.txt`, errorMessage));
-    });
-  });
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(1000);
+  cy.get(selector)
+    .should('be.visible')
+    .click()
+    .then(() => cy.writeLocal(`error.txt`, errorMessage));
+});
 
 Given('no cookie is created on the {string} page', (page: string) => {
   cy.intercept(`${Cypress.config('baseUrl')}${page}*`).as('callToServer');
@@ -234,7 +234,7 @@ defineStep('a {string} warning is displayed on the console', (warning: string) =
 
 defineStep('the queue is null', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(200);
+  cy.wait(1000);
   cy.window()
     .its('sessionStorage')
     .then((storage) => {

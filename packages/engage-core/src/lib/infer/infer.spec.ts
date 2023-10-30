@@ -1,7 +1,5 @@
-import { Infer } from './infer';
-
+import * as infer from './infer';
 describe('Test infer class', () => {
-  const infer = new Infer();
   const { window } = global;
   describe('language', () => {
     afterEach(() => {
@@ -16,6 +14,15 @@ describe('Test infer class', () => {
 
     it('should return undefined language if html lang attribute length is less than 2', async () => {
       jest.spyOn(document.documentElement, 'lang', 'get').mockImplementation(() => 'e');
+      const language = infer.language();
+
+      expect(language).toEqual(undefined);
+    });
+
+    it('should return undefined language if window is not defined', async () => {
+      jest.spyOn(document.documentElement, 'lang', 'get').mockImplementation(() => 'en-US');
+      jest.spyOn(global, 'window', 'get').mockReturnValueOnce(undefined as any);
+
       const language = infer.language();
 
       expect(language).toEqual(undefined);
@@ -48,6 +55,13 @@ describe('Test infer class', () => {
       const pageName = infer.pageName();
 
       expect(pageName).toEqual('about');
+    });
+
+    it('should return empty string if window is undefined', async () => {
+      jest.spyOn(global, 'window', 'get').mockReturnValueOnce(undefined as any);
+      const pageName = infer.pageName();
+
+      expect(pageName).toBe('');
     });
   });
 });

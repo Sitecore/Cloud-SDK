@@ -1,18 +1,20 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { useEvents } from '../context/events';
-import { usePersonalize } from '../context/personalize';
 
 import { useState } from 'react';
 import styles from './HomePage.module.css';
-import { IPageViewEventInput } from '@sitecore-cloudsdk/events';
+import {
+  IPageViewEventInput,
+  getBrowserId,
+  pageView,
+  LIBRARY_VERSION as eventVersion,
+} from '@sitecore-cloudsdk/events';
+
+import { LIBRARY_VERSION as personalizeVerion } from '@sitecore-cloudsdk/personalize';
 
 export function Index() {
-  const events = useEvents();
-  const personalize = usePersonalize();
-
   const [eventData, seteventData] = useState<IPageViewEventInput>({
     channel: 'WEB',
-    currency: 'EUR'
+    currency: 'EUR',
   });
   const [bid, setBID] = useState('Click a button above to retrieve browser ID');
   const [version, setVersion] = useState('Click a button above to retrieve version');
@@ -77,7 +79,7 @@ export function Index() {
           <div>
             <button
               data-testid='sendEvent'
-              onClick={() => events?.pageView(eventData)}>
+              onClick={() => pageView(eventData)}>
               Send Event
             </button>
           </div>
@@ -103,7 +105,7 @@ export function Index() {
           <button
             className={styles.button}
             data-testid='getBrowserIdFromWindow'
-            onClick={() => setBID(events?.getBrowserId() || '')}>
+            onClick={() => setBID(getBrowserId() || '')}>
             Get ID invoking method from window
           </button>
           <button
@@ -126,7 +128,7 @@ export function Index() {
           <button
             className={styles.button}
             data-testid='getVersionLibFromWindowEvents'
-            onClick={() => events && setVersion(events.version)}>
+            onClick={() => eventVersion && setVersion(eventVersion)}>
             Get Events version from lib function
           </button>
           <button
@@ -141,7 +143,7 @@ export function Index() {
           <button
             className={styles.button}
             data-testid='getVersionLibFromWindowPersonalize'
-            onClick={() => personalize && setVersion(personalize.version)}>
+            onClick={() => personalizeVerion && setVersion(personalizeVerion)}>
             Get Personalize version from lib function
           </button>
           <button

@@ -9,9 +9,11 @@ import {
   isHttpRequest,
   isHttpResponse,
 } from '@sitecore-cloudsdk/engage-utils';
-import { ISettings } from '../settings/interfaces';
+import { getSettingsServer } from '../init/init-core-server';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { handleHttpCookie } from './handle-http-cookie';
+import { getProxySettings } from '../init/get-proxy-settings';
+import { BID_PREFIX } from '../consts';
 
 /**
  * Handles server-side cookie operations based on the provided 'request' and 'response' objects.
@@ -24,12 +26,19 @@ import { handleHttpCookie } from './handle-http-cookie';
 export async function handleServerCookie<T extends TRequest, X extends IMiddlewareNextResponse | IHttpResponse>(
   request: T,
   response: X,
-  options: ISettings,
   timeout?: number
 ): Promise<void> {
+  const settings = getSettingsServer();
+
+  const { browserId, clientKey } = await getProxySettings(settings.contextId, timeout);
+
+  if (!clientKey) return;
+
+  settings.cookieSettings.cookieName = `${BID_PREFIX}${clientKey}`;
+
   if (isNextJsMiddlewareRequest(request) && isNextJsMiddlewareResponse(response)) {
-    await handleNextJsMiddlewareCookie(request, response, options, timeout);
+    handleNextJsMiddlewareCookie(request, response, settings, browserId);
   } else if (isHttpRequest(request) && isHttpResponse(response)) {
-    await handleHttpCookie(request, response, options, timeout);
+    handleHttpCookie(request, response, settings, browserId);
   }
 }

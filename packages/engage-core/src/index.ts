@@ -10,8 +10,10 @@ export { getBrowserId } from './lib/init/get-browser-id';
 export { getProxySettings } from './lib/init/get-proxy-settings';
 export { getGuestId } from './lib/init/get-guest-id';
 export { createSettings } from './lib/settings/create-settings';
+export { getSettings, initCore } from './lib/init/init-core';
+export { getSettingsServer, initCoreServer } from './lib/init/init-core-server';
 export { validateSettings } from './lib/settings/validate-settings';
-export { Infer } from './lib/infer/infer';
+export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export {
   API_VERSION,

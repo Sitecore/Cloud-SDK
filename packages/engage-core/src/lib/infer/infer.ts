@@ -1,26 +1,23 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 /**
- * A class that includes all the inferrer functionality of the library
+ * Returns the uppercase language code of the current web page's root HTML element, using the "lang" attribute.
+ * If unavailable or invalid, an undefined is returned.
+ * @returns - Language attribute or undefined
  */
-export class Infer {
-  /**
-   * Returns the uppercase language code of the current web page's root HTML element, using the "lang" attribute.
-   * If unavailable or invalid, an undefined is returned.
-   * @returns - Language attribute or undefined
-   */
-  language() {
-    return window.document.documentElement.lang.length > 1
-      ? new Intl.Locale(window.document.documentElement.lang).language.toLocaleUpperCase()
-      : undefined;
-  }
+export function language() {
+  return typeof window === 'undefined' || window.document.documentElement.lang.length <= 1
+    ? undefined
+    : new Intl.Locale(window.document.documentElement.lang).language.toLocaleUpperCase();
+}
 
-  /**
-   * Returns the name of the current page extracted from the URL's pathname.
-   * If it's the home page, it returns 'Home Page'.
-   * @returns - Home Page if root or pathname
-   */
-  pageName() {
-    return window.location.pathname === '/' ? 'Home Page' : (window.location.pathname.split('/').pop() as string);
-  }
+/**
+ * Returns the name of the current page extracted from the URL's pathname.
+ * If it's the home page, it returns 'Home Page'.
+ * @returns - Home Page if root or pathname
+ */
+export function pageName() {
+  if (typeof window === 'undefined') return '';
+
+  return window.location.pathname === '/' ? 'Home Page' : (window.location.pathname.split('/').pop() as string);
 }

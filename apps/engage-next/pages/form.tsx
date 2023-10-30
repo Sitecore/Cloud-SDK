@@ -1,9 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { useEvents } from '../context/events';
+import { form } from '@sitecore-cloudsdk/events';
 
 export function FormEvent() {
-  const events = useEvents();
-
   const getParamsFromUrl = (parameter: string) => {
     return new URLSearchParams(window.location.search).get(parameter);
   };
@@ -12,7 +10,7 @@ export function FormEvent() {
     const formId = getParamsFromUrl('formId') ?? '';
     const interactionType = getParamsFromUrl('interactionType') as unknown as 'VIEWED' | 'SUBMITTED';
 
-    await events?.form(formId, interactionType);
+    await form(formId, interactionType);
   };
 
   return (

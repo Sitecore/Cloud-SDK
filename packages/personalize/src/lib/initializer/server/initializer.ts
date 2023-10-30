@@ -1,71 +1,52 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import {
-  ISettingsParamsServer,
-  createSettings,
-  getBrowserIdFromRequest,
-  handleServerCookie,
-} from '@sitecore-cloudsdk/engage-core';
-import { CallFlowEdgeProxyClient, IFailedCalledFlowsResponse } from '../../personalization/callflow-edge-proxy-client';
-import { IPersonalizerInput, Personalizer } from '../../personalization/personalizer';
+import { ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/engage-core';
+import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
+import { IBrowserPersonalizeSettings } from '../client/initializer';
 import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/engage-utils';
-import { LIBRARY_VERSION } from '../../consts';
+
+let serverDependencies: IServerPersonalize | null = null;
+/**
+ * Sets the personalize settings to be used by the application.
+ *
+ * @param settings - The personalize settings to be set, or `null` to clear the settings.
+ */
+export function setDependencies(settings: IServerPersonalize | null) {
+  serverDependencies = settings;
+}
+/**
+ * Retrieves the personalize server settings used by the application.
+ *
+ * @returns The personalize server settings.
+ * @throws Error if the personalize server settings haven't been initialized.
+ */
+export function getServerDependencies(): IServerPersonalize {
+  if (!serverDependencies) {
+    throw Error(`[IE-0009] You must first initialize the "personalize" module. Run the "initServer" function.`);
+  }
+
+  return serverDependencies;
+}
 
 /**
  * Initiates the server Engage library using the global settings added by the developer
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function initServer(settingsInput: ISettingsParamsServer): Promise<PersonalizeServer> {
-  const settings = await createSettings(settingsInput);
-  const callFlowCDPClient = new CallFlowEdgeProxyClient(settings);
+export async function initServer<TResponse extends IMiddlewareNextResponse | IHttpResponse>(
+  settingsInput: ISettingsParamsServer,
+  request: TRequest,
+  response: TResponse
+): Promise<void> {
+  await initCoreServer(settingsInput, request, response);
 
-  return {
-    handleCookie: async (request, response, timeout) => {
-      if (!settingsInput.enableServerCookie) return;
-      await handleServerCookie(request, response, settings, timeout);
-    },
-    personalize: (personalizeData, request, timeout) => {
-      const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
+  const settings = getSettingsServer();
+  const callFlowEdgeProxyClient = new CallFlowEdgeProxyClient(settings);
 
-      return new Personalizer(callFlowCDPClient, id).getInteractiveExperienceData(personalizeData, timeout);
-    },
-    version: LIBRARY_VERSION,
-  };
+  setDependencies({
+    callFlowEdgeProxyClient,
+    settings: settings,
+  });
 }
 
-/**
- * Handles the library functionality
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface PersonalizeServer {
-  /**
-   * A function that handles the server set cookie
-   * @param  request - Interface with constraint for extending request
-   * @param  response - Interface with constraint for extending response
-   */
-  handleCookie: <T extends TRequest, X extends IMiddlewareNextResponse | IHttpResponse>(
-    request: T,
-    response: X,
-    timeout?: number
-  ) => Promise<void>;
-
-  /**
-   * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
-   * @param personalizeData - The required/optional attributes in order to create a flow execution
-   * @param request - Interface with constraint for extending request
-   * @param timeout - Optional timeout in milliseconds.
-   * Used to abort the request to execute an interactive experiment or web experiment.
-   * @returns A flow execution response
-   */
-  personalize: <T extends TRequest>(
-    personalizeData: IPersonalizerInput,
-    request: T,
-    timeout?: number
-  ) => Promise<unknown | null | IFailedCalledFlowsResponse>;
-
-  /**
-   * Returns the version of the library.
-   */
-  version: string;
-}
+export type IServerPersonalize = Omit<IBrowserPersonalizeSettings, 'id'>;

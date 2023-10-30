@@ -1,11 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
+import { language, pageName } from '@sitecore-cloudsdk/engage-core';
+import type { ISettings } from '@sitecore-cloudsdk/engage-core';
 import { IEventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
   private readonly browserId: string;
   private readonly language: string | undefined;
-  private readonly page: string;
+  public page: string;
   /**
    * The base event class that has all the shared functions between Events
    * @param baseEventData - The event data to send
@@ -13,15 +14,10 @@ export class BaseEvent {
    * @param id - The browser id
    * @param infer - The source of methods to estimate language and page parameters
    */
-  constructor(
-    private baseEventData: IBaseEventData,
-    protected settings: ISettings,
-    id: string,
-    private infer?: IInfer
-  ) {
+  constructor(private baseEventData: IBaseEventData, protected settings: ISettings, id: string) {
     this.browserId = id;
-    this.language = this.baseEventData.language ?? this.infer?.language();
-    this.page = this.baseEventData.page ?? (this.infer ? this.infer.pageName() : '');
+    this.language = this.baseEventData.language ?? language();
+    this.page = this.baseEventData.page ?? pageName();
   }
 
   /**

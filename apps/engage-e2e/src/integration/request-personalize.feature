@@ -15,6 +15,7 @@ Scenario: Developer requests personalize from API route
     """
         {"Key":"value"}
     """
+
 Scenario Outline: Developer requests personalize from middleware
     Given the '/personalize' page is loaded
     When the 'requestPersonalizeFromMiddleware' button is clicked
@@ -60,7 +61,7 @@ Scenario: Developer requests personalize from the client with timeout and CDP fa
         }
     """
     And the 'requestPersonalizeFromClientWithTimeout' button is clicked
-    Then an error is thrown: '[IE-0003] Timeout exceeded. The server did not respond within the allotted time.'
+    Then an error is thrown: '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.'
  
     Examples:
         | timeout | 

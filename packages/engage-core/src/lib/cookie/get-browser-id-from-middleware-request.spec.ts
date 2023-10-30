@@ -1,8 +1,5 @@
-// Import the function to be tested
-
 import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
 
-// Mock the dependencies
 const mockCookieName = 'bid_key';
 const mockRequest = {
   cookies: { get: jest.fn(), set: jest.fn() },
@@ -13,7 +10,7 @@ const mockRequest = {
 
 describe('getBrowserIdFromMiddlewareRequest', () => {
   beforeEach(() => {
-    jest.clearAllMocks(); // Reset mock function calls before each test
+    jest.clearAllMocks();
   });
 
   it('should return browser ID when found in Next.js v12 cookie format', () => {

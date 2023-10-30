@@ -28,7 +28,6 @@ describe('Test Base CallFlow Base Class', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
@@ -51,12 +50,15 @@ describe('Test Base CallFlow Base Class', () => {
     };
     new CallFlowEdgeProxyClient(settingsMock).sendCallFlowsRequest(expectedBody).then(() => {
       expect(fetch).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(`${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.contextId}&siteId=${settingsMock.siteId}`, {
-        body: JSON.stringify(expectedBody),
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { 'Content-Type': 'application/json', 'X-Library-Version': LIBRARY_VERSION },
-        method: 'POST',
-      });
+      expect(fetch).toHaveBeenCalledWith(
+        `${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.contextId}&siteId=${settingsMock.siteId}`,
+        {
+          body: JSON.stringify(expectedBody),
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          headers: { 'Content-Type': 'application/json', 'X-Library-Version': LIBRARY_VERSION },
+          method: 'POST',
+        }
+      );
     });
   });
 

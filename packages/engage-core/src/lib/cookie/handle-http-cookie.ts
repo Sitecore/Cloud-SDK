@@ -2,7 +2,6 @@
 
 import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/engage-utils';
 import { ISettings } from '../settings/interfaces';
-import { getProxySettings } from '../init/get-proxy-settings';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/engage-utils';
 
@@ -14,15 +13,16 @@ import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/enga
  * @param response - The Middleware Next Response or HTTP Response object.
  * @returns A Promise that resolves once the browser ID cookie is handled.
  *
- * @throws [IE-0004] - This exception is thrown in the case getBrowserIdFromCdp wasn't able to retrieve a browser id.
+ * @throws [IE-0003] - This exception is thrown in the case getBrowserIdFromCdp wasn't able to retrieve a browser id.
  */
-export async function handleHttpCookie(
+export function handleHttpCookie(
   request: IHttpRequest,
   response: IHttpResponse,
   options: ISettings,
-  timeout?: number
+  cookieTempValue: string
 ) {
   const { cookieName } = options.cookieSettings;
+
   const cookieValueFromRequest = request.headers.cookie;
 
   let cookie;
@@ -33,11 +33,11 @@ export async function handleHttpCookie(
     if (cookie) cookieValue = cookie.value;
   }
 
-  if (!cookieValue) cookieValue = (await getProxySettings(options.contextId, timeout)).browserId;
+  if (!cookieValue) cookieValue = cookieTempValue;
 
   if (!cookieValue)
     throw new Error(
-      '[IE-0004] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
     );
 
   const defaultCookieAttributes = getDefaultCookieAttributes(

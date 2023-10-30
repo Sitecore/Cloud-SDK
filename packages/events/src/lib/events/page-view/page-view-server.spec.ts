@@ -1,0 +1,108 @@
+import { pageViewServer } from './page-view-server';
+import { getServerDependencies } from '../../initializer/server/initializer';
+import { IPageViewEventInput, PageViewEvent } from './page-view-event';
+import * as init from '../../initializer/server/initializer';
+import * as core from '@sitecore-cloudsdk/engage-core';
+import { EventApiClient } from '../../cdp/EventApiClient';
+
+jest.mock('../../initializer/server/initializer');
+jest.mock('@sitecore-cloudsdk/engage-utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
+
+jest.mock('./page-view-event', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    PageViewEvent: jest.fn().mockImplementation(() => {
+      return {
+        send: jest.fn(() => Promise.resolve('mockedResponse')),
+      };
+    }),
+  };
+});
+
+describe('pageViewServer', () => {
+  let eventData: IPageViewEventInput;
+  const eventApiClient = new EventApiClient('http://test.com', '123', '456');
+  const settings: core.ISettings = {
+    contextId: '123',
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 730,
+      cookieName: 'bid_name',
+      cookiePath: '/',
+    },
+    siteId: '456',
+  };
+
+  jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
+    eventApiClient: eventApiClient,
+    settings: settings,
+  });
+
+  const req = {
+    cookies: {
+      get() {
+        return 'test';
+      },
+      set: () => undefined,
+    },
+    headers: {
+      get: () => '',
+      host: '',
+    },
+    ip: undefined,
+    url: '',
+  };
+
+  afterEach(() => {
+    eventData = {
+      channel: 'WEB',
+      currency: 'EUR',
+      language: 'EN',
+      page: 'races',
+      pointOfSale: 'spinair.com',
+    };
+    jest.clearAllMocks();
+  });
+
+  it('should send a PageViewEvent to the server', async () => {
+    const extensionData = { extKey: 'extValue' };
+    const response = await pageViewServer(eventData, req, extensionData);
+
+    expect(getServerDependencies).toHaveBeenCalled();
+    expect(PageViewEvent).toHaveBeenCalledWith({
+      eventApiClient: eventApiClient,
+      eventData,
+      extensionData,
+      id: 'test',
+      searchParams: '',
+      settings: {
+        contextId: '123',
+        cookieSettings: {
+          cookieDomain: 'cDomain',
+          cookieExpiryDays: 730,
+          cookieName: 'bid_name',
+          cookiePath: '/',
+        },
+        siteId: '456',
+      },
+    });
+    expect(response).toBe('mockedResponse');
+  });
+});

@@ -2,6 +2,15 @@ import { ICdpResponse } from '@sitecore-cloudsdk/engage-core';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { LIBRARY_VERSION } from '../consts';
 
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 describe('EventApiClient', () => {
   beforeEach(() => {
     const mockFetch = Promise.resolve({

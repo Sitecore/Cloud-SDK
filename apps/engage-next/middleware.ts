@@ -1,41 +1,51 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { initServer } from '@sitecore-cloudsdk/events';
-import { initServer as initPersonalizeServer } from '@sitecore-cloudsdk/personalize';
+import { eventServer, identityServer, initServer, pageViewServer } from '@sitecore-cloudsdk/events';
+import { initServer as initPersonalizeServer, personalizeServer } from '@sitecore-cloudsdk/personalize';
+import { handleServerCookie } from '@sitecore-cloudsdk/engage-core';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
   // Setting cookies on the response
   const response = NextResponse.next();
+
   const enableServerCookie =
     request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
     request.nextUrl.pathname.startsWith('/middleware');
 
   const badContextId = request?.nextUrl?.searchParams?.get('badContextId') ?? undefined;
-
-  const eventsServer = await initServer({
-    cookieExpiryDays: 400,
-    enableServerCookie,
-    contextId: badContextId ?? (process.env.CONTEXT_ID || ''),
-    siteId: process.env.SITE_ID || '',
-  });
+  
+  await initServer(
+    {
+      contextId: badContextId ?? (process.env.CONTEXT_ID || ''),
+      cookieExpiryDays: 400,
+      enableServerCookie,
+      siteId: process.env.SITE_ID || '',
+    },
+    request,
+    response
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
     channel: 'WEB',
-    currency: 'EUR'
+    currency: 'EUR',
   };
 
   const identityEventData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'testMiddleware@test.com',
-    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }]
+    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }],
   };
 
-  if (!request.nextUrl.pathname.startsWith('/about') && !request.nextUrl.pathname.startsWith('/server-side-props')) {
-    await eventsServer.handleCookie(request, response);
+  if (
+    !request.nextUrl.pathname.startsWith('/about') &&
+    !request.nextUrl.pathname.startsWith('/server-side-props') &&
+        enableServerCookie
+  ) {
+    await handleServerCookie(request, response);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-view-event')) {
@@ -44,7 +54,7 @@ export async function middleware(request: NextRequest) {
     const extensionData = {
       extParam: 'middlewareTest',
     };
-    await eventsServer.pageView(basicEventData, request, extensionData);
+    await pageViewServer(basicEventData, request, extensionData);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {
@@ -54,28 +64,32 @@ export async function middleware(request: NextRequest) {
       extParam: 'middlewareTest',
     };
 
-    await eventsServer.event('MIDDLEWARE-CUSTOM', basicEventData, request, extensionData);
+    await eventServer('MIDDLEWARE-CUSTOM', basicEventData, request, extensionData);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) {
-    await eventsServer.identity(identityEventData, request);
+    await identityServer(identityEventData, request);
   }
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
-    const personalizeServer = await initPersonalizeServer({
-      cookieExpiryDays: 400,
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
-    });
+    await initPersonalizeServer(
+      {
+        contextId: process.env.CONTEXT_ID || '',
+        siteId: process.env.SITE_ID || '',
+      },
+      request,
+      response
+    );
 
     const personalizeData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
-      friendlyId: 'personalizeintegrationtest'
+      friendlyId: 'personalizeintegrationtest',
+      language: 'EN'
     };
 
-    const personalizeRes = await personalizeServer.personalize(personalizeData, request);
+    const personalizeRes = await personalizeServer(personalizeData, request);
 
     response.cookies.set('cdpResponse', JSON.stringify(personalizeRes));
   }

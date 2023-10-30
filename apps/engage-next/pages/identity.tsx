@@ -1,13 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IIdentityEventAttributesInput } from '@sitecore-cloudsdk/events';
-import { useEvents } from '../context/events';
+import { IIdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
 export function Identity() {
-  const events = useEvents();
-
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  const handleSubmit = (eventTrigger: React.FormEvent<HTMLFormElement>) => {
+    eventTrigger.preventDefault();
 
     interface IFormData {
       city: HTMLInputElement;
@@ -28,7 +25,7 @@ export function Identity() {
       expiry_date: HTMLInputElement;
     }
 
-    const formData = event.target as HTMLFormElement & IFormData;
+    const formData = eventTrigger.target as HTMLFormElement & IFormData;
 
     // Get data from the form.
     const data: IIdentityEventAttributesInput = {
@@ -63,7 +60,7 @@ export function Identity() {
       data.identifiers[0].expiryDate = formData.expiry_date.value;
     }
 
-    events?.identity(data, { banana: null as unknown as string });
+    identity(data, { banana: null as unknown as string });
   };
 
   const sendIdentityWithEmptyExt = () => {
@@ -75,7 +72,7 @@ export function Identity() {
       language: 'EN'
     };
 
-    events?.identity(event, {});
+    identity(event, {});
   };
 
   const sendIdentityWithoutExtObject = () => {
@@ -87,7 +84,7 @@ export function Identity() {
       language: 'EN'
     };
 
-    events?.identity(event);
+    identity(event);
   };
 
   const sendIdentityWithExtObject = () => {
@@ -107,13 +104,13 @@ export function Identity() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const extensionDataExt: any = {};
     if (extensionDataNested && Object.keys(extensionDataNested).length)
-    extensionDataExt.nested = { ...extensionDataNested };
+      extensionDataExt.nested = { ...extensionDataNested };
 
     eventAttributes.forEach((value, key) => {
       extensionDataExt[key as keyof typeof extensionDataExt] = value;
     });
 
-    events?.identity(event, extensionDataExt);
+    identity(event, extensionDataExt);
   };
 
   const sendRequestToNextApi = () => {

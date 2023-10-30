@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BaseEvent } from './base-event';
-import { IEventAttributesInput } from './common-interfaces';
-import { IEventApiClient } from '../cdp/EventApiClient';
-import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
+import { BaseEvent } from '../base-event';
+import { IEventAttributesInput } from '../common-interfaces';
+import { IEventApiClient } from '../../cdp/EventApiClient';
+import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
 import { BasicTypes, IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
-import { MAX_EXT_ATTRIBUTES } from './consts';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: ICustomEventPayload;
@@ -17,7 +17,7 @@ export class CustomEvent extends BaseEvent {
    */
   constructor(args: ICustomEventArguments) {
     const { channel, currency, pointOfSale, language, page, ...rest } = args.eventData;
-    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id, args.infer);
+    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id);
 
     this.eventApiClient = args.eventApiClient;
 
@@ -60,7 +60,6 @@ export interface ICustomEventArguments {
   extensionData?: INestedObject;
   settings: ISettings;
   type: string;
-  infer?: IInfer;
 }
 
 /**

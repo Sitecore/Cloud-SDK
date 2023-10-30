@@ -1,10 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { INestedObject } from '@sitecore-cloudsdk/engage-utils';
-import { useEvents } from '../context/events';
+import { addToEventQueue, processEventQueue, clearEventQueue } from '@sitecore-cloudsdk/events';
 
 export function EventToQueue() {
-  const events = useEvents();
-
   const addEventToQueue = () => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const extensionDataNested = eventAttributes.get('nested')
@@ -47,7 +45,7 @@ export function EventToQueue() {
       addMultipleEventsToQueue(type, extensionData, parseInt(multipleEvents));
     }
 
-    events?.addToEventQueue(type, event, extensionData);
+    addToEventQueue(type, event, extensionData);
   };
 
   function addMultipleEventsToQueue(type: string, extensionData: INestedObject, multipleEvents: number) {
@@ -58,7 +56,7 @@ export function EventToQueue() {
         language: 'EN',
         page: `testEvent${index}`
       };
-      events?.addToEventQueue(type, eventTwo, extensionData);
+      addToEventQueue(type, eventTwo, extensionData);
     }
   }
 
@@ -69,7 +67,7 @@ export function EventToQueue() {
       language: 'EN'
     };
 
-    events?.addToEventQueue(type, event);
+    addToEventQueue(type, event);
   }
 
   const getParamsFromUrl = (parameter: string) => {
@@ -77,11 +75,11 @@ export function EventToQueue() {
   };
 
   const sendEventsFromQueue = () => {
-    events?.processEventQueue();
+    processEventQueue();
   };
 
-  const clearEventQueue = () => {
-    events?.clearEventQueue();
+  const clearQueue = () => {
+    clearEventQueue();
   };
 
   return (
@@ -111,7 +109,7 @@ export function EventToQueue() {
         </button>
         <button
           data-testid='clearQueue'
-          onClick={clearEventQueue}>
+          onClick={clearQueue}>
           Clear Event Queue
         </button>
       </div>

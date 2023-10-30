@@ -2,3 +2,6 @@
 
 export * from './client';
 export * from './server';
+export { LIBRARY_VERSION } from './lib/consts';
+
+export type { IPersonalizerInput } from './lib/personalization/personalizer';

@@ -36,7 +36,7 @@ export async function fetchWithTimeout(
     .then((data) => data)
     .catch((error) => {
       if (error.name === 'AbortError')
-        throw new Error('[IE-0003] Timeout exceeded. The server did not respond within the allotted time.');
+        throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
 
       return null;
     });

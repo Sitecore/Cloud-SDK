@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IPersonalizerInput, initServer } from '@sitecore-cloudsdk/personalize';
+import { IPersonalizerInput, initServer, personalize, personalizeServer } from '@sitecore-cloudsdk/personalize';
 import { useState } from 'react';
-import { usePersonalize } from '../context/personalize';
+
 import { GetServerSidePropsContext } from 'next';
 
 export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: string }) {
-  const personalize = usePersonalize();
   let timeout: number;
   const [personalizeData, setPersonalizetData] = useState<any>({
     channel: 'WEB',
     currency: 'EUR',
     language: 'EN',
-    page: 'personalize'
+    page: 'personalize',
   });
 
   function getParamsValue(paramsValue: string) {
@@ -86,7 +85,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           type='button'
           data-testid='requestPersonalizeFromClient'
           onClick={async () => {
-            const response = await personalize?.personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -99,7 +98,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='requestPersonalizeWithEmptyStringLanguage'
           onClick={async () => {
             personalizeData.language = '';
-            const response = await personalize?.personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -112,7 +111,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='requestPersonalizeWithUndefinedLanguage'
           onClick={async () => {
             personalizeData.language = undefined;
-            const response = await personalize?.personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -124,7 +123,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           type='button'
           data-testid='requestPersonalizeFromClientWithTimeout'
           onClick={async () => {
-            const response = await personalize?.personalize(personalizeData as unknown as IPersonalizerInput, timeout);
+            const response = await personalize(personalizeData as unknown as IPersonalizerInput, timeout);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -186,23 +185,25 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
     friendlyId: 'personalizeintegrationtest',
-    language: 'EN'
+    language: 'EN',
   };
 
-  const personalizeServer = await initServer({
-    cookieDomain:
-      typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
-    cookieExpiryDays: 400,
-    contextId: process.env.CONTEXT_ID || '',
-    enableServerCookie:
-      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    siteId: process.env.SITE_ID || '',
-  });
+  await initServer(
+    {
+      cookieDomain:
+        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+      cookieExpiryDays: 400,
+      enableServerCookie:
+        typeof context.query.enableServerCookie === 'string' &&
+        context.query.enableServerCookie.toLowerCase() === 'true',
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
+    },
+    context.req,
+    context.res
+  );
 
-  let cdpResponse;
-  if (personalizeServer) {
-    cdpResponse = await personalizeServer.personalize(event, context.req);
-  }
+  const cdpResponse = await personalizeServer(event, context.req);
 
   return {
     props: {

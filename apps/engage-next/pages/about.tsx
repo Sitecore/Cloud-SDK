@@ -1,14 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { initServer, IPageViewEventInput } from '@sitecore-cloudsdk/events';
-import { useEvents } from '../context/events';
+import { initServer, IPageViewEventInput, pageView } from '@sitecore-cloudsdk/events';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-export function About() {
-  const events = useEvents();
+import { handleServerCookie } from '@sitecore-cloudsdk/engage-core';
 
+export function About() {
   const [eventData, seteventData] = useState<IPageViewEventInput>({
     channel: 'WEB',
-    currency: 'EUR'
+    currency: 'EUR',
   });
   return (
     <div>
@@ -25,7 +24,7 @@ export function About() {
           />
           <button
             data-testid='sendEvent'
-            onClick={() => events?.pageView(eventData)}>
+            onClick={() => pageView(eventData)}>
             Send Event
           </button>
         </div>
@@ -38,16 +37,24 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const cookieDomain =
     typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : undefined;
 
-  const eventsServer = await initServer({
-    cookieDomain,
-    cookieExpiryDays: 400,
-    enableServerCookie:
-      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    contextId: process.env.CONTEXT_ID || '',
-    siteId: process.env.SITE_ID || '',
-  });
+  await initServer(
+    {
+      cookieDomain,
+      cookieExpiryDays: 400,
+      enableServerCookie:
+        typeof context.query.enableServerCookie === 'string' &&
+        context.query.enableServerCookie.toLowerCase() === 'true',
 
-  await eventsServer.handleCookie(context.req, context.res);
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
+    },
+    context.req,
+    context.res
+  );
+
+  if (typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true')
+    await handleServerCookie(context.req, context.res);
+
   return {
     props: {}, // will be passed to the page component as props
   };

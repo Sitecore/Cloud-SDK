@@ -7,8 +7,9 @@ const config = {
   ],
   thresholds: { high: 80, low: 60, break: 100 },
   // ignoreStatic: true,
-  incremental: true,
+  incremental: false,
   testRunner: 'jest',
+  htmlReporter: { fileName: 'reports/mutation/engage-core/mutation.html' },
   reporters: ['html', 'clear-text', 'progress'],
   coverageAnalysis: 'off',
   jest: {

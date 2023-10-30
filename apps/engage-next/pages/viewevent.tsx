@@ -1,11 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { useEvents } from '../context/events';
+
 import { useEffect, useState } from 'react';
-import { IPageViewEventInput, initServer } from '@sitecore-cloudsdk/events';
+import { IPageViewEventInput, initServer, pageView, pageViewServer, init } from '@sitecore-cloudsdk/events';
 import { INestedObject } from '@sitecore-cloudsdk/engage-utils';
 import { GetServerSidePropsContext } from 'next';
 export function ViewEvent(props: { res: string | number | readonly string[] }) {
-  const events = useEvents();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [res] = useState(props.res);
 
@@ -18,7 +17,7 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
 
     const event: IPageViewEventInput = {
       channel: 'WEB',
-      currency: 'EUR'
+      currency: 'EUR',
     };
 
     if (eventAttributes.get('variantid')) {
@@ -40,10 +39,20 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
 
     if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-    if (events) {
-      events.pageView(event, noExt ? undefined : extensionData);
+    async function initEventsSetting() {
+      await init({
+        cookieDomain: 'localhost',
+        cookieExpiryDays: 400,
+        enableBrowserCookie: true,
+        contextId: process.env.CONTEXT_ID || '',
+        siteId: process.env.SITE_ID || '',
+      });
+
+      pageView(event, noExt ? undefined : extensionData);
     }
-  }, [events]);
+
+    initEventsSetting();
+  }, []);
 
   if (res === 'Error') {
     throw new Error(`[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.`);
@@ -79,7 +88,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const event: Record<string, unknown> = {
     channel: 'WEB',
-    currency: 'EUR'
+    currency: 'EUR',
   };
 
   if (eventAttributes.get('variantid')) {
@@ -97,27 +106,30 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-  const eventsServer = await initServer({
-    cookieDomain:
-      typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
-    cookieExpiryDays: 400,
-    contextId: process.env.CONTEXT_ID || '',
-    enableServerCookie:
-      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
-    siteId: process.env.SITE_ID || '',
-  });
+  await initServer(
+    {
+      cookieDomain:
+        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+      cookieExpiryDays: 400,
+      enableServerCookie:
+        typeof context.query.enableServerCookie === 'string' &&
+        context.query.enableServerCookie.toLowerCase() === 'true',
+      contextId: process.env.CONTEXT_ID || '',
+      siteId: process.env.SITE_ID || '',
+    },
+    context.req,
+    context.res
+  );
 
   let cdpResponse;
-  if (eventsServer) {
-    try {
-      cdpResponse = await eventsServer.pageView(
-        event as unknown as IPageViewEventInput,
-        context.req,
-        noExt ? undefined : extensionData
-      );
-    } catch {
-      cdpResponse = 'Error';
-    }
+  try {
+    cdpResponse = await pageViewServer(
+      event as unknown as IPageViewEventInput,
+      context.req,
+      noExt ? undefined : extensionData
+    );
+  } catch {
+    cdpResponse = 'Error';
   }
 
   return {

@@ -32,7 +32,7 @@ defineStep('{string} page is loaded again with enableServerCookie parameter', (p
   cy.visit(`${page}?enableServerCookie=true&`);
 });
 
-Given('{string} page is loaded with enableServerCookie true and an invalid ClientKey parameter', (page: string) => {
+Given('{string} page is loaded with enableServerCookie true and an invalid contextId parameter', (page: string) => {
   cy.on('uncaught:exception', (error) => {
     errorMessage = error.message;
     return false;

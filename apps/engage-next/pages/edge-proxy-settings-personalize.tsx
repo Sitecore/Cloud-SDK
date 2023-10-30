@@ -20,7 +20,6 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
     await init({ contextId: process.env.CONTEXT_ID as string, siteId: process.env.SITE_ID as string });
   };
 
-
   return (
     <div>
       <h1>EdgeProxySettings Page</h1>
@@ -87,10 +86,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const siteId = attributeToTest === 'siteid' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
 
   try {
-    await initServer({
-      contextId,
-      siteId,
-    } as ISettingsParamsServer);
+    await initServer(
+      {
+        contextId,
+        siteId,
+      } as ISettingsParamsServer,
+      context.req,
+      context.res
+    );
 
     return {
       props: {

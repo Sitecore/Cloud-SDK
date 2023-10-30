@@ -15,7 +15,9 @@ export interface ISettingsParamsServer extends ISettingsParams {
   enableServerCookie?: boolean;
 }
 
-export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {}
+export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
+  timeout?: number;
+}
 
 /**
  * Properties for the global settings object
@@ -39,7 +41,6 @@ export interface ICookieSettings {
   cookieDomain?: string;
   cookieExpiryDays: number;
   cookiePath?: string;
-  cookieTempValue: string;
 }
 
 /**

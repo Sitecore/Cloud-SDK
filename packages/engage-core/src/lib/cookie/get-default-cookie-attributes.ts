@@ -5,7 +5,7 @@
  * @returns the default configuration settings for the cookie string
  */
 
-import { ICookieProperties, SameSiteProperties } from '@sitecore-cloudsdk/engage-utils';
+import { ICookieProperties } from '@sitecore-cloudsdk/engage-utils';
 import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
 
 // eslint-disable-next-line max-len
@@ -17,7 +17,7 @@ export function getDefaultCookieAttributes(
     domain: cookieDomain,
     maxAge: maxAge * DAILY_SECONDS,
     path: '/',
-    sameSite: SameSiteProperties.None,
+    sameSite: 'None',
     secure: true,
   };
 }

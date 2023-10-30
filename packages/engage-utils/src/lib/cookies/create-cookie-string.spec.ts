@@ -1,6 +1,6 @@
 import { createCookieString } from './create-cookie-string';
 import { DAILY_SECONDS } from './consts';
-import { ICookieProperties, SameSiteProperties } from './interfaces';
+import { ICookieProperties } from './interfaces';
 
 describe('createCookieString', () => {
   const cookieMaxAge = 365 * DAILY_SECONDS;
@@ -9,7 +9,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=None`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -18,7 +18,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=None; Secure`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -28,7 +28,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Lax`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Lax,
+      sameSite: 'Lax',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -38,7 +38,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Strict; Secure`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: true,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -48,7 +48,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Strict`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -58,7 +58,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Strict; Secure`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: true,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -68,7 +68,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Lax`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Lax,
+      sameSite: 'Lax',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -78,7 +78,7 @@ describe('createCookieString', () => {
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=Strict`;
     const options: ICookieProperties = {
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -90,7 +90,7 @@ describe('createCookieString', () => {
     const options: ICookieProperties = {
       domain: 'localhost',
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -101,7 +101,7 @@ describe('createCookieString', () => {
     const options: ICookieProperties = {
       domain: '',
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.Strict,
+      sameSite: 'Strict',
       secure: false,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -112,7 +112,7 @@ describe('createCookieString', () => {
     const options: ICookieProperties = {
       domain: 'localhost',
       maxAge: cookieMaxAge,
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
@@ -124,7 +124,7 @@ describe('createCookieString', () => {
       domain: 'localhost',
       maxAge: 365 * DAILY_SECONDS,
       path: '/',
-      sameSite: SameSiteProperties.None,
+      sameSite: 'None',
       secure: true,
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);

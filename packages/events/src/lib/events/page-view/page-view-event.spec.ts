@@ -1,23 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { EventApiClient } from '../cdp/EventApiClient';
+
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
 import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
-import { MAX_EXT_ATTRIBUTES } from './consts';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/engage-core';
 import * as utils from '@sitecore-cloudsdk/engage-utils';
-
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
-
+import { EventApiClient } from '../../cdp/EventApiClient';
 jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
 
@@ -27,34 +17,28 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
+jest.mock('@sitecore-cloudsdk/engage-core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
 
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 describe('PageViewEvent', () => {
   const eventApiClient = new EventApiClient('http://testurl', '123', '456');
   const fetchCallSpy = jest.spyOn(EventApiClient.prototype, 'send');
   const id = 'test_id';
-  const infer = new core.Infer();
-  let expectedBasicAttributes = {
-  };
-  let eventData: IPageViewEventInput = {
-    channel: 'WEB',
-    currency: 'EUR',
-    page: 'races'
-  };
-  let settings: ISettings = {
-    contextId: '123',
-    cookieSettings: {
-      cookieExpiryDays: 730,
-      cookieName: 'bid_name',
-      cookieTempValue: 'bid_value'
-    },
-    siteId: '456',
-  };
+
+  let expectedBasicAttributes = {};
+  let eventData: IPageViewEventInput;
+  let settings: ISettings;
 
   function callPageEvent(
     eventApiClient: any,
     eventData: any,
     id: any,
-    infer: any,
     settings: any,
     extensionData?: any,
     searchParams?: any
@@ -63,7 +47,6 @@ describe('PageViewEvent', () => {
       eventApiClient,
       eventData,
       id,
-      infer,
       settings,
       searchParams: searchParams ?? window.location.search,
       extensionData,
@@ -77,13 +60,15 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pos: ''
+      pos: '',
     };
 
     eventData = {
       channel: 'WEB',
       currency: 'EUR',
-      page: 'races'
+      language: 'EN',
+      page: 'races',
+      pointOfSale: '',
     };
 
     settings = {
@@ -93,12 +78,11 @@ describe('PageViewEvent', () => {
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
-        cookieTempValue: 'bid_value'
       },
       siteId: '456',
     };
-    infer.language = jest.fn().mockImplementation(() => 'EN');
-    infer.pageName = jest.fn().mockImplementation(() => 'races');
+    jest.spyOn(core, 'language').mockImplementation(() => 'EN');
+    jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
   });
 
   afterEach(() => {
@@ -121,7 +105,6 @@ describe('PageViewEvent', () => {
         eventApiClient,
         eventData,
         id,
-        infer,
         searchParams: '',
         settings,
       });
@@ -132,102 +115,6 @@ describe('PageViewEvent', () => {
     });
   });
 
-  // describe('check getUTMParameters function', () => {
-  //   const getUTMParametersSpy = jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters');
-  //   beforeEach(() => {
-  //     jest.clearAllMocks();
-  //     settings.includeUTMParameters = true;
-  //     const mockFetch = Promise.resolve({
-  //       json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
-  //     });
-  //     global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  //   });
-
-  //   afterEach(() => {
-  //     jest.clearAllMocks();
-  //   });
-
-  // it('should not call getUTMParameters if includeUTMParameters is false', () => {
-  //   settings.includeUTMParameters = false;
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   expect(getUTMParametersSpy).toHaveBeenCalledTimes(0);
-  // });
-
-  // it('should {} if urlSearchParams is empty', () => {
-  //   Object.defineProperty(window, 'location', {
-  //     value: {
-  //       search: '',
-  //     },
-  //     writable: true,
-  //   });
-
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   expect(getUTMParametersSpy).toHaveLastReturnedWith({});
-  // });
-
-  // it("should return empty object if urlSearchParams doesn't contain utm_ params", () => {
-  //   Object.defineProperty(window, 'location', {
-  //     value: {
-  //       search: '?banana=banana',
-  //     },
-  //     writable: true,
-  //   });
-
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   expect(getUTMParametersSpy).toHaveReturnedWith({});
-  // });
-
-  // it('should return object with utm_ params when urlSearchParams contains utm_params', () => {
-  //   Object.defineProperty(window, 'location', {
-  //     value: {
-  //       search: '?utm_campaign=campaign&utm_medium=email',
-  //     },
-  //     writable: true,
-  //   });
-
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
-  // });
-
-  // it('should return object with utm_ params and be case insensitive', () => {
-  //   Object.defineProperty(window, 'location', {
-  //     value: {
-  //       search: '?uTm_campaign=campaign&UTM_medium=email',
-  //     },
-  //     writable: true,
-  //   });
-
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
-  // });
-
-  // it('should send event without utm_ params if the returned object is empty {}', () => {
-  //   jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
-
-  //   callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //   const expectedAttributes = {
-  //     ...expectedBasicAttributes,
-  //     ...{
-  //       type: 'VIEW',
-  //     },
-  //   };
-  //   expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
-  // });
-
-  //   it('should send event with utm_ params if the returned object is not empty', () => {
-  //     getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
-  //     callPageEvent(eventApiClient, eventData, id, infer, settings);
-  //     const expectedAttributes = {
-  //       ...expectedBasicAttributes,
-  //       ...{
-  //         type: 'VIEW',
-  //         utm_test: 'test',
-  //       },
-  //     };
-  //     expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
-  //   });
-  // });
-
   describe('check getPageVariantId function', () => {
     const getPageVariantIdSpy = jest.spyOn(PageViewEvent.prototype as any, 'getPageVariantId');
     let eventData: IPageViewEventInput = {
@@ -235,7 +122,6 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: 'spinair.com',
     };
 
     beforeEach(() => {
@@ -249,7 +135,6 @@ describe('PageViewEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pointOfSale: 'spinair.com',
       };
     });
 
@@ -265,13 +150,13 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
 
     it('should return the variantid if exists in the search params that is passed from the server and not present in the event data', async () => {
-      callPageEvent(eventApiClient, eventData, id, infer, settings, undefined, '?variantid=test_pageVariantId');
+      callPageEvent(eventApiClient, eventData, id, settings, undefined, '?variantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
     it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
@@ -283,7 +168,7 @@ describe('PageViewEvent', () => {
       });
       eventData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
-      callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData, '?testVariantid=test_pageVariantId');
+      callPageEvent(eventApiClient, eventData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
 
@@ -297,7 +182,7 @@ describe('PageViewEvent', () => {
 
       eventData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
-      callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData);
+      callPageEvent(eventApiClient, eventData, id, settings, extensionData);
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
     it('should return null if the variantid does not exist in the search params property and event data', async () => {
@@ -307,7 +192,7 @@ describe('PageViewEvent', () => {
         },
         writable: true,
       });
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       expect(getPageVariantIdSpy).toHaveReturnedWith(null);
     });
     it('should not call flatten object method when no extension data is passed', async () => {
@@ -319,7 +204,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
     it('should prioritize pageVariantId value from event data over extension data when provided in both', async () => {
@@ -333,7 +218,7 @@ describe('PageViewEvent', () => {
 
       eventData.pageVariantId = 'vid';
 
-      callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData);
+      callPageEvent(eventApiClient, eventData, id, settings, extensionData);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -351,7 +236,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -369,7 +254,7 @@ describe('PageViewEvent', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData);
+    callPageEvent(eventApiClient, eventData, id, settings, extensionData);
     const expectedAttributes = {
       ...expectedBasicAttributes,
       ...{
@@ -388,7 +273,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData);
+        callPageEvent(eventApiClient, eventData, id, settings, extensionData);
       }).toThrowError(extErrorMessage);
     });
 
@@ -399,7 +284,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(eventApiClient, eventData, id, infer, settings, extensionData);
+        callPageEvent(eventApiClient, eventData, id, settings, extensionData);
       }).not.toThrowError(extErrorMessage);
     });
   });
@@ -418,14 +303,14 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should return null if isFirstPageView is false ', async () => {
       PageViewEvent.isFirstPageView = false;
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(PageViewEvent.isFirstPageView).toBeFalsy();
     });
     it('getReferrer should return null if isFirstPageView is true and document referrer is empty string ', async () => {
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       expect(document.referrer).toBe('');
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -445,7 +330,7 @@ describe('PageViewEvent', () => {
       });
 
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(eventApiClient, eventData, id, infer, settings);
+      callPageEvent(eventApiClient, eventData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{ type: 'VIEW' },
@@ -468,7 +353,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(eventApiClient, eventData, id, infer, settings, undefined);
+      callPageEvent(eventApiClient, eventData, id, settings, undefined);
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith(null);
     });
@@ -481,7 +366,7 @@ describe('PageViewEvent', () => {
 
       expect(global.window).toBeUndefined();
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(eventApiClient, eventData, id, infer, settings, undefined, '');
+      callPageEvent(eventApiClient, eventData, id, settings, undefined, '');
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{ type: 'VIEW' },
@@ -499,7 +384,7 @@ describe('PageViewEvent', () => {
       });
       PageViewEvent.isFirstPageView = true;
       eventData.referrer = 'campaign';
-      callPageEvent(eventApiClient, eventData, id, infer, settings, undefined, '');
+      callPageEvent(eventApiClient, eventData, id, settings, undefined, '');
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith('campaign');

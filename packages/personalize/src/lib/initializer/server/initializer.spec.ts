@@ -3,20 +3,12 @@
 import * as core from '@sitecore-cloudsdk/engage-core';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
-import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/engage-utils';
-import { Personalizer } from '../../personalization/personalizer';
-import { initServer } from './initializer';
+import { IServerPersonalize, getServerDependencies, initServer, setDependencies } from './initializer';
+import * as callFlowEdgeProxyClient from '../../personalization/callflow-edge-proxy-client';
 
 jest.mock('../../personalization/personalizer');
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('../../personalization/callflow-edge-proxy-client');
 
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule,
-  };
-});
 jest.mock('@sitecore-cloudsdk/engage-core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
 
@@ -28,12 +20,15 @@ jest.mock('@sitecore-cloudsdk/engage-core', () => {
 });
 
 describe('initializer', () => {
-  const id = 'test_id';
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
+  global.fetch = jest.fn().mockImplementation(() => mockFetch);
   const settingsParams: core.ISettingsParamsServer = {
-    contextId: '123',
+    contextId: '456',
     cookieDomain: 'cDomain',
-    siteId: '456',
+    enableServerCookie: true,
+    siteId: '123',
   };
+
   const req = {
     cookies: {
       get() {
@@ -49,14 +44,7 @@ describe('initializer', () => {
     url: '',
   };
 
-  const eventData = {
-    channel: 'WEB',
-    currency: 'EUR',
-    language: 'EN',
-    page: 'races',
-    pointOfSale: '',
-  };
-  const res: IMiddlewareNextResponse = {
+  const res = {
     cookies: {
       set() {
         return 'test';
@@ -64,31 +52,57 @@ describe('initializer', () => {
     },
   };
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref', client_key: 'key' }) });
-  global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-
   afterEach(() => {
     jest.clearAllMocks();
   });
-  jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValue(id);
-  it('should return an object with available functionality', async () => {
-    settingsParams.enableServerCookie = true;
-    const serverEngage = await initServer(settingsParams);
 
-    expect(typeof serverEngage.version).toBe('string');
-    expect(serverEngage.version).toBe(packageJson.version);
-    expect(LIBRARY_VERSION).toBe(packageJson.version);
-    expect(typeof serverEngage).toBe('object');
-    expect(typeof serverEngage.handleCookie).toBe('function');
-    expect(typeof serverEngage.personalize).toBe('function');
+  beforeEach(() => {
+    setDependencies(null as unknown as IServerPersonalize);
+  });
+  jest.spyOn(core, 'initCoreServer');
 
-    const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
+  jest.spyOn(core, 'getSettingsServer').mockReturnValue({
+    contextId: '456',
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 730,
+      cookieName: 'bid_key',
+      cookiePath: '/',
+    },
+    siteId: '123',
+  });
 
-    await serverEngage.handleCookie(req, res);
+  describe('getDependencies', () => {
+    beforeEach(() => {
+      setDependencies(null as unknown as IServerPersonalize);
+    });
 
-    expect(handleServerCookieSpy).toHaveBeenCalledTimes(1);
+    it('should throw error if settings are not initialized', () => {
+      let settings;
+      expect(() => {
+        setDependencies(null);
+        settings = getServerDependencies();
+      }).toThrow(`[IE-0009] You must first initialize the "personalize" module. Run the "initServer" function.`);
+      expect(settings).toBeUndefined();
+    });
+  });
 
-    serverEngage.personalize({ friendlyId: 'personalizeintegrationtest', ...eventData }, req);
-    expect(Personalizer).toHaveBeenCalledTimes(1);
+  describe('init', () => {
+    it('should throw error if settings are not initialized', () => {
+      expect(() => getServerDependencies()).toThrow(
+        `[IE-0009] You must first initialize the "personalize" module. Run the "initServer" function.`
+      );
+    });
+
+    it('should initialize the server functionality', async () => {
+      await initServer(settingsParams, req, res);
+      const settings = getServerDependencies();
+      expect(settings).toBeDefined();
+      expect(settings.settings.contextId).toBe('456');
+      expect(core.initCoreServer).toHaveBeenCalledTimes(1);
+      expect(core.getSettingsServer).toHaveBeenCalledTimes(1);
+      expect(callFlowEdgeProxyClient.CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
+      expect(LIBRARY_VERSION).toBe(packageJson.version);
+    });
   });
 });

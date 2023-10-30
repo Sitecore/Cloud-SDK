@@ -5,21 +5,12 @@
  */
 export interface ICookieProperties {
   maxAge: number;
-  sameSite: SameSiteProperties;
+  sameSite: string;
   secure: boolean;
   path?: string;
   httpOnly?: boolean;
   expires?: Date;
   domain?: string;
-}
-
-/**
- * Values for the [sameSite] cookie property
- */
-export enum SameSiteProperties {
-  Strict = 'Strict',
-  Lax = 'Lax',
-  None = 'None',
 }
 
 /**
