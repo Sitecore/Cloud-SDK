@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { IPageViewEventInput, initServer, pageView, pageViewServer, init } from '@sitecore-cloudsdk/events';
-import { INestedObject } from '@sitecore-cloudsdk/engage-utils';
+import { INestedObject } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
 export function ViewEvent(props: { res: string | number | readonly string[] }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars

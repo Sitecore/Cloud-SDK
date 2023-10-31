@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { INestedObject } from '@sitecore-cloudsdk/engage-utils';
+import { INestedObject } from '@sitecore-cloudsdk/utils';
 import { addToEventQueue, processEventQueue, clearEventQueue } from '@sitecore-cloudsdk/events';
 
 export function EventToQueue() {
@@ -20,7 +20,7 @@ export function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN'
+      language: 'EN',
     };
 
     eventAttributes.delete('nested');
@@ -54,7 +54,7 @@ export function EventToQueue() {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: `testEvent${index}`
+        page: `testEvent${index}`,
       };
       addToEventQueue(type, eventTwo, extensionData);
     }
@@ -64,7 +64,7 @@ export function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN'
+      language: 'EN',
     };
 
     addToEventQueue(type, event);

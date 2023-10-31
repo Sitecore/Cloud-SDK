@@ -49,11 +49,14 @@ Then('api server event request responds with status code {string}', (expectedSta
 
 defineStep('the {string} page is loaded', (page: string) => {
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
-    'personalizeRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+  ).as('personalizeRequest');
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
+    'eventRequest'
+  );
   cy.visit(page);
 
   cy.wait('@initialCall', { timeout: 30000 });
@@ -79,11 +82,14 @@ defineStep('the {string} page is loaded without init function', (page: string) =
 
 defineStep('the {string} page is loaded with query parameters:', (page: string, params: string) => {
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
-    'personalizeRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+  ).as('personalizeRequest');
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
+    'eventRequest'
+  );
 
   let searchString = '';
   const parameters = JSON.parse(params);
@@ -107,11 +113,14 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
 //Visit page with the provided query parameters
 defineStep('the {string} page is loaded with query parameters', (page: string, datatable: any) => {
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
-    'personalizeRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+  ).as('personalizeRequest');
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
+    'eventRequest'
+  );
   const attributesArray: { key: string; value: string }[] = [];
   const attributes = datatable.hashes()[0];
   let searchString = '';

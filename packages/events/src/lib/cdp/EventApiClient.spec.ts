@@ -1,9 +1,9 @@
-import { ICdpResponse } from '@sitecore-cloudsdk/engage-core';
+import { ICdpResponse } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { LIBRARY_VERSION } from '../consts';
 
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -1,8 +1,8 @@
 import { IBrowserEventsSettings, init, setDependencies } from './initializer';
 import packageJson from '../../../../package.json';
 import { LIBRARY_VERSION } from '../../consts';
-import * as core from '@sitecore-cloudsdk/engage-core';
-import * as utils from '@sitecore-cloudsdk/engage-utils';
+import * as core from '@sitecore-cloudsdk/core';
+import * as utils from '@sitecore-cloudsdk/utils';
 import { EventApiClient } from '../../cdp/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
 import '../../../global.d.ts';
@@ -10,8 +10,8 @@ import '../../../global.d.ts';
 jest.mock('../../cdp/EventApiClient');
 jest.mock('../../eventStorage/eventStorage');
 
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -19,8 +19,8 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

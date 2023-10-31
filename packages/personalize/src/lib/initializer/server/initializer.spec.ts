@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable sort-keys */
-import * as core from '@sitecore-cloudsdk/engage-core';
+import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
 import { IServerPersonalize, getServerDependencies, initServer, setDependencies } from './initializer';
@@ -9,8 +9,8 @@ import * as callFlowEdgeProxyClient from '../../personalization/callflow-edge-pr
 jest.mock('../../personalization/personalizer');
 jest.mock('../../personalization/callflow-edge-proxy-client');
 
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

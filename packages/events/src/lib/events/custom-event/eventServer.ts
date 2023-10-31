@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICdpResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/engage-core';
+import { ICdpResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
 import { ExtensionData } from '../common-interfaces';
 import { ICustomEventInput, CustomEvent } from './custom-event';
 import { getServerDependencies } from '../../initializer/server/initializer';
-import { TRequest } from '@sitecore-cloudsdk/engage-utils';
+import { TRequest } from '@sitecore-cloudsdk/utils';
 /**
  * A function that sends an event to SitecoreCloud API with the specified type
  * @param type - The required type of the event

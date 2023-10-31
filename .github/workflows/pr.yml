@@ -50,8 +50,8 @@ jobs:
     strategy:
       matrix:
         mutation-package:
-          - engage-core
-          - engage-utils
+          - core
+          - utils
           - events
           - personalize
     runs-on: ubuntu-latest
@@ -86,7 +86,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: e2e-report
-          path: apps/engage-e2e/cypress/results/  
+          path: apps/engage-e2e/cypress/results/
   personalize-e2e-tests:
     name: Run Personalize E2E
     runs-on: ubuntu-latest

@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/engage-core';
+import { ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
 import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 import { IBrowserPersonalizeSettings } from '../client/initializer';
-import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/engage-utils';
+import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
 
 let serverDependencies: IServerPersonalize | null = null;
 /**

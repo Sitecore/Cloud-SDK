@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { BasicTypes, INestedObject } from '@sitecore-cloudsdk/engage-utils';
+import { BasicTypes, INestedObject } from '@sitecore-cloudsdk/utils';
 
 /**
  * Event data received as input to be sent to Sitecore CDP

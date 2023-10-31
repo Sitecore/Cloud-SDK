@@ -1,12 +1,12 @@
 import { CustomEvent, ICustomEventInput } from './custom-event';
 import { EventApiClient } from '../../cdp/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
-import * as core from '@sitecore-cloudsdk/engage-core';
-import * as utils from '@sitecore-cloudsdk/engage-utils';
+import * as core from '@sitecore-cloudsdk/core';
+import * as utils from '@sitecore-cloudsdk/utils';
 
 jest.mock('../../cdp/EventApiClient');
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -14,8 +14,8 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

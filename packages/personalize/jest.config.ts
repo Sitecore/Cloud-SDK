@@ -21,6 +21,6 @@ const config: Config.InitialOptions = {
       statements: -10,
     },
   },
-  testPathIgnorePatterns: ["web-personalization.spec.ts"]
+  testPathIgnorePatterns: ['web-personalization.spec.ts'],
 };
 export default config;

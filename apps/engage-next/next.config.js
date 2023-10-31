@@ -11,7 +11,7 @@ const nextConfig = {
   env: {
     /* eslint-disable @typescript-eslint/naming-convention */
     CONTEXT_ID: process.env.CONTEXT_ID || '',
-    SITE_ID: process.env.SITE_ID || ''
+    SITE_ID: process.env.SITE_ID || '',
     /* eslint-enable @typescript-eslint/naming-convention */
   },
   nx: {

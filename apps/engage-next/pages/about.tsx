@@ -2,7 +2,7 @@
 import { initServer, IPageViewEventInput, pageView } from '@sitecore-cloudsdk/events';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { handleServerCookie } from '@sitecore-cloudsdk/engage-core';
+import { handleServerCookie } from '@sitecore-cloudsdk/core';
 
 export function About() {
   const [eventData, seteventData] = useState<IPageViewEventInput>({

@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/engage-core';
-import { INestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/engage-utils';
+import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/core';
+import { INestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
 
 export class CallFlowEdgeProxyClient implements IPersonalizeClient {

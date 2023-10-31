@@ -5,9 +5,9 @@
   "files": [],
   "include": [],
   "references": [
-    { "path": "./packages/engage-utils/tsconfig.cjs.json" },
-    { "path": "./packages/engage-core/tsconfig.cjs.json" },
+    { "path": "./packages/utils/tsconfig.cjs.json" },
+    { "path": "./packages/core/tsconfig.cjs.json" },
     { "path": "./packages/events/tsconfig.cjs.json" },
-    { "path": "./packages/personalize/tsconfig.cjs.json" },
+    { "path": "./packages/personalize/tsconfig.cjs.json" }
   ]
 }

@@ -2,12 +2,12 @@ import { pageViewServer } from './page-view-server';
 import { getServerDependencies } from '../../initializer/server/initializer';
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
 import * as init from '../../initializer/server/initializer';
-import * as core from '@sitecore-cloudsdk/engage-core';
+import * as core from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../cdp/EventApiClient';
 
 jest.mock('../../initializer/server/initializer');
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -15,8 +15,8 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

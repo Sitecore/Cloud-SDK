@@ -1,13 +1,13 @@
 import { processEventQueue } from './processEventQueue';
 import { IEventAttributesInput } from '../events/common-interfaces';
 import * as init from '../../lib/initializer/browser/initializer';
-import * as core from '@sitecore-cloudsdk/engage-core';
+import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import { addToEventQueue } from './addToEventQueue';
 import { CustomEvent } from '../events/custom-event/custom-event';
 jest.mock('../events/custom-event/custom-event');
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

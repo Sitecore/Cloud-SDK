@@ -3,8 +3,8 @@ import { BaseEvent } from '../base-event';
 import { ExtensionData, IEventAttributesInput } from '../common-interfaces';
 import { IEventApiClient } from '../../cdp/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
-import { isShortISODateString, isValidEmail, IFlattenedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
-import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
+import { isShortISODateString, isValidEmail, IFlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
 
 export class IdentityEvent extends BaseEvent {
   private eventData: IIdentityEventAttributesInput;

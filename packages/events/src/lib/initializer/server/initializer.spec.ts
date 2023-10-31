@@ -1,14 +1,14 @@
 import { initServer, getServerDependencies, setServerDependencies, IServerEventsSettings } from './initializer';
 import packageJson from '../../../../package.json';
-import { ISettingsParamsServer } from '@sitecore-cloudsdk/engage-core';
+import { ISettingsParamsServer } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
-import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/engage-utils';
+import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
 import { EventApiClient } from '../../cdp/EventApiClient';
-import * as core from '@sitecore-cloudsdk/engage-core';
+import * as core from '@sitecore-cloudsdk/core';
 
 jest.mock('../../cdp/EventApiClient');
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -16,8 +16,8 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
     ...originalModule,
   };
 });
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

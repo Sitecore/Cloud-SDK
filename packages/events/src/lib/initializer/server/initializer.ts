@@ -5,9 +5,9 @@ import {
   getSettingsServer,
   initCoreServer,
   TARGET_URL,
-} from '@sitecore-cloudsdk/engage-core';
+} from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../cdp/EventApiClient';
-import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/engage-utils';
+import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
 
 let serverDependencies: IServerEventsSettings | null = null;
 

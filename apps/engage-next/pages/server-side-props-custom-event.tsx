@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { handleServerCookie } from '@sitecore-cloudsdk/engage-core';
+import { handleServerCookie } from '@sitecore-cloudsdk/core';
 import { eventServer, initServer } from '@sitecore-cloudsdk/events';
 import { GetServerSidePropsContext } from 'next';
 

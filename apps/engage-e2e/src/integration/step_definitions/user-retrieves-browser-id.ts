@@ -20,4 +20,3 @@ Then('the getBrowserId function returns the browser id', () => {
     cy.get('[data-testid="browserIdLabel"]').contains(expectedCookieValue);
   });
 });
-

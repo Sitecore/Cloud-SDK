@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { pageName, language } from '@sitecore-cloudsdk/engage-core';
+import { pageName, language } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../cdp/EventApiClient';
 import { ICustomEventArguments, CustomEvent } from '../events';
 

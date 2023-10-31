@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { eventServer, identityServer, initServer, pageViewServer } from '@sitecore-cloudsdk/events';
 import { initServer as initPersonalizeServer, personalizeServer } from '@sitecore-cloudsdk/personalize';
-import { handleServerCookie } from '@sitecore-cloudsdk/engage-core';
+import { handleServerCookie } from '@sitecore-cloudsdk/core';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
     request.nextUrl.pathname.startsWith('/middleware');
 
   const badContextId = request?.nextUrl?.searchParams?.get('badContextId') ?? undefined;
-  
+
   await initServer(
     {
       contextId: badContextId ?? (process.env.CONTEXT_ID || ''),
@@ -43,7 +43,7 @@ export async function middleware(request: NextRequest) {
   if (
     !request.nextUrl.pathname.startsWith('/about') &&
     !request.nextUrl.pathname.startsWith('/server-side-props') &&
-        enableServerCookie
+    enableServerCookie
   ) {
     await handleServerCookie(request, response);
   }
@@ -86,7 +86,7 @@ export async function middleware(request: NextRequest) {
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN'
+      language: 'EN',
     };
 
     const personalizeRes = await personalizeServer(personalizeData, request);

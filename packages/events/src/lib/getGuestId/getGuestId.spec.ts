@@ -1,9 +1,9 @@
 import { getGuestId } from './getGuestId';
-import * as core from '@sitecore-cloudsdk/engage-core';
+import * as core from '@sitecore-cloudsdk/core';
 import * as EventSettings from '../../lib/initializer/browser/initializer';
 
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

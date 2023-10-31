@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ISettingsParamsBrowser, ISettingsParamsServer } from '@sitecore-cloudsdk/engage-core';
+import { ISettingsParamsBrowser, ISettingsParamsServer } from '@sitecore-cloudsdk/core';
 import { init, initServer } from '@sitecore-cloudsdk/events';
 import { GetServerSidePropsContext } from 'next';
 

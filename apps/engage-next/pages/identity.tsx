@@ -69,7 +69,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN'
+      language: 'EN',
     };
 
     identity(event, {});
@@ -81,7 +81,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN'
+      language: 'EN',
     };
 
     identity(event);
@@ -96,7 +96,7 @@ export function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN'
+      language: 'EN',
     };
 
     eventAttributes.delete('nested');

@@ -1,8 +1,5 @@
 {
-    "cucumberautocomplete.steps": ["apps/engage-e2e/src/integration/step_definitions/*.ts"],
-    "cucumberautocomplete.syncfeatures": "apps/engage-e2e/src/integration/*.feature",
-    "cSpell.words": [
-      "cloudsdk",
-      "sitecore"
-    ]
-  }
+  "cucumberautocomplete.steps": ["apps/engage-e2e/src/integration/step_definitions/*.ts"],
+  "cucumberautocomplete.syncfeatures": "apps/engage-e2e/src/integration/*.feature",
+  "cSpell.words": ["cloudsdk", "sitecore"]
+}

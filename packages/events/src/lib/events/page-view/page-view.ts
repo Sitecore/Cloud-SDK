@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ICdpResponse } from '@sitecore-cloudsdk/engage-core';
-import { INestedObject } from '@sitecore-cloudsdk/engage-utils';
+import { ICdpResponse } from '@sitecore-cloudsdk/core';
+import { INestedObject } from '@sitecore-cloudsdk/utils';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
 

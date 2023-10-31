@@ -15,8 +15,8 @@
     "baseUrl": ".",
     "types": ["jest", "node"],
     "paths": {
-      "@sitecore-cloudsdk/engage-core": ["packages/engage-core/src/index.ts"],
-      "@sitecore-cloudsdk/engage-utils": ["packages/engage-utils/src/index.ts"],
+      "@sitecore-cloudsdk/core": ["packages/core/src/index.ts"],
+      "@sitecore-cloudsdk/utils": ["packages/utils/src/index.ts"],
       "@sitecore-cloudsdk/events": ["packages/events/src/index.ts"],
       "@sitecore-cloudsdk/personalize": ["packages/personalize/src/index.ts"]
     }

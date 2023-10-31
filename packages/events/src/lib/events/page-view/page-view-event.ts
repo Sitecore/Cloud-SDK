@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/engage-core';
-import { IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
+import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
+import { IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
 import { IEventApiClient } from '../../cdp/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';

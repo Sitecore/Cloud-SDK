@@ -2,8 +2,8 @@
 import { BaseEvent } from '../base-event';
 import { IEventAttributesInput } from '../common-interfaces';
 import { IEventApiClient } from '../../cdp/EventApiClient';
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/engage-core';
-import { BasicTypes, IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
+import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/core';
+import { BasicTypes, IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 export class CustomEvent extends BaseEvent {

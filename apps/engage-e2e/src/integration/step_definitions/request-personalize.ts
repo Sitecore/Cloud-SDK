@@ -9,9 +9,10 @@ beforeEach(() => {
   statusCode = 0;
   cy.intercept('GET', `http://localhost:4200/api/personalize*`).as('personalizeRequestFromApi');
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`).as(
-    'personalizeRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+  ).as('personalizeRequest');
 });
 
 defineStep('personalize parameters are:', (params: string) => {

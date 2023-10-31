@@ -44,10 +44,10 @@ const cypressJsonConfig = {
 
     on('before:browser:launch', (browser, launchOptions) => {
       if (browser.family === 'firefox') {
-        launchOptions.preferences['network.proxy.testing_localhost_is_secure_when_hijacked'] = true
+        launchOptions.preferences['network.proxy.testing_localhost_is_secure_when_hijacked'] = true;
       }
-      return launchOptions
-    })
+      return launchOptions;
+    });
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;

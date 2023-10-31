@@ -46,7 +46,7 @@ jobs:
           git config user.name "Automated Build"
 
       - name: Bump version
-        run: npx nx run-many -t version -p engage-utils engage-core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit
+        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit
 
       - name: Get new release version
         id: get-version
@@ -96,7 +96,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-folder: [engage-utils, engage-core, events, personalize]
+        package-folder: [utils, core, events, personalize]
     needs: bump-and-build
     steps:
       - name: Download package artifact

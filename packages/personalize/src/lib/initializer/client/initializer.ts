@@ -7,7 +7,7 @@ import {
   getBrowserId,
   getSettings,
   initCore,
-} from '@sitecore-cloudsdk/engage-core';
+} from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 

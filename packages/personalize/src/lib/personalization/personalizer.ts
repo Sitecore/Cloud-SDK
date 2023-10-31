@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { language } from '@sitecore-cloudsdk/engage-core';
+import { language } from '@sitecore-cloudsdk/core';
 import { ICdpCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
-import { INestedObject, flattenObject } from '@sitecore-cloudsdk/engage-utils';
+import { INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 
 export class Personalizer {
   /**

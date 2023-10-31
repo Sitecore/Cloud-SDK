@@ -75,7 +75,9 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
       expect(actualAttr).to.eql(null);
     }
     // eslint-disable-next-line max-len
-    const expectedPackageVersion = request.url.includes('events') ? eventsPackageJson.version : personalizePackageJson.version;
+    const expectedPackageVersion = request.url.includes('events')
+      ? eventsPackageJson.version
+      : personalizePackageJson.version;
 
     expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
   });

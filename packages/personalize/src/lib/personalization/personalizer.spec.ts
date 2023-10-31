@@ -1,11 +1,11 @@
 import { IPersonalizeIdentifierInput, IPersonalizerInput, Personalizer } from './personalizer';
 import { IPersonalizeClient, CallFlowEdgeProxyClient } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
-import * as core from '@sitecore-cloudsdk/engage-core';
-import * as flatten from '@sitecore-cloudsdk/engage-utils';
+import * as core from '@sitecore-cloudsdk/core';
+import * as flatten from '@sitecore-cloudsdk/utils';
 
-jest.mock('@sitecore-cloudsdk/engage-utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-utils');
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -14,8 +14,8 @@ jest.mock('@sitecore-cloudsdk/engage-utils', () => {
   };
 });
 
-jest.mock('@sitecore-cloudsdk/engage-core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/engage-core');
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
