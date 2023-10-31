@@ -2,7 +2,6 @@
 import { initServer, IPageViewEventInput, pageView } from '@sitecore-cloudsdk/events';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
-import { handleServerCookie } from '@sitecore-cloudsdk/core';
 
 export function About() {
   const [eventData, seteventData] = useState<IPageViewEventInput>({
@@ -52,8 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
-  if (typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true')
-    await handleServerCookie(context.req, context.res);
+
 
   return {
     props: {}, // will be passed to the page component as props

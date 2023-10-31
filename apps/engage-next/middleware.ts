@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { eventServer, identityServer, initServer, pageViewServer } from '@sitecore-cloudsdk/events';
 import { initServer as initPersonalizeServer, personalizeServer } from '@sitecore-cloudsdk/personalize';
-import { handleServerCookie } from '@sitecore-cloudsdk/core';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -11,8 +10,8 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   const enableServerCookie =
-    request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
-    request.nextUrl.pathname.startsWith('/middleware');
+    (request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true') ||
+    request.nextUrl.pathname.startsWith('/middleware') && !request.nextUrl.pathname.startsWith('/about') && !request.nextUrl.pathname.startsWith('/server-side-props');
 
   const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
 
@@ -39,14 +38,6 @@ export async function middleware(request: NextRequest) {
     email: 'testMiddleware@test.com',
     identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }],
   };
-
-  if (
-    !request.nextUrl.pathname.startsWith('/about') &&
-    !request.nextUrl.pathname.startsWith('/server-side-props') &&
-    enableServerCookie
-  ) {
-    await handleServerCookie(request, response);
-  }
 
   if (request.nextUrl.pathname.startsWith('/middleware-view-event')) {
     basicEventData = { ...basicEventData, page: 'middleware-view' };

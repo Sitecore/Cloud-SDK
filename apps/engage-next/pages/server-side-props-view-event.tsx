@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { handleServerCookie } from '@sitecore-cloudsdk/core';
 import { initServer, pageViewServer } from '@sitecore-cloudsdk/events';
 import { GetServerSidePropsContext } from 'next';
 
@@ -30,6 +29,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       enableServerCookie: true,
       siteName: process.env.SITE_ID || '',
+      timeout: timeout,
     },
     context.req,
     context.res
@@ -37,7 +37,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let cdpResponse;
 
-  await handleServerCookie(context.req, context.res, timeout);
   try {
     cdpResponse = await pageViewServer(event, context.req);
   } catch {

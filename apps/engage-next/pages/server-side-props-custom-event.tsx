@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { handleServerCookie } from '@sitecore-cloudsdk/core';
 import { eventServer, initServer } from '@sitecore-cloudsdk/events';
 import { GetServerSidePropsContext } from 'next';
 
@@ -36,7 +35,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   );
 
   let cdpResponse;
-  await handleServerCookie(context.req, context.res);
   try {
     cdpResponse = await eventServer('SERVERSIDEPROPS_CUSTOM', event, context.req);
   } catch {

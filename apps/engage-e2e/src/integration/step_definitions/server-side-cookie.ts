@@ -103,7 +103,7 @@ defineStep('a server cookie is created with {string} domain', (domain: string) =
 });
 
 defineStep(
-  'the handleCookie function is triggered from {string} page with timeout: {string}',
+  'the initServer function is triggered from {string} page with timeout: {string}',
   (page: string, timeout: string) => {
     cy.on('uncaught:exception', (error) => {
       errorMessage = error.message;
