@@ -18,10 +18,10 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 const settingsParams: initPersonalize.ISettingsParamsBrowserPersonalize = {
-  contextId: '123',
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
-  siteId: '456',
+  siteName: '456',
+  sitecoreEdgeContextId: '123',
 };
 
 describe('initializer', () => {
@@ -36,14 +36,14 @@ describe('initializer', () => {
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   getSettingsSpy.mockReturnValue({
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   });
 
   afterEach(() => {
@@ -84,7 +84,7 @@ describe('initializer', () => {
       await initPersonalize.init(settingsParams);
       const settings = initPersonalize.getDependencies();
 
-      expect(settings.settings.contextId).toBe('123');
+      expect(settings.settings.sitecoreEdgeContextId).toBe('123');
       expect(settings).toBeDefined();
       expect(core.initCore).toHaveBeenCalledTimes(1);
       expect(core.getSettings).toHaveBeenCalledTimes(1);

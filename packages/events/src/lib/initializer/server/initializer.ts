@@ -43,7 +43,7 @@ export async function initServer<TResponse extends IMiddlewareNextResponse | IHt
 
   const settings = getSettingsServer();
 
-  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.contextId, settingsInput.siteId);
+  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.sitecoreEdgeContextId, settingsInput.siteName);
   setServerDependencies({
     eventApiClient,
     settings,

@@ -24,9 +24,9 @@ describe('processEventQueue', () => {
   const enqueueEventSpy = jest.spyOn(eventQueue.EventQueue.prototype, 'enqueueEvent');
 
   const settingsParams: core.ISettingsParamsBrowser = {
-    contextId: '123',
     cookieDomain: 'cDomain',
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   afterEach(() => {
     jest.clearAllMocks();

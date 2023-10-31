@@ -31,26 +31,26 @@ describe('handleServerCookie', () => {
   const getCookieServerSide = jest.spyOn(utils, 'getCookieServerSide');
 
   let options: ISettings = {
-    contextId: '',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: '',
       cookiePath: '/',
     },
-    siteId: '',
+    siteName: '',
+    sitecoreEdgeContextId: '',
   };
 
   beforeEach(() => {
     options = {
-      contextId: '',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: '',
         cookiePath: '/',
       },
-      siteId: '',
+      siteName: '',
+      sitecoreEdgeContextId: '',
     };
   });
 

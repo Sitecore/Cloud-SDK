@@ -28,8 +28,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
           : getSettingFromUrlParams('enableServerCookie') === 'true'
           ? false
           : true,
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
     });
   }, []);
 
@@ -58,8 +58,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie: true,
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
     });
   }, []);
 

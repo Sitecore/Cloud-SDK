@@ -14,14 +14,14 @@ export async function middleware(request: NextRequest) {
     request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
     request.nextUrl.pathname.startsWith('/middleware');
 
-  const badContextId = request?.nextUrl?.searchParams?.get('badContextId') ?? undefined;
+  const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
 
   await initServer(
     {
-      contextId: badContextId ?? (process.env.CONTEXT_ID || ''),
+      sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
       cookieExpiryDays: 400,
       enableServerCookie,
-      siteId: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || '',
     },
     request,
     response
@@ -74,8 +74,8 @@ export async function middleware(request: NextRequest) {
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalizeServer(
       {
-        contextId: process.env.CONTEXT_ID || '',
-        siteId: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+        siteName: process.env.SITE_ID || '',
       },
       request,
       response

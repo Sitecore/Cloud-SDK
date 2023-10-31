@@ -53,14 +53,14 @@ describe('Test Identity', () => {
     };
 
     settingsMock = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
   });
 
@@ -407,14 +407,14 @@ describe('Test Identity', () => {
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
     const settings: core.ISettings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
     new IdentityEvent({
       eventApiClient,
@@ -447,14 +447,14 @@ describe('Test Identity', () => {
       pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -491,14 +491,14 @@ describe('Test Identity', () => {
       pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
@@ -533,14 +533,14 @@ describe('Test Identity', () => {
       pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
 
     new IdentityEvent({ eventApiClient, eventData, id, settings }).send();
@@ -566,14 +566,14 @@ describe('Test Identity', () => {
       pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
     const extensionData = {};
     new IdentityEvent({ eventApiClient, eventData, extensionData, id, settings }).send();

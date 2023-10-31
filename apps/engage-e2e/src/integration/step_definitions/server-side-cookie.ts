@@ -32,21 +32,24 @@ defineStep('{string} page is loaded again with enableServerCookie parameter', (p
   cy.visit(`${page}?enableServerCookie=true&`);
 });
 
-Given('{string} page is loaded with enableServerCookie true and an invalid contextId parameter', (page: string) => {
-  cy.on('uncaught:exception', (error) => {
-    errorMessage = error.message;
-    return false;
-  });
-
-  cy.visit(`${page}?enableServerCookie=true&badContextId=banana`, {
-    failOnStatusCode: false,
-  }).then(() => {
-    // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(1000).then(() => {
-      cy.writeLocal(`error.txt`, errorMessage);
+Given(
+  '{string} page is loaded with enableServerCookie true and an invalid sitecoreEdgeContextId parameter',
+  (page: string) => {
+    cy.on('uncaught:exception', (error) => {
+      errorMessage = error.message;
+      return false;
     });
-  });
-});
+
+    cy.visit(`${page}?enableServerCookie=true&badSitecoreEdgeContextId=banana`, {
+      failOnStatusCode: false,
+    }).then(() => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000).then(() => {
+        cy.writeLocal(`error.txt`, errorMessage);
+      });
+    });
+  }
+);
 
 Then('the server updates the TTL of the server cookie according to the settings', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

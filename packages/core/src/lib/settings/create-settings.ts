@@ -12,16 +12,16 @@ import { validateSettings } from './validate-settings';
 export function createSettings(settingsInput: ISettingsParams): ISettings {
   validateSettings(settingsInput);
 
-  const { siteId, contextId, cookieDomain, cookiePath, cookieExpiryDays } = settingsInput;
+  const { siteName, sitecoreEdgeContextId, cookieDomain, cookiePath, cookieExpiryDays } = settingsInput;
 
   return {
-    contextId,
     cookieSettings: {
       cookieDomain,
       cookieExpiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
       cookieName: '',
       cookiePath: cookiePath || '/',
     },
-    siteId,
+    siteName,
+    sitecoreEdgeContextId,
   };
 }

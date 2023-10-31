@@ -40,14 +40,14 @@ describe('pageViewServer', () => {
   let eventData: IPageViewEventInput;
   const eventApiClient = new EventApiClient('http://test.com', '123', '456');
   const settings: core.ISettings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
 
   jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
@@ -93,14 +93,14 @@ describe('pageViewServer', () => {
       id: 'test',
       searchParams: '',
       settings: {
-        contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
           cookiePath: '/',
         },
-        siteId: '456',
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
       },
     });
     expect(response).toBe('mockedResponse');

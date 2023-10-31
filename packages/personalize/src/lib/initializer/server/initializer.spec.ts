@@ -23,10 +23,10 @@ describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   const settingsParams: core.ISettingsParamsServer = {
-    contextId: '456',
+    sitecoreEdgeContextId: '456',
     cookieDomain: 'cDomain',
     enableServerCookie: true,
-    siteId: '123',
+    siteName: '123',
   };
 
   const req = {
@@ -62,14 +62,14 @@ describe('initializer', () => {
   jest.spyOn(core, 'initCoreServer');
 
   jest.spyOn(core, 'getSettingsServer').mockReturnValue({
-    contextId: '456',
+    sitecoreEdgeContextId: '456',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_key',
       cookiePath: '/',
     },
-    siteId: '123',
+    siteName: '123',
   });
 
   describe('getDependencies', () => {
@@ -98,7 +98,7 @@ describe('initializer', () => {
       await initServer(settingsParams, req, res);
       const settings = getServerDependencies();
       expect(settings).toBeDefined();
-      expect(settings.settings.contextId).toBe('456');
+      expect(settings.settings.sitecoreEdgeContextId).toBe('456');
       expect(core.initCoreServer).toHaveBeenCalledTimes(1);
       expect(core.getSettingsServer).toHaveBeenCalledTimes(1);
       expect(callFlowEdgeProxyClient.CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);

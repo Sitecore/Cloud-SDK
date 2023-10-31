@@ -7,36 +7,36 @@ describe('validateSettings', () => {
   it('should throw errors when provided mandatory settings with falsy values', () => {
     expect(() => {
       validateSettings({
-        contextId: '',
         cookieDomain: '',
-        siteId: '',
+        siteName: '',
+        sitecoreEdgeContextId: '',
       });
-    }).toThrowError(`[MV-0001] "contextId" is required.`);
+    }).toThrowError(`[MV-0001] "sitecoreEdgeContextId" is required.`);
 
     expect(() => {
       validateSettings({
-        contextId: ' ',
         cookieDomain: '',
-        siteId: '',
+        siteName: '',
+        sitecoreEdgeContextId: ' ',
       });
-    }).toThrowError(`[MV-0001] "contextId" is required.`);
+    }).toThrowError(`[MV-0001] "sitecoreEdgeContextId" is required.`);
 
     expect(() => {
       validateSettings({
-        contextId: '1234',
         cookieDomain: '',
-        siteId: '',
+        siteName: '',
+        sitecoreEdgeContextId: '1234',
       });
-    }).toThrowError(`[MV-0002] "siteId" is required.`);
+    }).toThrowError(`[MV-0002] "siteName" is required.`);
   });
 
   it("should throw error when the string provided for targetURL doesn't correspond to a valid url", () => {
     expect(() => {
       validateSettings({
-        contextId: '1234',
         cookieDomain: '',
-        siteId: ' ',
+        siteName: ' ',
+        sitecoreEdgeContextId: '1234',
       });
-    }).toThrowError(`[MV-0002] "siteId" is required.`);
+    }).toThrowError(`[MV-0002] "siteName" is required.`);
   });
 });

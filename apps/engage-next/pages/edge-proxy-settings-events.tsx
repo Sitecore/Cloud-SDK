@@ -5,19 +5,19 @@ import { GetServerSidePropsContext } from 'next';
 
 export function EdgeProxySettings({ serverResponse }: { serverResponse: string }) {
   const handleInvalidContextId = async () => {
-    await init({ contextId: ' ', siteId: '456' });
+    await init({ sitecoreEdgeContextId: ' ', siteName: '456' });
   };
   const handleUndefinedContextId = async () => {
-    await init({ siteId: '456' } as ISettingsParamsBrowser);
+    await init({ siteName: '456' } as ISettingsParamsBrowser);
   };
-  const handleInvalidSiteId = async () => {
-    await init({ contextId: '123', siteId: ' ' });
+  const handleInvalidSiteName = async () => {
+    await init({ sitecoreEdgeContextId: '123', siteName: ' ' });
   };
-  const handleUndefinedSiteId = async () => {
-    await init({ contextId: '123' } as ISettingsParamsBrowser);
+  const handleUndefinedSiteName = async () => {
+    await init({ sitecoreEdgeContextId: '123' } as ISettingsParamsBrowser);
   };
   const handleHappyPath = async () => {
-    await init({ contextId: '123', siteId: '456' });
+    await init({ sitecoreEdgeContextId: '123', siteName: '456' });
   };
 
   return (
@@ -27,12 +27,12 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
         <legend>Context Id</legend>
         <div>
           <button
-            data-testid='initInvalidContextId'
+            data-testid='initInvalidSitecoreEdgeContextId'
             onClick={handleInvalidContextId}>
             Invalid context id
           </button>
           <button
-            data-testid='initUndefinedContextId'
+            data-testid='initUndefinedSitecoreEdgeContextId'
             onClick={handleUndefinedContextId}>
             Undefined context id
           </button>
@@ -42,13 +42,13 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
         <legend>Site Id</legend>
         <div>
           <button
-            data-testid='initInvalidSiteId'
-            onClick={handleInvalidSiteId}>
+            data-testid='initInvalidSiteName'
+            onClick={handleInvalidSiteName}>
             Invalid site id
           </button>
           <button
-            data-testid='initUndefinedSiteId'
-            onClick={handleUndefinedSiteId}>
+            data-testid='initUndefinedSiteName'
+            onClick={handleUndefinedSiteName}>
             Undefined site id
           </button>
         </div>
@@ -82,14 +82,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const attributeToTest = context.query.attribute;
   const testVariation = context.query.variation;
 
-  const contextId = attributeToTest === 'contextid' ? (testVariation === 'invalid' ? ' ' : undefined) : '123';
-  const siteId = attributeToTest === 'siteid' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
+  const sitecoreEdgeContextId =
+    attributeToTest === 'sitecoreEdgeContextId' ? (testVariation === 'invalid' ? ' ' : undefined) : '123';
+  const siteName = attributeToTest === 'siteName' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
 
   try {
     await initServer(
       {
-        contextId,
-        siteId,
+        sitecoreEdgeContextId,
+        siteName,
       } as ISettingsParamsServer,
       context.req,
       context.res

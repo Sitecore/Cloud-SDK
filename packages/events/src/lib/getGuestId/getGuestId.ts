@@ -10,5 +10,5 @@ import { getDependencies } from '../initializer/browser/initializer';
  */
 export function getGuestId(): Promise<string> {
   const { id, settings } = getDependencies();
-  return getGuestIdFromCore(id, settings.contextId);
+  return getGuestIdFromCore(id, settings.sitecoreEdgeContextId);
 }

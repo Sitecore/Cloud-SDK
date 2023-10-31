@@ -5,14 +5,14 @@ import * as init from './init-core';
 
 describe('getBrowserId', () => {
   jest.spyOn(init, 'getSettings').mockReturnValue({
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'cookieName',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   });
 
   afterEach(() => {

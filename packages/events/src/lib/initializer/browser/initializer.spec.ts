@@ -30,9 +30,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 const settingsParams: core.ISettingsParamsBrowser = {
-  contextId: '123',
   cookieDomain: 'cDomain',
-  siteId: '456',
+  siteName: '456',
+  sitecoreEdgeContextId: '123',
 };
 
 describe('initializer', () => {
@@ -43,14 +43,14 @@ describe('initializer', () => {
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   const settingsObj: core.ISettings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   afterEach(() => {
     jest.clearAllMocks();

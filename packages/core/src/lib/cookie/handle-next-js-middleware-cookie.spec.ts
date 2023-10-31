@@ -6,14 +6,14 @@ import { ISettings } from '../settings/interfaces';
 
 describe('handleMiddlewareRequest', () => {
   const options: ISettings = {
-    contextId: 'context_id',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_key',
       cookiePath: '/',
     },
-    siteId: '',
+    siteName: '',
+    sitecoreEdgeContextId: 'context_id',
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(

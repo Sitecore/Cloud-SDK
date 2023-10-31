@@ -72,14 +72,14 @@ describe('PageViewEvent', () => {
     };
 
     settings = {
-      contextId: '123',
+      sitecoreEdgeContextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
     jest.spyOn(core, 'pageName').mockImplementation(() => 'races');

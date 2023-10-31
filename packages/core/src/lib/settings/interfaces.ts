@@ -23,8 +23,8 @@ export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
  * Properties for the global settings object
  */
 interface IBasicSettings {
-  contextId: string;
-  siteId: string;
+  sitecoreEdgeContextId: string;
+  siteName: string;
 }
 
 interface ICookieSettingsInput {

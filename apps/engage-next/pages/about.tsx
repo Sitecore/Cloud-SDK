@@ -45,8 +45,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         typeof context.query.enableServerCookie === 'string' &&
         context.query.enableServerCookie.toLowerCase() === 'true',
 
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
     },
     context.req,
     context.res

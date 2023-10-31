@@ -22,14 +22,14 @@ describe('personalize', () => {
 
   jest.spyOn(core, 'createCookie').mock;
   const settingsObj: core.ISettings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   afterEach(() => {
     jest.clearAllMocks();

@@ -58,7 +58,7 @@ export async function init(settingsInput: ISettingsParamsBrowser): Promise<void>
   const settings = getSettings();
 
   const id = getBrowserId();
-  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.contextId, settingsInput.siteId);
+  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.sitecoreEdgeContextId, settingsInput.siteName);
   const eventQueue = new EventQueue(sessionStorage, eventApiClient);
 
   setDependencies({

@@ -5,8 +5,8 @@ import { LIBRARY_VERSION } from '../consts';
 
 export class EventApiClient implements IEventApiClient {
   private readonly eventUrl: string;
-  constructor(private targetURL: string, contextId: string, siteId: string) {
-    this.eventUrl = `${this.targetURL}/events/${API_VERSION}/events?sitecoreContextId=${contextId}&siteId=${siteId}`;
+  constructor(private targetURL: string, sitecoreEdgeContextId: string, siteName: string) {
+    this.eventUrl = `${this.targetURL}/events/${API_VERSION}/events?sitecoreContextId=${sitecoreEdgeContextId}&siteId=${siteName}`;
   }
 
   /**

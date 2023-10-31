@@ -7,12 +7,12 @@ import { getProxySettings } from '../init/get-proxy-settings';
 import { BID_PREFIX } from '../consts';
 /**
  * Creates and adds the cookie to the document
- * @param contextId - The contextId from global settings
+ * @param sitecoreEdgeContextId - The sitecoreEdgeContextId from global settings
  * @param settings - The ICookieSettings settings object
  * @returns - browserId or undefined on error
  */
 export async function createCookie(settings: ISettings): Promise<void> {
-  const { browserId, clientKey } = await getProxySettings(settings.contextId);
+  const { browserId, clientKey } = await getProxySettings(settings.sitecoreEdgeContextId);
 
   settings.cookieSettings.cookieName = `${BID_PREFIX}${clientKey}`;
 

@@ -2,10 +2,10 @@
 import { API_VERSION, TARGET_URL } from '../consts';
 /**
  * Constructs the URL for retrieving the proxy settings from EDGE events proxy
- * @param contextId - From global settings
+ * @param sitecoreEdgeContextId - From global settings
  * @returns The URL string for retrieving the browser ID and ClientKey
  */
 
-export function constructGetProxySettingsUrl(contextId: string): string {
-  return `${TARGET_URL}/events/${API_VERSION}/browser/create.json?sitecoreContextId=${contextId}&client_key=`;
+export function constructGetProxySettingsUrl(sitecoreEdgeContextId: string): string {
+  return `${TARGET_URL}/events/${API_VERSION}/browser/create.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=`;
 }

@@ -30,7 +30,7 @@ export async function handleServerCookie<T extends TRequest, X extends IMiddlewa
 ): Promise<void> {
   const settings = getSettingsServer();
 
-  const { browserId, clientKey } = await getProxySettings(settings.contextId, timeout);
+  const { browserId, clientKey } = await getProxySettings(settings.sitecoreEdgeContextId, timeout);
 
   if (!clientKey) return;
 

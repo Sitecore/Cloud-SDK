@@ -28,14 +28,14 @@ describe('createCookie', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     settings = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: '',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
   });
   it('should create a cookie and update the settings', async () => {

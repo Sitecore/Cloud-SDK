@@ -27,9 +27,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 describe('form function', () => {
   const settingsParams: ISettingsParamsBrowser = {
-    contextId: '123',
+    sitecoreEdgeContextId: '123',
     cookieDomain: 'cDomain',
-    siteId: '456',
+    siteName: '456',
   };
   const id = 'test_id';
 

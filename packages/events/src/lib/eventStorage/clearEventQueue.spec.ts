@@ -16,9 +16,9 @@ describe('clearEventQueue', () => {
   const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
 
   const settingsParams: core.ISettingsParamsBrowser = {
-    contextId: '123',
     cookieDomain: 'cDomain',
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);

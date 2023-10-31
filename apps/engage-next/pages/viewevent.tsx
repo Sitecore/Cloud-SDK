@@ -44,8 +44,8 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
         cookieDomain: 'localhost',
         cookieExpiryDays: 400,
         enableBrowserCookie: true,
-        contextId: process.env.CONTEXT_ID || '',
-        siteId: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+        siteName: process.env.SITE_ID || '',
       });
 
       pageView(event, noExt ? undefined : extensionData);
@@ -114,8 +114,8 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       enableServerCookie:
         typeof context.query.enableServerCookie === 'string' &&
         context.query.enableServerCookie.toLowerCase() === 'true',
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
     },
     context.req,
     context.res

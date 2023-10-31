@@ -39,7 +39,7 @@ Feature: Developer is setting for the creation of a server-set cookie
 
 # Scenario: Error is thrown if no browser id is retrieved
 #     #Artificial way to make the get cookie from cdp fail by passing a valid random url
-#     Given '/' page is loaded with enableServerCookie true and an invalid contextId parameter
+#     Given '/' page is loaded with enableServerCookie true and an invalid sitecoreEdgeContextId parameter
 #     Then an error is thrown: '[IE-0004] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
 
 @Smoke-Test-Events

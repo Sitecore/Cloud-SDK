@@ -33,14 +33,14 @@ describe('Event Storage', () => {
   const id = 'test_id';
 
   const settings: core.ISettings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
 
   const type = 'CUSTOM_TYPE';

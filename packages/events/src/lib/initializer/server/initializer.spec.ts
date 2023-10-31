@@ -30,19 +30,19 @@ describe('initializer', () => {
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   const settingsParams: ISettingsParamsServer = {
-    contextId: '123',
     cookieDomain: 'cDomain',
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   const settingsObj: core.ISettings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
 
   const req = {
@@ -99,7 +99,7 @@ describe('initializer', () => {
         expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
         expect(LIBRARY_VERSION).toBe(packageJson.version);
         expect(EventApiClient).toHaveBeenCalledTimes(1);
-        expect(eventServerSettings.settings.contextId).toBe(settingsObj.contextId);
+        expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe(settingsObj.sitecoreEdgeContextId);
         expect(typeof eventsServer).toBe('undefined');
       }).not.toThrow(`[IE-0007] You must first initialize the "events" module. Run the "initServer" function.`);
     });

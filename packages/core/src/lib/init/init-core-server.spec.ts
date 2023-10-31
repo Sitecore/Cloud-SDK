@@ -9,20 +9,20 @@ jest.mock('../cookie/handle-server-cookie');
 describe('core-server', () => {
   const handleServerSpy = jest.spyOn(handleServer, 'handleServerCookie');
   let settingsInput: ISettingsParamsServer = {
-    contextId: '123',
     cookieDomain: 'cDomain',
     enableServerCookie: undefined,
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   const createSettingsSpy = jest.spyOn(createSettings, 'createSettings').mockReturnValue({
-    contextId: '0123',
     cookieSettings: {
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
       cookieName: '',
       cookiePath: '/path',
     },
-    siteId: '4567',
+    siteName: '4567',
+    sitecoreEdgeContextId: '0123',
   });
 
   beforeEach(() => {
@@ -46,7 +46,7 @@ describe('core-server', () => {
 
         const _settings = getSettingsServer();
         expect(_settings).toBeDefined();
-        expect(_settings?.contextId).toBe('0123');
+        expect(_settings?.sitecoreEdgeContextId).toBe('0123');
         expect(handleServerSpy).toHaveBeenCalledTimes(0);
         expect(handleServerSpy).not.toHaveBeenCalled();
       }).not.toThrow('[IE-0005] You must first initialize the "core" module. Run the "initServer" function.');
@@ -60,7 +60,7 @@ describe('core-server', () => {
       await initCoreServer(settingsInput, request, response);
       const _settings = getSettingsServer();
       expect(_settings).toBeDefined();
-      expect(_settings?.contextId).toBe('0123');
+      expect(_settings?.sitecoreEdgeContextId).toBe('0123');
       expect(handleServerSpy).toHaveBeenCalledTimes(0);
     });
 
@@ -76,7 +76,7 @@ describe('core-server', () => {
       await initCoreServer(settingsInput, request, response);
       const _settings = getSettingsServer();
       expect(_settings).toBeDefined();
-      expect(_settings?.contextId).toBe('0123');
+      expect(_settings?.sitecoreEdgeContextId).toBe('0123');
       expect(handleServerSpy).toHaveBeenCalledTimes(1);
       expect(handleServerSpy).toHaveBeenCalledWith(request, response, settingsInput.timeout);
     });
@@ -86,14 +86,14 @@ describe('core-server', () => {
       const response = {} as any;
 
       const mockSettings = {
-        contextId: '0123',
         cookieSettings: {
           cookieDomain: 'domain',
           cookieExpiryDays: 40,
           cookieName: '',
           cookiePath: '/path',
         },
-        siteId: '4567',
+        siteName: '4567',
+        sitecoreEdgeContextId: '0123',
       };
 
       await initCoreServer(settingsInput, request, response);

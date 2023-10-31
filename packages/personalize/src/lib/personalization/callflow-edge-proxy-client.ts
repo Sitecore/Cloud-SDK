@@ -19,7 +19,7 @@ export class CallFlowEdgeProxyClient implements IPersonalizeClient {
    * @returns - A promise that resolves with either the Sitecore CDP response object or unknown
    */
   async sendCallFlowsRequest(cdpCallFlowsBody: ICdpCallFlowsBody, timeout?: number) {
-    const requestUrl = `${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${this.settings.contextId}&siteId=${this.settings.siteId}`;
+    const requestUrl = `${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${this.settings.sitecoreEdgeContextId}&siteId=${this.settings.siteName}`;
 
     const fetchOptions = {
       body: JSON.stringify(cdpCallFlowsBody),

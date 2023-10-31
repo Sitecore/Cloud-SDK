@@ -3,7 +3,7 @@ import { API_VERSION, LIBRARY_VERSION, TARGET_URL } from '../consts';
 import { getGuestId, IGetGuestRefResponse, IGetGuestRefResponseError } from './get-guest-id';
 
 describe('getGuestId', () => {
-  const contextId = 'contextId';
+  const sitecoreEdgeContextId = 'contextId';
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -17,7 +17,7 @@ describe('getGuestId', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
-    const response = await getGuestId(bid, contextId);
+    const response = await getGuestId(bid, sitecoreEdgeContextId);
     expect(response).toBe(expectedResponse);
   });
 
@@ -29,8 +29,8 @@ describe('getGuestId', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
 
-    const expectedUrl = `${TARGET_URL}/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${contextId}&client_key=&api_token=`;
-    await getGuestId(bid, contextId);
+    const expectedUrl = `${TARGET_URL}/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=&api_token=`;
+    await getGuestId(bid, sitecoreEdgeContextId);
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
@@ -53,6 +53,6 @@ describe('getGuestId', () => {
     const bid = 'bid';
 
     const expectedErrorMessage = `${expectedMsg}, for more info: ${expectedMoreInfo}`;
-    expect(() => getGuestId(bid, contextId)).rejects.toThrowError(expectedErrorMessage);
+    expect(() => getGuestId(bid, sitecoreEdgeContextId)).rejects.toThrowError(expectedErrorMessage);
   });
 });

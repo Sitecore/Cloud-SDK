@@ -27,9 +27,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       cookieDomain:
         typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toString() : 'localhost',
       cookieExpiryDays: 400,
-      contextId: process.env.CONTEXT_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       enableServerCookie: true,
-      siteId: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || '',
     },
     context.req,
     context.res

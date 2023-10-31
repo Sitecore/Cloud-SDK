@@ -41,14 +41,14 @@ describe('Test Personalizer Class', () => {
     };
 
     settingsMock = {
-      contextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
         cookiePath: '/',
       },
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
 
     personalizeHelper = new CallFlowEdgeProxyClient(settingsMock);
@@ -265,15 +265,14 @@ describe('Test Personalizer Class', () => {
       };
 
       settingsMock = {
-        contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
           cookiePath: '/',
         },
-
-        siteId: '456',
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
       };
 
       const callFlowCDPClient = new CallFlowEdgeProxyClient(settingsMock);
@@ -548,7 +547,7 @@ describe('Test Personalizer Class', () => {
       const response = await new Personalizer(cdpClient, id).getInteractiveExperienceData(personalizeInputMock, 100);
 
       expect(fetch).toHaveBeenCalledWith(
-        `${core.TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.contextId}&siteId=${settingsMock.siteId}`,
+        `${core.TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
           // eslint-disable-next-line @typescript-eslint/naming-convention

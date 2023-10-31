@@ -13,8 +13,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     {
       cookieExpiryDays: 400,
       enableServerCookie: true,
-      contextId: process.env.CONTEXT_ID || '',
-      siteId: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
     },
     req,
     res

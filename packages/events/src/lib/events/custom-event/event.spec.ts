@@ -39,14 +39,14 @@ describe('eventServer', () => {
   const eventApiClient = new EventApiClient('http://test.com', '123', '456');
   const eventQueue = new EventQueue(sessionStorage, eventApiClient);
   const settings = {
-    contextId: '123',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
     },
-    siteId: '456',
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
   };
   const getServerDependenciesSpy = jest.spyOn(init, 'getDependencies').mockReturnValueOnce({
     eventApiClient: eventApiClient,
@@ -73,14 +73,14 @@ describe('eventServer', () => {
       },
       id: '123',
       settings: {
-        contextId: '123',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
           cookiePath: '/',
         },
-        siteId: '456',
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
       },
       type: 'CUSTOM_TYPE',
     });

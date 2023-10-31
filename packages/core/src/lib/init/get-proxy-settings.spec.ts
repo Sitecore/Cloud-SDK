@@ -17,7 +17,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
 
 describe('getProxySettings', () => {
   const constructBrowserIdUrlSpy = jest.spyOn(constructGetProxySettingsUrl, 'constructGetProxySettingsUrl');
-  const contextId = '83d8199c-2837-4c29-a8ab-1bf234fea2d1';
+  const sitecoreEdgeContextId = '83d8199c-2837-4c29-a8ab-1bf234fea2d1';
   const mockResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
@@ -37,7 +37,7 @@ describe('getProxySettings', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
 
-    const res = await getProxySettings(contextId, 3000);
+    const res = await getProxySettings(sitecoreEdgeContextId, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
       `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
@@ -62,7 +62,7 @@ describe('getProxySettings', () => {
     );
     expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(contextId);
+    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId);
   });
 
   it('should resolve with an appropriate response object', () => {
@@ -70,7 +70,7 @@ describe('getProxySettings', () => {
       json: () => Promise.resolve(mockResponse as ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    getProxySettings(contextId).then((res) => {
+    getProxySettings(sitecoreEdgeContextId).then((res) => {
       expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
@@ -82,7 +82,7 @@ describe('getProxySettings', () => {
           },
         }
       );
-      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(contextId);
+      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId);
     });
   });
 
@@ -90,7 +90,7 @@ describe('getProxySettings', () => {
     const mockFetch = Promise.reject('Error');
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    getProxySettings(contextId).then((res) => {
+    getProxySettings(sitecoreEdgeContextId).then((res) => {
       expect(res).toEqual({ browserId: '', clientKey: '' });
     });
   });

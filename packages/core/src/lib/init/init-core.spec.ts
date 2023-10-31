@@ -14,23 +14,23 @@ jest.mock('@sitecore-cloudsdk/utils', () => ({
 }));
 
 const mockSettings = {
-  contextId: '123',
   cookieSettings: {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,
     cookieName: '',
     cookiePath: '/',
   },
-  siteId: '456',
+  siteName: '456',
+  sitecoreEdgeContextId: '123',
 };
 describe('initCore', () => {
   let mockSettingsInput: ISettingsParamsBrowser;
 
   beforeEach(() => {
     mockSettingsInput = {
-      contextId: '123',
       cookieDomain: 'cDomain',
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
     setInitStatus(INIT_STATUSES.NOT_STARTED);
     setCoreSettings(null as unknown as ISettings);
@@ -92,12 +92,11 @@ describe('getSettings', () => {
   it('should return the core settings if they have been initialized', async () => {
     jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
     const settingsInput: ISettingsParamsBrowser = {
-      contextId: '123',
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookiePath: '/',
-
-      siteId: '456',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
     };
 
     await initCore(settingsInput);

@@ -26,14 +26,14 @@ describe('httpCookieHandler', () => {
     setHeader: jest.fn(),
   };
   const options: ISettings = {
-    contextId: 'context_id',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
       cookiePath: '/',
     },
-    siteId: '',
+    siteName: '',
+    sitecoreEdgeContextId: 'context_id',
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
