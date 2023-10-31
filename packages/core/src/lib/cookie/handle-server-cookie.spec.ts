@@ -96,6 +96,8 @@ describe('handleServerCookie', () => {
 
   it('should call handleHttpCookie when request is an HTTP Request', async () => {
     const getSettingsServerSpy = jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    const isHttpRequestSpy = jest.spyOn(utils, 'isHttpRequest');
+    const isHttpResponseSpy = jest.spyOn(utils, 'isHttpResponse');
     jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: 'c_key' });
     const request: utils.TRequest = {
       headers: {
@@ -126,61 +128,14 @@ describe('handleServerCookie', () => {
     expect(handleHttpCookie).toHaveBeenCalledWith(request, response, expectedSettings, 'value');
     expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
     expect(isNextJsMiddlewareResponse).not.toHaveBeenCalled();
+    expect(isHttpRequestSpy).toHaveBeenCalled();
+    expect(isHttpResponseSpy).toHaveBeenCalled();
   });
 
-  it('should not call if no client key is retrieved', async () => {
+  it('should throw an error if getProxySettings returns an empty clientKey', () => {
     jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: '' });
-    const request: utils.TRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: '', clientKey: '' });
 
-    await handleServerCookie(request, response);
-
-    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
-    expect(handleHttpCookie).not.toHaveBeenCalled();
-  });
-
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when forceServerCookieMode is false', async () => {
-    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
-    const request: utils.TRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
-
-    await handleServerCookie(request, response);
-
-    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
-    expect(handleHttpCookie).not.toHaveBeenCalled();
-  });
-
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie', async () => {
-    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: '' });
-    const request: utils.TRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
-
-    await handleServerCookie(request, response);
-
-    expect(isNextJsMiddlewareResponse).not.toHaveBeenCalled();
-    expect(handleHttpCookie).not.toHaveBeenCalled();
-    expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
-  });
-
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when request is not isNextJsMiddlewareRequest or isHttpRequest', async () => {
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: 'value', clientKey: 'val' });
     const request: utils.TRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
@@ -192,11 +147,26 @@ describe('handleServerCookie', () => {
       cookies: {},
     } as unknown as utils.IMiddlewareNextResponse;
 
-    await handleServerCookie(request, response);
+    expect(async () => await handleServerCookie(request, response)).rejects.toThrow(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
+  });
 
-    expect(isNextJsMiddlewareResponse).toHaveBeenCalled();
-    expect(isNextJsMiddlewareResponse).toHaveReturnedWith(false);
+  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie if getProxySettings returns an empty clientKey', () => {
+    jest.spyOn(initCore, 'getSettingsServer').mockReturnValue(options);
+    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: '', clientKey: '' });
+    const request: utils.TRequest = {
+      cookies: { get: jest.fn(), set: jest.fn() },
+      headers: {
+        get: jest.fn(),
+      },
+    };
+    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
+
     expect(handleNextJsMiddlewareCookie).not.toHaveBeenCalled();
     expect(handleHttpCookie).not.toHaveBeenCalled();
+    expect(async () => await handleServerCookie(request, response)).rejects.toThrow(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
   });
 });

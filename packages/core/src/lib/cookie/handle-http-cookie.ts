@@ -35,11 +35,6 @@ export function handleHttpCookie(
 
   if (!cookieValue) cookieValue = cookieTempValue;
 
-  if (!cookieValue)
-    throw new Error(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
-
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,
     options.cookieSettings.cookieDomain

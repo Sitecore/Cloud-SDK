@@ -32,7 +32,10 @@ export async function handleServerCookie<T extends TRequest, X extends IMiddlewa
 
   const { browserId, clientKey } = await getProxySettings(settings.sitecoreEdgeContextId, timeout);
 
-  if (!clientKey) return;
+  if (!clientKey)
+    throw new Error(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
 
   settings.cookieSettings.cookieName = `${BID_PREFIX}${clientKey}`;
 

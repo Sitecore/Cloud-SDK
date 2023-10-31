@@ -76,19 +76,4 @@ describe('handleMiddlewareRequest', () => {
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);
   });
-
-  it('should throw error if getBrowserIdFromCdp returns a falsy value', () => {
-    getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce('');
-
-    const req: IMiddlewareRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-
-    expect(() => handleNextJsMiddlewareCookie(req, response, options, '')).toThrow(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
-  });
 });

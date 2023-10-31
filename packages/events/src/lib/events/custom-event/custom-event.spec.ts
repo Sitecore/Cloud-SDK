@@ -190,7 +190,6 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pointOfSale: 'spinair.com',
       };
       const type = 'CUSTOM_TYPE';
       const expectedData = {
@@ -218,7 +217,6 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
-        pointOfSale: 'spinair.com',
       };
       const type = 'CUSTOM_TYPE';
       const expectedData = {

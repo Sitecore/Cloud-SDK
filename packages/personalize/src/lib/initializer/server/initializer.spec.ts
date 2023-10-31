@@ -59,7 +59,7 @@ describe('initializer', () => {
   beforeEach(() => {
     setDependencies(null as unknown as IServerPersonalize);
   });
-  jest.spyOn(core, 'initCoreServer');
+  const initCoreSpy = jest.spyOn(core, 'initCoreServer');
 
   jest.spyOn(core, 'getSettingsServer').mockReturnValue({
     sitecoreEdgeContextId: '456',
@@ -95,6 +95,7 @@ describe('initializer', () => {
     });
 
     it('should initialize the server functionality', async () => {
+      initCoreSpy.mockImplementationOnce(() => Promise.resolve());
       await initServer(settingsParams, req, res);
       const settings = getServerDependencies();
       expect(settings).toBeDefined();

@@ -5,6 +5,10 @@ import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { EventApiClient } from '../../cdp/EventApiClient';
+//import * as base from '../base-event';
+import { BaseEvent } from '../base-event';
+
+jest.mock('../base-event');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -48,8 +52,7 @@ describe('Test Identity', () => {
         },
       ],
       language: 'EN',
-      page: 'identity',
-      pointOfSale: 'spinair.com',
+      page: 'identity'
     };
 
     settingsMock = {
@@ -562,8 +565,7 @@ describe('Test Identity', () => {
           id: '',
           provider: 'email',
         },
-      ],
-      pointOfSale: 'spinair.com',
+      ]
     };
     const settings: core.ISettings = {
       cookieSettings: {
@@ -577,7 +579,21 @@ describe('Test Identity', () => {
     };
     const extensionData = {};
     new IdentityEvent({ eventApiClient, eventData, extensionData, id, settings }).send();
-
+    expect(BaseEvent).toHaveBeenCalled();
+    expect(BaseEvent).toHaveBeenCalledWith(
+      {
+        channel: 'WEB',
+        currency: 'EUR',
+        language: undefined,
+        page: undefined,
+      },
+      {
+        cookieSettings: { cookieDomain: 'cDomain', cookieExpiryDays: 730, cookieName: 'bid_name', cookiePath: '/' },
+        siteName: '456',
+        sitecoreEdgeContextId : '123',
+      },
+      'test_id'
+    );
     expect(sendEventSpy).toHaveBeenCalledWith(expect.not.objectContaining({ ext: {} }));
   });
 });

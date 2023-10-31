@@ -16,8 +16,8 @@ export class CustomEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: ICustomEventArguments) {
-    const { channel, currency, pointOfSale, language, page, ...rest } = args.eventData;
-    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id);
+    const { channel, currency, language, page, ...rest } = args.eventData;
+    super({ channel, currency, language, page }, args.settings, args.id);
 
     this.eventApiClient = args.eventApiClient;
 

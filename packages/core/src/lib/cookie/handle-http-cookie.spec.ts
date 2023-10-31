@@ -79,21 +79,6 @@ describe('httpCookieHandler', () => {
     expect(req.headers.cookie).toBe('bid_name=mock_bid_name_from_edge_proxy');
   });
 
-  it('should throw error if there is no cookie', () => {
-    req = {
-      headers: {
-        cookie: '',
-      },
-    };
-    res = {
-      setHeader: jest.fn(),
-    };
-
-    expect(() => handleHttpCookie(req, res, options, '')).toThrow(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
-  });
-
   it('should set the request header cookie when getCookieServerSide returns undefined but there is a cookie in the request headers', async () => {
     getCookieServerSideSpy.mockReturnValue(undefined);
 

@@ -19,14 +19,13 @@ export class PageViewEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: IPageViewEventArguments) {
-    const { channel, currency, pointOfSale, language, page } = args.eventData;
+    const { channel, currency, language, page } = args.eventData;
     super(
       {
         channel,
         currency,
         language,
         page,
-        pointOfSale,
       },
       args.settings,
       args.id

@@ -17,8 +17,9 @@ export class IdentityEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: IIdentityEventArguments) {
-    const { channel, currency, pointOfSale, language, page } = args.eventData;
-    super({ channel, currency, language, page, pointOfSale }, args.settings, args.id);
+    const { channel, currency, language, page } = args.eventData;
+
+    super({ channel, currency, language, page }, args.settings, args.id);
 
     this.validateAttributes(args.eventData);
 

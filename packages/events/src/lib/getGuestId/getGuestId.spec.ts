@@ -31,8 +31,7 @@ describe('getGuestId', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'name',
-          cookiePath: '/',
-          forceServerCookieMode: false,
+          cookiePath: '/'
         },
         includeUTMParameters: true,
         targetURL: 'https://domain',
