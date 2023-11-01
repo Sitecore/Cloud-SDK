@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/utils": "0.x"
+    "@sitecore-cloudsdk/utils": "0.1.0-rc.0"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",
