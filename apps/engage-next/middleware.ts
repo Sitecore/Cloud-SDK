@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { eventServer, identityServer, initServer, pageViewServer } from '@sitecore-cloudsdk/events';
-import { initServer as initPersonalizeServer, personalizeServer } from '@sitecore-cloudsdk/personalize';
+import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
+import { init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -10,12 +10,14 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
   const enableServerCookie =
-    (request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true') ||
-    request.nextUrl.pathname.startsWith('/middleware') && !request.nextUrl.pathname.startsWith('/about') && !request.nextUrl.pathname.startsWith('/server-side-props');
+    request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
+    (request.nextUrl.pathname.startsWith('/middleware') &&
+      !request.nextUrl.pathname.startsWith('/about') &&
+      !request.nextUrl.pathname.startsWith('/server-side-props'));
 
   const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
 
-  await initServer(
+  await initEvents(
     {
       sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
       cookieExpiryDays: 400,
@@ -45,7 +47,7 @@ export async function middleware(request: NextRequest) {
     const extensionData = {
       extParam: 'middlewareTest',
     };
-    await pageViewServer(basicEventData, request, extensionData);
+    await pageView(basicEventData, request, extensionData);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {
@@ -55,15 +57,15 @@ export async function middleware(request: NextRequest) {
       extParam: 'middlewareTest',
     };
 
-    await eventServer('MIDDLEWARE-CUSTOM', basicEventData, request, extensionData);
+    await event('MIDDLEWARE-CUSTOM', basicEventData, request, extensionData);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) {
-    await identityServer(identityEventData, request);
+    await identity(identityEventData, request);
   }
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
-    await initPersonalizeServer(
+    await initPersonalize(
       {
         sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
         siteName: process.env.SITE_ID || '',
@@ -80,7 +82,7 @@ export async function middleware(request: NextRequest) {
       language: 'EN',
     };
 
-    const personalizeRes = await personalizeServer(personalizeData, request);
+    const personalizeRes = await personalize(personalizeData, request);
 
     response.cookies.set('cdpResponse', JSON.stringify(personalizeRes));
   }

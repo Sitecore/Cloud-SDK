@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { useEffect, useState } from 'react';
-import { IPageViewEventInput, initServer, pageView, pageViewServer, init } from '@sitecore-cloudsdk/events';
+import { IPageViewEventInput, pageView, init } from '@sitecore-cloudsdk/events/browser';
+import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { INestedObject } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
 export function ViewEvent(props: { res: string | number | readonly string[] }) {

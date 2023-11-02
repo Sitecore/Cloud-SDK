@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { initServer, IPageViewEventInput, pageView } from '@sitecore-cloudsdk/events';
+import { init as initServer, IPageViewEventInput } from '@sitecore-cloudsdk/events/server';
+import { pageView } from '@sitecore-cloudsdk/events/browser';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 
@@ -50,8 +51,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.req,
     context.res
   );
-
-
 
   return {
     props: {}, // will be passed to the page component as props

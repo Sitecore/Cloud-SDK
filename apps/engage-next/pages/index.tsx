@@ -7,9 +7,8 @@ import {
   getBrowserId,
   pageView,
   LIBRARY_VERSION as eventVersion,
-} from '@sitecore-cloudsdk/events';
-
-import { LIBRARY_VERSION as personalizeVerion } from '@sitecore-cloudsdk/personalize';
+} from '@sitecore-cloudsdk/events/browser';
+import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
 
 export function Index() {
   const [eventData, seteventData] = useState<IPageViewEventInput>({
@@ -143,7 +142,7 @@ export function Index() {
           <button
             className={styles.button}
             data-testid='getVersionLibFromWindowPersonalize'
-            onClick={() => personalizeVerion && setVersion(personalizeVerion)}>
+            onClick={() => personalizeVersion && setVersion(personalizeVersion)}>
             Get Personalize version from lib function
           </button>
           <button

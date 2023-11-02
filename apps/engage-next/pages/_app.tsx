@@ -5,9 +5,9 @@ import Navbar from '../components/Navbar';
 import { useCallback, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import './index.css';
-import { init as initEvent } from '@sitecore-cloudsdk/events';
+import { init as initEvent } from '@sitecore-cloudsdk/events/browser';
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
-import { init as initPersonalize } from '@sitecore-cloudsdk/personalize';
+import { init as initPersonalize } from '@sitecore-cloudsdk/personalize/browser';
 
 function CustomApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

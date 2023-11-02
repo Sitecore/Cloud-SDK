@@ -9,3 +9,5 @@ export { form } from './lib/events/custom-event/form';
 export { event } from './lib/events/custom-event/event';
 export { identity } from './lib/events/identity/identity';
 export { pageView } from './lib/events/page-view/page-view';
+export { getGuestId } from './lib/getGuestId/getGuestId';
+export { LIBRARY_VERSION } from './lib/consts';

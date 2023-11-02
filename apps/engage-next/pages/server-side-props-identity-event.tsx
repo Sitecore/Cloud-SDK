@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { identityServer, initServer } from '@sitecore-cloudsdk/events';
+import { identity, init } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
 export function ServerSidePropsIdenityEvent() {
@@ -13,14 +13,14 @@ export function ServerSidePropsIdenityEvent() {
 export default ServerSidePropsIdenityEvent;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const event = {
+  const eventData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'testServerSideProps@test.com',
     identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }],
   };
 
-  await initServer(
+  await init(
     {
       cookieDomain:
         typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
@@ -35,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let cdpResponse;
   try {
-    cdpResponse = await identityServer(event, context.req);
+    cdpResponse = await identity(eventData, context.req);
   } catch {
     cdpResponse = 'Error';
   }

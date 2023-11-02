@@ -82,7 +82,7 @@ describe('initializer', () => {
       let settings;
       expect(() => {
         settings = getServerDependencies();
-      }).toThrow(`[IE-0007] You must first initialize the "events" module. Run the "initServer" function.`);
+      }).toThrow(`[IE-0007] You must first initialize the "events" module. Run the "init" function.`);
 
       expect(settings).toBeUndefined();
     });
@@ -101,7 +101,7 @@ describe('initializer', () => {
         expect(EventApiClient).toHaveBeenCalledTimes(1);
         expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe(settingsObj.sitecoreEdgeContextId);
         expect(typeof eventsServer).toBe('undefined');
-      }).not.toThrow(`[IE-0007] You must first initialize the "events" module. Run the "initServer" function.`);
+      }).not.toThrow(`[IE-0007] You must first initialize the "events" module. Run the "init" function.`);
     });
 
     it('should not call handleCookie if enableServerCookie is false', async () => {

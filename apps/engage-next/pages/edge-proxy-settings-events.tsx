@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ISettingsParamsBrowser, ISettingsParamsServer } from '@sitecore-cloudsdk/core';
-import { init, initServer } from '@sitecore-cloudsdk/events';
+import { init } from '@sitecore-cloudsdk/events/browser';
+import { init as initServer } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
 export function EdgeProxySettings({ serverResponse }: { serverResponse: string }) {

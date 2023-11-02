@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { initServer, pageViewServer } from '@sitecore-cloudsdk/events';
+import { init, pageView } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
 export function serverSidePropsViewEvent() {
@@ -21,7 +21,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const timeout =
     typeof context.query.timeout === 'string' && context.query.timeout ? +context.query.timeout : undefined;
-  await initServer(
+  await init(
     {
       cookieDomain:
         typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
@@ -38,7 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let cdpResponse;
 
   try {
-    cdpResponse = await pageViewServer(event, context.req);
+    cdpResponse = await pageView(event, context.req);
   } catch {
     cdpResponse = 'Error';
   }

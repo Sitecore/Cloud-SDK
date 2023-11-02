@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { initServer, IPageViewEventInput, pageViewServer } from '@sitecore-cloudsdk/events';
+import { init, IPageViewEventInput, pageView } from '@sitecore-cloudsdk/events/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -10,7 +10,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     referrer: 'https://www.google.com/',
   };
 
-  await initServer(
+  await init(
     {
       cookieExpiryDays: 400,
       enableServerCookie: true,
@@ -21,6 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const cdpResponse = await pageViewServer(event, req);
+  const cdpResponse = await pageView(event, req);
   res.status(200).json(cdpResponse);
 }

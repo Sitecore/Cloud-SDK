@@ -1,6 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-export { initServer } from './lib/initializer/server/initializer';
-export { eventServer } from './lib/events/custom-event/eventServer';
-export { identityServer } from './lib/events/identity/identityServer';
-export { pageViewServer } from './lib/events/page-view/page-view-server';
-export type { IServerEventsSettings } from './lib/initializer/server/initializer';
+export { initServer as init } from './lib/initializer/server/initializer';
+export { eventServer as event } from './lib/events/custom-event/eventServer';
+export { identityServer as identity } from './lib/events/identity/identityServer';
+export { pageViewServer as pageView } from './lib/events/page-view/page-view-server';
+export { getGuestId } from './lib/getGuestId/getGuestId';
+export { LIBRARY_VERSION } from './lib/consts';
+export type { IPageViewEventInput, ICustomEventInput, IIdentityEventAttributesInput } from './lib/events';
+export type { IServerEventsSettings as IEventsSettings } from './lib/initializer/server/initializer';

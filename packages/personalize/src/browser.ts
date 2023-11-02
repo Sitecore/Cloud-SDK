@@ -2,3 +2,6 @@
 
 export { init } from './lib/initializer/client/initializer';
 export { personalize } from './lib/personalization/personalize';
+export { LIBRARY_VERSION } from './lib/consts';
+
+export type { IPersonalizerInput } from './lib/personalization/personalizer';

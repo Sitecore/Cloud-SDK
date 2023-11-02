@@ -22,7 +22,7 @@ export function setDependencies(settings: IServerPersonalize | null) {
  */
 export function getServerDependencies(): IServerPersonalize {
   if (!serverDependencies) {
-    throw Error(`[IE-0009] You must first initialize the "personalize" module. Run the "initServer" function.`);
+    throw Error(`[IE-0009] You must first initialize the "personalize" module. Run the "init" function.`);
   }
 
   return serverDependencies;

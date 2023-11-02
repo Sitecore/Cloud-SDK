@@ -2,17 +2,16 @@
   "name": "@sitecore-cloudsdk/events",
   "version": "0.1.0-rc.2",
   "license": "Apache-2.0",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",
-  "types": "dist/esm/src/index.d.ts",
   "exports": {
-    ".": {
-      "types": {
-        "require": "./dist/cjs/src/index.d.ts",
-        "default": "./dist/esm/src/index.d.ts"
-      },
-      "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"
+    "./server": {
+      "import": "./dist/esm/src/server.js",
+      "require": "./dist/cjs/src/server.js",
+      "types": "./dist/esm/src/server.d.ts"
+    },
+    "./browser": {
+      "import": "./dist/esm/src/browser.js",
+      "require": "./dist/cjs/src/browser.js",
+      "types": "./dist/esm/src/browser.d.ts"
     }
   },
   "dependencies": {

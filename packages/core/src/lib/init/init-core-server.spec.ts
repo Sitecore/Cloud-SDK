@@ -36,7 +36,7 @@ describe('core-server', () => {
   describe('getSettingsServer', () => {
     it('should throw an error when getSettingsServer are not initialized', () => {
       expect(() => getSettingsServer()).toThrow(
-        '[IE-0005] You must first initialize the "core" module. Run the "initServer" function.'
+        '[IE-0005] You must first initialize the "core" module. Run the "init" function.'
       );
     });
 
@@ -49,7 +49,7 @@ describe('core-server', () => {
         expect(_settings?.sitecoreEdgeContextId).toBe('0123');
         expect(handleServerSpy).toHaveBeenCalledTimes(0);
         expect(handleServerSpy).not.toHaveBeenCalled();
-      }).not.toThrow('[IE-0005] You must first initialize the "core" module. Run the "initServer" function.');
+      }).not.toThrow('[IE-0005] You must first initialize the "core" module. Run the "init" function.');
     });
   });
   describe('initCoreServer', () => {

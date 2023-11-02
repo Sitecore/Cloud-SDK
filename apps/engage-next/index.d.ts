@@ -1,7 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { Events } from '@sitecore-cloudsdk/events';
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 declare module '*.svg' {
   const content: any;
@@ -13,8 +11,6 @@ declare module '*.svg' {
 declare global {
   /* eslint-disable @typescript-eslint/naming-convention */
   interface Window {
-    eventsTestingInstance: Events;
-    events: Events;
     Engage: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [x: string]: any;
@@ -38,3 +34,5 @@ declare global {
     get: unknown;
   }
 }
+
+export {};

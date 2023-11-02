@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { IPersonalizerInput, initServer, personalize, personalizeServer } from '@sitecore-cloudsdk/personalize';
+import { init as initServer, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
+import { IPersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
 
 import { GetServerSidePropsContext } from 'next';

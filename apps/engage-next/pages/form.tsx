@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { form } from '@sitecore-cloudsdk/events';
+import { form } from '@sitecore-cloudsdk/events/browser';
 
 export function FormEvent() {
   const getParamsFromUrl = (parameter: string) => {

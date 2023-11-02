@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IIdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events';
+import { IIdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
 export function Identity() {
