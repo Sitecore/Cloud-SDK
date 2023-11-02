@@ -46,7 +46,7 @@ jobs:
           git config user.name "Automated Build"
 
       - name: Bump version
-        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit
+        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
         id: get-version
@@ -78,7 +78,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
-        run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body " " --head release/${{steps.get-version.outputs.new_release_version}}
+        run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
