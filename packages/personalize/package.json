@@ -4,14 +4,14 @@
   "license": "Apache-2.0",
   "exports": {
     "./server": {
-      "import": "./dist/esm/src/server.js",
-      "require": "./dist/cjs/src/server.js",
-      "types": "./dist/esm/src/server.d.ts"
+      "import": "./server.js",
+      "require": "./server.cjs",
+      "types": "./server.d.ts"
     },
     "./browser": {
-      "import": "./dist/esm/src/browser.js",
-      "require": "./dist/cjs/src/browser.js",
-      "types": "./dist/esm/src/browser.d.ts"
+      "import": "./browser.js",
+      "require": "./browser.cjs",
+      "types": "./browser.d.ts"
     }
   },
   "dependencies": {
@@ -25,6 +25,12 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "browser.js",
+    "browser.cjs",
+    "browser.d.ts",
+    "server.cjs",
+    "server.js",
+    "server.d.ts"
   ]
 }
