@@ -43,7 +43,7 @@ export function setCoreSettings(settings: ISettings) {
  */
 export function getSettings() {
   if (!coreSettings) {
-    throw Error(`[IE-0004] You must first initialize the "core" module. Run the "init" function.`);
+    throw Error(`[IE-0004] You must first initialize the "core" package. Run the "init" function.`);
   }
   return coreSettings;
 }

@@ -31,7 +31,7 @@ export function setDependencies(settings: IBrowserPersonalizeSettings | null) {
  */
 export function getDependencies(): IBrowserPersonalizeSettings {
   if (!dependencies) {
-    throw Error(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+    throw Error(`[IE-0008] You must first initialize the "personalize" package. Run the "init" function.`);
   }
   return dependencies;
 }

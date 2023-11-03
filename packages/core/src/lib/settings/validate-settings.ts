@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ISettingsParams } from './interfaces';
-
 /**
  * Validates the core settings to ensure they meet required criteria.
  *
@@ -10,10 +9,19 @@ import { ISettingsParams } from './interfaces';
  * @throws Error with specific error codes if any required property is missing or empty.
  */
 export function validateSettings(settings: ISettingsParams) {
-  const { sitecoreEdgeContextId, siteName } = settings;
-
+  const { sitecoreEdgeContextId, siteName, sitecoreEdgeUrl } = settings;
   if (!sitecoreEdgeContextId || sitecoreEdgeContextId.trim().length === 0)
     throw new Error(`[MV-0001] "sitecoreEdgeContextId" is required.`);
 
   if (!siteName || siteName.trim().length === 0) throw new Error(`[MV-0002] "siteName" is required.`);
+
+  if (sitecoreEdgeUrl) {
+    try {
+      new URL(sitecoreEdgeUrl);
+    } catch (e) {
+      throw new Error(
+        `[IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string.`
+      );
+    }
+  }
 }

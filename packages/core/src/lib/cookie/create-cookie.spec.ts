@@ -3,7 +3,7 @@ import { createCookie } from './create-cookie';
 import * as getProxySettings from '../init/get-proxy-settings';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
-import { BID_PREFIX } from '../consts';
+import { BID_PREFIX, SITECORE_EDGE_URL } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   cookieExists: jest.fn(),
@@ -36,6 +36,7 @@ describe('createCookie', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: SITECORE_EDGE_URL,
     };
   });
   it('should create a cookie and update the settings', async () => {

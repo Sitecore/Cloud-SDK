@@ -22,6 +22,7 @@ const mockSettings = {
   },
   siteName: '456',
   sitecoreEdgeContextId: '123',
+  sitecoreEdgeUrl: '',
 };
 describe('initCore', () => {
   let mockSettingsInput: ISettingsParamsBrowser;
@@ -31,6 +32,7 @@ describe('initCore', () => {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     setInitStatus(INIT_STATUSES.NOT_STARTED);
     setCoreSettings(null as unknown as ISettings);
@@ -97,6 +99,7 @@ describe('getSettings', () => {
       cookiePath: '/',
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
 
     await initCore(settingsInput);
@@ -107,7 +110,7 @@ describe('getSettings', () => {
   });
   it('should throw an error if the core settings are not initialized', () => {
     expect(() => getSettings()).toThrow(
-      `[IE-0004] You must first initialize the "core" module. Run the "init" function.`
+      `[IE-0004] You must first initialize the "core" package. Run the "init" function.`
     );
   });
 });

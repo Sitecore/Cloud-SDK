@@ -34,6 +34,7 @@ describe('httpCookieHandler', () => {
     },
     siteName: '',
     sitecoreEdgeContextId: 'context_id',
+    sitecoreEdgeUrl: '',
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(

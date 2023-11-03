@@ -1,4 +1,6 @@
 const config = {
+  $schema: './node_modules/@stryker-mutator/core/schema/stryker-schema.json',
+  _comment: 'Comments can be put inside `xxx_comment` properties.',
   packageManager: 'npm',
   mutate: [
     './packages/events/src/**/*.ts',
@@ -25,6 +27,7 @@ const config = {
   },
   logLevel: 'info',
   allowConsoleColors: true,
+  incremental: true,
 };
 
 module.exports = config;

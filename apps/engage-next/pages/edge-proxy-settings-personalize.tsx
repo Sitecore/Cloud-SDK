@@ -20,6 +20,12 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
   const handleHappyPath = async () => {
     await init({ sitecoreEdgeContextId: process.env.CONTEXT_ID as string, siteName: process.env.SITE_ID as string });
   };
+  const handleInvalidsitecoreEdgeUrl = async () => {
+    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: '_a' });
+  };
+  const handlEmptyStringsitecoreEdgeUrl = async () => {
+    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: ' ' });
+  };
 
   return (
     <div>
@@ -36,6 +42,21 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
             data-testid='initUndefinedSitecoreEdgeContextId'
             onClick={handleUndefinedContextId}>
             Undefined context id
+          </button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Context Id</legend>
+        <div>
+          <button
+            data-testid='initInvalidSitecoreEdgesitecoreEdgeUrl'
+            onClick={handleInvalidsitecoreEdgeUrl}>
+            Invalid sitecoreEdgeUrl
+          </button>
+          <button
+            data-testid='initEmptyStringSitecoreEdgesitecoreEdgeUrl'
+            onClick={handlEmptyStringsitecoreEdgeUrl}>
+            Empty Space sitecoreEdgeUrl
           </button>
         </div>
       </fieldset>
@@ -86,12 +107,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const sitecoreEdgeContextId =
     attributeToTest === 'sitecoreEdgeContextId' ? (testVariation === 'invalid' ? ' ' : undefined) : '123';
   const siteName = attributeToTest === 'siteName' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
-
+  const sitecoreEdgeUrl =
+    attributeToTest === 'sitecoreEdgeUrl' ? (testVariation === 'invalid' ? '_a' : ' ') : undefined;
   try {
     await initServer(
       {
         sitecoreEdgeContextId,
         siteName,
+        sitecoreEdgeUrl,
       } as ISettingsParamsServer,
       context.req,
       context.res

@@ -49,6 +49,7 @@ describe('Test Personalizer Class', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
     };
 
     personalizeHelper = new CallFlowEdgeProxyClient(settingsMock);
@@ -271,8 +272,10 @@ describe('Test Personalizer Class', () => {
           cookieName: 'bid_name',
           cookiePath: '/',
         },
+
         siteName: '456',
         sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
       };
 
       const callFlowCDPClient = new CallFlowEdgeProxyClient(settingsMock);
@@ -547,7 +550,7 @@ describe('Test Personalizer Class', () => {
       const response = await new Personalizer(cdpClient, id).getInteractiveExperienceData(personalizeInputMock, 100);
 
       expect(fetch).toHaveBeenCalledWith(
-        `${core.TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
+        `${core.SITECORE_EDGE_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
           // eslint-disable-next-line @typescript-eslint/naming-convention

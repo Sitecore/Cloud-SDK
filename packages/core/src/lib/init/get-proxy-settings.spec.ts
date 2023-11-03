@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { LIBRARY_VERSION, TARGET_URL } from '../consts';
+import { LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import { ICdpResponse } from '../interfaces';
 import { getProxySettings } from './get-proxy-settings';
 import * as constructGetProxySettingsUrl from './construct-get-proxy-settings-url';
@@ -37,10 +37,10 @@ describe('getProxySettings', () => {
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
 
-    const res = await getProxySettings(sitecoreEdgeContextId, 3000);
+    const res = await getProxySettings(sitecoreEdgeContextId, SITECORE_EDGE_URL, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
-      `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       3000,
       {
         headers: {
@@ -51,7 +51,7 @@ describe('getProxySettings', () => {
     );
 
     expect(fetch).toHaveBeenCalledWith(
-      `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -62,7 +62,7 @@ describe('getProxySettings', () => {
     );
     expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
     expect(fetch).toHaveBeenCalledTimes(1);
-    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId);
+    expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId, SITECORE_EDGE_URL);
   });
 
   it('should resolve with an appropriate response object', () => {
@@ -70,11 +70,11 @@ describe('getProxySettings', () => {
       json: () => Promise.resolve(mockResponse as ICdpResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    getProxySettings(sitecoreEdgeContextId).then((res) => {
+    getProxySettings(sitecoreEdgeContextId, SITECORE_EDGE_URL).then((res) => {
       expect(res).toMatchObject({ browserId: mockResponse.ref, clientKey: mockResponse.client_key });
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        `${TARGET_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+        `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
         {
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -82,7 +82,7 @@ describe('getProxySettings', () => {
           },
         }
       );
-      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId);
+      expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(sitecoreEdgeContextId, SITECORE_EDGE_URL);
     });
   });
 
@@ -90,7 +90,7 @@ describe('getProxySettings', () => {
     const mockFetch = Promise.reject('Error');
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    getProxySettings(sitecoreEdgeContextId).then((res) => {
+    getProxySettings(sitecoreEdgeContextId, SITECORE_EDGE_URL).then((res) => {
       expect(res).toEqual({ browserId: '', clientKey: '' });
     });
   });

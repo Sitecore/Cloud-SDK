@@ -52,7 +52,7 @@ describe('Test Identity', () => {
         },
       ],
       language: 'EN',
-      page: 'identity'
+      page: 'identity',
     };
 
     settingsMock = {
@@ -64,6 +64,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
   });
 
@@ -418,6 +419,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     new IdentityEvent({
       eventApiClient,
@@ -458,6 +460,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -502,6 +505,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
@@ -544,6 +548,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
 
     new IdentityEvent({ eventApiClient, eventData, id, settings }).send();
@@ -565,7 +570,7 @@ describe('Test Identity', () => {
           id: '',
           provider: 'email',
         },
-      ]
+      ],
     };
     const settings: core.ISettings = {
       cookieSettings: {
@@ -576,6 +581,7 @@ describe('Test Identity', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     const extensionData = {};
     new IdentityEvent({ eventApiClient, eventData, extensionData, id, settings }).send();
@@ -590,7 +596,8 @@ describe('Test Identity', () => {
       {
         cookieSettings: { cookieDomain: 'cDomain', cookieExpiryDays: 730, cookieName: 'bid_name', cookiePath: '/' },
         siteName: '456',
-        sitecoreEdgeContextId : '123',
+        sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: '',
       },
       'test_id'
     );

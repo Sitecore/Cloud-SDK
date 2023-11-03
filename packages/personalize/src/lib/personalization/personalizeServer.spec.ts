@@ -54,6 +54,7 @@ describe('personalize', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
   };
   afterEach(() => {
     jest.clearAllMocks();

@@ -16,12 +16,14 @@ export async function middleware(request: NextRequest) {
       !request.nextUrl.pathname.startsWith('/server-side-props'));
 
   const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
+  const sitecoreEdgeUrl = request?.nextUrl?.searchParams?.get('sitecoreEdgeUrl') ?? undefined;
 
   await initEvents(
     {
       sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
       cookieExpiryDays: 400,
       enableServerCookie,
+      sitecoreEdgeUrl,
       siteName: process.env.SITE_ID || '',
     },
     request,
@@ -69,6 +71,7 @@ export async function middleware(request: NextRequest) {
       {
         sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
         siteName: process.env.SITE_ID || '',
+        sitecoreEdgeUrl,
       },
       request,
       response

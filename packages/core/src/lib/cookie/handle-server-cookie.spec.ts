@@ -39,6 +39,7 @@ describe('handleServerCookie', () => {
     },
     siteName: '',
     sitecoreEdgeContextId: '',
+    sitecoreEdgeUrl: '',
   };
 
   beforeEach(() => {
@@ -51,6 +52,7 @@ describe('handleServerCookie', () => {
       },
       siteName: '',
       sitecoreEdgeContextId: '',
+      sitecoreEdgeUrl: '',
     };
   });
 

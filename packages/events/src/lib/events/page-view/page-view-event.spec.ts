@@ -80,6 +80,7 @@ describe('PageViewEvent', () => {
         cookiePath: '/',
       },
       siteName: '456',
+      sitecoreEdgeUrl: '',
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
     jest.spyOn(core, 'pageName').mockImplementation(() => 'races');

@@ -21,6 +21,21 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
     await init({ sitecoreEdgeContextId: '123', siteName: '456' });
   };
 
+  const handleInvalidsitecoreEdgeUrl = async () => {
+    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: '_a' });
+  };
+  const handlEmptyStringsitecoreEdgeUrl = async () => {
+    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: ' ' });
+  };
+  const handlDifferentsitecoreEdgeUrl = async () => {
+    await init({
+      sitecoreEdgeContextId: '72d5674b-1da5-47d8-5829-08db5ace6087',
+      siteName: '456',
+      sitecoreEdgeUrl: 'https://edge-platform-staging.sitecore-staging.cloud',
+      enableBrowserCookie: true,
+    });
+  };
+
   return (
     <div>
       <h1>EdgeProxySettings Page</h1>
@@ -36,6 +51,26 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
             data-testid='initUndefinedSitecoreEdgeContextId'
             onClick={handleUndefinedContextId}>
             Undefined context id
+          </button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Context Id</legend>
+        <div>
+          <button
+            data-testid='initInvalidSitecoreEdgesitecoreEdgeUrl'
+            onClick={handleInvalidsitecoreEdgeUrl}>
+            Invalid sitecoreEdgeUrl
+          </button>
+          <button
+            data-testid='initEmptyStringSitecoreEdgesitecoreEdgeUrl'
+            onClick={handlEmptyStringsitecoreEdgeUrl}>
+            Empty Space sitecoreEdgeUrl
+          </button>
+          <button
+            data-testid='initDifferentSitecoreEdgesitecoreEdgeUrl'
+            onClick={handlDifferentsitecoreEdgeUrl}>
+            Different sitecoreEdgeUrl
           </button>
         </div>
       </fieldset>
@@ -86,12 +121,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const sitecoreEdgeContextId =
     attributeToTest === 'sitecoreEdgeContextId' ? (testVariation === 'invalid' ? ' ' : undefined) : '123';
   const siteName = attributeToTest === 'siteName' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
-
+  const sitecoreEdgeUrl =
+    attributeToTest === 'sitecoreEdgeUrl' ? (testVariation === 'invalid' ? '_a' : ' ') : undefined;
   try {
     await initServer(
       {
         sitecoreEdgeContextId,
         siteName,
+        sitecoreEdgeUrl,
       } as ISettingsParamsServer,
       context.req,
       context.res

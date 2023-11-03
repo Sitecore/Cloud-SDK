@@ -41,6 +41,7 @@ describe('Event Storage', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
 
   const type = 'CUSTOM_TYPE';

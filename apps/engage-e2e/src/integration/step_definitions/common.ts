@@ -47,6 +47,13 @@ Then('api server event request responds with status code {string}', (expectedSta
   });
 });
 
+defineStep('initial call returns {string}', (expectedStatus: string) => {
+  cy.waitForResponse('@initialCall').then((response: any) => {
+    const actualStatus = response.statusCode;
+    expect(actualStatus).to.eq(Number(expectedStatus));
+  });
+});
+
 defineStep('the {string} page is loaded', (page: string) => {
   // eslint-disable-next-line max-len
   cy.intercept(

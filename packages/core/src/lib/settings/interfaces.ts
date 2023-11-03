@@ -5,6 +5,7 @@
  */
 export interface ISettings extends IBasicSettings {
   cookieSettings: ICookieSettings;
+  sitecoreEdgeUrl: string;
 }
 
 export interface ISettingsParamsBrowser extends ISettingsParams {
@@ -25,6 +26,7 @@ export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
 interface IBasicSettings {
   sitecoreEdgeContextId: string;
   siteName: string;
+  sitecoreEdgeUrl?: string;
 }
 
 interface ICookieSettingsInput {

@@ -21,7 +21,7 @@ export {
   DAILY_SECONDS,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
-  TARGET_URL,
+  SITECORE_EDGE_URL,
 } from './lib/consts';
 
 export type { ICdpResponse, IInfer } from './lib/interfaces';

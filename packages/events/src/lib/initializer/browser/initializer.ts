@@ -1,14 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { EventApiClient } from '../../cdp/EventApiClient';
-import {
-  ISettings,
-  ISettingsParamsBrowser,
-  TARGET_URL,
-  getBrowserId,
-  getSettings,
-  initCore,
-} from '@sitecore-cloudsdk/core';
+import { ISettings, ISettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { EventQueue } from '../../eventStorage/eventStorage';
 
@@ -28,7 +21,7 @@ export function setDependencies(settings: IBrowserEventsSettings | null) {
  */
 export function getDependencies(): IBrowserEventsSettings {
   if (!dependencies) {
-    throw Error(`[IE-0006] You must first initialize the "events" module. Run the "init" function.`);
+    throw Error(`[IE-0006] You must first initialize the "events" package. Run the "init" function.`);
   }
   return dependencies;
 }
@@ -58,7 +51,11 @@ export async function init(settingsInput: ISettingsParamsBrowser): Promise<void>
   const settings = getSettings();
 
   const id = getBrowserId();
-  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.sitecoreEdgeContextId, settingsInput.siteName);
+  const eventApiClient = new EventApiClient(
+    settings.sitecoreEdgeUrl,
+    settingsInput.sitecoreEdgeContextId,
+    settingsInput.siteName
+  );
   const eventQueue = new EventQueue(sessionStorage, eventApiClient);
 
   setDependencies({

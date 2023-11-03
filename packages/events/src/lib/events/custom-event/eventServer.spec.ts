@@ -68,6 +68,7 @@ describe('eventServer', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
   const getServerDependenciesSpy = jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
     eventApiClient: eventApiClient,
@@ -103,6 +104,7 @@ describe('eventServer', () => {
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: '',
       },
       type: 'CUSTOM_TYPE',
     });

@@ -21,6 +21,7 @@ const config = {
   },
   logLevel: 'info',
   allowConsoleColors: true,
+  incremental: true,
 };
 
 module.exports = config;

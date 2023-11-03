@@ -22,6 +22,7 @@ const settingsParams: initPersonalize.ISettingsParamsBrowserPersonalize = {
   enableBrowserCookie: true,
   siteName: '456',
   sitecoreEdgeContextId: '123',
+  sitecoreEdgeUrl: '',
 };
 
 describe('initializer', () => {
@@ -44,6 +45,7 @@ describe('initializer', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   });
 
   afterEach(() => {
@@ -61,14 +63,14 @@ describe('initializer', () => {
     });
     it('should throw error if settings are not initialized', () => {
       expect(() => initPersonalize.getDependencies()).toThrow(
-        `[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`
+        `[IE-0008] You must first initialize the "personalize" package. Run the "init" function.`
       );
     });
     it('should throw error if settings are not initialized v2', () => {
       let settings;
       expect(() => {
         settings = initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+      }).toThrowError(`[IE-0008] You must first initialize the "personalize" package. Run the "init" function.`);
       expect(settings).toBeUndefined();
     });
 
@@ -76,7 +78,7 @@ describe('initializer', () => {
       expect(() => {
         initPersonalize.setDependencies(null);
         initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0008] You must first initialize the "personalize" module. Run the "init" function.`);
+      }).toThrowError(`[IE-0008] You must first initialize the "personalize" package. Run the "init" function.`);
     });
   });
   describe('init', () => {

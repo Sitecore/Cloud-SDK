@@ -48,6 +48,7 @@ describe('pageViewServer', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
 
   jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
@@ -101,6 +102,7 @@ describe('pageViewServer', () => {
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: '',
       },
     });
     expect(response).toBe('mockedResponse');

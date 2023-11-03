@@ -13,6 +13,7 @@ describe('core-server', () => {
     enableServerCookie: undefined,
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
   const createSettingsSpy = jest.spyOn(createSettings, 'createSettings').mockReturnValue({
     cookieSettings: {
@@ -23,6 +24,7 @@ describe('core-server', () => {
     },
     siteName: '4567',
     sitecoreEdgeContextId: '0123',
+    sitecoreEdgeUrl: '',
   });
 
   beforeEach(() => {
@@ -36,7 +38,7 @@ describe('core-server', () => {
   describe('getSettingsServer', () => {
     it('should throw an error when getSettingsServer are not initialized', () => {
       expect(() => getSettingsServer()).toThrow(
-        '[IE-0005] You must first initialize the "core" module. Run the "init" function.'
+        '[IE-0005] You must first initialize the "core" package. Run the "init" function.'
       );
     });
 
@@ -49,7 +51,7 @@ describe('core-server', () => {
         expect(_settings?.sitecoreEdgeContextId).toBe('0123');
         expect(handleServerSpy).toHaveBeenCalledTimes(0);
         expect(handleServerSpy).not.toHaveBeenCalled();
-      }).not.toThrow('[IE-0005] You must first initialize the "core" module. Run the "init" function.');
+      }).not.toThrow('[IE-0005] You must first initialize the "core" package. Run the "init" function.');
     });
   });
   describe('initCoreServer', () => {
@@ -94,6 +96,7 @@ describe('core-server', () => {
         },
         siteName: '4567',
         sitecoreEdgeContextId: '0123',
+        sitecoreEdgeUrl: '',
       };
 
       await initCoreServer(settingsInput, request, response);

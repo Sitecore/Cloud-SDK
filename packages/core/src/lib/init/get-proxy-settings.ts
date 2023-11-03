@@ -11,7 +11,11 @@ import { constructGetProxySettingsUrl } from './construct-get-proxy-settings-url
  * @param timeout - The timeout for the call to proxy
  * @returns the browser ID and Client Key
  */
-export async function getProxySettings(sitecoreEdgeContextId: string, timeout?: number): Promise<IProxySettings> {
+export async function getProxySettings(
+  sitecoreEdgeContextId: string,
+  sitecoreEdgeUrl: string,
+  timeout?: number
+): Promise<IProxySettings> {
   const fetchOptions = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: { 'X-Library-Version': LIBRARY_VERSION },
@@ -19,9 +23,13 @@ export async function getProxySettings(sitecoreEdgeContextId: string, timeout?: 
 
   let response;
   if (timeout !== undefined) {
-    response = await fetchWithTimeout(constructGetProxySettingsUrl(sitecoreEdgeContextId), timeout, fetchOptions);
+    response = await fetchWithTimeout(
+      constructGetProxySettingsUrl(sitecoreEdgeContextId, sitecoreEdgeUrl),
+      timeout,
+      fetchOptions
+    );
   } else {
-    response = await fetch(constructGetProxySettingsUrl(sitecoreEdgeContextId), fetchOptions)
+    response = await fetch(constructGetProxySettingsUrl(sitecoreEdgeContextId, sitecoreEdgeUrl), fetchOptions)
       .then((res) => res.json())
       .then((data) => data)
       .catch(() => undefined);

@@ -33,6 +33,7 @@ const settingsParams: core.ISettingsParamsBrowser = {
   cookieDomain: 'cDomain',
   siteName: '456',
   sitecoreEdgeContextId: '123',
+  sitecoreEdgeUrl: '',
 };
 
 describe('initializer', () => {
@@ -51,6 +52,7 @@ describe('initializer', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
   afterEach(() => {
     jest.clearAllMocks();
@@ -79,7 +81,7 @@ describe('initializer', () => {
       expect(core.getBrowserId).toHaveBeenCalledTimes(1);
       expect(EventApiClient).toHaveBeenCalledTimes(1);
       expect(EventQueue).toHaveBeenCalledTimes(1);
-    }).not.toThrow(`[IE-0006] You must first initialize the "events" module. Run the "init" function.`);
+    }).not.toThrow(`[IE-0006] You must first initialize the "events" package. Run the "init" function.`);
   });
 
   it('should not try to create a cookie if it already exists', () => {

@@ -30,6 +30,7 @@ describe('form function', () => {
     sitecoreEdgeContextId: '123',
     cookieDomain: 'cDomain',
     siteName: '456',
+    sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
   };
   const id = 'test_id';
 

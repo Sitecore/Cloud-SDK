@@ -4,7 +4,7 @@
   "license": "Apache-2.0",
   "scripts": {
     "mutation-tests": "nx affected --target=stryker",
-    "mutation-local": "nx run-many --target=stryker --all",
+    "mutation-local": "nx run-many --target=stryker",
     "unit-tests": "nx affected --target=test",
     "lint": "nx affected --target=lint",
     "build": "nx affected --target=build",

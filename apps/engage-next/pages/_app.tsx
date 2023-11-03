@@ -30,6 +30,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
           : true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
+      sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined,
     });
   }, []);
 
@@ -54,12 +55,14 @@ function CustomApp({ Component, pageProps }: AppProps) {
     if (webPersonalizationSettings?.baseURLOverride == 'undefined') {
       webPersonalizationSettings.baseURLOverride = undefined;
     }
+
     await initPersonalize({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
+      sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined,
     });
   }, []);
 

@@ -1,6 +1,6 @@
 import { CallFlowEdgeProxyClient, ICdpCallFlowsBody } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
-import { ISettings, TARGET_URL } from '@sitecore-cloudsdk/core';
+import { ISettings, SITECORE_EDGE_URL } from '@sitecore-cloudsdk/core';
 
 describe('Test Base CallFlow Base Class', () => {
   let data: ICdpCallFlowsBody;
@@ -30,6 +30,7 @@ describe('Test Base CallFlow Base Class', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: SITECORE_EDGE_URL,
     };
   });
 
@@ -51,7 +52,7 @@ describe('Test Base CallFlow Base Class', () => {
     new CallFlowEdgeProxyClient(settingsMock).sendCallFlowsRequest(expectedBody).then(() => {
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        `${TARGET_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
+        `${SITECORE_EDGE_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           body: JSON.stringify(expectedBody),
           // eslint-disable-next-line @typescript-eslint/naming-convention

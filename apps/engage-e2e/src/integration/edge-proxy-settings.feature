@@ -1,4 +1,4 @@
-Feature: Edge Proxy sitecoreEdgeContextId and siteName settings in init function
+Feature: Edge Proxy sitecoreEdgeContextId , siteName, sitecoreEdgeUrl settings in init function
 
 Scenario Outline: Developer sets invalid siteName parameter for initialization settings on the browser
     Given the '<page>' page is loaded without init function
@@ -24,6 +24,30 @@ Scenario Outline: Developer sets invalid sitecoreEdgeContextId parameter for ini
         | /edge-proxy-settings-personalize | initInvalidSitecoreEdgeContextId    | [MV-0001] "sitecoreEdgeContextId" is required. |
         | /edge-proxy-settings-personalize | initUndefinedSitecoreEdgeContextId  | [MV-0001] "sitecoreEdgeContextId" is required. |
 
+
+Scenario Outline: Developer sets invalid sitecoreEdgeUrl parameter for initialization settings on the browser
+    Given the '<page>' page is loaded without init function
+    When the '<button>' button is clicked
+    Then an error is thrown: '<error>' 
+
+    Examples:
+        | page                             | button                              | error                                          |
+        | /edge-proxy-settings-events      | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-events      | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+
+
+Scenario Outline: Developer sets invalid sitecoreEdgeUrl parameter for Initialization settings on the server
+    Given the '<page>' page is loaded without init function
+    Then the '<error>' string is printed in 'serverResponse' element
+
+    Examples:
+        | page                                                                                                     |  error                                          |
+        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid        | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined      | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid   | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
 
 Scenario Outline: Developer sets invalid sitecoreEdgeContextId parameter for Initialization settings on the server
     Given the '<page>' page is loaded without init function
@@ -64,3 +88,11 @@ Scenario Outline: Developer sets valid parameters for Initialization settings on
 Scenario Outline: Developer sets valid parameters for Initialization settings on the server
     Given the '/edge-proxy-settings-personalize?serverSideTest=true' page is loaded without init function
     Then the 'no error' string is printed in 'serverResponse' element
+
+
+Scenario Outline: Developer sets staging sitecoreEdgeUrl and contextID on the browser 
+    Given the '/edge-proxy-settings-events' page is loaded without init function
+    When the 'initDifferentSitecoreEdgesitecoreEdgeUrl' button is clicked
+    Then no error is thrown
+    And a cookie exists on the page
+    

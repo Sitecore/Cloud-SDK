@@ -33,6 +33,7 @@ describe('initializer', () => {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
   const settingsObj: core.ISettings = {
     cookieSettings: {
@@ -43,6 +44,7 @@ describe('initializer', () => {
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
   };
 
   const req = {
@@ -82,7 +84,7 @@ describe('initializer', () => {
       let settings;
       expect(() => {
         settings = getServerDependencies();
-      }).toThrow(`[IE-0007] You must first initialize the "events" module. Run the "init" function.`);
+      }).toThrow(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
 
       expect(settings).toBeUndefined();
     });
@@ -101,7 +103,7 @@ describe('initializer', () => {
         expect(EventApiClient).toHaveBeenCalledTimes(1);
         expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe(settingsObj.sitecoreEdgeContextId);
         expect(typeof eventsServer).toBe('undefined');
-      }).not.toThrow(`[IE-0007] You must first initialize the "events" module. Run the "init" function.`);
+      }).not.toThrow(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
     });
 
     it('should not call handleCookie if enableServerCookie is false', async () => {

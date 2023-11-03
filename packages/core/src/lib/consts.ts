@@ -12,4 +12,4 @@ export const DAILY_SECONDS = 86400;
 
 export const API_VERSION = 'v1.2';
 
-export const TARGET_URL = 'https://edge-platform.sitecorecloud.io';
+export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';

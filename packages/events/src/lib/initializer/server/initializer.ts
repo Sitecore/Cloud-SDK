@@ -4,7 +4,7 @@ import {
   ISettingsParamsServer,
   getSettingsServer,
   initCoreServer,
-  TARGET_URL,
+  SITECORE_EDGE_URL,
 } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../cdp/EventApiClient';
 import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
@@ -25,7 +25,7 @@ export function setServerDependencies(settings: IServerEventsSettings | null) {
  */
 export function getServerDependencies(): IServerEventsSettings {
   if (!serverDependencies) {
-    throw Error(`[IE-0007] You must first initialize the "events" module. Run the "init" function.`);
+    throw Error(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
   }
   return serverDependencies;
 }
@@ -43,7 +43,11 @@ export async function initServer<TResponse extends IMiddlewareNextResponse | IHt
 
   const settings = getSettingsServer();
 
-  const eventApiClient = new EventApiClient(TARGET_URL, settingsInput.sitecoreEdgeContextId, settingsInput.siteName);
+  const eventApiClient = new EventApiClient(
+    SITECORE_EDGE_URL,
+    settingsInput.sitecoreEdgeContextId,
+    settingsInput.siteName
+  );
   setServerDependencies({
     eventApiClient,
     settings,

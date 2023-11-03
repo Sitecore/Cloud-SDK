@@ -46,6 +46,7 @@ describe('CustomEvent', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
 
     beforeEach(() => {
@@ -135,6 +136,7 @@ describe('CustomEvent', () => {
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     };
     beforeEach(() => {
       const mockFetch = Promise.resolve({
