@@ -87,4 +87,15 @@ describe('validateSettings', () => {
       });
     }).toThrowError(`[IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string.`);
   });
+
+  it('should throw error when the sitecoreEdgeUrl provided for targetURL is empty string', () => {
+    expect(() => {
+      validateSettings({
+        cookieDomain: '',
+        siteName: '456',
+        sitecoreEdgeContextId: '1234',
+        sitecoreEdgeUrl: '',
+      });
+    }).toThrowError(`[IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string.`);
+  });
 });

@@ -27,7 +27,6 @@ describe('processEventQueue', () => {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
   };
   afterEach(() => {
     jest.clearAllMocks();

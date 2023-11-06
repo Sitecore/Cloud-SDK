@@ -1,11 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import {
-  ISettings,
-  ISettingsParamsServer,
-  getSettingsServer,
-  initCoreServer,
-  SITECORE_EDGE_URL,
-} from '@sitecore-cloudsdk/core';
+import { ISettings, ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../cdp/EventApiClient';
 import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
 
@@ -44,9 +38,9 @@ export async function initServer<TResponse extends IMiddlewareNextResponse | IHt
   const settings = getSettingsServer();
 
   const eventApiClient = new EventApiClient(
-    SITECORE_EDGE_URL,
-    settingsInput.sitecoreEdgeContextId,
-    settingsInput.siteName
+    settings.sitecoreEdgeUrl,
+    settings.sitecoreEdgeContextId,
+    settings.siteName
   );
   setServerDependencies({
     eventApiClient,

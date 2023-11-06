@@ -18,6 +18,7 @@ export interface ISettingsParamsServer extends ISettingsParams {
 
 export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
   timeout?: number;
+  sitecoreEdgeUrl?: string;
 }
 
 /**
@@ -26,7 +27,6 @@ export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
 interface IBasicSettings {
   sitecoreEdgeContextId: string;
   siteName: string;
-  sitecoreEdgeUrl?: string;
 }
 
 interface ICookieSettingsInput {

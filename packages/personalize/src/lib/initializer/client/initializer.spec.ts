@@ -22,7 +22,6 @@ const settingsParams: initPersonalize.ISettingsParamsBrowserPersonalize = {
   enableBrowserCookie: true,
   siteName: '456',
   sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: '',
 };
 
 describe('initializer', () => {

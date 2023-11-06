@@ -1,5 +1,31 @@
 Feature: Edge Proxy sitecoreEdgeContextId , siteName, sitecoreEdgeUrl settings in init function
 
+
+Scenario: Developer sets invalid sitecoreEdgeUrl parameter for events Initialization settings on the server
+    Given the '/edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=valid' page is loaded without init function
+    Then the 'no error' string is printed in 'serverResponse' element
+    And a cookie exists on the page
+
+Scenario: Developer sets invalid sitecoreEdgeUrl parameter for personalize Initialization settings on the server
+    Given the '/edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=valid' page is loaded without init function
+    Then the 'no error' string is printed in 'serverResponse' element
+    And a cookie exists on the page
+
+
+Scenario: Developer sets an alternative sitecoreEdgeUrl and contextID on the browser event page
+    Given the '/edge-proxy-settings-events' page is loaded without init function
+    When the 'initDifferentSitecoreEdgesitecoreEdgeUrl' button is clicked
+    Then the request is sent with staging url
+    And no error is thrown
+    And a cookie exists on the page
+
+Scenario: Developer sets staging sitecoreEdgeUrl and contextID on the browser on personalize page
+    Given the '/edge-proxy-settings-personalize' page is loaded without init function
+    When the 'initDifferentSitecoreEdgesitecoreEdgeUrl' button is clicked
+    Then the request is sent with staging url
+    And no error is thrown
+    And a cookie exists on the page
+
 Scenario Outline: Developer sets invalid siteName parameter for initialization settings on the browser
     Given the '<page>' page is loaded without init function
     When the '<button>' button is clicked
@@ -88,11 +114,4 @@ Scenario Outline: Developer sets valid parameters for Initialization settings on
 Scenario Outline: Developer sets valid parameters for Initialization settings on the server
     Given the '/edge-proxy-settings-personalize?serverSideTest=true' page is loaded without init function
     Then the 'no error' string is printed in 'serverResponse' element
-
-
-Scenario Outline: Developer sets staging sitecoreEdgeUrl and contextID on the browser 
-    Given the '/edge-proxy-settings-events' page is loaded without init function
-    When the 'initDifferentSitecoreEdgesitecoreEdgeUrl' button is clicked
-    Then no error is thrown
-    And a cookie exists on the page
-    
+  

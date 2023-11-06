@@ -33,18 +33,7 @@ describe('initializer', () => {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
-  };
-  const settingsObj: core.ISettings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: undefined,
   };
 
   const req = {
@@ -74,7 +63,7 @@ describe('initializer', () => {
     jest.clearAllMocks();
   });
 
-  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer').mockReturnValue(settingsObj);
+  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
   beforeEach(() => {
     setServerDependencies(null as unknown as IServerEventsSettings);
   });
@@ -93,17 +82,15 @@ describe('initializer', () => {
   describe('init Server', () => {
     it('should run all necessary functionality during init', async () => {
       const eventsServer = await initServer(settingsParams, req, res);
+      const eventServerSettings = getServerDependencies();
 
-      expect(async () => {
-        const eventServerSettings = getServerDependencies();
-
-        expect(typeof LIBRARY_VERSION).toBe('string');
-        expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
-        expect(LIBRARY_VERSION).toBe(packageJson.version);
-        expect(EventApiClient).toHaveBeenCalledTimes(1);
-        expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe(settingsObj.sitecoreEdgeContextId);
-        expect(typeof eventsServer).toBe('undefined');
-      }).not.toThrow(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
+      expect(typeof LIBRARY_VERSION).toBe('string');
+      expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
+      expect(LIBRARY_VERSION).toBe(packageJson.version);
+      expect(EventApiClient).toHaveBeenCalledTimes(1);
+      expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe('123');
+      expect(eventServerSettings.settings.sitecoreEdgeUrl).toBe('https://edge-platform.sitecorecloud.io');
+      expect(typeof eventsServer).toBe('undefined');
     });
 
     it('should not call handleCookie if enableServerCookie is false', async () => {

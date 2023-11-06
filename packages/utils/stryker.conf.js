@@ -6,7 +6,7 @@ const config = {
     '!./packages/utils/src/lib/fetch-with-timeout.ts',
   ],
   thresholds: { high: 80, low: 60, break: 100 },
-  incremental: false,
+  incremental: true,
   testRunner: 'jest',
   htmlReporter: { fileName: 'reports/mutation/utils/mutation.html' },
   reporters: ['html', 'clear-text', 'progress'],
@@ -24,7 +24,6 @@ const config = {
   },
   logLevel: 'info',
   allowConsoleColors: true,
-  incremental: true,
 };
 
 module.exports = config;

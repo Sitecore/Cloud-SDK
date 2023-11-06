@@ -2,7 +2,7 @@ const config = {
   packageManager: 'npm',
   mutate: ['./packages/personalize/src/**/*.ts', '!./packages/personalize/src/**/*spec.ts'],
   thresholds: { high: 80, low: 60, break: 100 },
-  incremental: false,
+  incremental: true,
   testRunner: 'jest',
   reporters: ['html', 'clear-text', 'progress'],
   htmlReporter: { fileName: 'reports/mutation/personalize/mutation.html' },
@@ -20,7 +20,6 @@ const config = {
   },
   logLevel: 'info',
   allowConsoleColors: true,
-  incremental: true,
 };
 
 module.exports = config;

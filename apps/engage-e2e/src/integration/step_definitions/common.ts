@@ -16,6 +16,9 @@ beforeEach(() => {
     win.sessionStorage.clear();
   });
   // eslint-disable-next-line max-len
+  cy.intercept(`https://${Cypress.env('HOSTNAME_STAGING')}/events/${Cypress.env('API_VERSION')}/browser/*`).as(
+    'initialCallStg'
+  );
   cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/pageview-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/identity-event*`).as('sendTriggerEvent');
@@ -326,5 +329,11 @@ defineStep('ext contains {string} attributes', (numberOfAttributes: string) => {
 Then('CDP API responds with {string} status code', (expectedStatus: string) => {
   cy.wait('@eventRequest').then(({ response }) => {
     expect(response?.statusCode).to.equal(+expectedStatus);
+  });
+});
+
+Then('the request is sent with staging url', () => {
+  cy.wait('@initialCallStg').then(({ request }) => {
+    expect(request.url).to.contain(Cypress.env('HOSTNAME_STAGING'));
   });
 });

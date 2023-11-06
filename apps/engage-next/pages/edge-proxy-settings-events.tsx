@@ -25,7 +25,7 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
     await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: '_a' });
   };
   const handlEmptyStringsitecoreEdgeUrl = async () => {
-    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: ' ' });
+    await init({ sitecoreEdgeContextId: '123', siteName: '456', sitecoreEdgeUrl: '' });
   };
   const handlDifferentsitecoreEdgeUrl = async () => {
     await init({
@@ -118,17 +118,28 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const attributeToTest = context.query.attribute;
   const testVariation = context.query.variation;
 
-  const sitecoreEdgeContextId =
+  let sitecoreEdgeContextId =
     attributeToTest === 'sitecoreEdgeContextId' ? (testVariation === 'invalid' ? ' ' : undefined) : '123';
   const siteName = attributeToTest === 'siteName' ? (testVariation === 'invalid' ? ' ' : undefined) : '456';
   const sitecoreEdgeUrl =
-    attributeToTest === 'sitecoreEdgeUrl' ? (testVariation === 'invalid' ? '_a' : ' ') : undefined;
+    attributeToTest === 'sitecoreEdgeUrl'
+      ? testVariation === 'invalid' || testVariation === 'undefined'
+        ? '_a'
+        : 'https://edge-platform-staging.sitecore-staging.cloud'
+      : undefined;
+  let enableServerCookie;
+  if (sitecoreEdgeUrl === 'https://edge-platform-staging.sitecore-staging.cloud') {
+    sitecoreEdgeContextId = '72d5674b-1da5-47d8-5829-08db5ace6087';
+    enableServerCookie = true;
+  }
+
   try {
     await initServer(
       {
         sitecoreEdgeContextId,
         siteName,
         sitecoreEdgeUrl,
+        enableServerCookie,
       } as ISettingsParamsServer,
       context.req,
       context.res

@@ -15,7 +15,7 @@ export function validateSettings(settings: ISettingsParams) {
 
   if (!siteName || siteName.trim().length === 0) throw new Error(`[MV-0002] "siteName" is required.`);
 
-  if (sitecoreEdgeUrl) {
+  if (sitecoreEdgeUrl !== undefined) {
     try {
       new URL(sitecoreEdgeUrl);
     } catch (e) {

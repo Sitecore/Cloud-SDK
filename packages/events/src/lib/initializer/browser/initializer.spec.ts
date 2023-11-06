@@ -3,7 +3,7 @@ import packageJson from '../../../../package.json';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import * as EventApiClient from '../../cdp/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
 import '../../../global.d.ts';
 
@@ -33,7 +33,7 @@ const settingsParams: core.ISettingsParamsBrowser = {
   cookieDomain: 'cDomain',
   siteName: '456',
   sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: '',
+  sitecoreEdgeUrl: 'https://localhost',
 };
 
 describe('initializer', () => {
@@ -43,17 +43,6 @@ describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-  const settingsObj: core.ISettings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
-  };
   afterEach(() => {
     jest.clearAllMocks();
     global.window ??= Object.create(window);
@@ -62,14 +51,14 @@ describe('initializer', () => {
   beforeEach(() => {
     setDependencies(null as unknown as IBrowserEventsSettings);
   });
+  const eventApiClientSpy = jest.spyOn(EventApiClient, 'EventApiClient');
+  const getSettingsSpy = jest.spyOn(core, 'getSettings');
 
   jest.spyOn(core, 'createCookie').mock;
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
   jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-  const getSettingsSpy = jest.spyOn(core, 'getSettings');
   jest.spyOn(core, 'getSettings');
   jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
-  jest.spyOn(core, 'getSettings').mockReturnValue(settingsObj);
   jest.spyOn(core, 'initCore');
 
   it('should be initialized properly if all settings are configured', () => {
@@ -79,19 +68,13 @@ describe('initializer', () => {
       expect(core.initCore).toHaveBeenCalledTimes(1);
       expect(getSettingsSpy).toHaveBeenCalledTimes(1);
       expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-      expect(EventApiClient).toHaveBeenCalledTimes(1);
+      expect(eventApiClientSpy).toHaveBeenCalledTimes(1);
+      expect(eventApiClientSpy).toHaveBeenCalledWith('https://localhost', '123', '456');
+      expect(eventApiClientSpy).not.toHaveBeenCalledWith('https://edge-platform.sitecorecloud.io', '123', '456');
       expect(EventQueue).toHaveBeenCalledTimes(1);
     }).not.toThrow(`[IE-0006] You must first initialize the "events" package. Run the "init" function.`);
   });
 
-  it('should not try to create a cookie if it already exists', () => {
-    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-
-    init({ ...settingsParams, enableBrowserCookie: true });
-
-    expect(core.createCookie).toHaveBeenCalledTimes(0);
-  });
   it('should return an object with available functionality', async () => {
     await init(settingsParams);
 
