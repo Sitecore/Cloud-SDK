@@ -107,7 +107,7 @@ jobs:
       - name: Get release tag
         id: get-tag
         run: |
-          [[ ${{ contains(fromJSON('["prerelease","premajor","preminor","prepatch"]'), inputs.release_type) }} ]] && echo "release-tag=canary" >> $GITHUB_OUTPUT || echo "release-tag=latest" >> $GITHUB_OUTPUT
+          [[ "${{ inputs.release_type }}" == "prerelease" ]] && echo "release-tag=canary" >> $GITHUB_OUTPUT || echo "release-tag=latest" >> $GITHUB_OUTPUT
 
       - name: Create npm token file
         run: echo //registry.npmjs.org/:_authToken=${{secrets.NPMJS_PUBLISH_TOKEN}} > .npmrc
