@@ -10,13 +10,13 @@ import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middlew
  * @returns The browser ID extracted from the cookie or an empty string if not found.
  */
 export function getBrowserIdFromRequest<T extends TRequest>(request: T, cookieName: string) {
-  let bid: string | undefined = undefined;
+  let browserId: string | undefined = undefined;
   if (isNextJsMiddlewareRequest(request)) {
-    bid = getBrowserIdFromMiddlewareRequest(request, cookieName);
+    browserId = getBrowserIdFromMiddlewareRequest(request, cookieName);
   } else if (isHttpRequest(request)) {
     const cookieHeader = request.headers.cookie;
-    bid = getCookieServerSide(cookieHeader, cookieName)?.value;
+    browserId = getCookieServerSide(cookieHeader, cookieName)?.value;
   }
 
-  return bid ?? '';
+  return browserId ?? '';
 }

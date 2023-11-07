@@ -4,22 +4,24 @@ import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/utils';
 import { ISettings } from '../settings/interfaces';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/utils';
+import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 
 /**
  * Handles HTTP Cookie operations for setting the browser ID cookie in the request and response.
  *
  * @param request - The HTTP Request object containing request headers and data.
+ * @param response - The HTTP Response object.
  * @param options - The settings object containing configuration options.
- * @param response - The Middleware Next Response or HTTP Response object.
+ * @param timeout - The timeout for the call to proxy to get browserId.
  * @returns A Promise that resolves once the browser ID cookie is handled.
  *
  * @throws [IE-0003] - This exception is thrown in the case getBrowserIdFromCdp wasn't able to retrieve a browser id.
  */
-export function handleHttpCookie(
+export async function handleHttpCookie(
   request: IHttpRequest,
   response: IHttpResponse,
   options: ISettings,
-  cookieTempValue: string
+  timeout?: number
 ) {
   const { cookieName } = options.cookieSettings;
 
@@ -33,7 +35,14 @@ export function handleHttpCookie(
     if (cookie) cookieValue = cookie.value;
   }
 
-  if (!cookieValue) cookieValue = cookieTempValue;
+  if (!cookieValue) {
+    const { browserId } = await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout);
+    if (!browserId)
+      throw new Error(
+        '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+      );
+    cookieValue = browserId;
+  }
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,

@@ -1,9 +1,9 @@
 import { ISettings } from '../settings/interfaces';
 import { createCookie } from './create-cookie';
-import * as getProxySettings from '../init/get-proxy-settings';
+import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
-import { BID_PREFIX, SITECORE_EDGE_URL } from '../consts';
+import { COOKIE_NAME_PREFIX, SITECORE_EDGE_URL } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   cookieExists: jest.fn(),
@@ -27,11 +27,12 @@ describe('createCookie', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+
     settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
-        cookieName: '',
+        cookieName: `${COOKIE_NAME_PREFIX}123`,
         cookiePath: '/',
       },
       siteName: '456',
@@ -39,39 +40,59 @@ describe('createCookie', () => {
       sitecoreEdgeUrl: SITECORE_EDGE_URL,
     };
   });
+
+  it('should not create a cookie if the fetchBrowserIdFromEdgeProxy returns an empty value', async () => {
+    const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
+
+    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: '' });
+    const getDefaultCookieAttributesSpy = jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes');
+
+    await createCookie(settings);
+
+    expect(cookieExistSpy).toHaveBeenCalledTimes(1);
+    expect(getDefaultCookieAttributesSpy).not.toHaveBeenCalled();
+  });
+
   it('should create a cookie and update the settings', async () => {
-    const expectedCookieName = `${BID_PREFIX}c_key`;
+    const expectedCookieName = `${COOKIE_NAME_PREFIX}123`;
     const expectedCookie = `${expectedCookieName}=bid_value`;
     const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    jest.spyOn(utils, 'createCookieString').mockReturnValueOnce(expectedCookie);
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValueOnce({ browserId: 'value', clientKey: 'c_key' });
-    jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes').mockReturnValueOnce(mockCookieAttributes);
+    const createCookieStringSpy = jest.spyOn(utils, 'createCookieString').mockReturnValueOnce(expectedCookie);
+    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: 'value' });
+    const getDefaultCookieAttributesSpy = jest
+      .spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes')
+      .mockReturnValueOnce(mockCookieAttributes);
 
     await createCookie(settings);
 
     expect(settings.cookieSettings.cookieName).toBe(expectedCookieName);
     expect(cookieExistSpy).toHaveBeenCalledTimes(1);
+    expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
+    expect(createCookieStringSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should not run if browser id comes as an empty string', async () => {
-    const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValue({ browserId: '', clientKey: 'c_key' });
+  it('should not not create a cookie if cookieName exists', async () => {
+    const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(true);
+    const fetchBrowserIdFromEdgeProxySpy = jest
+      .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
+      .mockResolvedValueOnce({ browserId: 'value' });
 
     await createCookie(settings);
 
     expect(cookieExistSpy).toHaveBeenCalledTimes(1);
-    expect(utils.createCookieString).toHaveBeenCalledTimes(0);
+    expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
+    expect(utils.createCookieString).not.toHaveBeenCalled();
   });
 
   it('should add the cooke to document.cookie', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    jest.spyOn(getProxySettings, 'getProxySettings').mockResolvedValueOnce({ browserId: 'value', clientKey: 'c_key' });
+    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: 'value' });
     jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes').mockReturnValueOnce(mockCookieAttributes);
 
     const expected = `${settings.cookieSettings.cookieName}=value`;
 
     await createCookie(settings);
-    jest.spyOn(document, 'cookie', 'get').mockImplementationOnce(() => 'bid_c_key=value');
+    jest.spyOn(document, 'cookie', 'get').mockImplementationOnce(() => 'sc_123=value');
     expect(document.cookie).toContain(expected);
   });
 });

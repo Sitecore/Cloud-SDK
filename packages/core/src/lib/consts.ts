@@ -4,7 +4,8 @@
 import packageJson from '../../package.json';
 
 export const LIBRARY_VERSION = packageJson.version;
-export const BID_PREFIX = 'bid_';
+
+export const COOKIE_NAME_PREFIX = 'sc_';
 
 export const DEFAULT_COOKIE_EXPIRY_DAYS = 730;
 

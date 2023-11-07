@@ -1,19 +1,31 @@
-import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
 import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { ISettings } from '../settings/interfaces';
+import { COOKIE_NAME_PREFIX } from '../consts';
+import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
+import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 
 describe('handleMiddlewareRequest', () => {
+  const mockFetchResponse = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
+    ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
+    status: 'OK',
+    version: '1.2',
+  };
+  const mockFetch = Promise.resolve({
+    json: () => Promise.resolve(mockFetchResponse),
+  });
   const options: ISettings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'bid_key',
+      cookieName: `${COOKIE_NAME_PREFIX}123`,
       cookiePath: '/',
     },
     siteName: '',
-    sitecoreEdgeContextId: 'context_id',
+    sitecoreEdgeContextId: '123',
     sitecoreEdgeUrl: '',
   };
 
@@ -27,7 +39,7 @@ describe('handleMiddlewareRequest', () => {
     'getBrowserIdFromMiddlewareRequest'
   );
 
-  const req: IMiddlewareRequest = {
+  const request: IMiddlewareRequest = {
     cookies: { get: jest.fn(), set: jest.fn() },
     headers: {
       get: jest.fn(),
@@ -36,45 +48,65 @@ describe('handleMiddlewareRequest', () => {
 
   const response: IMiddlewareNextResponse = {
     cookies: {
-      /* eslint-disable @typescript-eslint/no-explicit-any */
       set: jest.fn(),
     },
   };
 
-  const setSpy = jest.spyOn(req.cookies, 'set');
+  const setSpy = jest.spyOn(request.cookies, 'set');
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should set the browser ID from getBrowserIdFromMiddlewareRequest when available', () => {
+  it('should set the browser ID from getBrowserIdFromMiddlewareRequest when available', async() => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce('dac13bc5-cdae-4e65-8868-13443409d05e');
-    const cookieName = 'bid_key';
+    const cookieName = 'sc_123';
 
-    handleNextJsMiddlewareCookie(req, response, options, '');
+    await handleNextJsMiddlewareCookie(request, response, options);
 
-    expect(getBrowserIdFromMiddlewareRequestSpy).toHaveBeenCalledWith(req, cookieName);
+    expect(getBrowserIdFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, cookieName);
     expect(getBrowserIdFromMiddlewareRequestSpy).toBeCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
   });
 
-  it('should set the browser ID from settings temp value when getBrowserIdFromMiddlewareRequest returns undefined', () => {
+  it('should set the browser ID from settings temp value when getBrowserIdFromMiddlewareRequest returns undefined', async() => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
-    const cookieName = 'bid_key';
+    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
+    const cookieName = 'sc_123';
 
     const mockBrowserId = 'dac13bc5-cdae-4e65-8868-13443409d05e';
 
-    const req: IMiddlewareRequest = {
+    const request: IMiddlewareRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const setSpy = jest.spyOn(req.cookies, 'set');
+    const setSpy = jest.spyOn(request.cookies, 'set');
 
-    handleNextJsMiddlewareCookie(req, response, options, mockBrowserId);
+    await handleNextJsMiddlewareCookie(request, response, options);
+
+    expect(fetchBrowserIdFromEdgeProxySpy).toHaveBeenCalledWith(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, undefined);
 
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);
+  });
+
+  it('should throw an error if fetchBrowserIdFromEdgeProxy returns an empty browserId', async() => {
+    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: ''});
+
+    const request: IMiddlewareRequest = {
+      cookies: { get: jest.fn(), set: jest.fn() },
+      headers: {
+        get: jest.fn(),
+      },
+    };
+
+    expect(async () => await handleNextJsMiddlewareCookie(request, response, options)).rejects.toThrow(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
   });
 });

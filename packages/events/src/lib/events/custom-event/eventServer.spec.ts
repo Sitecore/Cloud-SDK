@@ -52,8 +52,7 @@ describe('eventServer', () => {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
-      page: 'races',
-      pointOfSale: 'spinair.com',
+      page: 'races'
     };
   });
 
@@ -88,8 +87,7 @@ describe('eventServer', () => {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: 'races',
-        pointOfSale: 'spinair.com',
+        page: 'races'
       },
       extensionData: {
         extKey: 'extValue',

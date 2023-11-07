@@ -7,7 +7,7 @@ export { handleHttpCookie } from './lib/cookie/handle-http-cookie';
 export { handleNextJsMiddlewareCookie } from './lib/cookie/handle-next-js-middleware-cookie';
 export { handleServerCookie } from './lib/cookie/handle-server-cookie';
 export { getBrowserId } from './lib/init/get-browser-id';
-export { getProxySettings } from './lib/init/get-proxy-settings';
+export { fetchBrowserIdFromEdgeProxy } from './lib/init/fetch-browser-id-from-edge-proxy';
 export { getGuestId } from './lib/init/get-guest-id';
 export { createSettings } from './lib/settings/create-settings';
 export { getSettings, initCore } from './lib/init/init-core';
@@ -17,7 +17,7 @@ export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export {
   API_VERSION,
-  BID_PREFIX,
+  COOKIE_NAME_PREFIX,
   DAILY_SECONDS,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,

@@ -3,17 +3,18 @@
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
 import { IProxySettings, ICdpResponse } from '../interfaces';
-import { constructGetProxySettingsUrl } from './construct-get-proxy-settings-url';
+import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**
  * Gets the browser ID and Client Key from Sitecore Edge Proxy
- * @param sitecoreEdgeContextId - The sitecoreEdgeContextId
+ * @param sitecoreEdgeUrl - The baseURL for the Edge Proxy API.
+ * @param sitecoreEdgeContextId - The sitecoreContextId param for the edge Proxy API.
  * @param timeout - The timeout for the call to proxy
- * @returns the browser ID and Client Key
+ * @returns the browser ID
  */
-export async function getProxySettings(
-  sitecoreEdgeContextId: string,
+export async function fetchBrowserIdFromEdgeProxy(
   sitecoreEdgeUrl: string,
+  sitecoreEdgeContextId: string,
   timeout?: number
 ): Promise<IProxySettings> {
   const fetchOptions = {
@@ -21,22 +22,22 @@ export async function getProxySettings(
     headers: { 'X-Library-Version': LIBRARY_VERSION },
   };
 
+  const url = constructGetBrowserIdUrl(sitecoreEdgeUrl, sitecoreEdgeContextId);
+
   let response;
   if (timeout !== undefined) {
-    response = await fetchWithTimeout(
-      constructGetProxySettingsUrl(sitecoreEdgeContextId, sitecoreEdgeUrl),
+    response = await fetchWithTimeout(url,
       timeout,
       fetchOptions
     );
   } else {
-    response = await fetch(constructGetProxySettingsUrl(sitecoreEdgeContextId, sitecoreEdgeUrl), fetchOptions)
+    response = await fetch(url, fetchOptions)
       .then((res) => res.json())
       .then((data) => data)
       .catch(() => undefined);
   }
 
-  if (!response) return { browserId: '', clientKey: '' };
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  const { client_key: clientKey, ref: browserId }: ICdpResponse = response;
-  return { browserId, clientKey };
+  if (!response) return { browserId: '' };
+  const { ref: browserId }: ICdpResponse = response;
+  return { browserId };
 }

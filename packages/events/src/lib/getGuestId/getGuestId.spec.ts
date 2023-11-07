@@ -26,7 +26,6 @@ describe('getGuestId', () => {
     getDependenciesSpy.mockReturnValueOnce({
       id: '_id',
       settings: {
-        clientKey: 'key',
         cookieSettings: {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,

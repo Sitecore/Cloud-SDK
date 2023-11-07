@@ -124,13 +124,16 @@ Then('the event is sent with the initial browser id', () => {
   });
 });
 
-When('a cookie exists on the page', () => {
-  cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
+When('a cookie exists on the page with the respective {string} environment contextId', (environment: string) => {
+  const cookieName = environment.toLowerCase() == 'production' 
+  ? Cypress.env('COOKIE_NAME') : Cypress.env('COOKIE_NAME_STAGING');
+  cy.waitUntil(() => cy.getCookie(cookieName), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
     interval: 100,
   });
 });
+
 
 Then('the bid value set in the cookie for the user is returned', () => {
   // eslint-disable-next-line max-len

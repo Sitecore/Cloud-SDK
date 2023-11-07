@@ -91,16 +91,15 @@ Scenario: Developer sends VIEW event from client with empty string language para
 
 Scenario: Developer uses pageView to send an event to CDP when cookie exists
     Given the '/' page is loaded
-    And a cookie exists on the page
+    And a cookie exists on the page with the respective 'production' environment contextId
     When the pageView function is called
     Then the bid value set in the cookie for the user is returned
 
-#Events & Personalize try to init a cookie at the same time so cookie value ends up being updated. Will skip this test until we handle the init
-# Scenario: Developer uses pageView to send an event to CDP when no cookie exists
-#     Given the '/' page is loaded
-    # When the cookies are removed from the browser
-    # And the pageView function is called
-    # Then the event is sent with the initial browser id
+Scenario: Developer uses pageView to send an event to CDP when no cookie exists
+    Given the '/' page is loaded
+    When the cookies are removed from the browser
+    And the pageView function is called
+    Then the event is sent with the initial browser id
 
 Scenario: Developer sends VIEW event with a user-defined object
     Given the '/viewevent' page is loaded with query parameters

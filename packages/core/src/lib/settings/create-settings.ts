@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { DEFAULT_COOKIE_EXPIRY_DAYS, SITECORE_EDGE_URL } from '../consts';
+import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, SITECORE_EDGE_URL } from '../consts';
 import { ISettings, ISettingsParams } from './interfaces';
 import { validateSettings } from './validate-settings';
 /**
@@ -15,7 +15,7 @@ export function createSettings(settingsInput: ISettingsParams): ISettings {
     cookieSettings: {
       cookieDomain,
       cookieExpiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-      cookieName: '',
+      cookieName: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
       cookiePath: cookiePath || '/',
     },
     siteName,

@@ -1,5 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ISettings, ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
+import {
+  ISettings,
+  ISettingsParamsServer,
+  getSettingsServer,
+  initCoreServer,
+} from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../cdp/EventApiClient';
 import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
 

@@ -13,7 +13,6 @@ export interface ICdpResponse {
 
 export interface IProxySettings {
   browserId: string;
-  clientKey: string;
 }
 
 /**

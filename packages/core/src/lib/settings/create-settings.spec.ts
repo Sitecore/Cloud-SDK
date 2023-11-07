@@ -1,5 +1,6 @@
-import { SITECORE_EDGE_URL } from '../consts';
+import { SITECORE_EDGE_URL, COOKIE_NAME_PREFIX } from '../consts';
 import { createSettings } from './create-settings';
+
 describe('createSettings', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -21,7 +22,7 @@ describe('createSettings', () => {
     expect(cookieDomain).toEqual('domain');
     expect(cookieExpiryDays).toEqual(40);
     expect(cookiePath).toEqual('/path');
-    expect(cookieName).toEqual('');
+    expect(cookieName).toEqual(`${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`);
     expect(siteName).toEqual('4567');
     expect(sitecoreEdgeContextId).toEqual('0123');
     expect(sitecoreEdgeUrl).toEqual(SITECORE_EDGE_URL);

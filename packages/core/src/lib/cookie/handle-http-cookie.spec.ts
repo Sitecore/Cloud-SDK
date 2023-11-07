@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import * as Utils from '@sitecore-cloudsdk/utils';
 import { ISettings } from '../settings/interfaces';
 import { handleHttpCookie } from './handle-http-cookie';
+import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import * as Utils from '@sitecore-cloudsdk/utils';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -16,24 +17,36 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
 });
 
 describe('httpCookieHandler', () => {
-  let req: Utils.IHttpRequest = {
+  const mockFetchResponse = {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
+    ref: 'browser_id_from_proxy',
+    status: 'OK',
+    version: '1.2',
+  };
+  const mockFetch = Promise.resolve({
+    json: () => Promise.resolve(mockFetchResponse),
+  });
+  global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
+  let request: Utils.IHttpRequest = {
     headers: {
-      cookie: 'bid_key=123456789',
+      cookie: 'sc_123=123456789',
     },
   };
 
-  let res: Utils.IHttpResponse = {
+  let response: Utils.IHttpResponse = {
     setHeader: jest.fn(),
   };
   const options: ISettings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'bid_name',
+      cookieName: 'sc_123',
       cookiePath: '/',
     },
     siteName: '',
-    sitecoreEdgeContextId: 'context_id',
+    sitecoreEdgeContextId: '123',
     sitecoreEdgeUrl: '',
   };
 
@@ -49,71 +62,74 @@ describe('httpCookieHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should handle the browser ID cookie in the request and response when the cookie is present', () => {
+  it('should handle the browser ID cookie in the request and response when the cookie is present', async() => {
     const mockCookie = { name: 'test', value: '123456789' };
 
     getCookieServerSideSpy.mockReturnValue(mockCookie);
-    createCookieStringSpy.mockReturnValue('bid_key=123456789');
+    createCookieStringSpy.mockReturnValue('sc_123=123456789');
 
-    handleHttpCookie(req, res, options, 'bid_value');
+    await handleHttpCookie(request, response, options);
 
-    expect(getCookieServerSideSpy).toHaveBeenCalledWith(req.headers.cookie, 'bid_name');
-    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_name', '123456789', defaultCookieAttributes);
-    expect(req.headers.cookie).toBe('bid_key=123456789');
-    expect(res.setHeader).toHaveBeenCalledWith('Set-Cookie', 'bid_key=123456789');
+    expect(getCookieServerSideSpy).toHaveBeenCalledWith(request.headers.cookie, 'sc_123');
+    expect(createCookieStringSpy).toHaveBeenCalledWith('sc_123', '123456789', defaultCookieAttributes);
+    expect(request.headers.cookie).toBe('sc_123=123456789');
+    expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_123=123456789');
   });
 
-  it('should handle the browser ID cookie in the request and response when the cookie is not present', () => {
-    req = {
+  it('should handle the browser ID cookie in the request and response when the cookie is not present', async() => {
+    request = {
       headers: {},
     };
 
-    res = {
+    response = {
       setHeader: jest.fn(),
     };
 
-    createCookieStringSpy.mockReturnValue('bid_name=mock_bid_name_from_edge_proxy');
+    createCookieStringSpy.mockReturnValue('sc_123=browser_id_from_proxy');
 
-    handleHttpCookie(req, res, options, 'bid_value');
+    await handleHttpCookie(request, response, options);
 
-    expect(createCookieStringSpy).toHaveBeenCalledWith('bid_name', 'bid_value', defaultCookieAttributes);
-    expect(req.headers.cookie).toBe('bid_name=mock_bid_name_from_edge_proxy');
+    expect(createCookieStringSpy).toHaveBeenCalledWith('sc_123', 'browser_id_from_proxy', defaultCookieAttributes);
+    expect(request.headers.cookie).toBe('sc_123=browser_id_from_proxy');
   });
 
   it('should set the request header cookie when getCookieServerSide returns undefined but there is a cookie in the request headers', async () => {
     getCookieServerSideSpy.mockReturnValue(undefined);
+    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: '123456789'});
 
-    req = {
+    request = {
       headers: {
-        cookie: '',
+        cookie: 'sc_123=123456789',
       },
     };
 
-    res = {
+    response = {
       setHeader: jest.fn(),
     };
-    createCookieStringSpy.mockReturnValue('bid_key=mock_bid_key_from_cdp');
+    createCookieStringSpy.mockReturnValue('sc_123=browser_id_from_proxy');
 
-    handleHttpCookie(req, res, options, 'bid_value');
+    await handleHttpCookie(request, response, options);
 
-    expect(req.headers.cookie).toBe('bid_key=mock_bid_key_from_cdp');
+    expect(request.headers.cookie).toBe('sc_123=123456789; sc_123=browser_id_from_proxy');
   });
 
-  it('should set the request header cookie when there is a tempCookieValue returns undefined but there is a cookie in the request headers', () => {
-    req = {
+  it('should throw an error if fetchBrowserIdFromEdgeProxy returns an empty browserId', () => {
+    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: ''});
+
+    request = {
       headers: {
-        cookie: 'bid_key=123456789',
+        cookie: 'sc_123=123456789',
       },
     };
 
-    res = {
+    response = {
       setHeader: jest.fn(),
     };
 
-    createCookieStringSpy.mockReturnValue('bid_key=bid_value');
-
-    handleHttpCookie(req, res, options, 'bid_value');
-
-    expect(req.headers.cookie).toBe('bid_key=123456789; bid_key=bid_value');
+    expect(async () => await handleHttpCookie(request, response, options)).rejects.toThrow(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
   });
 });
