@@ -1,11 +1,5 @@
 # core
 
-This library was generated with [Nx](https://nx.dev).
+© Sitecore Corporation A/S. All rights reserved. Sitecore© is a registered trademark of Sitecore Corporation A/S.
 
-## Building
-
-Run `nx build core` to build the library.
-
-## Running unit tests
-
-Run `nx test core` to execute the unit tests via [Jest](https://jestjs.io).
+This is an internal package used by other Sitecore Cloud SDK packages.
