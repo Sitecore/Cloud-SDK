@@ -107,7 +107,7 @@ jobs:
       - name: Get release tag
         id: get-tag
         run: |
-          [[ ${{ contains(fromJSON('["prerelease", "premajor" ,"preminor", "prepatch"]'), inputs.release_type) }} ]] && echo "release-tag=canary" >> $GITHUB_OUTPUT || echo "release-tag=latest" >> $GITHUB_OUTPUT
+          [[ ${{ contains(fromJSON('["prerelease", "premajor", "preminor", "prepatch"]'), inputs.release_type) }} ]] && echo "release-tag=canary" >> $GITHUB_OUTPUT || echo "release-tag=latest" >> $GITHUB_OUTPUT
         env:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
