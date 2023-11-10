@@ -1,9 +1,22 @@
 name: Run Veracode pipeline scan
 on:
-    workflow_dispatch: 
+    workflow_dispatch:
+    push:
+      branches:
+        - 'master'
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-          - uses: actions/checkout@v3
+  veracode-scan:
+    strategy:
+        matrix:
+            package:
+                - core
+                - utils
+                - events
+                - personalize
+    name: Run Veracode for ${{ matrix.package }} package
+    uses: Sitecore-Internal/sitecore.devops.github.workflow.veracodescan.raw/.github/workflows/VeracodeScanRaw.yaml@V1
+    secrets: inherit
+    with:
+      ProjectName: engage
+      DirectoryToScan: packages/${{ matrix.package }}
