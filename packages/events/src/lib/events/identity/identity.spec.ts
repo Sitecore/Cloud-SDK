@@ -59,7 +59,6 @@ describe('identity', () => {
       ],
       language: 'EN',
       page: 'identity',
-      pointOfSale: 'spinair.com',
     };
 
     const extensionData = { extKey: 'extValue' };

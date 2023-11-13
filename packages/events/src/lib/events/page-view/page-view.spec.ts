@@ -50,7 +50,6 @@ describe('pageView', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: 'spinair.com',
     };
     jest.clearAllMocks();
   });

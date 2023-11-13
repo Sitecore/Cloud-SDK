@@ -147,7 +147,6 @@ describe('Test Identity', () => {
       identifiers: [],
       language: 'EN',
       page: 'identity',
-      pointOfSale: 'spinair.com',
     };
     expect(() => {
       new IdentityEvent({
@@ -173,7 +172,6 @@ describe('Test Identity', () => {
       ],
       language: 'EN',
       page: 'identity',
-      pointOfSale: 'spinair.com',
     };
     expect(() => {
       new IdentityEvent({
@@ -218,8 +216,6 @@ describe('Test Identity', () => {
       mobile: '6911111111',
       page: 'identity',
       phone: '2310111111',
-      pointOfSale: 'spinair.com',
-
       postalCode: '',
       state: 'macedonia',
       street: ['gennimata'],
@@ -247,8 +243,6 @@ describe('Test Identity', () => {
       mobile: '+6911111111',
       page: 'identity',
       phone: '+2310111111',
-      pointOfSale: 'spinair.com',
-
       postal_code: '',
       state: 'Macedonia',
       street: ['Gennimata'],
@@ -298,8 +292,6 @@ describe('Test Identity', () => {
       mobile: '6911111111',
       page: 'identity',
       phone: '2310111111',
-      pointOfSale: 'spinair.com',
-
       postalCode: '12345',
       state: 'macedonia',
       street: ['street'],
@@ -406,7 +398,6 @@ describe('Test Identity', () => {
           provider: 'email',
         },
       ],
-      pointOfSale: 'spinair.com',
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
@@ -449,7 +440,6 @@ describe('Test Identity', () => {
           provider: 'email',
         },
       ],
-      pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
       cookieSettings: {
@@ -494,7 +484,6 @@ describe('Test Identity', () => {
           provider: 'email',
         },
       ],
-      pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
       cookieSettings: {
@@ -537,7 +526,6 @@ describe('Test Identity', () => {
           provider: 'email',
         },
       ],
-      pointOfSale: 'spinair.com',
     };
     const settings: core.ISettings = {
       cookieSettings: {

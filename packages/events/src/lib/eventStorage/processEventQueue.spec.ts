@@ -46,7 +46,6 @@ describe('processEventQueue', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: 'spinair.com',
     };
 
     await init.init(settingsParams);

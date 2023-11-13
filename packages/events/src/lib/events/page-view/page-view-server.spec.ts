@@ -77,7 +77,6 @@ describe('pageViewServer', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: 'spinair.com',
     };
     jest.clearAllMocks();
   });

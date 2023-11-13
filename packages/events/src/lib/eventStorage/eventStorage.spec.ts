@@ -58,7 +58,6 @@ describe('Event Storage', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: 'spinair.com',
     };
 
     global.sessionStorage.getItem = jest.fn();

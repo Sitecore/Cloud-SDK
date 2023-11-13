@@ -15,7 +15,7 @@ Then('the window.Engage object has the provided settings', (datatable: any) => {
     interval: 100,
   });
   cy.window().its('Engage').its('settings').its('web_flow_target').should('eq', attributes['webFlowTarget']);
-  cy.window().its('Engage').its('settings').its('pointOfSale').should('eq', attributes['pointOfSale']);
+
   cy.window()
     .its('Engage')
     .its('settings')

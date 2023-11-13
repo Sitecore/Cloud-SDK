@@ -68,7 +68,6 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      pointOfSale: '',
     };
 
     settings = {

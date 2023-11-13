@@ -20,7 +20,6 @@ interface IInferrableInput {
    * To be restored back to IMandatoryEventInput Interface
    * as mandatory input parameter in version 1.0.0
    */
-  pointOfSale?: string;
   language?: string;
   page?: string;
 }

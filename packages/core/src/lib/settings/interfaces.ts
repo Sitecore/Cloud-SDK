@@ -64,7 +64,6 @@ export interface IWebPersonalizationConfig {
 export interface IWebExperiencesSettings {
   /* eslint-disable @typescript-eslint/naming-convention */
   targetURL: string;
-  pointOfSale: string;
   client_key: string;
   web_flow_config: {
     async: boolean;

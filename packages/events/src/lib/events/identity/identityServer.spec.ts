@@ -60,7 +60,6 @@ describe('eventServer', () => {
       ],
       language: 'EN',
       page: 'identity',
-      pointOfSale: 'spinair.com',
     };
   });
 
@@ -102,7 +101,6 @@ describe('eventServer', () => {
         ],
         language: 'EN',
         page: 'identity',
-        pointOfSale: 'spinair.com',
       },
       extensionData: {
         extKey: 'extValue',

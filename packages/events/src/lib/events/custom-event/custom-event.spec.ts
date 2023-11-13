@@ -55,7 +55,6 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pointOfSale: 'spinair.com',
       };
     });
     it('should not call flatten object method when no extension data is passed', () => {
@@ -155,7 +154,6 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        pointOfSale: 'spinair.com',
         testAttr1: 'test',
         testAttr2: true,
         testAttr3: 22,
@@ -175,7 +173,6 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
-        pointOfSale: 'spinair.com',
       };
       const type = 'CUSTOM_TYPE';
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');

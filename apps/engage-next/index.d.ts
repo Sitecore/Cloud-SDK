@@ -16,7 +16,6 @@ declare global {
       [x: string]: any;
       settings?: {
         targetURL: string;
-        pointOfSale: string;
         client_key: string;
         web_flow_config: {
           async: boolean;
