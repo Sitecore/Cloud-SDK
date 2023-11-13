@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { getSettings, initCore, setInitStatus, setCoreSettings, INIT_STATUSES } from './init-core';
+import { getSettings, initCore, setCoreSettings, setCookiePromise } from './init-core';
 import { ISettings, ISettingsParamsBrowser } from '../settings/interfaces';
 import * as createCookieInit from '../cookie/create-cookie';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as createSetting from '../settings/create-settings';
+
 // Mock the dependencies
 jest.mock('../cookie/create-cookie', () => ({
   createCookie: jest.fn(),
@@ -32,10 +33,9 @@ describe('initCore', () => {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
     };
-    setInitStatus(INIT_STATUSES.NOT_STARTED);
-    setCoreSettings(null as unknown as ISettings);
+    setCoreSettings(null as any);
+    setCookiePromise(null as any);
   });
 
   afterEach(() => {
@@ -69,25 +69,25 @@ describe('initCore', () => {
     expect(createCookieInitSpy).toHaveBeenCalledTimes(1);
   });
 
-  it('should return void if trying to re-initialize', async () => {
-    jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
-    jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    const createCookieSpy = jest.spyOn(createCookieInit, 'createCookie');
+  it('should not call secondary functions when re-initializing', async () => {
+    const createSettingsSpy = jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
+    const createCookieSpy = jest.spyOn(createCookieInit, 'createCookie').mockResolvedValueOnce();
     mockSettingsInput.enableBrowserCookie = true;
 
     await initCore(mockSettingsInput);
+
+    expect(createSettingsSpy).toHaveBeenCalledTimes(1);
     expect(createCookieSpy).toHaveBeenCalledTimes(1);
 
-    const result = await initCore(mockSettingsInput);
+    await initCore(mockSettingsInput);
 
-    expect(result).toBe(void 0);
+    expect(createSettingsSpy).toHaveBeenCalledTimes(1);
     expect(createCookieSpy).toHaveBeenCalledTimes(1);
   });
 });
 
 describe('getSettings', () => {
   beforeEach(() => {
-    setInitStatus(INIT_STATUSES.NOT_STARTED);
     setCoreSettings(null as unknown as ISettings);
   });
 

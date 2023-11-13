@@ -4,34 +4,11 @@ import { createSettings } from '../settings/create-settings';
 import { ISettings, ISettingsParamsBrowser } from '../settings/interfaces';
 
 /**
- * Enum representing the initialization statuses.
- * - `NOT_STARTED`: The initialization process has not started.
- * - `INITIALIZING`: The initialization process is in progress.
- * - `DONE`: The initialization process is complete.
- */
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export enum INIT_STATUSES {
-  NOT_STARTED,
-  INITIALIZING,
-  DONE,
-}
-
-/**
  * Internal settings object to be used by all functions in module caching.
  * It starts with a null value and is set to the proper object by the  function. *
  * Can be retrieved only through the  function.
  */
 let coreSettings: ISettings | null = null;
-
-let initStatus = INIT_STATUSES.NOT_STARTED;
-
-export function setInitStatus(status: INIT_STATUSES) {
-  initStatus = status;
-}
-
-export function setCoreSettings(settings: ISettings) {
-  coreSettings = settings;
-}
 
 /**
  * Retrieves the core settings object.
@@ -48,6 +25,8 @@ export function getSettings() {
   return coreSettings;
 }
 
+let createCookiePromise: Promise<void> | null = null;
+
 /**
  * Initializes the core settings for browser-based applications.
  *
@@ -57,17 +36,20 @@ export function getSettings() {
  * @returns A Promise that resolves when initialization is complete.
  */
 export async function initCore(settingsInput: ISettingsParamsBrowser): Promise<void> {
-  if (initStatus != INIT_STATUSES.NOT_STARTED) return;
+  if (coreSettings === null) coreSettings = createSettings(settingsInput);
 
-  setInitStatus(INIT_STATUSES.INITIALIZING);
+  if (settingsInput.enableBrowserCookie && createCookiePromise === null)
+    createCookiePromise = createCookie(coreSettings);
 
-  coreSettings = createSettings(settingsInput);
+  await createCookiePromise;
+}
 
-  setCoreSettings(coreSettings);
-
-  if (settingsInput.enableBrowserCookie) {
-    await createCookie(coreSettings);
-  }
-
-  setInitStatus(INIT_STATUSES.DONE);
+/**
+ * Helper functions for tests
+ */
+export function setCoreSettings(settings: ISettings) {
+  coreSettings = settings;
+}
+export function setCookiePromise(promise: Promise<void>) {
+  createCookiePromise = promise;
 }
