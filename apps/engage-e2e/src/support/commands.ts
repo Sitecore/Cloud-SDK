@@ -74,14 +74,18 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
     } else {
       expect(actualAttr).to.eql(null);
     }
-    // eslint-disable-next-line max-len
-    const expectedPackageVersion = request.url.includes('events')
-      ? eventsPackageJson.version
-      : personalizePackageJson.version;
-
-    expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
   });
+
+  const expectedPackageVersion = request.url.includes('events')
+  ? eventsPackageJson.version
+  : personalizePackageJson.version;
+
+  cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) =>      
+  expect(request.body.browser_id).to.eq(cookie?.value));
+    
+  expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
 });
+
 
 Cypress.Commands.add('requestGuestContext', () => {
   const authorization = `Basic ${Cypress.env('GUEST_API_TOKEN')}`;

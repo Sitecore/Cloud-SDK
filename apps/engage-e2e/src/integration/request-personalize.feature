@@ -122,7 +122,7 @@ Scenario Outline: Developer requests personalize with valid parameters
     
     Examples:
         | friendlyId                 | email                | identifier           | 
-        # | personalizeintegrationtest |                      |                      |
+        | personalizeintegrationtest |                      |                      |
         | personalizeintegrationtest | personalize@test.com |                      |
         | personalizeintegrationtest |                      | personalize@test.com | 
 
