@@ -29,7 +29,5 @@ export type {
   ICookieSettings,
   ISettings,
   ISettingsParamsBrowser,
-  ISettingsParamsServer,
-  IWebExperiencesSettings,
-  IWebPersonalizationConfig,
+  ISettingsParamsServer
 } from './lib/settings/interfaces';

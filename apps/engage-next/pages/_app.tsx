@@ -12,12 +12,6 @@ import { init as initPersonalize } from '@sitecore-cloudsdk/personalize/browser'
 function CustomApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
-  useEffect(() => {
-    if (router.pathname.startsWith('/templates/') && window.Engage?.triggerExperiences) {
-      window.Engage.triggerExperiences();
-    }
-  }, [router.pathname]);
-
   const loadEvents = useCallback(async () => {
     await initEvent({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
@@ -46,16 +40,6 @@ function CustomApp({ Component, pageProps }: AppProps) {
 
   // Personalize
   const loadPersonalize = useCallback(async () => {
-    const SettingFromUrlParams = getSettingFromUrlParams('webPersonalizationSettings');
-
-    const webPersonalizationSettings = SettingFromUrlParams
-      ? parseWebPersonalizationConfig(SettingFromUrlParams)
-      : null;
-
-    if (webPersonalizationSettings?.baseURLOverride == 'undefined') {
-      webPersonalizationSettings.baseURLOverride = undefined;
-    }
-
     await initPersonalize({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
@@ -89,7 +73,3 @@ function CustomApp({ Component, pageProps }: AppProps) {
 }
 
 export default CustomApp;
-
-function parseWebPersonalizationConfig(urlParamsString: string) {
-  return urlParamsString ? JSON.parse(urlParamsString) : null;
-}

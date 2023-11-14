@@ -51,24 +51,3 @@ export interface ICookieSettings {
 export interface ICookieSettingsBrowser extends ICookieSettings {
   enableBrowserCookie: boolean;
 }
-
-/**
- * Properties for the Web Flow configuration
- */
-export interface IWebPersonalizationConfig {
-  asyncScriptLoading?: boolean;
-  deferScriptLoading?: boolean;
-  baseURLOverride?: string;
-}
-
-export interface IWebExperiencesSettings {
-  /* eslint-disable @typescript-eslint/naming-convention */
-  targetURL: string;
-  client_key: string;
-  web_flow_config: {
-    async: boolean;
-    defer: boolean;
-  };
-  web_flow_target?: string;
-  /* eslint-enable @typescript-eslint/naming-convention */
-}

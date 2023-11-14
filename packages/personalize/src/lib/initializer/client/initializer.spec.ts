@@ -17,7 +17,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
-const settingsParams: initPersonalize.ISettingsParamsBrowserPersonalize = {
+const settingsParams: core.ISettingsParamsBrowser = {
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
   siteName: '456',
@@ -108,7 +108,6 @@ describe('initializer', () => {
     beforeEach(() => {
       initPersonalize.setDependencies(null as unknown as initPersonalize.IBrowserPersonalizeSettings);
     });
-    settingsParams.webPersonalization = undefined;
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
       await initPersonalize.init(settingsParams);
 

@@ -3,7 +3,6 @@
 import {
   ISettings,
   ISettingsParamsBrowser,
-  IWebPersonalizationConfig,
   getBrowserId,
   getSettings,
   initCore,
@@ -40,7 +39,7 @@ export function getDependencies(): IBrowserPersonalizeSettings {
  * @param settingsInput - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Promise<void> {
+export async function init(settingsInput: ISettingsParamsBrowser): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error(
       // eslint-disable-next-line max-len
@@ -71,10 +70,6 @@ export async function init(settingsInput: ISettingsParamsBrowserPersonalize): Pr
     },
   };
 }
-
-export type ISettingsParamsBrowserPersonalize = {
-  webPersonalization?: boolean | IWebPersonalizationConfig;
-} & ISettingsParamsBrowser;
 
 export interface IBrowserPersonalizeSettings {
   id: string;

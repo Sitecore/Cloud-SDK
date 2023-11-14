@@ -14,15 +14,6 @@ declare global {
     Engage: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       [x: string]: any;
-      settings?: {
-        targetURL: string;
-        client_key: string;
-        web_flow_config: {
-          async: boolean;
-          defer: boolean;
-        };
-        web_flow_target?: string;
-      };
       getBrowserId?: () => string;
       versions?: {
         events?: string;

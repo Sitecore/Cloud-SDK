@@ -10,7 +10,6 @@ const links = [
   { text: 'Custom Event', path: '/customevent', testId: 'customEventPage' },
   { text: 'Identity', path: '/identity', testId: 'identityEventPage' },
   { text: 'Get Guest Id', path: '/getGuestId', testId: 'getguestIdPage' },
-  { text: 'Web Experiences', path: '/webexperiences', testId: 'webExperiencesPage' },
   { text: 'Form Event', path: '/form', testId: 'formEventPage' },
   { text: 'Event Queue', path: '/eventqueue', testId: 'eventQueuePage' },
   { text: 'Middleware View Event', path: '/middleware-view-event', testId: 'middlewareViewEventPage' },
