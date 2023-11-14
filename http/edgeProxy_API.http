@@ -1,0 +1,87 @@
+
+
+@targetURL = https://edge-platform.sitecorecloud.io
+@contextID = 83d8199c-2837-4c29-a8ab-1bf234fea2d1
+@siteId = spinair.com
+
+@LIBRARY_VERSION = 1.1
+
+### EVENTS API ###
+
+### Get BrowserID
+
+# @name getBrowserID
+GET {{targetURL}}/events/v1.2/browser/create.json?sitecoreContextId={{contextID}}&client_key=
+
+@browserID = {{getBrowserID.response.body.ref}}
+
+### Send Custom Event
+POST {{targetURL}}/events/v1.2/events?sitecoreContextId={{contextID}}&siteId={{siteId}}
+Content-Type: application/json
+
+{
+    "type": "CUSTOM",
+    "browser_id": "{{browserID}}",
+    "channel": "WEB",
+    "client_key": "",
+    "currency": "EUR",
+    "page": "api-custom",
+    "pos": "",
+    "language": ""
+}
+
+### Send Page View Event
+POST {{targetURL}}/events/v1.2/events?sitecoreContextId={{contextID}}&siteId={{siteId}}
+Content-Type: application/json
+
+{
+    "type": "VIEW",
+    "browser_id": "{{browserID}}",
+    "channel": "WEB",
+    "client_key": "",
+    "currency": "USD",
+    "language": "EN",
+    "page": "Home Page",
+    "pos": ""
+}
+
+### Send Identity Event
+POST {{targetURL}}/events/v1.2/events?sitecoreContextId={{contextID}}&siteId={{siteId}}
+Content-Type: application/json
+
+{
+    "email": "testMiddleware@test.com",
+    "identifiers": [
+        {
+            "id": "testMiddleware@test.com",
+            "provider": "email"
+        }
+    ],
+    "type": "IDENTITY",
+    "browser_id": "{{browserID}}",
+    "channel": "WEB",
+    "client_key": "",
+    "currency": "EUR",
+    "language": "EN",
+    "page": "Home Page",
+    "pos": ""
+}
+
+### Get GuestId ###
+GET {{targetURL}}/events/v1.2/browser/{{browserID}}/show.json?sitecoreContextId={{contextID}}&client_key=&api_token=`; HTTP/1.1
+
+### PERSONALIZE API ###
+### Send Callflow
+POST {{targetURL}}/personalize/v2/callFlows?sitecoreContextId={{contextID}}&siteId={{siteId}}
+Content-Type: application/json
+
+{
+    "channel": "WEB",
+    "clientKey": "",
+    "currencyCode": "USD",
+    "friendlyId": "personalizeintegrationtest",
+    "language": "EN",
+    "pointOfSale": "",
+    "browserId": "{{browserID}}"
+}
+
