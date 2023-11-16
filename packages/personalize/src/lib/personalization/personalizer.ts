@@ -85,7 +85,7 @@ export class Personalizer {
    * A validation method to throw error for the mandatory property for runtime users
    */
   private validate({ friendlyId }: IPersonalizerInput) {
-    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(`[MV-0008] "friendlyId" is required.`);
+    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(`[MV-0004] "friendlyId" is required.`);
   }
 }
 

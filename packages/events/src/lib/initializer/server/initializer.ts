@@ -24,7 +24,7 @@ export function setServerDependencies(settings: IServerEventsSettings | null) {
  */
 export function getServerDependencies(): IServerEventsSettings {
   if (!serverDependencies) {
-    throw Error(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
+    throw Error(`[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`);
   }
   return serverDependencies;
 }

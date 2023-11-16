@@ -73,7 +73,7 @@ describe('initializer', () => {
       let settings;
       expect(() => {
         settings = getServerDependencies();
-      }).toThrow(`[IE-0007] You must first initialize the "events" package. Run the "init" function.`);
+      }).toThrow(`[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`);
 
       expect(settings).toBeUndefined();
     });

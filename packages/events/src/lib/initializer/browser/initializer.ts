@@ -21,7 +21,7 @@ export function setDependencies(settings: IBrowserEventsSettings | null) {
  */
 export function getDependencies(): IBrowserEventsSettings {
   if (!dependencies) {
-    throw Error(`[IE-0006] You must first initialize the "events" package. Run the "init" function.`);
+    throw Error(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
   }
   return dependencies;
 }

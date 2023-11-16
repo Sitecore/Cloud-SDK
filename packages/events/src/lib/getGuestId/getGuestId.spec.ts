@@ -47,7 +47,7 @@ describe('getGuestId', () => {
 
   it('should throw error if settings have not been configured properly', async () => {
     expect(() => getGuestId()).toThrow(
-      '[IE-0006] You must first initialize the "events" package. Run the "init" function.'
+      '[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.'
     );
   });
 });

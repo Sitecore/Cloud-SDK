@@ -26,7 +26,7 @@ export function setCoreSettings(settings: ISettings) {
  */
 export function getSettingsServer() {
   if (!coreSettings) {
-    throw Error('[IE-0005] You must first initialize the "core" package. Run the "init" function.');
+    throw Error('[IE-0008] You must first initialize the "core" package. Run the "init" function.');
   }
 
   return coreSettings;

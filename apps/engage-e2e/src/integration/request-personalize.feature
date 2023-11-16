@@ -181,7 +181,7 @@ Scenario Outline: Developer requests personalize with invalid parameters
 Scenario: Developer requests personalize without the mandatory friendlyId parameter
     Given the '/personalize' page is loaded
     And the 'requestPersonalizeFromClient' button is clicked
-    Then an error is thrown: '[MV-0008] "friendlyId" is required.'
+    Then an error is thrown: '[MV-0004] "friendlyId" is required.'
 
 # Scenario: Developer requests personalize with language undefined
 #     Given the '/personalize' page is loaded

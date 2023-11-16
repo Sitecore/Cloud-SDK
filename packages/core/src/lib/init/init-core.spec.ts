@@ -110,7 +110,7 @@ describe('getSettings', () => {
   });
   it('should throw an error if the core settings are not initialized', () => {
     expect(() => getSettings()).toThrow(
-      `[IE-0004] You must first initialize the "core" package. Run the "init" function.`
+      `[IE-0008] You must first initialize the "core" package. Run the "init" function.`
     );
   });
 });

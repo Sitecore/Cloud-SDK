@@ -41,7 +41,7 @@ export class IdentityEvent extends BaseEvent {
    *  * @param eventData - The data to be validated
    */
   private validateAttributes(eventData: IIdentityEventAttributesInput) {
-    if (eventData.identifiers.length === 0) throw new Error(`[MV-0004] "identifiers" is required.`);
+    if (eventData.identifiers.length === 0) throw new Error(`[MV-0003] "identifiers" is required.`);
 
     if (eventData.dob !== undefined && !isShortISODateString(eventData.dob))
       throw new Error(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);

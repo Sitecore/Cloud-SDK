@@ -84,7 +84,7 @@ describe('initializer', () => {
       expect(() => {
         setDependencies(null);
         settings = getServerDependencies();
-      }).toThrow(`[IE-0009] You must first initialize the "personalize" package. Run the "init" function.`);
+      }).toThrow(`[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`);
       expect(settings).toBeUndefined();
     });
   });
@@ -92,7 +92,7 @@ describe('initializer', () => {
   describe('init', () => {
     it('should throw error if settings are not initialized', () => {
       expect(() => getServerDependencies()).toThrow(
-        `[IE-0009] You must first initialize the "personalize" package. Run the "init" function.`
+        `[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`
       );
     });
 

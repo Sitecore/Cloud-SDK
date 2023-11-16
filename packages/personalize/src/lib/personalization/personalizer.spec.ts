@@ -81,28 +81,27 @@ describe('Test Personalizer Class', () => {
       jest.clearAllMocks();
     });
 
-    it('should not throw error when pointOfSale and friendlyId are provided', async () => {
+    it('should not throw error when friendlyId are provided', async () => {
       await new Personalizer(personalizeHelper, id).getInteractiveExperienceData(personalizeInputMock);
       expect(validateSpy).toHaveBeenCalledTimes(1);
-      expect(() => validateSpy).not.toThrowError(`[MV-0008] "friendlyId" is required.`);
-      expect(() => validateSpy).not.toThrowError(`[MV-0003] "pointOfSale" is required.`);
+      expect(() => validateSpy).not.toThrowError(`[MV-0004] "friendlyId" is required.`);
       expect(sanitizeInputSpy).toBeCalledTimes(1);
     });
 
     it('should throw error when friendlyId is undefined ', async () => {
       const mockData = undefined;
       personalizeInputMock.friendlyId = mockData as unknown as string;
-      callValidation(personalizeInputMock, `[MV-0008] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
     });
 
     it('should throw error when friendlyId is empty space string', async () => {
       personalizeInputMock.friendlyId = ' ';
-      callValidation(personalizeInputMock, `[MV-0008] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
     });
 
     it('should throw error when friendlyId is empty string', async () => {
       personalizeInputMock.friendlyId = '';
-      callValidation(personalizeInputMock, `[MV-0008] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
     });
   });
 

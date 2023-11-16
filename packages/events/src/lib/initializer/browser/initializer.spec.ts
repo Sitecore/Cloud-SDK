@@ -72,7 +72,7 @@ describe('initializer', () => {
       expect(eventApiClientSpy).toHaveBeenCalledWith('https://localhost', '123', '456');
       expect(eventApiClientSpy).not.toHaveBeenCalledWith('https://edge-platform.sitecorecloud.io', '123', '456');
       expect(EventQueue).toHaveBeenCalledTimes(1);
-    }).not.toThrow(`[IE-0006] You must first initialize the "events" package. Run the "init" function.`);
+    }).not.toThrow(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
   });
 
   it('should return an object with available functionality', async () => {

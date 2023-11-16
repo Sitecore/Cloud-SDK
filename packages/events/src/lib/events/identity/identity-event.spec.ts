@@ -82,7 +82,7 @@ describe('Test Identity', () => {
           id,
           settings: settingsMock,
         })
-    ).not.toThrow(`[MV-0004] "identifiers" is required.`);
+    ).not.toThrow(`[MV-0003] "identifiers" is required.`);
 
     expect(data.city).toEqual(undefined);
     expect(data.country).toEqual(undefined);
@@ -155,7 +155,7 @@ describe('Test Identity', () => {
         id,
         settings: settingsMock,
       });
-    }).toThrowError(`[MV-0004] "identifiers" is required.`);
+    }).toThrowError(`[MV-0003] "identifiers" is required.`);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -191,7 +191,7 @@ describe('Test Identity', () => {
         id,
         settings: settingsMock,
       });
-    }).not.toThrowError(`[MV-0004] "identifiers" is required.`);
+    }).not.toThrowError(`[MV-0003] "identifiers" is required.`);
   });
 
   it('Should make all values to Title Case', () => {
