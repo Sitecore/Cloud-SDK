@@ -12,6 +12,8 @@ declare global {
 }
 /* eslint-enable @typescript-eslint/naming-convention */
 
+let errorMessage: string;
+
 Then('the cookie is automatically set with the correct bid value for the user', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
@@ -100,3 +102,22 @@ Then('the cookie is set with the default expiry', () => {
     }
   );
 });
+
+Given(
+  '{string} page is loaded with enableBrowserCookie true and an invalid sitecoreEdgeContextId parameter',
+  (page: string) => {
+    cy.on('uncaught:exception', (error) => {
+      errorMessage = error.message;
+      return false;
+    });
+
+    cy.visit(`${page}?enableBrowserCookie=true&badSitecoreEdgeContextIdBrowser=banana`, {
+      failOnStatusCode: false,
+    }).then(() => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(1000).then(() => {
+        cy.writeLocal(`error.txt`, errorMessage);
+      });
+    });
+  }
+);

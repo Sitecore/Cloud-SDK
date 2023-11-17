@@ -15,11 +15,9 @@ export async function createCookie(settings: ISettings): Promise<void> {
 
   const { browserId } = await fetchBrowserIdFromEdgeProxy(settings.sitecoreEdgeUrl, settings.sitecoreEdgeContextId);
 
-  if (browserId) {
-    const attributes = getDefaultCookieAttributes(
-      settings.cookieSettings.cookieExpiryDays,
-      settings.cookieSettings.cookieDomain
-    );
-    document.cookie = createCookieString(settings.cookieSettings.cookieName, browserId, attributes);
-  }
+  const attributes = getDefaultCookieAttributes(
+    settings.cookieSettings.cookieExpiryDays,
+    settings.cookieSettings.cookieDomain
+  );
+  document.cookie = createCookieString(settings.cookieSettings.cookieName, browserId, attributes);
 }

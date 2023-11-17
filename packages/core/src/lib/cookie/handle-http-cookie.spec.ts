@@ -62,7 +62,7 @@ describe('httpCookieHandler', () => {
     jest.clearAllMocks();
   });
 
-  it('should handle the browser ID cookie in the request and response when the cookie is present', async() => {
+  it('should handle the browser ID cookie in the request and response when the cookie is present', async () => {
     const mockCookie = { name: 'test', value: '123456789' };
 
     getCookieServerSideSpy.mockReturnValue(mockCookie);
@@ -76,7 +76,7 @@ describe('httpCookieHandler', () => {
     expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_123=123456789');
   });
 
-  it('should handle the browser ID cookie in the request and response when the cookie is not present', async() => {
+  it('should handle the browser ID cookie in the request and response when the cookie is not present', async () => {
     request = {
       headers: {},
     };
@@ -96,7 +96,7 @@ describe('httpCookieHandler', () => {
   it('should set the request header cookie when getCookieServerSide returns undefined but there is a cookie in the request headers', async () => {
     getCookieServerSideSpy.mockReturnValue(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
-    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: '123456789'});
+    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: '123456789' });
 
     request = {
       headers: {
@@ -112,24 +112,5 @@ describe('httpCookieHandler', () => {
     await handleHttpCookie(request, response, options);
 
     expect(request.headers.cookie).toBe('sc_123=123456789; sc_123=browser_id_from_proxy');
-  });
-
-  it('should throw an error if fetchBrowserIdFromEdgeProxy returns an empty browserId', () => {
-    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
-    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: ''});
-
-    request = {
-      headers: {
-        cookie: 'sc_123=123456789',
-      },
-    };
-
-    response = {
-      setHeader: jest.fn(),
-    };
-
-    expect(async () => await handleHttpCookie(request, response, options)).rejects.toThrow(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
   });
 });

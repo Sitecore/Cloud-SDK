@@ -86,12 +86,14 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     });
   });
 
-  it('should resolve with empty string if fetch returns null or undefined', () => {
-    const mockFetch = Promise.reject('Error');
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  it('should throw IE-0003 error if fetch fails', async () => {
+    global.fetch = jest.fn().mockRejectedValue(undefined);
 
-    fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {
-      expect(res).toEqual({ browserId: '' });
-    });
+    const expectedError =
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+
+    expect(async () => {
+      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
+    }).rejects.toThrow(expectedError);
   });
 });

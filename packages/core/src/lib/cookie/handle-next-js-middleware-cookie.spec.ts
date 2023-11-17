@@ -58,7 +58,7 @@ describe('handleMiddlewareRequest', () => {
     jest.clearAllMocks();
   });
 
-  it('should set the browser ID from getBrowserIdFromMiddlewareRequest when available', async() => {
+  it('should set the browser ID from getBrowserIdFromMiddlewareRequest when available', async () => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce('dac13bc5-cdae-4e65-8868-13443409d05e');
     const cookieName = 'sc_123';
 
@@ -69,7 +69,7 @@ describe('handleMiddlewareRequest', () => {
     expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
   });
 
-  it('should set the browser ID from settings temp value when getBrowserIdFromMiddlewareRequest returns undefined', async() => {
+  it('should set the browser ID from settings temp value when getBrowserIdFromMiddlewareRequest returns undefined', async () => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
@@ -88,25 +88,13 @@ describe('handleMiddlewareRequest', () => {
 
     await handleNextJsMiddlewareCookie(request, response, options);
 
-    expect(fetchBrowserIdFromEdgeProxySpy).toHaveBeenCalledWith(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, undefined);
+    expect(fetchBrowserIdFromEdgeProxySpy).toHaveBeenCalledWith(
+      options.sitecoreEdgeUrl,
+      options.sitecoreEdgeContextId,
+      undefined
+    );
 
     expect(setSpy).toHaveBeenCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);
-  });
-
-  it('should throw an error if fetchBrowserIdFromEdgeProxy returns an empty browserId', async() => {
-    const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
-    fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: ''});
-
-    const request: IMiddlewareRequest = {
-      cookies: { get: jest.fn(), set: jest.fn() },
-      headers: {
-        get: jest.fn(),
-      },
-    };
-
-    expect(async () => await handleNextJsMiddlewareCookie(request, response, options)).rejects.toThrow(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
   });
 });

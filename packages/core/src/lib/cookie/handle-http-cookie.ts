@@ -35,14 +35,9 @@ export async function handleHttpCookie(
     if (cookie) cookieValue = cookie.value;
   }
 
-  if (!cookieValue) {
-    const { browserId } = await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout);
-    if (!browserId)
-      throw new Error(
-        '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-      );
-    cookieValue = browserId;
-  }
+  if (!cookieValue)
+    cookieValue = (await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout))
+      .browserId;
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,

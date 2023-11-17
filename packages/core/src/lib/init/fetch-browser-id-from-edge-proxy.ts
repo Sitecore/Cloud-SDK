@@ -26,10 +26,7 @@ export async function fetchBrowserIdFromEdgeProxy(
 
   let response;
   if (timeout !== undefined) {
-    response = await fetchWithTimeout(url,
-      timeout,
-      fetchOptions
-    );
+    response = await fetchWithTimeout(url, timeout, fetchOptions);
   } else {
     response = await fetch(url, fetchOptions)
       .then((res) => res.json())
@@ -37,7 +34,11 @@ export async function fetchBrowserIdFromEdgeProxy(
       .catch(() => undefined);
   }
 
-  if (!response) return { browserId: '' };
+  if (!response)
+    throw new Error(
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    );
+
   const { ref: browserId }: ICdpResponse = response;
   return { browserId };
 }

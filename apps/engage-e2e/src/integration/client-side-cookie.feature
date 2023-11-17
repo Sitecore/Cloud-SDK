@@ -39,3 +39,8 @@ Scenario: Cookie is created with expiry upon initialization of Engage library
     Given the '/' page is loaded
     When no TTL setting has been specified
     Then the cookie is set with the default expiry
+
+Scenario: Error is thrown if no browser id is retrieved
+    #Artificial way to make the get cookie from edge proxy fail by passing a valid random url
+    Given '/' page is loaded with enableBrowserCookie true and an invalid sitecoreEdgeContextId parameter
+    Then an error is thrown: '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'

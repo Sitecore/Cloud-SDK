@@ -13,6 +13,8 @@ function CustomApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
   const loadEvents = useCallback(async () => {
+    const badSitecoreEdgeContextId = getSettingFromUrlParams('badSitecoreEdgeContextIdBrowser') ?? undefined;
+
     await initEvent({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
@@ -22,7 +24,7 @@ function CustomApp({ Component, pageProps }: AppProps) {
           : getSettingFromUrlParams('enableServerCookie') === 'true'
           ? false
           : true,
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      sitecoreEdgeContextId: badSitecoreEdgeContextId || process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined,
     });

@@ -41,24 +41,14 @@ describe('createCookie', () => {
     };
   });
 
-  it('should not create a cookie if the fetchBrowserIdFromEdgeProxy returns an empty value', async () => {
-    const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValue(false);
-
-    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: '' });
-    const getDefaultCookieAttributesSpy = jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes');
-
-    await createCookie(settings);
-
-    expect(cookieExistSpy).toHaveBeenCalledTimes(1);
-    expect(getDefaultCookieAttributesSpy).not.toHaveBeenCalled();
-  });
-
   it('should create a cookie and update the settings', async () => {
     const expectedCookieName = `${COOKIE_NAME_PREFIX}123`;
     const expectedCookie = `${expectedCookieName}=bid_value`;
     const cookieExistSpy = jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
     const createCookieStringSpy = jest.spyOn(utils, 'createCookieString').mockReturnValueOnce(expectedCookie);
-    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: 'value' });
+    jest
+      .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
+      .mockResolvedValueOnce({ browserId: 'value' });
     const getDefaultCookieAttributesSpy = jest
       .spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes')
       .mockReturnValueOnce(mockCookieAttributes);
@@ -86,7 +76,9 @@ describe('createCookie', () => {
 
   it('should add the cooke to document.cookie', async () => {
     jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy').mockResolvedValueOnce({ browserId: 'value' });
+    jest
+      .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
+      .mockResolvedValueOnce({ browserId: 'value' });
     jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes').mockReturnValueOnce(mockCookieAttributes);
 
     const expected = `${settings.cookieSettings.cookieName}=value`;
