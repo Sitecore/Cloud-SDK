@@ -97,7 +97,8 @@ Cypress.Commands.add('requestGuestContext', () => {
       console.log('test');
       const options = {
         method: 'GET',
-        url: `${Cypress.env('HOSTNAME')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`,
+        url: 
+        `${Cypress.env('GUEST_API_URL')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`,
         headers: {
           authorization,
         },

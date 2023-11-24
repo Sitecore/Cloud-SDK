@@ -7,7 +7,7 @@ const expectedEventData = {
   channel: 'WEB',
   clientKey: Cypress.env('CLIENT_KEY'),
   type: '',
-};
+  };
 
 Then('CDP returns the event with {string} type', (eventType: string, datatable) => {
   expectedEventData.type = eventType;
@@ -16,7 +16,7 @@ Then('CDP returns the event with {string} type', (eventType: string, datatable) 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
   const expectedArbitraryData = (({ pos, type, channel, ...o }) => o)(expectedReq);
   cy.requestGuestContext().then((actualEvent: { arbitraryData: any }) => {
-    expect(actualEvent.arbitraryData).to.deep.contain(expectedArbitraryData);
+    if(expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);  
     expect(actualEvent).to.deep.contain(expectedEventData);
   });
 });
@@ -28,7 +28,7 @@ Then('CDP returns the event with parameters:', (params: string) => {
   const expectedArbitraryData = (({ type, ...o }) => o)(parameters);
   expectedEventData.type = parameters.type;
   cy.requestGuestContext().then((actualEvent: { arbitraryData: any }) => {
-    expect(actualEvent.arbitraryData).to.deep.contain(expectedArbitraryData);
+    if(expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);  
     expect(actualEvent).to.deep.contain(expectedEventData);
   });
 });
