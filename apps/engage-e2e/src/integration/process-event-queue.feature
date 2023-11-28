@@ -1,4 +1,4 @@
-Feature: Process Event Queue in Session Storage in order to finally send them to CDP
+Feature: Process Event Queue in Session Storage in order to finally send them to EP
 
 @Smoke-Test-Events
 Scenario: Developer processes an enqueued event

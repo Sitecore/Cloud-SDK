@@ -24,10 +24,10 @@ export {
   SITECORE_EDGE_URL,
 } from './lib/consts';
 
-export type { ICdpResponse, IInfer } from './lib/interfaces';
+export type { IEPResponse, IInfer } from './lib/interfaces';
 export type {
   ICookieSettings,
   ISettings,
   ISettingsParamsBrowser,
-  ISettingsParamsServer
+  ISettingsParamsServer,
 } from './lib/settings/interfaces';

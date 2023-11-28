@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { ISettings, ISettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { EventQueue } from '../../eventStorage/eventStorage';

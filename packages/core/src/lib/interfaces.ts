@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 /**
- * The response object that Sitecore CDP returns
+ * The response object that Sitecore EP returns
  */
-export interface ICdpResponse {
+export interface IEPResponse {
   ref: string;
   status: string;
   version: string;

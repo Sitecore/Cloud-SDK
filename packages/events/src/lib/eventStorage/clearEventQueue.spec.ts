@@ -20,7 +20,7 @@ describe('clearEventQueue', () => {
     siteName: '456',
     sitecoreEdgeContextId: '123',
   };
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
     jest.clearAllMocks();

@@ -21,7 +21,7 @@ export class BaseEvent {
   }
 
   /**
-   *  A function that returns the properties for sending events to Sitecore CDP
+   *  A function that returns the properties for sending events to Sitecore EP
    * @returns an object that is required
    */
   protected mapBaseEventPayload(): IBasePayload {

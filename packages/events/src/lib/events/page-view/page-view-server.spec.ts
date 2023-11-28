@@ -3,7 +3,7 @@ import { getServerDependencies } from '../../initializer/server/initializer';
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
 import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 
 jest.mock('../../initializer/server/initializer');
 jest.mock('@sitecore-cloudsdk/utils', () => {

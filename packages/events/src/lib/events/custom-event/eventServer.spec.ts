@@ -2,7 +2,7 @@ import { eventServer } from './eventServer';
 import { CustomEvent, ICustomEventInput } from './custom-event';
 import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 
 jest.mock('../../initializer/server/initializer');
 jest.mock('./custom-event');
@@ -52,7 +52,7 @@ describe('eventServer', () => {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
-      page: 'races'
+      page: 'races',
     };
   });
 
@@ -87,7 +87,7 @@ describe('eventServer', () => {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: 'races'
+        page: 'races',
       },
       extensionData: {
         extKey: 'extValue',

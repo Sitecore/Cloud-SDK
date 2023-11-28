@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
 import { IEventAttributesInput } from '../common-interfaces';
-import { IEventApiClient } from '../../cdp/EventApiClient';
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/core';
+import { IEventApiClient } from '../../ep/EventApiClient';
+import { IEPResponse, ISettings } from '@sitecore-cloudsdk/core';
 import { BasicTypes, IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 
@@ -39,10 +39,10 @@ export class CustomEvent extends BaseEvent {
   }
 
   /**
-   * Sends the event to Sitecore CDP
-   * @returns - A promise that resolves with either the Sitecore CDP response object or null
+   * Sends the event to Sitecore EP
+   * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(): Promise<ICdpResponse | null> {
+  async send(): Promise<IEPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const fetchBody = Object.assign({}, this.customEventPayload, baseAttr);
 

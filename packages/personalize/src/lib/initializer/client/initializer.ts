@@ -1,12 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import {
-  ISettings,
-  ISettingsParamsBrowser,
-  getBrowserId,
-  getSettings,
-  initCore,
-} from '@sitecore-cloudsdk/core';
+import { ISettings, ISettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 
@@ -23,7 +17,7 @@ export function setDependencies(settings: IBrowserPersonalizeSettings | null) {
 /**
  * Retrieves the browser personalize settings object.
  *
- * This function ensures that the browser personalize settings have been initialized and contain essential properties like `settings` and `callFlowCDPClient`.
+ * This function ensures that the browser personalize settings have been initialized and contain essential properties like `settings` and `callFlowEPClient`.
  *
  * @returns The browser personalize settings object.
  * @throws Error if the personalize settings haven't been initialized with the required properties.

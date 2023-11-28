@@ -136,7 +136,7 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
   let searchString = '';
   let extSearchString = '';
 
-  //In order to test the amount of ext attributes that can be sent to CDP
+  //In order to test the amount of ext attributes that can be sent to EP
   if (Object.getOwnPropertyDescriptor(attributes, 'extAttributesNumber')) {
     for (let i = 0; i < attributes.extAttributesNumber; i++) {
       attributesArray.push({ key: `attr${i}`, value: `value${i}` });
@@ -326,7 +326,7 @@ defineStep('ext contains {string} attributes', (numberOfAttributes: string) => {
   });
 });
 
-Then('CDP API responds with {string} status code', (expectedStatus: string) => {
+Then('EP API responds with {string} status code', (expectedStatus: string) => {
   cy.wait('@eventRequest').then(({ response }) => {
     expect(response?.statusCode).to.equal(+expectedStatus);
   });

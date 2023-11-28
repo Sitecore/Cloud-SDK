@@ -2,7 +2,7 @@
 
 import { ExtensionData } from '../common-interfaces';
 import { TRequest } from '@sitecore-cloudsdk/utils';
-import { ICdpResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
+import { IEPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
 import { getServerDependencies } from '../../initializer/server/initializer';
 import { IIdentityEventAttributesInput, IdentityEvent } from './identity-event';
 
@@ -12,13 +12,13 @@ import { IIdentityEventAttributesInput, IdentityEvent } from './identity-event';
  * @param request - Interface with constraint for extending request
  * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
  * This object will be flattened and sent in the ext object of the payload
- * @returns The response object that Sitecore CDP returns
+ * @returns The response object that Sitecore EP returns
  */
 export function identityServer(
   eventData: IIdentityEventAttributesInput,
   request: TRequest,
   extensionData?: ExtensionData
-): Promise<ICdpResponse | null> {
+): Promise<IEPResponse | null> {
   const { eventApiClient, settings } = getServerDependencies();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   return new IdentityEvent({

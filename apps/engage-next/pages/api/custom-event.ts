@@ -20,6 +20,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const cdpResponse = await event('CUSTOM', eventData, req);
-  res.status(200).json(cdpResponse);
+  const EPResponse = await event('CUSTOM', eventData, req);
+  res.status(200).json(EPResponse);
 }

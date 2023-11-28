@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ICdpResponse } from '@sitecore-cloudsdk/core';
+import { IEPResponse } from '@sitecore-cloudsdk/core';
 import { INestedObject } from '@sitecore-cloudsdk/utils';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
@@ -9,9 +9,9 @@ import { IPageViewEventInput, PageViewEvent } from './page-view-event';
  * @param eventData - The required/optional attributes in order to be send to SitecoreCloud API
  * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
  * This object will be flattened and sent in the ext object of the payload
- * @returns The response object that Sitecore CDP returns
+ * @returns The response object that Sitecore EP returns
  */
-export function pageView(eventData: IPageViewEventInput, extensionData?: INestedObject): Promise<ICdpResponse | null> {
+export function pageView(eventData: IPageViewEventInput, extensionData?: INestedObject): Promise<IEPResponse | null> {
   const { eventApiClient, id, settings } = getDependencies();
 
   return new PageViewEvent({

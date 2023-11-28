@@ -4,7 +4,7 @@ import { IdentityEvent, IIdentityEventAttributesInput } from './identity-event';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 //import * as base from '../base-event';
 import { BaseEvent } from '../base-event';
 
@@ -37,7 +37,7 @@ describe('Test Identity', () => {
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -379,7 +379,7 @@ describe('Test Identity', () => {
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 

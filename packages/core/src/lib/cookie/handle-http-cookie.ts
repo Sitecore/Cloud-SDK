@@ -15,7 +15,7 @@ import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-
  * @param timeout - The timeout for the call to proxy to get browserId.
  * @returns A Promise that resolves once the browser ID cookie is handled.
  *
- * @throws [IE-0003] - This exception is thrown in the case getBrowserIdFromCdp wasn't able to retrieve a browser id.
+ * @throws [IE-0003] - This exception is thrown in the case getBrowserIdFromEP wasn't able to retrieve a browser id.
  */
 export async function handleHttpCookie(
   request: IHttpRequest,

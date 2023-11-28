@@ -33,12 +33,12 @@ Feature: Developer is setting for the creation of a server-set cookie
 #     Then the server updates the TTL of the server cookie according to the settings
 
 #  Scenario: Error is thrown if no browser id is retrieved
-#      #Artificial way to make the get cookie from cdp fail by passing a valid random url
+#      #Artificial way to make the get cookie from EP fail by passing a valid random url
 #      Given '/' page is loaded with enableServerCookie true and an invalid sitecoreEdgeContextId parameter
 #      Then an error is thrown: '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
 
 @Smoke-Test-Events
-Scenario: Developer requests cookie from server using initServer with timeOut and CDP fails to respond
+Scenario: Developer requests cookie from server using initServer with timeOut and EP fails to respond
     Given the initServer function is triggered from '/server-side-props-view-event' page with timeout: '<timeout>'
     Then an error is thrown: '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.'
 
@@ -48,7 +48,7 @@ Scenario: Developer requests cookie from server using initServer with timeOut an
         |    1    |
 
 @Smoke-Test-Events
-Scenario: Developer requests cookie from server using initServer with timeOut and CDP responds timely
+Scenario: Developer requests cookie from server using initServer with timeOut and EP responds timely
     Given the initServer function is triggered from '/server-side-props-view-event' page with timeout: '5000'
     Then no error is thrown
 

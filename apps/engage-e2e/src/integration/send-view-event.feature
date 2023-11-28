@@ -1,4 +1,4 @@
-Feature: Send a VIEW event to CDP
+Feature: Send a VIEW event to EP
 
 Scenario: Developer sends a view event from server
     Given the '/' page is loaded
@@ -47,7 +47,7 @@ Scenario: Developer uses pageView to send a VIEW event without referrer
     Given the '/viewevent' page is loaded with the same document.referrer hostname
     Then the event is sent without the referrer
 
-Scenario: Developer uses pageView to send an event to CDP and provides page & language parameters through eventData
+Scenario: Developer uses pageView to send an event to EP and provides page & language parameters through eventData
     Given the '/' page is loaded
     When the pageView function is called
         | page      | language      |
@@ -56,19 +56,19 @@ Scenario: Developer uses pageView to send an event to CDP and provides page & la
         | page      | language      |
         | test_page | test_language |
 
-Scenario: Developer uses pageView to send an event to CDP and doesn't provide any parameters
+Scenario: Developer uses pageView to send an event to EP and doesn't provide any parameters
     Given the '/about' page is loaded
     When the pageView function is called
     Then the event is sent with the values inferred from window.location.pathname
 
-Scenario: Developer uses pageView to send an event to CDP without page parameter and the URL is /
+Scenario: Developer uses pageView to send an event to EP without page parameter and the URL is /
     Given the '/' page is loaded
      When the pageView function is called
      Then the event is sent with 'VIEW' type
         | page      |
         | Home Page |
 
-Scenario: Developer uses pageView to send an event to CDP,doesn't provide language parameter but language is present in the document
+Scenario: Developer uses pageView to send an event to EP,doesn't provide language parameter but language is present in the document
     Given the '/' page is loaded
     And the 'lang' attribute 'en-US' exist in the document
     When the pageView function is called
@@ -76,26 +76,26 @@ Scenario: Developer uses pageView to send an event to CDP,doesn't provide langua
          | language | page      |
          | EN       | Home Page |
 
-Scenario: Developer sends VIEW event from client without language param and CDP responds successfully
+Scenario: Developer sends VIEW event from client without language param and EP responds successfully
     Given the '/' page is loaded
     And the 'lang' attribute doesn't exist in the document
     When the pageView function is called
-    Then CDP API responds with '201' status code
+    Then EP API responds with '201' status code
 
-Scenario: Developer sends VIEW event from client with empty string language param and CDP responds successfully
+Scenario: Developer sends VIEW event from client with empty string language param and EP responds successfully
     Given the '/' page is loaded
     When the pageView function is called
         | language    |
         | {backspace} |
-    Then CDP API responds with '201' status code
+    Then EP API responds with '201' status code
 
-Scenario: Developer uses pageView to send an event to CDP when cookie exists
+Scenario: Developer uses pageView to send an event to EP when cookie exists
     Given the '/' page is loaded
     And a cookie exists on the page with the respective 'production' environment contextId
     When the pageView function is called
     Then the bid value set in the cookie for the user is returned
 
-Scenario: Developer uses pageView to send an event to CDP when no cookie exists
+Scenario: Developer uses pageView to send an event to EP when no cookie exists
     Given the '/' page is loaded
     When the cookies are removed from the browser
     And the pageView function is called

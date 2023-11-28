@@ -1,7 +1,7 @@
 import { event } from './event';
 import { CustomEvent, ICustomEventInput } from './custom-event';
 import * as init from '../../initializer/browser/initializer';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
 
 jest.mock('../../initializer/browser/initializer');

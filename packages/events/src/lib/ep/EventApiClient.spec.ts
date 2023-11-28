@@ -1,5 +1,5 @@
-import { ICdpResponse } from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../cdp/EventApiClient';
+import { IEPResponse } from '@sitecore-cloudsdk/core';
+import { EventApiClient } from '../ep/EventApiClient';
 import { LIBRARY_VERSION } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -14,7 +14,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('EventApiClient', () => {
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 

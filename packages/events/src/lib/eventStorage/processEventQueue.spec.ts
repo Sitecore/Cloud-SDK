@@ -16,7 +16,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('processEventQueue', () => {
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   const getDependenciesSpy = jest.spyOn(init, 'getDependencies');

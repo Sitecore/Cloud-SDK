@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICdpResponse } from '@sitecore-cloudsdk/core';
+import { IEPResponse } from '@sitecore-cloudsdk/core';
 import { ExtensionData } from '../common-interfaces';
 import { ICustomEventInput, CustomEvent } from './custom-event';
 import { getDependencies } from '../../initializer/browser/initializer';
@@ -11,13 +11,13 @@ import { getDependencies } from '../../initializer/browser/initializer';
  * @param eventData - The required/optional attributes in order to be send to SitecoreCloud API
  * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
  * This object will be flattened and sent in the ext object of the payload
- * @returns The response object that Sitecore CDP returns
+ * @returns The response object that Sitecore EP returns
  */
 export function event(
   type: string,
   eventData: ICustomEventInput,
   extensionData?: ExtensionData
-): Promise<ICdpResponse | null> {
+): Promise<IEPResponse | null> {
   const { eventApiClient, id, settings } = getDependencies();
 
   return new CustomEvent({

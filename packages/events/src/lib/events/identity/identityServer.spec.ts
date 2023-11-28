@@ -1,7 +1,7 @@
 import { identityServer } from './identityServer'; // Import the function to be tested
 import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { IIdentityEventAttributesInput, IdentityEvent } from './identity-event';
 
 jest.mock('../../initializer/server/initializer');

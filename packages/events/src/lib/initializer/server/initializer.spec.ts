@@ -3,10 +3,10 @@ import packageJson from '../../../../package.json';
 import { ISettingsParamsServer } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import * as core from '@sitecore-cloudsdk/core';
 
-jest.mock('../../cdp/EventApiClient');
+jest.mock('../../ep/EventApiClient');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 

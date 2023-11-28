@@ -1,13 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { pageName, language } from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../cdp/EventApiClient';
+import { EventApiClient } from '../ep/EventApiClient';
 import { ICustomEventArguments, CustomEvent } from '../events';
 
 export class EventQueue {
   /**
    * Initialize the Event Storage
    * @param storage - Interface that describes the storage functionality
-   * @param eventApiClient - The API client which sends events to CDP
+   * @param eventApiClient - The API client which sends events to EP
    * @param infer - The instance of the infer class
    */
   private key = 'EventQueue';
@@ -48,7 +48,7 @@ export class EventQueue {
     this.storage.setItem(this.key, JSON.stringify(eventQueue));
   }
   /**
-   * Iterates the queue, and sends sequently the custom events to Sitecore CDP.
+   * Iterates the queue, and sends sequently the custom events to Sitecore EP.
    */
   async sendAllEvents() {
     const eventQueue = this.getEventQueue();

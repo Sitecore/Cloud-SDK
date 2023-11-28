@@ -1,9 +1,9 @@
-import { CallFlowEdgeProxyClient, ICdpCallFlowsBody } from './callflow-edge-proxy-client';
+import { CallFlowEdgeProxyClient, IEPCallFlowsBody } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
 import { ISettings, SITECORE_EDGE_URL } from '@sitecore-cloudsdk/core';
 
 describe('Test Base CallFlow Base Class', () => {
-  let data: ICdpCallFlowsBody;
+  let data: IEPCallFlowsBody;
   let settingsMock: ISettings;
 
   beforeEach(() => {

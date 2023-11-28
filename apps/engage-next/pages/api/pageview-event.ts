@@ -21,6 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const cdpResponse = await pageView(event, req);
-  res.status(200).json(cdpResponse);
+  const EPResponse = await pageView(event, req);
+  res.status(200).json(EPResponse);
 }

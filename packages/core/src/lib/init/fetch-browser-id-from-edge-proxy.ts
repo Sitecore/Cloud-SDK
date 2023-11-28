@@ -2,7 +2,7 @@
 
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
-import { IProxySettings, ICdpResponse } from '../interfaces';
+import { IProxySettings, IEPResponse } from '../interfaces';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**
@@ -39,6 +39,6 @@ export async function fetchBrowserIdFromEdgeProxy(
       '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
     );
 
-  const { ref: browserId }: ICdpResponse = response;
+  const { ref: browserId }: IEPResponse = response;
   return { browserId };
 }

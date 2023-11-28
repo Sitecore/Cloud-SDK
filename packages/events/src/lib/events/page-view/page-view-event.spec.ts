@@ -3,11 +3,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { IPageViewEventInput, PageViewEvent } from './page-view-event';
-import { ICdpResponse, ISettings } from '@sitecore-cloudsdk/core';
+import { IEPResponse, ISettings } from '@sitecore-cloudsdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -97,7 +97,7 @@ describe('PageViewEvent', () => {
     it('should change state to false when the event is sent', async () => {
       global.window ??= Object.create(window);
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -126,7 +126,7 @@ describe('PageViewEvent', () => {
 
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -249,7 +249,7 @@ describe('PageViewEvent', () => {
 
   it('should send a view event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 

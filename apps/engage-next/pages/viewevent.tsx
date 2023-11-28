@@ -122,20 +122,20 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
-  let cdpResponse;
+  let EPResponse;
   try {
-    cdpResponse = await pageViewServer(
+    EPResponse = await pageViewServer(
       event as unknown as IPageViewEventInput,
       context.req,
       noExt ? undefined : extensionData
     );
   } catch {
-    cdpResponse = 'Error';
+    EPResponse = 'Error';
   }
 
   return {
     props: {
-      res: JSON.stringify(cdpResponse),
+      res: JSON.stringify(EPResponse),
     },
   };
 }

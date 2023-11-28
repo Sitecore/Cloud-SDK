@@ -87,7 +87,7 @@ export async function middleware(request: NextRequest) {
 
     const personalizeRes = await personalize(personalizeData, request);
 
-    response.cookies.set('cdpResponse', JSON.stringify(personalizeRes));
+    response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
   }
 
   return response;

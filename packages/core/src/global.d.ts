@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/naming-convention*/
 declare global {
   interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Engage: any;
   }
 }

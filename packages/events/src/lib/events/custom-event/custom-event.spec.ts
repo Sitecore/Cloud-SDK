@@ -1,10 +1,10 @@
 import { CustomEvent, ICustomEventInput } from './custom-event';
-import { EventApiClient } from '../../cdp/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 
-jest.mock('../../cdp/EventApiClient');
+jest.mock('../../ep/EventApiClient');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -139,7 +139,7 @@ describe('CustomEvent', () => {
     };
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
+        json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
       });
       global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     });

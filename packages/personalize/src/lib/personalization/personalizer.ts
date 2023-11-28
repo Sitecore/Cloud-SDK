@@ -1,22 +1,22 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { language } from '@sitecore-cloudsdk/core';
-import { ICdpCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
+import { IEPCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
 import { INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
-   * @param personalizeClient - The data to be send to Sitecore CDP
+   * @param personalizeClient - The data to be send to Sitecore EP
    * @param infer - The source of methods to estimate language and page parameters
    */
 
   constructor(private personalizeClient: IPersonalizeClient, private id: string) {}
 
   /**
-   * A function to make a request to the Sitecore CDP /callFlows API endpoint
+   * A function to make a request to the Sitecore EP /callFlows API endpoint
    * @param timeout - Optional timeout in milliseconds to cancel the request
-   * @returns - A promise that resolves with either the Sitecore CDP response object or null
+   * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
     personalizeInput: IPersonalizerInput,
@@ -26,7 +26,7 @@ export class Personalizer {
 
     const sanitizedInput = this.sanitizeInput(personalizeInput);
 
-    const mappedData = this.mapPersonalizeInputToCDPData(sanitizedInput);
+    const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
 
     const response = await this.personalizeClient.sendCallFlowsRequest(mappedData, timeout);
@@ -62,11 +62,11 @@ export class Personalizer {
     return sanitizedInput;
   }
   /**
-   * A function that maps the personalize input data with the CDP
-   * @returns - The CDP object
+   * A function that maps the personalize input data with the EP
+   * @returns - The EP object
    */
-  private mapPersonalizeInputToCDPData(input: IPersonalizerInput): ICdpCallFlowsBody {
-    const mappedData: ICdpCallFlowsBody = {
+  private mapPersonalizeInputToEPData(input: IPersonalizerInput): IEPCallFlowsBody {
+    const mappedData: IEPCallFlowsBody = {
       channel: input.channel,
       clientKey: '',
       currencyCode: input.currency,

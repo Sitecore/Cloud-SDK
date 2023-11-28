@@ -9,7 +9,7 @@ const expectedEventData = {
   type: '',
   };
 
-Then('CDP returns the event with {string} type', (eventType: string, datatable) => {
+Then('EP returns the event with {string} type', (eventType: string, datatable) => {
   expectedEventData.type = eventType;
   const expectedReq = Utils.createExpectedEventReq(eventType, datatable);
 
@@ -21,7 +21,7 @@ Then('CDP returns the event with {string} type', (eventType: string, datatable) 
   });
 });
 
-Then('CDP returns the event with parameters:', (params: string) => {
+Then('EP returns the event with parameters:', (params: string) => {
   const parameters = JSON.parse(params);
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -33,7 +33,7 @@ Then('CDP returns the event with parameters:', (params: string) => {
   });
 });
 
-Then('CDP returns the {string} as identifier', (email: string) => {
+Then('EP returns the {string} as identifier', (email: string) => {
   cy.requestGuestContext().then((actualEvent: { arbitraryData: any }) => {
     expect(actualEvent.arbitraryData.identifiers[0].id).to.deep.equal(email);
     expect(actualEvent.arbitraryData.identifiers[0].provider).to.deep.equal('email');

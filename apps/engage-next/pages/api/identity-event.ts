@@ -30,6 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const cdpResponse = await identity(event, req);
-  res.status(200).json(cdpResponse);
+  const EPResponse = await identity(event, req);
+  res.status(200).json(EPResponse);
 }

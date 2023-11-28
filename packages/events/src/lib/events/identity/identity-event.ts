@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
 import { ExtensionData, IEventAttributesInput } from '../common-interfaces';
-import { IEventApiClient } from '../../cdp/EventApiClient';
+import { IEventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { isShortISODateString, isValidEmail, IFlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
-import { ICdpResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
+import { IEPResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
 
 export class IdentityEvent extends BaseEvent {
   private eventData: IIdentityEventAttributesInput;
@@ -67,7 +67,7 @@ export class IdentityEvent extends BaseEvent {
       email: this.eventData.email,
       firstname: this.eventData.firstName,
       gender: this.eventData.gender,
-      identifiers: this.eventData.identifiers.map((value: IIdentifier): ICDPIdentifier => {
+      identifiers: this.eventData.identifiers.map((value: IIdentifier): IEPIdentifier => {
         return {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: value.expiryDate,
@@ -92,10 +92,10 @@ export class IdentityEvent extends BaseEvent {
   }
 
   /**
-   * Sends the event to Sitecore CDP
-   * @returns - A promise that resolves with either the Sitecore CDP response object or null
+   * Sends the event to Sitecore EP
+   * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(): Promise<ICdpResponse | null> {
+  async send(): Promise<IEPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
@@ -107,7 +107,7 @@ export class IdentityEvent extends BaseEvent {
 /**
  * The JSON array of objects that contain the identity identifiers
  */
-interface ICDPIdentifier {
+interface IEPIdentifier {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   expiry_date?: string;
   id: string;
@@ -153,7 +153,7 @@ export interface IIdentityEventPayload {
   email?: string;
   firstname?: string;
   gender?: string;
-  identifiers: ICDPIdentifier[];
+  identifiers: IEPIdentifier[];
   lastname?: string;
   mobile?: string;
   phone?: string;

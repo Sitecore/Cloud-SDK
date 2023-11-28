@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
-import { ICdpResponse } from '../interfaces';
+import { IEPResponse } from '../interfaces';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
 import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -32,7 +32,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should resolve with an appropriate response object when calling fetch with timeout', async () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as ICdpResponse),
+      json: () => Promise.resolve(mockResponse as IEPResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
@@ -67,7 +67,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should resolve with an appropriate response object', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as ICdpResponse),
+      json: () => Promise.resolve(mockResponse as IEPResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {

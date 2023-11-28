@@ -39,7 +39,7 @@ Cypress.Commands.add('waitForRequest', (alias) => {
   });
 });
 
-//Returns the response from CDP
+//Returns the response from EP
 Cypress.Commands.add('waitForResponse', (alias) => {
   cy.wait(alias);
   cy.get(`${alias}.all`).then((aliasList) => {
@@ -77,15 +77,13 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
   });
 
   const expectedPackageVersion = request.url.includes('events')
-  ? eventsPackageJson.version
-  : personalizePackageJson.version;
+    ? eventsPackageJson.version
+    : personalizePackageJson.version;
 
-  cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) =>      
-  expect(request.body.browser_id).to.eq(cookie?.value));
-    
+  cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => expect(request.body.browser_id).to.eq(cookie?.value));
+
   expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
 });
-
 
 Cypress.Commands.add('requestGuestContext', () => {
   const authorization = `Basic ${Cypress.env('GUEST_API_TOKEN')}`;
@@ -114,7 +112,7 @@ Cypress.Commands.add('requestGuestContext', () => {
               return response.body.items[0].sessions[0].events[0];
             }),
             {
-              errorMsg: 'Event not returned from CDP',
+              errorMsg: 'Event not returned from EP',
               timeout: 15000,
               interval: 100,
             };

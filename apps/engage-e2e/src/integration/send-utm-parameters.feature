@@ -19,7 +19,7 @@ Feature: Send UTM parameters for every event with configuration setting
 #         | true                  |
 #     Then a VIEW event is sent with no UTM key-value pairs
 
-# Scenario: Enabled Utm Parameters with URL encoded parameters and are sent decoded to CDP
+# Scenario: Enabled Utm Parameters with URL encoded parameters and are sent decoded to EP
 #     Given the '/viewevent' page is loaded with query parameters
 #         | includeUTMParameters | UTM_medium | UTM_source   | utm_campaign   | utm_content           |
 #         | true                 | email      | active users | feature launch | bottom%20cta%20button |

@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { API_VERSION, ICdpResponse } from '@sitecore-cloudsdk/core';
+import { API_VERSION, IEPResponse } from '@sitecore-cloudsdk/core';
 import type { IBasePayload, IPageViewEventPayload, IIdentityEventPayload, ICustomEventPayload } from '../events';
 import { LIBRARY_VERSION } from '../consts';
 
@@ -10,11 +10,11 @@ export class EventApiClient implements IEventApiClient {
   }
 
   /**
-   * A function that sends the payload to Sitecore CDP
-   * @param body - The Request body for the Sitecore CDP
-   * @returns - A promise that resolves with either the Sitecore CDP response object or null
+   * A function that sends the payload to Sitecore EP
+   * @param body - The Request body for the Sitecore EP
+   * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(body: TCdpFetchBody & IBasePayload): Promise<ICdpResponse | null> {
+  async send(body: TEPFetchBody & IBasePayload): Promise<IEPResponse | null> {
     const fetchOptions = {
       body: JSON.stringify(body),
       headers: {
@@ -37,10 +37,10 @@ export class EventApiClient implements IEventApiClient {
  * The interface of EventApiClient class
  */
 export interface IEventApiClient {
-  send(body: TCdpFetchBody & IBasePayload): Promise<ICdpResponse | null>;
+  send(body: TEPFetchBody & IBasePayload): Promise<IEPResponse | null>;
 }
 
 /**
  * The type describing all possible event payloads
  */
-type TCdpFetchBody = IPageViewEventPayload | IIdentityEventPayload | ICustomEventPayload;
+type TEPFetchBody = IPageViewEventPayload | IIdentityEventPayload | ICustomEventPayload;

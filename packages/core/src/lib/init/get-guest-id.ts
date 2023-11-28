@@ -3,7 +3,7 @@
 import { API_VERSION, LIBRARY_VERSION } from '../consts';
 
 /**
- * A function that gets the guest ref from CDP.
+ * A function that gets the guest ref from EP.
  * @param browserId - The browser id of the client
  * @param sitecoreEdgeContextId - The sitecoreEdgeContextId
  * @returns - A promise that resolves with the guest ref

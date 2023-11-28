@@ -16,7 +16,7 @@ describe('getGuestId', () => {
   const getDependenciesSpy = jest.spyOn(EventSettings, 'getDependencies');
   const getGuestIdSpy = jest.spyOn(core, 'getGuestId');
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
     jest.clearAllMocks();
@@ -30,7 +30,7 @@ describe('getGuestId', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'name',
-          cookiePath: '/'
+          cookiePath: '/',
         },
         includeUTMParameters: true,
         targetURL: 'https://domain',

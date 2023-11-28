@@ -1,5 +1,5 @@
 @personalize
-Feature: Developer requests personalize from CDP via client, api, middleware and serverSideProps
+Feature: Developer requests personalize from EP via client, api, middleware and serverSideProps
 
 Scenario: Developer requests personalize from API route
     Given the '/personalize' page is loaded
@@ -32,7 +32,7 @@ Scenario Outline: Developer requests personalize from serverSideProps
         {"Key":"value"}
     """
 
-Scenario: Developer requests personalize from the API route with timeout and CDP fails to respond
+Scenario: Developer requests personalize from the API route with timeout and EP fails to respond
     Given the '/personalize' page is loaded
     When personalize parameters are: 
     """
@@ -50,7 +50,7 @@ Scenario: Developer requests personalize from the API route with timeout and CDP
         | 0       |
         | 20      |
 
-Scenario: Developer requests personalize from the client with timeout and CDP fails to respond
+Scenario: Developer requests personalize from the client with timeout and EP fails to respond
     Given the '/personalize' page is loaded
     When personalize parameters are: 
     """
@@ -83,7 +83,7 @@ Scenario: Developer requests personalize with invalid timeout input
     Then an error is thrown: '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
 
 @Smoke-Test-Personalize
-Scenario: Developer requests personalize with timeout from the client and CDP responds timely
+Scenario: Developer requests personalize with timeout from the client and EP responds timely
     Given the '/personalize' page is loaded
     When personalize parameters are: 
     """

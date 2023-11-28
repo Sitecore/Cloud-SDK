@@ -1,4 +1,4 @@
-Feature: User sends identity events to CDP
+Feature: User sends identity events to EP
 
 Scenario: Developer sends identity event from server
     Given the '/identity' page is loaded with query parameters

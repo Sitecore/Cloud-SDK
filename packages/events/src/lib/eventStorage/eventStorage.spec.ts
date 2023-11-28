@@ -1,5 +1,5 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import { EventApiClient } from '../cdp/EventApiClient';
+import { EventApiClient } from '../ep/EventApiClient';
 import { ICustomEventInput, CustomEvent } from '../events/custom-event/custom-event';
 import { EventQueue, QueueEventPayload } from './eventStorage';
 import * as core from '@sitecore-cloudsdk/core';
@@ -62,7 +62,7 @@ describe('Event Storage', () => {
 
     global.sessionStorage.getItem = jest.fn();
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.ICdpResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     jest.clearAllMocks();
@@ -192,8 +192,8 @@ describe('Event Storage', () => {
     expect(storageMock.getItem).toHaveBeenCalledTimes(1);
   });
 
-  it('sendAllEvents should send all stored events to CDP.', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.ICdpResponse);
+  it('sendAllEvents should send all stored events to EP.', async () => {
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.IEPResponse);
     const eventQueueSpy = jest.spyOn(EventQueue.prototype as any, 'getEventQueue');
 
     const mockArray: QueueEventPayload[] = [];
@@ -221,7 +221,7 @@ describe('Event Storage', () => {
   });
 
   it('sendAllEvents should send events in the queue and clear the queue', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.ICdpResponse);
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.IEPResponse);
     const mockArray: QueueEventPayload[] = [];
 
     const queueEventPayloadTwo: QueueEventPayload = { eventData, id: 'testId2', settings, type };

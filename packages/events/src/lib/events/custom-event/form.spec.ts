@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { ICdpResponse, ISettingsParamsBrowser } from '@sitecore-cloudsdk/core';
+import { IEPResponse, ISettingsParamsBrowser } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -38,11 +38,11 @@ describe('form function', () => {
     jest.clearAllMocks();
   });
 
-  it('should send the form event without CDP optional attributes', async () => {
+  it('should send the form event without EP optional attributes', async () => {
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
 
-    const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as ICdpResponse) });
+    const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as IEPResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     await init(settingsParams);

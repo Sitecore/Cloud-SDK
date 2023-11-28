@@ -3,7 +3,7 @@
 import { BasicTypes, INestedObject } from '@sitecore-cloudsdk/utils';
 
 /**
- * Event data received as input to be sent to Sitecore CDP
+ * Event data received as input to be sent to Sitecore EP
  */
 interface IMandatoryInput {
   channel: string;
@@ -13,7 +13,7 @@ interface IMandatoryInput {
 type IMandatoryEventInput = IMandatoryInput;
 
 /**
- * Event data that is sent to Sitecore CDP
+ * Event data that is sent to Sitecore EP
  */
 interface IInferrableInput {
   /**

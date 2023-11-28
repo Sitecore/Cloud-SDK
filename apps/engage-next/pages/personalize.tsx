@@ -26,10 +26,10 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
 
   const sendRequestToNextApi = async () => {
     const response = await fetch(`/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}`);
-    const cdpResponse = await response.json();
+    const EPResponse = await response.json();
 
     const res = document.getElementById('response') as HTMLInputElement;
-    res.value = JSON.stringify(cdpResponse);
+    res.value = JSON.stringify(EPResponse);
   };
 
   return (
@@ -154,19 +154,19 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='requestPersonalizeFromMiddleware'
           onClick={async () => {
             const middlewareRes = document.getElementById('response') as HTMLInputElement;
-            const cdpResponse =
+            const EPResponse =
               document?.cookie
                 ?.split('; ')
-                ?.find((cookie) => cookie.split('=')[0] === 'cdpResponse')
-                ?.split('cdpResponse=')[1] || '';
+                ?.find((cookie) => cookie.split('=')[0] === 'EPResponse')
+                ?.split('EPResponse=')[1] || '';
 
-            const cookie = decodeURIComponent(cdpResponse);
+            const cookie = decodeURIComponent(EPResponse);
             middlewareRes.value = cookie;
           }}>
           Request Personalize from Middleware{' '}
         </button>
         <p></p>
-        <label htmlFor='response'>CDP Response:</label>
+        <label htmlFor='response'>EP Response:</label>
         <input
           type='text'
           id='response'
@@ -204,11 +204,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
-  const cdpResponse = await personalizeServer(event, context.req);
+  const EPResponse = await personalizeServer(event, context.req);
 
   return {
     props: {
-      serverSidePropsRes: JSON.stringify(cdpResponse),
+      serverSidePropsRes: JSON.stringify(EPResponse),
     },
   };
 }

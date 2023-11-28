@@ -1,7 +1,7 @@
-Feature: Developer sends form event to CDP
+Feature: Developer sends form event to EP
 
 @Smoke-Test-Events
-Scenario: Developer sends FORMS event to CDP from client side
+Scenario: Developer sends FORMS event to EP from client side
     Given the '/form' page is loaded with query parameters
         | formId | interactionType |
         | xxxx   | test            |

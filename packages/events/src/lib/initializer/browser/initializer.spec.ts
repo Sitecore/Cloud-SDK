@@ -3,11 +3,11 @@ import packageJson from '../../../../package.json';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import * as EventApiClient from '../../cdp/EventApiClient';
+import * as EventApiClient from '../../ep/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
 import '../../../global.d.ts';
 
-jest.mock('../../cdp/EventApiClient');
+jest.mock('../../ep/EventApiClient');
 jest.mock('../../eventStorage/eventStorage');
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -40,7 +40,7 @@ describe('initializer', () => {
   const { window } = global;
   const id = 'test_id';
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.ICdpResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   afterEach(() => {

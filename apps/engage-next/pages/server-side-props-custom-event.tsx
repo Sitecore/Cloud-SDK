@@ -34,16 +34,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
-  let cdpResponse;
+  let EPResponse;
   try {
-    cdpResponse = await event('SERVERSIDEPROPS_CUSTOM', eventData, context.req);
+    EPResponse = await event('SERVERSIDEPROPS_CUSTOM', eventData, context.req);
   } catch {
-    cdpResponse = 'Error';
+    EPResponse = 'Error';
   }
 
   return {
     props: {
-      res: JSON.stringify(cdpResponse),
+      res: JSON.stringify(EPResponse),
     },
   };
 }

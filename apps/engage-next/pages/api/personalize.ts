@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const timeoutParam = requestUrl.searchParams.get('timeout');
   const timeout = timeoutParam !== 'null' && timeoutParam !== 'undefined' ? Number(timeoutParam) : undefined;
 
-  const cdpResponse = await personalize(event, req, timeout);
+  const EPResponse = await personalize(event, req, timeout);
 
-  res.status(200).json(cdpResponse);
+  res.status(200).json(EPResponse);
 }

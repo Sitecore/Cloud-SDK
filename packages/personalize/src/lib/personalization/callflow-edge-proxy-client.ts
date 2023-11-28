@@ -7,22 +7,22 @@ import { LIBRARY_VERSION } from '../consts';
 export class CallFlowEdgeProxyClient implements IPersonalizeClient {
   /**
    * A helper class which handles the functionality for sending CALLFLOW requests
-   * @param personalizeData - The mandatory payload to be send to Sitecore CDP
+   * @param personalizeData - The mandatory payload to be send to Sitecore EP
    * @param settings - The global settings
    */
   constructor(public settings: ISettings) {}
 
   /**
-   * A function that sends a CallFlow request to Sitecore CDP
-   * @param personalizeData - Properties to be send to Sitecore CDP
+   * A function that sends a CallFlow request to Sitecore EP
+   * @param personalizeData - Properties to be send to Sitecore EP
    * @param timeout - Optional timeout in milliseconds to cancel the request
-   * @returns - A promise that resolves with either the Sitecore CDP response object or unknown
+   * @returns - A promise that resolves with either the Sitecore EP response object or unknown
    */
-  async sendCallFlowsRequest(cdpCallFlowsBody: ICdpCallFlowsBody, timeout?: number) {
+  async sendCallFlowsRequest(epCallFlowsBody: IEPCallFlowsBody, timeout?: number) {
     const requestUrl = `${this.settings.sitecoreEdgeUrl}/personalize/v2/callFlows?sitecoreContextId=${this.settings.sitecoreEdgeContextId}&siteId=${this.settings.siteName}`;
 
     const fetchOptions = {
-      body: JSON.stringify(cdpCallFlowsBody),
+      body: JSON.stringify(epCallFlowsBody),
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Content-Type': 'application/json',
@@ -50,13 +50,13 @@ export class CallFlowEdgeProxyClient implements IPersonalizeClient {
 export interface IPersonalizeClient {
   settings: ISettings;
   sendCallFlowsRequest: (
-    cdpCallFlowAttributes: ICdpCallFlowsBody,
+    epCallFlowAttributes: IEPCallFlowsBody,
     timeout?: number
   ) => Promise<unknown | null | IFailedCalledFlowsResponse>;
 }
 
 /**
- * An interface that describes the failed response model from Sitecore CDP
+ * An interface that describes the failed response model from Sitecore EP
  */
 export interface IFailedCalledFlowsResponse {
   status: string;
@@ -69,28 +69,28 @@ export interface IFailedCalledFlowsResponse {
 /**
  * An interface that describes the identifier model attributes for the library
  */
-export interface ICdpIdentifier {
+export interface IEPIdentifier {
   id: string;
   provider: string;
 }
 
 /**
- * An interface that describes the payload sent to Sitecore CDP library
+ * An interface that describes the payload sent to Sitecore EP library
  */
-export interface ICdpCallFlowsBody {
+export interface IEPCallFlowsBody {
   browserId?: string;
   email?: string;
   friendlyId: string;
-  identifiers?: ICdpIdentifier;
+  identifiers?: IEPIdentifier;
   channel: string;
   clientKey: string;
   currencyCode: string;
   language: string | undefined;
-  params?: ICdpCallFlowsParams;
+  params?: IEPCallFlowsParams;
   pointOfSale: string;
 }
 
 /**
- * A type that describes the params property of the ICdpCallFlowsBody
+ * A type that describes the params property of the IEPCallFlowsBody
  */
-export type ICdpCallFlowsParams = INestedObject;
+export type IEPCallFlowsParams = INestedObject;
