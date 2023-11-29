@@ -80,11 +80,21 @@ defineStep('the {string} page is loaded', (page: string) => {
 defineStep('the {string} string is printed in {string} element', (message: string, element: string) => {
   const selector = `[data-testid="${element}"]`;
 
-  cy.get(selector).should('be.visible').contains(message);
+  cy.get(selector).scrollIntoView().should('be.visible');
+
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(1000);
+  cy.waitUntil(() =>  cy.get(selector).contains(message), {
+    errorMsg: 'Server error not found',
+    timeout: 10000,
+    interval: 100,
+  });
 });
 
 defineStep('the {string} page is loaded without init function', (page: string) => {
   cy.visit(page);
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(2000);
   cy.location().should((loc) => {
     expect(`${loc.pathname}${loc.search}`).to.eq(page);
   });

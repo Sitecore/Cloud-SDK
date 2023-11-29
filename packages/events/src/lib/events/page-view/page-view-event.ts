@@ -4,7 +4,7 @@ import { IEPResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
 import { IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
 import { IEventApiClient } from '../../ep/EventApiClient';
-import { MAX_EXT_ATTRIBUTES } from '../consts';
+import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { IEventAttributesInput } from '../common-interfaces';
 
 export class PageViewEvent extends BaseEvent {
@@ -13,6 +13,7 @@ export class PageViewEvent extends BaseEvent {
   private eventData: IPageViewEventInput;
   private extensionData: IFlattenedObject = {};
   private urlSearchParams: URLSearchParams;
+  private includeUTMParameters: boolean;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -42,6 +43,8 @@ export class PageViewEvent extends BaseEvent {
         `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
       );
     this.eventApiClient = args.eventApiClient;
+    this.includeUTMParameters =
+      args.eventData.includeUTMParameters === undefined ? true : args.eventData.includeUTMParameters;
   }
 
   /**
@@ -97,6 +100,11 @@ export class PageViewEvent extends BaseEvent {
       viewPayload.ext = { ...viewPayload.ext, ...this.extensionData };
     }
 
+    if (this.includeUTMParameters) {
+      const utmParameters = this.getUTMParameters();
+      viewPayload = { ...viewPayload, ...utmParameters };
+    }
+
     const referrer = this.getReferrer();
 
     if (referrer !== null) viewPayload = { ...viewPayload, referrer };
@@ -115,6 +123,22 @@ export class PageViewEvent extends BaseEvent {
 
     PageViewEvent.isFirstPageView = false;
     return await this.eventApiClient.send(fetchBody);
+  }
+
+  /**
+   * Retrieves UTM parameters from the url query string
+   * @returns - an object containing the UTM parameters if they exist
+   */
+  private getUTMParameters() {
+    const utmParameters: IUtmParameters = {};
+
+    this.urlSearchParams.forEach((value: string, key: string) => {
+      const param = key.toLowerCase();
+
+      if (param.indexOf(UTM_PREFIX) === 0) utmParameters[param as keyof IUtmParameters] = value;
+    });
+
+    return utmParameters;
   }
 }
 
@@ -137,6 +161,7 @@ export interface IPageViewEventArguments {
 export interface IPageViewEventInput extends IEventAttributesInput {
   pageVariantId?: string;
   referrer?: string;
+  includeUTMParameters?: boolean;
 }
 
 /**

@@ -11,6 +11,7 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
 
   useEffect(() => {
     const eventAttributes = new URLSearchParams(window.location.search);
+    const includeUTMSearchParameter = eventAttributes.get('includeUTMParameters');
 
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const extensionDataNested = eventAttributes.has('nested') ? JSON.parse(eventAttributes.get('nested')!) : {};
@@ -25,8 +26,14 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
       event.pageVariantId = eventAttributes.get('variantid') || '';
     }
 
+    if (typeof includeUTMSearchParameter === 'string') {
+      if (includeUTMSearchParameter === 'true') event.includeUTMParameters = true;
+      else if (includeUTMSearchParameter === 'false') event.includeUTMParameters = false;
+    }
+
     eventAttributes.delete('nested');
     eventAttributes.delete('variantid');
+    eventAttributes.delete('includeUTMParameters');
 
     const extensionDataExt: Record<string, unknown> = {};
 

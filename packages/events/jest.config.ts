@@ -21,5 +21,6 @@ const config: Config = {
       statements: -10,
     },
   },
+  coveragePathIgnorePatterns: ['./src/lib/events/index.ts'],
 };
 export default config;

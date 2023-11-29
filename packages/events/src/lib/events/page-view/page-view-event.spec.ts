@@ -68,6 +68,7 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
+      includeUTMParameters: true,
     };
 
     settings = {
@@ -122,6 +123,7 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
+      includeUTMParameters: true,
     };
 
     beforeEach(() => {
@@ -135,6 +137,7 @@ describe('PageViewEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
+        includeUTMParameters: true,
       };
     });
 
@@ -388,6 +391,118 @@ describe('PageViewEvent', () => {
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith('campaign');
+    });
+  });
+
+  describe('check getUTMParameters function', () => {
+    let windowSpy: jest.SpyInstance;
+    let documentSpy: jest.SpyInstance;
+
+    const getUTMParametersSpy = jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters');
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+
+      windowSpy = jest.spyOn(globalThis, 'window', 'get');
+      documentSpy = jest.spyOn(globalThis, 'document', 'get');
+
+      PageViewEvent.isFirstPageView = true;
+      eventData.includeUTMParameters = undefined;
+
+      const mockFetch = Promise.resolve({
+        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
+      });
+      global.fetch = jest.fn().mockImplementation(() => mockFetch);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+      PageViewEvent.isFirstPageView = true;
+    });
+
+    it('should not call getUTMParameters if includeUTMParameters is false', async () => {
+      windowSpy.mockImplementation(() => ({
+        location: {
+          search: '',
+        },
+      }));
+
+      eventData.includeUTMParameters = false;
+
+      callPageEvent(eventApiClient, eventData, id, settings);
+      expect(getUTMParametersSpy).toHaveBeenCalledTimes(0);
+    });
+
+    it('should call getUTMParameters if includeUTMParameters is true', async () => {
+      windowSpy.mockImplementation(() => ({
+        location: {
+          search: '',
+        },
+      }));
+
+      eventData.includeUTMParameters = true;
+      callPageEvent(eventApiClient, eventData, id, settings);
+      expect(getUTMParametersSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return {} if urlSearchParams is empty', () => {
+      windowSpy.mockImplementation(() => ({
+        location: {
+          search: '',
+        },
+      }));
+      callPageEvent(eventApiClient, eventData, id, settings);
+      expect(getUTMParametersSpy).toHaveLastReturnedWith({});
+    });
+
+    it("should return an empty object if urlSearchParams doesn't contain utm_ params", () => {
+      windowSpy.mockImplementation(() => ({
+        location: {
+          search: '?banana=banana',
+        },
+      }));
+      callPageEvent(eventApiClient, eventData, id, settings);
+      expect(getUTMParametersSpy).toHaveReturnedWith({});
+    });
+
+    it('should return an object with utm_ params when urlSearchParams contains utm_params', () => {
+      windowSpy.mockImplementation(() => ({
+        location: {
+          search: '?utm_campaign=campaign&utm_medium=email',
+        },
+      }));
+      callPageEvent(eventApiClient, eventData, id, settings);
+      expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
+    });
+
+    it('should send event without utm_ params if the returned object is empty {}', () => {
+      documentSpy.mockImplementation(() => ({
+        referrer: undefined,
+      }));
+
+      jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
+
+      callPageEvent(eventApiClient, eventData, id, settings);
+      const expectedAttributes = {
+        ...expectedBasicAttributes,
+        ...{
+          type: 'VIEW',
+        },
+      };
+      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+    });
+
+    it('should send an event with utm_ params if the returned object is not empty', () => {
+      getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
+      callPageEvent(eventApiClient, eventData, id, settings);
+      const expectedAttributes = {
+        ...expectedBasicAttributes,
+        ...{
+          type: 'VIEW',
+          utm_test: 'test',
+        },
+      };
+      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
     });
   });
 });
