@@ -1,45 +1,37 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { BasicTypes, INestedObject } from '@sitecore-cloudsdk/utils';
+import { NestedObject } from '@sitecore-cloudsdk/utils';
 
 /**
  * Event data received as input to be sent to Sitecore EP
  */
-interface IMandatoryInput {
+interface MandatoryInput {
   channel: string;
   currency: string;
 }
 
-type IMandatoryEventInput = IMandatoryInput;
+type MandatoryEventInput = MandatoryInput;
 
 /**
  * Event data that is sent to Sitecore EP
  */
-interface IInferrableInput {
+interface InferrableInput {
   /**
-   * To be restored back to IMandatoryEventInput Interface
+   * To be restored back to MandatoryEventInput Interface
    * as mandatory input parameter in version 1.0.0
    */
   language?: string;
   page?: string;
 }
 
-type IInferrableEventInput = IInferrableInput;
+type InferrableEventInput = InferrableInput;
 
 /**
  * Interface to hold the base event attributes
  */
-export interface IEventAttributesInput extends IMandatoryEventInput, IInferrableEventInput {}
-
-/**
- * Interface to hold the "ext" data
- */
-export interface IExtensionData {
-  pageVariantId?: string;
-  [key: string]: BasicTypes;
-}
+export interface EventAttributesInput extends MandatoryEventInput, InferrableEventInput {}
 
 /**
  * Type of the extension data that the developer can pass to events
  */
-export type ExtensionData = INestedObject;
+export type ExtensionData = NestedObject;

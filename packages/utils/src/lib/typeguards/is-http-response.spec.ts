@@ -1,9 +1,9 @@
-import { IHttpResponse, IMiddlewareNextResponse } from '../interfaces';
+import { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 import { isHttpResponse } from './is-http-response';
 
 describe('isHttpResponse', () => {
   it('should return true if response has Http Response properties', () => {
-    const res: IHttpResponse = {
+    const res: HttpResponse = {
       setHeader: jest.fn(),
     };
     const result = isHttpResponse(res);
@@ -12,7 +12,7 @@ describe('isHttpResponse', () => {
   });
 
   it('should return false if response lacks Http Response properties', () => {
-    const nonHttpResponse: IMiddlewareNextResponse = {
+    const nonHttpResponse: MiddlewareNextResponse = {
       cookies: {
         set: jest.fn(),
       },

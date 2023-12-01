@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { getSettingsServer, initCoreServer, setCoreSettings } from './init-core-server';
-import { ISettingsParamsServer } from '../settings/interfaces';
+import { SettingsParamsServer } from '../settings/interfaces';
 import * as handleServer from '../cookie/handle-server-cookie';
 import * as createSettings from '../settings/create-settings';
 
@@ -8,7 +8,7 @@ jest.mock('../cookie/handle-server-cookie');
 
 describe('core-server', () => {
   const handleServerSpy = jest.spyOn(handleServer, 'handleServerCookie');
-  let settingsInput: ISettingsParamsServer = {
+  let settingsInput: SettingsParamsServer = {
     cookieDomain: 'cDomain',
     enableServerCookie: undefined,
     siteName: '456',

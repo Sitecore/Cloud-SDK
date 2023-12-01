@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IHttpRequest, TRequest } from '../interfaces';
+import { HttpRequest, Request } from '../interfaces';
 
 /**
  * Checks if the given 'request' object is a valid HTTP Request
@@ -10,6 +10,6 @@ import { IHttpRequest, TRequest } from '../interfaces';
  * @returns Returns true if 'request' is a valid HTTP Request, otherwise false.
  */
 
-export function isHttpRequest(request: TRequest): request is IHttpRequest {
+export function isHttpRequest(request: Request): request is HttpRequest {
   return 'headers' in request;
 }

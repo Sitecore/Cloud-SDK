@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICookie, IMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { Cookie, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 
 /**
  * Retrieves the browser ID from the provided Middleware Request by extracting the cookie value
@@ -11,8 +11,8 @@ import { ICookie, IMiddlewareRequest } from '@sitecore-cloudsdk/utils';
  * @param cookieName - The name of the cookie to retrieve.
  * @returns The browser ID extracted from the cookie, or undefined if not found.
  */
-export function getBrowserIdFromMiddlewareRequest(request: IMiddlewareRequest, cookieName: string) {
-  const cookieValueFromRequest: ICookie | string | undefined = request.cookies.get(cookieName);
+export function getBrowserIdFromMiddlewareRequest(request: MiddlewareRequest, cookieName: string) {
+  const cookieValueFromRequest: Cookie | string | undefined = request.cookies.get(cookieName);
   // It checks nextjs v12 cookie values
   if (typeof cookieValueFromRequest === 'string') return cookieValueFromRequest;
   // It checks nextjs v13 cookie values

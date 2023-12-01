@@ -1,9 +1,9 @@
-import { IHttpResponse, IMiddlewareNextResponse } from '../interfaces';
+import { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 import { isNextJsMiddlewareResponse } from './is-next-js-middleware-response';
 
 describe('isNextJsMiddlewareResponse', () => {
   it('should return false if response does not have Next Js Middleware Response properties', () => {
-    const res: IHttpResponse = {
+    const res: HttpResponse = {
       setHeader: jest.fn(),
     };
     const result = isNextJsMiddlewareResponse(res);
@@ -12,7 +12,7 @@ describe('isNextJsMiddlewareResponse', () => {
   });
 
   it('should return true if response has Next Js Middleware Response properties', () => {
-    const response: IMiddlewareNextResponse = {
+    const response: MiddlewareNextResponse = {
       cookies: {
         set: jest.fn(),
       },

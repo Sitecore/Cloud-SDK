@@ -1,5 +1,5 @@
 import { event } from './event';
-import { CustomEvent, ICustomEventInput } from './custom-event';
+import { CustomEvent, CustomEventInput } from './custom-event';
 import * as init from '../../initializer/browser/initializer';
 import { EventApiClient } from '../../ep/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
@@ -18,7 +18,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 describe('eventServer', () => {
-  let eventData: ICustomEventInput;
+  let eventData: CustomEventInput;
   const type = 'CUSTOM_TYPE';
   const extensionData = { extKey: 'extValue' };
 

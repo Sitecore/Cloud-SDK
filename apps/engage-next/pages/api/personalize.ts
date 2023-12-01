@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, IPersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { init, PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
-  const event: IPersonalizerInput = {
+  const event: PersonalizerInput = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',

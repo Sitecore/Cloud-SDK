@@ -3,7 +3,7 @@
 /**
  * The response object that Sitecore EP returns
  */
-export interface IEPResponse {
+export interface EPResponse {
   ref: string;
   status: string;
   version: string;
@@ -11,14 +11,14 @@ export interface IEPResponse {
   client_key: string;
 }
 
-export interface IProxySettings {
+export interface ProxySettings {
   browserId: string;
 }
 
 /**
  * Interface for supporting response IncomingMessage http node type
  */
-export interface IInfer {
+export interface Infer {
   language: () => string | undefined;
   pageName: () => string;
 }

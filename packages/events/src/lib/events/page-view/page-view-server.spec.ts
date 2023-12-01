@@ -1,6 +1,6 @@
 import { pageViewServer } from './page-view-server';
 import { getServerDependencies } from '../../initializer/server/initializer';
-import { IPageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewEventInput, PageViewEvent } from './page-view-event';
 import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../ep/EventApiClient';
@@ -37,9 +37,9 @@ jest.mock('./page-view-event', () => {
 });
 
 describe('pageViewServer', () => {
-  let eventData: IPageViewEventInput;
+  let eventData: PageViewEventInput;
   const eventApiClient = new EventApiClient('http://test.com', '123', '456');
-  const settings: core.ISettings = {
+  const settings: core.Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,

@@ -21,7 +21,7 @@ describe('personalize', () => {
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   jest.spyOn(core, 'createCookie').mock;
-  const settingsObj: core.ISettings = {
+  const settingsObj: core.Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,

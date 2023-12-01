@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { pageName, language } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../ep/EventApiClient';
-import { ICustomEventArguments, CustomEvent } from '../events';
+import { CustomEventArguments, CustomEvent } from '../events';
 
 export class EventQueue {
   /**
@@ -11,7 +11,7 @@ export class EventQueue {
    * @param infer - The instance of the infer class
    */
   private key = 'EventQueue';
-  constructor(private storage: IStorage, private eventApiClient: EventApiClient) {}
+  constructor(private storage: Storage, private eventApiClient: EventApiClient) {}
 
   /** Returns the stored array of data with type QueueEventPayload, or empty array if the given key does not exist. */
   private getEventQueue(): QueueEventPayload[] {
@@ -78,10 +78,10 @@ export class EventQueue {
 /**
  * This Storage interface represents the required storage functionality.
  */
-export interface IStorage {
+export interface Storage {
   getItem(key: string): string | null;
   setItem(key: string, value: string): void;
   removeItem(key: string): void;
 }
 
-export type QueueEventPayload = Pick<ICustomEventArguments, 'eventData' | 'extensionData' | 'type' | 'settings' | 'id'>;
+export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'extensionData' | 'type' | 'settings' | 'id'>;

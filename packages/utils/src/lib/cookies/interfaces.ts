@@ -3,7 +3,7 @@
 /**
  * Cookie properties
  */
-export interface ICookieProperties {
+export interface CookieProperties {
   maxAge: number;
   sameSite: string;
   secure: boolean;
@@ -16,7 +16,7 @@ export interface ICookieProperties {
 /**
  * Interface that represents a cookie (name, value)
  */
-export interface ICookie {
+export interface Cookie {
   name: string;
   value: string;
 }

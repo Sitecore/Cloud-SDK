@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { ISettings } from '../settings/interfaces';
+import { Settings } from '../settings/interfaces';
 import { handleHttpCookie } from './handle-http-cookie';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import * as Utils from '@sitecore-cloudsdk/utils';
@@ -29,16 +29,16 @@ describe('httpCookieHandler', () => {
   });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
-  let request: Utils.IHttpRequest = {
+  let request: Utils.HttpRequest = {
     headers: {
       cookie: 'sc_123=123456789',
     },
   };
 
-  let response: Utils.IHttpResponse = {
+  let response: Utils.HttpResponse = {
     setHeader: jest.fn(),
   };
-  const options: ISettings = {
+  const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,

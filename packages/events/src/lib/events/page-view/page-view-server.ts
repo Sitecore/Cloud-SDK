@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IEPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
-import { INestedObject, TRequest } from '@sitecore-cloudsdk/utils';
+import { EPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
+import { NestedObject, Request } from '@sitecore-cloudsdk/utils';
 import { getServerDependencies } from '../../initializer/server/initializer';
-import { IPageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewEventInput, PageViewEvent } from './page-view-event';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -12,11 +12,11 @@ import { IPageViewEventInput, PageViewEvent } from './page-view-event';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function pageViewServer<T extends TRequest>(
-  eventData: IPageViewEventInput,
+export function pageViewServer<T extends Request>(
+  eventData: PageViewEventInput,
   request: T,
-  extensionData?: INestedObject
-): Promise<IEPResponse | null> {
+  extensionData?: NestedObject
+): Promise<EPResponse | null> {
   const { eventApiClient, settings } = getServerDependencies();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   // Host is irrelevant but necessary to support relative URL

@@ -1,22 +1,22 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
-import { ExtensionData, IEventAttributesInput } from '../common-interfaces';
-import { IEventApiClient } from '../../ep/EventApiClient';
+import { ExtensionData, EventAttributesInput } from '../common-interfaces';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
-import { isShortISODateString, isValidEmail, IFlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
-import { IEPResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
+import { isShortISODateString, isValidEmail, FlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
 
 export class IdentityEvent extends BaseEvent {
-  private eventData: IIdentityEventAttributesInput;
-  private eventApiClient: IEventApiClient;
-  private extensionData: IFlattenedObject = {};
+  private eventData: IdentityEventAttributesInput;
+  private eventApiClient: EventApiClient;
+  private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
    * @param args - Unified object containing the required properties
    */
-  constructor(args: IIdentityEventArguments) {
+  constructor(args: IdentityEventArguments) {
     const { channel, currency, language, page } = args.eventData;
 
     super({ channel, currency, language, page }, args.settings, args.id);
@@ -40,13 +40,13 @@ export class IdentityEvent extends BaseEvent {
    * Function that validates the identifiers object, email and date attributes for CDN users
    *  * @param eventData - The data to be validated
    */
-  private validateAttributes(eventData: IIdentityEventAttributesInput) {
+  private validateAttributes(eventData: IdentityEventAttributesInput) {
     if (eventData.identifiers.length === 0) throw new Error(`[MV-0003] "identifiers" is required.`);
 
     if (eventData.dob !== undefined && !isShortISODateString(eventData.dob))
       throw new Error(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
 
-    eventData.identifiers.forEach((identifier: IIdentifier) => {
+    eventData.identifiers.forEach((identifier: Identifier) => {
       if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
         throw new Error(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
     });
@@ -59,15 +59,15 @@ export class IdentityEvent extends BaseEvent {
    * A function that maps the identity event input data with the payload sent to the API
    * @returns - The payload object
    */
-  private mapAttributes(): IIdentityEventPayload {
-    const identityPayload: IIdentityEventPayload = {
+  private mapAttributes(): IdentityEventPayload {
+    const identityPayload: IdentityEventPayload = {
       city: this.eventData.city,
       country: this.eventData.country,
       dob: this.eventData.dob,
       email: this.eventData.email,
       firstname: this.eventData.firstName,
       gender: this.eventData.gender,
-      identifiers: this.eventData.identifiers.map((value: IIdentifier): IEPIdentifier => {
+      identifiers: this.eventData.identifiers.map((value: Identifier): EPIdentifier => {
         return {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: value.expiryDate,
@@ -95,7 +95,7 @@ export class IdentityEvent extends BaseEvent {
    * Sends the event to Sitecore EP
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(): Promise<IEPResponse | null> {
+  async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
@@ -107,7 +107,7 @@ export class IdentityEvent extends BaseEvent {
 /**
  * The JSON array of objects that contain the identity identifiers
  */
-interface IEPIdentifier {
+interface EPIdentifier {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   expiry_date?: string;
   id: string;
@@ -117,14 +117,14 @@ interface IEPIdentifier {
 /**
  * Interface with the necessary attributes for the input for sending Identity events
  */
-export interface IIdentityEventAttributesInput extends IEventAttributesInput {
+export interface IdentityEventAttributesInput extends EventAttributesInput {
   city?: string;
   country?: string;
   dob?: string;
   email?: string;
   firstName?: string;
   gender?: string;
-  identifiers: IIdentifier[];
+  identifiers: Identifier[];
   lastName?: string;
   mobile?: string;
   phone?: string;
@@ -137,7 +137,7 @@ export interface IIdentityEventAttributesInput extends IEventAttributesInput {
 /**
  * The JSON array of objects that contain the identity identifiers
  */
-export interface IIdentifier {
+export interface Identifier {
   expiryDate?: string;
   id: string;
   provider: string;
@@ -146,14 +146,14 @@ export interface IIdentifier {
 /**
  *  An interface describing the identity event specific payload to be sent to the API
  */
-export interface IIdentityEventPayload {
+export interface IdentityEventPayload {
   city?: string;
   country?: string;
   dob?: string;
   email?: string;
   firstname?: string;
   gender?: string;
-  identifiers: IEPIdentifier[];
+  identifiers: EPIdentifier[];
   lastname?: string;
   mobile?: string;
   phone?: string;
@@ -163,17 +163,17 @@ export interface IIdentityEventPayload {
   street?: string[];
   title?: string;
   type: 'IDENTITY';
-  ext?: IFlattenedObject;
+  ext?: FlattenedObject;
 }
 
 /**
  * Interface of the unified arguments object for identity event
  */
-export interface IIdentityEventArguments {
-  eventApiClient: IEventApiClient;
-  eventData: IIdentityEventAttributesInput;
+export interface IdentityEventArguments {
+  eventApiClient: EventApiClient;
+  eventData: IdentityEventAttributesInput;
   extensionData?: ExtensionData;
   id: string;
-  settings: ISettings;
-  infer?: IInfer;
+  settings: Settings;
+  infer?: Infer;
 }

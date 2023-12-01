@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable multiline-comment-style */
-import { IdentityEvent, IIdentityEventAttributesInput } from './identity-event';
+import { IdentityEvent, IdentityEventAttributesInput } from './identity-event';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
@@ -28,8 +28,8 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('Test Identity', () => {
-  let data: IIdentityEventAttributesInput;
-  let settingsMock: core.ISettings;
+  let data: IdentityEventAttributesInput;
+  let settingsMock: core.Settings;
   const eventApiClient = new EventApiClient('http://testurl', 'key', 'site');
   const id = 'test_id';
 
@@ -37,7 +37,7 @@ describe('Test Identity', () => {
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -379,7 +379,7 @@ describe('Test Identity', () => {
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -401,7 +401,7 @@ describe('Test Identity', () => {
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -441,7 +441,7 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -485,7 +485,7 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -527,7 +527,7 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -560,7 +560,7 @@ describe('Test Identity', () => {
         },
       ],
     };
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,

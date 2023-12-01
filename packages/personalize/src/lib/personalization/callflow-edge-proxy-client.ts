@@ -1,16 +1,16 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettings } from '@sitecore-cloudsdk/core';
-import { INestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
+import { Settings } from '@sitecore-cloudsdk/core';
+import { NestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
 
-export class CallFlowEdgeProxyClient implements IPersonalizeClient {
+export class CallFlowEdgeProxyClient implements PersonalizeClient {
   /**
    * A helper class which handles the functionality for sending CALLFLOW requests
    * @param personalizeData - The mandatory payload to be send to Sitecore EP
    * @param settings - The global settings
    */
-  constructor(public settings: ISettings) {}
+  constructor(public settings: Settings) {}
 
   /**
    * A function that sends a CallFlow request to Sitecore EP
@@ -18,7 +18,7 @@ export class CallFlowEdgeProxyClient implements IPersonalizeClient {
    * @param timeout - Optional timeout in milliseconds to cancel the request
    * @returns - A promise that resolves with either the Sitecore EP response object or unknown
    */
-  async sendCallFlowsRequest(epCallFlowsBody: IEPCallFlowsBody, timeout?: number) {
+  async sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, timeout?: number) {
     const requestUrl = `${this.settings.sitecoreEdgeUrl}/personalize/v2/callFlows?sitecoreContextId=${this.settings.sitecoreEdgeContextId}&siteId=${this.settings.siteName}`;
 
     const fetchOptions = {
@@ -47,18 +47,18 @@ export class CallFlowEdgeProxyClient implements IPersonalizeClient {
 /**
  * An interface with the basic functionality that the derived classes needs to implement
  */
-export interface IPersonalizeClient {
-  settings: ISettings;
+export interface PersonalizeClient {
+  settings: Settings;
   sendCallFlowsRequest: (
-    epCallFlowAttributes: IEPCallFlowsBody,
+    epCallFlowAttributes: EPCallFlowsBody,
     timeout?: number
-  ) => Promise<unknown | null | IFailedCalledFlowsResponse>;
+  ) => Promise<unknown | null | FailedCalledFlowsResponse>;
 }
 
 /**
  * An interface that describes the failed response model from Sitecore EP
  */
-export interface IFailedCalledFlowsResponse {
+export interface FailedCalledFlowsResponse {
   status: string;
   code: string;
   message: string;
@@ -69,7 +69,7 @@ export interface IFailedCalledFlowsResponse {
 /**
  * An interface that describes the identifier model attributes for the library
  */
-export interface IEPIdentifier {
+export interface EPIdentifier {
   id: string;
   provider: string;
 }
@@ -77,20 +77,20 @@ export interface IEPIdentifier {
 /**
  * An interface that describes the payload sent to Sitecore EP library
  */
-export interface IEPCallFlowsBody {
+export interface EPCallFlowsBody {
   browserId?: string;
   email?: string;
   friendlyId: string;
-  identifiers?: IEPIdentifier;
+  identifiers?: EPIdentifier;
   channel: string;
   clientKey: string;
   currencyCode: string;
   language: string | undefined;
-  params?: IEPCallFlowsParams;
+  params?: EPCallFlowsParams;
   pointOfSale: string;
 }
 
 /**
- * A type that describes the params property of the IEPCallFlowsBody
+ * A type that describes the params property of the EPCallFlowsBody
  */
-export type IEPCallFlowsParams = INestedObject;
+export type EPCallFlowsParams = NestedObject;

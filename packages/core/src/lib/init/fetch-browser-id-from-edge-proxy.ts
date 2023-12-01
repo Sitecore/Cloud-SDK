@@ -2,7 +2,7 @@
 
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
-import { IProxySettings, IEPResponse } from '../interfaces';
+import { ProxySettings, EPResponse } from '../interfaces';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
 /**
@@ -16,7 +16,7 @@ export async function fetchBrowserIdFromEdgeProxy(
   sitecoreEdgeUrl: string,
   sitecoreEdgeContextId: string,
   timeout?: number
-): Promise<IProxySettings> {
+): Promise<ProxySettings> {
   const fetchOptions = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     headers: { 'X-Library-Version': LIBRARY_VERSION },
@@ -39,6 +39,6 @@ export async function fetchBrowserIdFromEdgeProxy(
       '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
     );
 
-  const { ref: browserId }: IEPResponse = response;
+  const { ref: browserId }: EPResponse = response;
   return { browserId };
 }

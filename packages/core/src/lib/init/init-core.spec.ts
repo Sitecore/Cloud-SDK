@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { getSettings, initCore, setCoreSettings, setCookiePromise } from './init-core';
-import { ISettings, ISettingsParamsBrowser } from '../settings/interfaces';
+import { Settings, SettingsParamsBrowser } from '../settings/interfaces';
 import * as createCookieInit from '../cookie/create-cookie';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as createSetting from '../settings/create-settings';
@@ -26,7 +26,7 @@ const mockSettings = {
   sitecoreEdgeUrl: '',
 };
 describe('initCore', () => {
-  let mockSettingsInput: ISettingsParamsBrowser;
+  let mockSettingsInput: SettingsParamsBrowser;
 
   beforeEach(() => {
     mockSettingsInput = {
@@ -88,12 +88,12 @@ describe('initCore', () => {
 
 describe('getSettings', () => {
   beforeEach(() => {
-    setCoreSettings(null as unknown as ISettings);
+    setCoreSettings(null as unknown as Settings);
   });
 
   it('should return the core settings if they have been initialized', async () => {
     jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
-    const settingsInput: ISettingsParamsBrowser = {
+    const settingsInput: SettingsParamsBrowser = {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookiePath: '/',

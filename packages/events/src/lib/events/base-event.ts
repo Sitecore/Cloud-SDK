@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { language, pageName } from '@sitecore-cloudsdk/core';
-import type { ISettings } from '@sitecore-cloudsdk/core';
-import { IEventAttributesInput } from './common-interfaces';
+import type { Settings } from '@sitecore-cloudsdk/core';
+import { EventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
   private readonly browserId: string;
@@ -14,7 +14,7 @@ export class BaseEvent {
    * @param id - The browser id
    * @param infer - The source of methods to estimate language and page parameters
    */
-  constructor(private baseEventData: IBaseEventData, protected settings: ISettings, id: string) {
+  constructor(private baseEventData: BaseEventData, protected settings: Settings, id: string) {
     this.browserId = id;
     this.language = this.baseEventData.language ?? language();
     this.page = this.baseEventData.page ?? pageName();
@@ -24,7 +24,7 @@ export class BaseEvent {
    *  A function that returns the properties for sending events to Sitecore EP
    * @returns an object that is required
    */
-  protected mapBaseEventPayload(): IBasePayload {
+  protected mapBaseEventPayload(): BasePayload {
     return {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       browser_id: this.browserId,
@@ -42,7 +42,7 @@ export class BaseEvent {
 /**
  *  An interface describing the basic payload to be sent to the API
  */
-export interface IBasePayload {
+export interface BasePayload {
   browser_id: string;
   channel?: string;
   client_key: string;
@@ -52,4 +52,4 @@ export interface IBasePayload {
   pos: string;
 }
 
-type IBaseEventData = Partial<IEventAttributesInput>;
+type BaseEventData = Partial<EventAttributesInput>;

@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { ExtensionData } from '../common-interfaces';
-import { TRequest } from '@sitecore-cloudsdk/utils';
-import { IEPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
+import { Request } from '@sitecore-cloudsdk/utils';
+import { EPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
 import { getServerDependencies } from '../../initializer/server/initializer';
-import { IIdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API
@@ -15,10 +15,10 @@ import { IIdentityEventAttributesInput, IdentityEvent } from './identity-event';
  * @returns The response object that Sitecore EP returns
  */
 export function identityServer(
-  eventData: IIdentityEventAttributesInput,
-  request: TRequest,
+  eventData: IdentityEventAttributesInput,
+  request: Request,
   extensionData?: ExtensionData
-): Promise<IEPResponse | null> {
+): Promise<EPResponse | null> {
   const { eventApiClient, settings } = getServerDependencies();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   return new IdentityEvent({

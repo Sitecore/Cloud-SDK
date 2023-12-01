@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import {
-  type TRequest,
-  type IMiddlewareNextResponse,
-  type IHttpResponse,
+  type Request,
+  type MiddlewareNextResponse,
+  type HttpResponse,
   isNextJsMiddlewareRequest,
   isNextJsMiddlewareResponse,
   isHttpRequest,
@@ -21,7 +21,7 @@ import { handleHttpCookie } from './handle-http-cookie';
  * @param timeout - The timeout for the call to proxy to get browserId.
  * @returns A Promise that resolves once the cookie handling is complete.
  */
-export async function handleServerCookie<T extends TRequest, X extends IMiddlewareNextResponse | IHttpResponse>(
+export async function handleServerCookie<T extends Request, X extends MiddlewareNextResponse | HttpResponse>(
   request: T,
   response: X,
   timeout?: number

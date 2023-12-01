@@ -1,14 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { createCookie } from '../cookie/create-cookie';
 import { createSettings } from '../settings/create-settings';
-import { ISettings, ISettingsParamsBrowser } from '../settings/interfaces';
+import { Settings, SettingsParamsBrowser } from '../settings/interfaces';
 
 /**
  * Internal settings object to be used by all functions in module caching.
  * It starts with a null value and is set to the proper object by the  function. *
  * Can be retrieved only through the  function.
  */
-let coreSettings: ISettings | null = null;
+let coreSettings: Settings | null = null;
 
 /**
  * Retrieves the core settings object.
@@ -35,7 +35,7 @@ let createCookiePromise: Promise<void> | null = null;
  * @param settingsInput - The settings input to configure the core settings.
  * @returns A Promise that resolves when initialization is complete.
  */
-export async function initCore(settingsInput: ISettingsParamsBrowser): Promise<void> {
+export async function initCore(settingsInput: SettingsParamsBrowser): Promise<void> {
   if (coreSettings === null) coreSettings = createSettings(settingsInput);
 
   if (settingsInput.enableBrowserCookie && createCookiePromise === null)
@@ -47,7 +47,7 @@ export async function initCore(settingsInput: ISettingsParamsBrowser): Promise<v
 /**
  * Helper functions for tests
  */
-export function setCoreSettings(settings: ISettings) {
+export function setCoreSettings(settings: Settings) {
   coreSettings = settings;
 }
 export function setCookiePromise(promise: Promise<void>) {

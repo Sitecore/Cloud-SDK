@@ -1,17 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IEPResponse, IInfer, ISettings } from '@sitecore-cloudsdk/core';
-import { IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
+import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
-import { IEventApiClient } from '../../ep/EventApiClient';
+import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
-import { IEventAttributesInput } from '../common-interfaces';
+import { EventAttributesInput } from '../common-interfaces';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
-  private eventApiClient: IEventApiClient;
-  private eventData: IPageViewEventInput;
-  private extensionData: IFlattenedObject = {};
+  private eventApiClient: EventApiClient;
+  private eventData: PageViewEventInput;
+  private extensionData: FlattenedObject = {};
   private urlSearchParams: URLSearchParams;
   private includeUTMParameters: boolean;
 
@@ -19,7 +19,7 @@ export class PageViewEvent extends BaseEvent {
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
    * @param args - Unified object containing the required properties
    */
-  constructor(args: IPageViewEventArguments) {
+  constructor(args: PageViewEventArguments) {
     const { channel, currency, language, page } = args.eventData;
     super(
       {
@@ -83,8 +83,8 @@ export class PageViewEvent extends BaseEvent {
    * Maps parameters given as input to corresponding attributes send to the API
    * @returns the mapped object to be sent as payload
    */
-  private mapAttributes(): IPageViewEventPayload {
-    let viewPayload: IPageViewEventPayload = {
+  private mapAttributes(): PageViewEventPayload {
+    let viewPayload: PageViewEventPayload = {
       type: 'VIEW',
     };
 
@@ -116,7 +116,7 @@ export class PageViewEvent extends BaseEvent {
    * Sends the event to Sitecore EP
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(): Promise<IEPResponse | null> {
+  async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
@@ -130,12 +130,12 @@ export class PageViewEvent extends BaseEvent {
    * @returns - an object containing the UTM parameters if they exist
    */
   private getUTMParameters() {
-    const utmParameters: IUtmParameters = {};
+    const utmParameters: UtmParameters = {};
 
     this.urlSearchParams.forEach((value: string, key: string) => {
       const param = key.toLowerCase();
 
-      if (param.indexOf(UTM_PREFIX) === 0) utmParameters[param as keyof IUtmParameters] = value;
+      if (param.indexOf(UTM_PREFIX) === 0) utmParameters[param as keyof UtmParameters] = value;
     });
 
     return utmParameters;
@@ -145,20 +145,20 @@ export class PageViewEvent extends BaseEvent {
 /**
  * Interface of the unified arguments object for page view event
  */
-export interface IPageViewEventArguments {
-  eventApiClient: IEventApiClient;
-  eventData: IPageViewEventInput;
+export interface PageViewEventArguments {
+  eventApiClient: EventApiClient;
+  eventData: PageViewEventInput;
   id: string;
-  settings: ISettings;
-  infer?: IInfer;
-  extensionData?: INestedObject;
+  settings: Settings;
+  infer?: Infer;
+  extensionData?: NestedObject;
   searchParams: string;
 }
 
 /**
  * Type with the required/optional attributes in order to send a view event to SitecoreCloud API
  */
-export interface IPageViewEventInput extends IEventAttributesInput {
+export interface PageViewEventInput extends EventAttributesInput {
   pageVariantId?: string;
   referrer?: string;
   includeUTMParameters?: boolean;
@@ -167,15 +167,15 @@ export interface IPageViewEventInput extends IEventAttributesInput {
 /**
  * Interface with the utm_ parameters
  */
-interface IUtmParameters {
+interface UtmParameters {
   [key: `utm_${string}`]: string;
 }
 
 /**
  * An interface describing the page view event specific payload to be sent * to the API
  */
-export interface IPageViewEventPayload extends IUtmParameters {
+export interface PageViewEventPayload extends UtmParameters {
   type: 'VIEW';
   referrer?: string;
-  ext?: { pageVariantId?: string } & IFlattenedObject;
+  ext?: { pageVariantId?: string } & FlattenedObject;
 }

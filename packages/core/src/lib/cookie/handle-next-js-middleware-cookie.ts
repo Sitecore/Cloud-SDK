@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/utils';
-import { ISettings } from '../settings/interfaces';
+import { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { Settings } from '../settings/interfaces';
 import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
@@ -20,9 +20,9 @@ import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-
  *
  */
 export async function handleNextJsMiddlewareCookie(
-  request: IMiddlewareRequest,
-  response: IMiddlewareNextResponse,
-  options: ISettings,
+  request: MiddlewareRequest,
+  response: MiddlewareNextResponse,
+  options: Settings,
   timeout?: number
 ) {
   const { cookieName } = options.cookieSettings;

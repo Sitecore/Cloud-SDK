@@ -1,6 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { EventApiClient } from '../ep/EventApiClient';
-import { ICustomEventInput, CustomEvent } from '../events/custom-event/custom-event';
+import { CustomEventInput, CustomEvent } from '../events/custom-event/custom-event';
 import { EventQueue, QueueEventPayload } from './eventStorage';
 import * as core from '@sitecore-cloudsdk/core';
 
@@ -29,10 +29,10 @@ describe('Event Storage', () => {
   const inferLanguageSpy = jest.spyOn(core, 'language');
   const inferPageSpy = jest.spyOn(core, 'pageName');
 
-  let eventData: ICustomEventInput;
+  let eventData: CustomEventInput;
   const id = 'test_id';
 
-  const settings: core.ISettings = {
+  const settings: core.Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
@@ -62,7 +62,7 @@ describe('Event Storage', () => {
 
     global.sessionStorage.getItem = jest.fn();
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     jest.clearAllMocks();
@@ -193,7 +193,7 @@ describe('Event Storage', () => {
   });
 
   it('sendAllEvents should send all stored events to EP.', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.IEPResponse);
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.EPResponse);
     const eventQueueSpy = jest.spyOn(EventQueue.prototype as any, 'getEventQueue');
 
     const mockArray: QueueEventPayload[] = [];
@@ -221,7 +221,7 @@ describe('Event Storage', () => {
   });
 
   it('sendAllEvents should send events in the queue and clear the queue', async () => {
-    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.IEPResponse);
+    jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.EPResponse);
     const mockArray: QueueEventPayload[] = [];
 
     const queueEventPayloadTwo: QueueEventPayload = { eventData, id: 'testId2', settings, type };

@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import type { IHttpRequest, IHttpResponse } from '@sitecore-cloudsdk/utils';
-import { ISettings } from '../settings/interfaces';
+import type { HttpRequest, HttpResponse } from '@sitecore-cloudsdk/utils';
+import { Settings } from '../settings/interfaces';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/utils';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
@@ -18,9 +18,9 @@ import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-
  * @throws [IE-0003] - This exception is thrown in the case getBrowserIdFromEP wasn't able to retrieve a browser id.
  */
 export async function handleHttpCookie(
-  request: IHttpRequest,
-  response: IHttpResponse,
-  options: ISettings,
+  request: HttpRequest,
+  response: HttpResponse,
+  options: Settings,
   timeout?: number
 ) {
   const { cookieName } = options.cookieSettings;

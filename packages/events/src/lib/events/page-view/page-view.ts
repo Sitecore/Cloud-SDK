@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IEPResponse } from '@sitecore-cloudsdk/core';
-import { INestedObject } from '@sitecore-cloudsdk/utils';
+import { EPResponse } from '@sitecore-cloudsdk/core';
+import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { getDependencies } from '../../initializer/browser/initializer';
-import { IPageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewEventInput, PageViewEvent } from './page-view-event';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -11,7 +11,7 @@ import { IPageViewEventInput, PageViewEvent } from './page-view-event';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function pageView(eventData: IPageViewEventInput, extensionData?: INestedObject): Promise<IEPResponse | null> {
+export function pageView(eventData: PageViewEventInput, extensionData?: NestedObject): Promise<EPResponse | null> {
   const { eventApiClient, id, settings } = getDependencies();
 
   return new PageViewEvent({

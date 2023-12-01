@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { API_VERSION, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
-import { getGuestId, IGetGuestRefResponse, IGetGuestRefResponseError } from './get-guest-id';
+import { getGuestId, GetGuestRefResponse, GetGuestRefResponseError } from './get-guest-id';
 
 describe('getGuestId', () => {
   const sitecoreEdgeContextId = 'contextId';
@@ -12,7 +12,7 @@ describe('getGuestId', () => {
   it('should return the guest id', async () => {
     const expectedResponse = 'ref';
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ customer: { ref: expectedResponse } } as IGetGuestRefResponse),
+      json: () => Promise.resolve({ customer: { ref: expectedResponse } } as GetGuestRefResponse),
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
@@ -23,7 +23,7 @@ describe('getGuestId', () => {
 
   it('should call fetch with the correct url', async () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ customer: { ref: 'ref' } } as IGetGuestRefResponse),
+      json: () => Promise.resolve({ customer: { ref: 'ref' } } as GetGuestRefResponse),
       ok: true,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
@@ -46,7 +46,7 @@ describe('getGuestId', () => {
     const expectedMoreInfo = 'more_info';
     const mockFetch = Promise.resolve({
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      json: () => Promise.resolve({ error_msg: expectedMsg, moreInfo: expectedMoreInfo } as IGetGuestRefResponseError),
+      json: () => Promise.resolve({ error_msg: expectedMsg, moreInfo: expectedMoreInfo } as GetGuestRefResponseError),
       ok: false,
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);

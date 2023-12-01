@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { API_VERSION, IEPResponse } from '@sitecore-cloudsdk/core';
-import type { IBasePayload, IPageViewEventPayload, IIdentityEventPayload, ICustomEventPayload } from '../events';
+import { API_VERSION, EPResponse } from '@sitecore-cloudsdk/core';
+import type { BasePayload, PageViewEventPayload, IdentityEventPayload, CustomEventPayload } from '../events';
 import { LIBRARY_VERSION } from '../consts';
 
-export class EventApiClient implements IEventApiClient {
+export class EventApiClient implements EventApiClient {
   private readonly eventUrl: string;
   constructor(private targetURL: string, sitecoreEdgeContextId: string, siteName: string) {
     this.eventUrl = `${this.targetURL}/events/${API_VERSION}/events?sitecoreContextId=${sitecoreEdgeContextId}&siteId=${siteName}`;
@@ -14,7 +14,7 @@ export class EventApiClient implements IEventApiClient {
    * @param body - The Request body for the Sitecore EP
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(body: TEPFetchBody & IBasePayload): Promise<IEPResponse | null> {
+  async send(body: EPFetchBody & BasePayload): Promise<EPResponse | null> {
     const fetchOptions = {
       body: JSON.stringify(body),
       headers: {
@@ -36,11 +36,11 @@ export class EventApiClient implements IEventApiClient {
 /**
  * The interface of EventApiClient class
  */
-export interface IEventApiClient {
-  send(body: TEPFetchBody & IBasePayload): Promise<IEPResponse | null>;
+export interface EventApiClient {
+  send(body: EPFetchBody & BasePayload): Promise<EPResponse | null>;
 }
 
 /**
  * The type describing all possible event payloads
  */
-type TEPFetchBody = IPageViewEventPayload | IIdentityEventPayload | ICustomEventPayload;
+type EPFetchBody = PageViewEventPayload | IdentityEventPayload | CustomEventPayload;

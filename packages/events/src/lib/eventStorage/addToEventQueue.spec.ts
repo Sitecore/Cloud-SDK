@@ -1,5 +1,5 @@
 import { addToEventQueue } from './addToEventQueue';
-import { IEventAttributesInput } from '../events/common-interfaces';
+import { EventAttributesInput } from '../events/common-interfaces';
 import * as init from '../../lib/initializer/browser/initializer';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
@@ -16,12 +16,12 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('addToEventQueue', () => {
   const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
 
-  const settingsParams: core.ISettingsParamsBrowser = {
+  const settingsParams: core.SettingsParamsBrowser = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
   };
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
     jest.clearAllMocks();
@@ -29,7 +29,7 @@ describe('addToEventQueue', () => {
   it('should add an event to the queue with the correct payload', async () => {
     const enqueueEventSpy = jest.spyOn(eventQueue.EventQueue.prototype, 'enqueueEvent');
 
-    const eventData: IEventAttributesInput = {
+    const eventData: EventAttributesInput = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       channel: 'WEB',
       currency: 'EUR',

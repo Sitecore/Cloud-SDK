@@ -1,5 +1,5 @@
-import { IPersonalizeIdentifierInput, IPersonalizerInput, Personalizer } from './personalizer';
-import { IPersonalizeClient, CallFlowEdgeProxyClient } from './callflow-edge-proxy-client';
+import { PersonalizeIdentifierInput, PersonalizerInput, Personalizer } from './personalizer';
+import { PersonalizeClient, CallFlowEdgeProxyClient } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as flatten from '@sitecore-cloudsdk/utils';
@@ -26,9 +26,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 describe('Test Personalizer Class', () => {
   const { window } = global;
-  let personalizeHelper: IPersonalizeClient;
-  let settingsMock: core.ISettings;
-  let personalizeInputMock: IPersonalizerInput;
+  let personalizeHelper: PersonalizeClient;
+  let settingsMock: core.Settings;
+  let personalizeInputMock: PersonalizerInput;
   const id = 'test_id';
 
   beforeEach(() => {
@@ -61,7 +61,7 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('Test Personalizer validation ', () => {
-    function callValidation(personalizeInputMock: IPersonalizerInput, errorMessage: string) {
+    function callValidation(personalizeInputMock: PersonalizerInput, errorMessage: string) {
       const action = async () => {
         await new Personalizer(personalizeHelper, id).getInteractiveExperienceData(personalizeInputMock);
       };
@@ -237,7 +237,7 @@ describe('Test Personalizer Class', () => {
   describe('Test sanitizeInput', () => {
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
     const flattenObjectSpy = jest.spyOn(flatten as any, 'flattenObject');
-    let expected: IPersonalizerInput;
+    let expected: PersonalizerInput;
     beforeEach(() => {
       const mockFetch = Promise.resolve({
         json: () => Promise.resolve({ status: 'OK' } as unknown),
@@ -333,7 +333,7 @@ describe('Test Personalizer Class', () => {
 
     it('Test return object of the sanitizeInput method without identifier object ', () => {
       personalizeInputMock.email = 'test';
-      const mockIdentifier = {} as IPersonalizeIdentifierInput;
+      const mockIdentifier = {} as PersonalizeIdentifierInput;
       personalizeInputMock.identifier = mockIdentifier;
 
       new Personalizer(personalizeHelper, id).getInteractiveExperienceData(personalizeInputMock);

@@ -5,14 +5,14 @@
  * @returns the default configuration settings for the cookie string
  */
 
-import { ICookieProperties } from '@sitecore-cloudsdk/utils';
+import { CookieProperties } from '@sitecore-cloudsdk/utils';
 import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
 
 // eslint-disable-next-line max-len
 export function getDefaultCookieAttributes(
   maxAge: number = DEFAULT_COOKIE_EXPIRY_DAYS,
   cookieDomain?: string
-): ICookieProperties {
+): CookieProperties {
   return {
     domain: cookieDomain,
     maxAge: maxAge * DAILY_SECONDS,

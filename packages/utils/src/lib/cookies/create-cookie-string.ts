@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICookieProperties } from './interfaces';
+import { CookieProperties } from './interfaces';
 
 /**
  * Creates the cookie string with the respectively cookie attributes
@@ -9,7 +9,7 @@ import { ICookieProperties } from './interfaces';
  * @param attributes - an object of supported cookie attributes
  * @returns - a string that will be passed to document.cookie
  */
-export function createCookieString(name: string, value: string, attributes: ICookieProperties): string {
+export function createCookieString(name: string, value: string, attributes: CookieProperties): string {
   let cookieString = `${name}=${value};`;
 
   cookieString += ` Max-Age=${attributes.maxAge}; SameSite=${attributes.sameSite};`;

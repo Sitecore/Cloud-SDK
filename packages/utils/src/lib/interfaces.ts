@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ICookie } from './cookies/interfaces';
+import { Cookie } from './cookies/interfaces';
 
 /**
  * A reusable type that accepts only basic types and arrays of those
@@ -15,7 +15,7 @@ export type BasicTypes =
 /**
  * Interface for supporting request IncomingMessage http node type
  */
-export interface IHttpRequest {
+export interface HttpRequest {
   headers: {
     'cookie'?: string;
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,24 +28,24 @@ export interface IHttpRequest {
 /**
  * Interface for supporting response OutgoingMessage http node type
  */
-export interface IHttpResponse {
+export interface HttpResponse {
   setHeader(name: string, value: number | string | ReadonlyArray<string>): void;
 }
 
-export type TRequest = IHttpRequest | IMiddlewareRequest;
+export type Request = HttpRequest | MiddlewareRequest;
 
 /**
  * Interface for supporting request from Edge Next.js
  * includes types compatible with both NextJS versions 12 & 13
  */
-export interface IMiddlewareRequest {
+export interface MiddlewareRequest {
   cookies: {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     set:
       | ((key: string, value: string, options: any) => any)
-      | ((...args: [key: string, value: string] | [options: ICookie]) => any);
+      | ((...args: [key: string, value: string] | [options: Cookie]) => any);
     /* eslint-enable @typescript-eslint/no-explicit-any */
-    get: (key: string) => ICookie | string | undefined;
+    get: (key: string) => Cookie | string | undefined;
   };
   headers: {
     get: (name: string) => string | null;
@@ -57,12 +57,12 @@ export interface IMiddlewareRequest {
  * Interface for Edge Next.js Response
  * includes types compatible with both NextJS versions 12 & 13
  */
-export interface IMiddlewareNextResponse {
+export interface MiddlewareNextResponse {
   cookies: {
     /* eslint-disable @typescript-eslint/no-explicit-any */
     set:
       | ((key: string, value: unknown, options?: any) => any)
-      | ((...args: [key: string, value: string] | [options: ICookie]) => any);
+      | ((...args: [key: string, value: string] | [options: Cookie]) => any);
     /* eslint-enable @typescript-eslint/no-explicit-any */
   };
 }

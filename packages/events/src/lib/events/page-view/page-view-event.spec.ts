@@ -2,8 +2,8 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { IPageViewEventInput, PageViewEvent } from './page-view-event';
-import { IEPResponse, ISettings } from '@sitecore-cloudsdk/core';
+import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -32,8 +32,8 @@ describe('PageViewEvent', () => {
   const id = 'test_id';
 
   let expectedBasicAttributes = {};
-  let eventData: IPageViewEventInput;
-  let settings: ISettings;
+  let eventData: PageViewEventInput;
+  let settings: Settings;
 
   function callPageEvent(
     eventApiClient: any,
@@ -98,7 +98,7 @@ describe('PageViewEvent', () => {
     it('should change state to false when the event is sent', async () => {
       global.window ??= Object.create(window);
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -118,7 +118,7 @@ describe('PageViewEvent', () => {
 
   describe('check getPageVariantId function', () => {
     const getPageVariantIdSpy = jest.spyOn(PageViewEvent.prototype as any, 'getPageVariantId');
-    let eventData: IPageViewEventInput = {
+    let eventData: PageViewEventInput = {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
@@ -128,7 +128,7 @@ describe('PageViewEvent', () => {
 
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -252,7 +252,7 @@ describe('PageViewEvent', () => {
 
   it('should send a view event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -410,7 +410,7 @@ describe('PageViewEvent', () => {
       eventData.includeUTMParameters = undefined;
 
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as IEPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
     });

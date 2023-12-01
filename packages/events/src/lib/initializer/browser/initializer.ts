@@ -1,13 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { EventApiClient } from '../../ep/EventApiClient';
-import { ISettings, ISettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
+import { Settings, SettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { EventQueue } from '../../eventStorage/eventStorage';
 
-let dependencies: IBrowserEventsSettings | null = null;
+let dependencies: BrowserEventsSettings | null = null;
 
-export function setDependencies(settings: IBrowserEventsSettings | null) {
+export function setDependencies(settings: BrowserEventsSettings | null) {
   dependencies = settings;
 }
 
@@ -19,16 +19,16 @@ export function setDependencies(settings: IBrowserEventsSettings | null) {
  * @returns The browser event settings object.
  * @throws Error if the event settings haven't been initialized with the required properties.
  */
-export function getDependencies(): IBrowserEventsSettings {
+export function getDependencies(): BrowserEventsSettings {
   if (!dependencies) {
     throw Error(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
   }
   return dependencies;
 }
 
-export interface IBrowserEventsSettings {
+export interface BrowserEventsSettings {
   id: string;
-  settings: ISettings;
+  settings: Settings;
   eventQueue: EventQueue;
   eventApiClient: EventApiClient;
 }
@@ -38,7 +38,7 @@ export interface IBrowserEventsSettings {
  * @param settingsInput - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function init(settingsInput: ISettingsParamsBrowser): Promise<void> {
+export async function init(settingsInput: SettingsParamsBrowser): Promise<void> {
   if (typeof window === 'undefined') {
     throw new Error(
       // eslint-disable-next-line max-len

@@ -1,5 +1,5 @@
 import { eventServer } from './eventServer';
-import { CustomEvent, ICustomEventInput } from './custom-event';
+import { CustomEvent, CustomEventInput } from './custom-event';
 import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../ep/EventApiClient';
@@ -26,7 +26,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('eventServer', () => {
-  let eventData: ICustomEventInput;
+  let eventData: CustomEventInput;
   const type = 'CUSTOM_TYPE';
   const extensionData = { extKey: 'extValue' };
   const req = {
@@ -58,7 +58,7 @@ describe('eventServer', () => {
 
   const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
   const eventApiClient = new EventApiClient('http://test.com', '123', '456');
-  const settings: core.ISettings = {
+  const settings: core.Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,

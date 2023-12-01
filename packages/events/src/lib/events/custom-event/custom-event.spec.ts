@@ -1,4 +1,4 @@
-import { CustomEvent, ICustomEventInput } from './custom-event';
+import { CustomEvent, CustomEventInput } from './custom-event';
 import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
@@ -35,9 +35,9 @@ describe('CustomEvent', () => {
     jest.clearAllMocks();
   });
   describe('constructor', () => {
-    let eventData: ICustomEventInput;
+    let eventData: CustomEventInput;
     const type = 'CUSTOM_TYPE';
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -126,7 +126,7 @@ describe('CustomEvent', () => {
   });
 
   describe('send', () => {
-    const settings: core.ISettings = {
+    const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -139,7 +139,7 @@ describe('CustomEvent', () => {
     };
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as core.IEPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
       });
       global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     });

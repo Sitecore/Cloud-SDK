@@ -1,8 +1,8 @@
-import { initServer, getServerDependencies, setServerDependencies, IServerEventsSettings } from './initializer';
+import { initServer, getServerDependencies, setServerDependencies, ServerEventsSettings } from './initializer';
 import packageJson from '../../../../package.json';
-import { ISettingsParamsServer } from '@sitecore-cloudsdk/core';
+import { SettingsParamsServer } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
-import { IMiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
+import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
 import { EventApiClient } from '../../ep/EventApiClient';
 import * as core from '@sitecore-cloudsdk/core';
 
@@ -29,7 +29,7 @@ describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-  const settingsParams: ISettingsParamsServer = {
+  const settingsParams: SettingsParamsServer = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
@@ -51,7 +51,7 @@ describe('initializer', () => {
     url: '',
   };
 
-  const res: IMiddlewareNextResponse = {
+  const res: MiddlewareNextResponse = {
     cookies: {
       set() {
         return 'test';
@@ -65,7 +65,7 @@ describe('initializer', () => {
 
   const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
   beforeEach(() => {
-    setServerDependencies(null as unknown as IServerEventsSettings);
+    setServerDependencies(null as unknown as ServerEventsSettings);
   });
 
   describe('getServerDependencies', () => {

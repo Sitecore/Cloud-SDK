@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
-import { IFailedCalledFlowsResponse } from './callflow-edge-proxy-client';
-import { TRequest } from '@sitecore-cloudsdk/utils';
+import { FailedCalledFlowsResponse } from './callflow-edge-proxy-client';
+import { Request } from '@sitecore-cloudsdk/utils';
 import { getServerDependencies } from '../initializer/server/initializer';
-import { IPersonalizerInput, Personalizer } from './personalizer';
+import { PersonalizerInput, Personalizer } from './personalizer';
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
  * @param personalizeData - The required/optional attributes in order to create a flow execution
@@ -12,11 +12,11 @@ import { IPersonalizerInput, Personalizer } from './personalizer';
  * Used to abort the request to execute an interactive experiment or web experiment.
  * @returns A flow execution response
  */
-export function personalizeServer<T extends TRequest>(
-  personalizeData: IPersonalizerInput,
+export function personalizeServer<T extends Request>(
+  personalizeData: PersonalizerInput,
   request: T,
   timeout?: number
-): Promise<unknown | null | IFailedCalledFlowsResponse> {
+): Promise<unknown | null | FailedCalledFlowsResponse> {
   const { callFlowEdgeProxyClient, settings } = getServerDependencies();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   return new Personalizer(callFlowEdgeProxyClient, id).getInteractiveExperienceData(personalizeData, timeout);

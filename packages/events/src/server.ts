@@ -4,5 +4,5 @@ export { eventServer as event } from './lib/events/custom-event/eventServer';
 export { identityServer as identity } from './lib/events/identity/identityServer';
 export { pageViewServer as pageView } from './lib/events/page-view/page-view-server';
 export { LIBRARY_VERSION } from './lib/consts';
-export type { IPageViewEventInput, ICustomEventInput, IIdentityEventAttributesInput } from './lib/events';
-export type { IServerEventsSettings as IEventsSettings } from './lib/initializer/server/initializer';
+export type { PageViewEventInput, CustomEventInput, IdentityEventAttributesInput } from './lib/events';
+export type { ServerEventsSettings as EventsSettings } from './lib/initializer/server/initializer';

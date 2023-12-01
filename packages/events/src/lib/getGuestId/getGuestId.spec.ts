@@ -16,7 +16,7 @@ describe('getGuestId', () => {
   const getDependenciesSpy = jest.spyOn(EventSettings, 'getDependencies');
   const getGuestIdSpy = jest.spyOn(core, 'getGuestId');
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
     jest.clearAllMocks();

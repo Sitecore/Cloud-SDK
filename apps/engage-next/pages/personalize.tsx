@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { init as initServer, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
-import { IPersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/browser';
+import { PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
 
 import { GetServerSidePropsContext } from 'next';
@@ -86,7 +86,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           type='button'
           data-testid='requestPersonalizeFromClient'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -99,7 +99,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='requestPersonalizeWithEmptyStringLanguage'
           onClick={async () => {
             personalizeData.language = '';
-            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -112,7 +112,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='requestPersonalizeWithUndefinedLanguage'
           onClick={async () => {
             personalizeData.language = undefined;
-            const response = await personalize(personalizeData as unknown as IPersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizerInput);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -124,7 +124,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           type='button'
           data-testid='requestPersonalizeFromClientWithTimeout'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as IPersonalizerInput, timeout);
+            const response = await personalize(personalizeData as unknown as PersonalizerInput, timeout);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -181,7 +181,7 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
 export default PersonalizeCall;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const event: IPersonalizerInput = {
+  const event: PersonalizerInput = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',

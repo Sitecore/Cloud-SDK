@@ -1,17 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
+import { SettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
 import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
-import { IBrowserPersonalizeSettings } from '../client/initializer';
-import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
+import { BrowserPersonalizeSettings } from '../client/initializer';
+import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
 
-let serverDependencies: IServerPersonalize | null = null;
+let serverDependencies: ServerPersonalize | null = null;
 /**
  * Sets the personalize settings to be used by the application.
  *
  * @param settings - The personalize settings to be set, or `null` to clear the settings.
  */
-export function setDependencies(settings: IServerPersonalize | null) {
+export function setDependencies(settings: ServerPersonalize | null) {
   serverDependencies = settings;
 }
 /**
@@ -20,7 +20,7 @@ export function setDependencies(settings: IServerPersonalize | null) {
  * @returns The personalize server settings.
  * @throws Error if the personalize server settings haven't been initialized.
  */
-export function getServerDependencies(): IServerPersonalize {
+export function getServerDependencies(): ServerPersonalize {
   if (!serverDependencies) {
     throw Error(`[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`);
   }
@@ -33,10 +33,10 @@ export function getServerDependencies(): IServerPersonalize {
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function initServer<TResponse extends IMiddlewareNextResponse | IHttpResponse>(
-  settingsInput: ISettingsParamsServer,
-  request: TRequest,
-  response: TResponse
+export async function initServer<Response extends MiddlewareNextResponse | HttpResponse>(
+  settingsInput: SettingsParamsServer,
+  request: Request,
+  response: Response
 ): Promise<void> {
   await initCoreServer(settingsInput, request, response);
 
@@ -49,4 +49,4 @@ export async function initServer<TResponse extends IMiddlewareNextResponse | IHt
   });
 }
 
-export type IServerPersonalize = Omit<IBrowserPersonalizeSettings, 'id'>;
+export type ServerPersonalize = Omit<BrowserPersonalizeSettings, 'id'>;

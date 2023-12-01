@@ -1,4 +1,4 @@
-import { ISettings } from '../settings/interfaces';
+import { Settings } from '../settings/interfaces';
 import { createCookie } from './create-cookie';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => ({
 }));
 
 describe('createCookie', () => {
-  let settings: ISettings;
+  let settings: Settings;
   const mockCookieAttributes = {
     domain: 'localhost',
     maxAge: 720,

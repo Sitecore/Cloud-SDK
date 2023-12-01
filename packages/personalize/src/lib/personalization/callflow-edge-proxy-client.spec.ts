@@ -1,10 +1,10 @@
-import { CallFlowEdgeProxyClient, IEPCallFlowsBody } from './callflow-edge-proxy-client';
+import { CallFlowEdgeProxyClient, EPCallFlowsBody } from './callflow-edge-proxy-client';
 import { LIBRARY_VERSION } from '../consts';
-import { ISettings, SITECORE_EDGE_URL } from '@sitecore-cloudsdk/core';
+import { Settings, SITECORE_EDGE_URL } from '@sitecore-cloudsdk/core';
 
 describe('Test Base CallFlow Base Class', () => {
-  let data: IEPCallFlowsBody;
-  let settingsMock: ISettings;
+  let data: EPCallFlowsBody;
+  let settingsMock: Settings;
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({

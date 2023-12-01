@@ -1,12 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IIdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events/browser';
+import { IdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
 export function Identity() {
   const handleSubmit = (eventTrigger: React.FormEvent<HTMLFormElement>) => {
     eventTrigger.preventDefault();
 
-    interface IFormData {
+    interface FormData {
       city: HTMLInputElement;
       country: HTMLInputElement;
       email: HTMLInputElement;
@@ -25,10 +25,10 @@ export function Identity() {
       expiry_date: HTMLInputElement;
     }
 
-    const formData = eventTrigger.target as HTMLFormElement & IFormData;
+    const formData = eventTrigger.target as HTMLFormElement & FormData;
 
     // Get data from the form.
-    const data: IIdentityEventAttributesInput = {
+    const data: IdentityEventAttributesInput = {
       channel: 'WEB',
       city: formData.city.value,
       country: formData.country.value,

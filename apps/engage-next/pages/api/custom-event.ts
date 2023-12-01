@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, ICustomEventInput, event } from '@sitecore-cloudsdk/events/server';
+import { init, CustomEventInput, event } from '@sitecore-cloudsdk/events/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const eventData: ICustomEventInput = {
+  const eventData: CustomEventInput = {
     channel: 'WEB',
     currency: 'EUR',
     page: 'api-custom',

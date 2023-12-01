@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { INestedObject } from '@sitecore-cloudsdk/utils';
+import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { addToEventQueue, processEventQueue, clearEventQueue } from '@sitecore-cloudsdk/events/browser';
 
 export function EventToQueue() {
@@ -36,7 +36,7 @@ export function EventToQueue() {
       extensionDataExt[key as keyof typeof extensionDataExt] = value;
     });
 
-    const extensionData: INestedObject = {};
+    const extensionData: NestedObject = {};
     if (extensionDataNested && Object.keys(extensionDataNested).length)
       extensionData.nested = { ...extensionDataNested };
     if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
@@ -48,7 +48,7 @@ export function EventToQueue() {
     addToEventQueue(type, event, extensionData);
   };
 
-  function addMultipleEventsToQueue(type: string, extensionData: INestedObject, multipleEvents: number) {
+  function addMultipleEventsToQueue(type: string, extensionData: NestedObject, multipleEvents: number) {
     for (let index = 1; index < multipleEvents; index++) {
       const eventTwo = {
         channel: 'WEB',

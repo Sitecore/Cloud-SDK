@@ -1,4 +1,4 @@
-import { IBrowserEventsSettings, init, setDependencies } from './initializer';
+import { BrowserEventsSettings, init, setDependencies } from './initializer';
 import packageJson from '../../../../package.json';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
@@ -29,7 +29,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
-const settingsParams: core.ISettingsParamsBrowser = {
+const settingsParams: core.SettingsParamsBrowser = {
   cookieDomain: 'cDomain',
   siteName: '456',
   sitecoreEdgeContextId: '123',
@@ -40,7 +40,7 @@ describe('initializer', () => {
   const { window } = global;
   const id = 'test_id';
 
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
   afterEach(() => {
@@ -49,7 +49,7 @@ describe('initializer', () => {
   });
 
   beforeEach(() => {
-    setDependencies(null as unknown as IBrowserEventsSettings);
+    setDependencies(null as unknown as BrowserEventsSettings);
   });
   const eventApiClientSpy = jest.spyOn(EventApiClient, 'EventApiClient');
   const getSettingsSpy = jest.spyOn(core, 'getSettings');

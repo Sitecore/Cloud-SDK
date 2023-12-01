@@ -1,5 +1,5 @@
 import { isNextJsMiddlewareRequest } from './is-next-js-middleware-request';
-import { TRequest } from '../interfaces';
+import { Request } from '../interfaces';
 
 describe('isNextJsMiddlewareRequest', () => {
   it('should return true for a valid Next.js Middleware Request', () => {
@@ -10,7 +10,7 @@ describe('isNextJsMiddlewareRequest', () => {
       },
     };
 
-    const result = isNextJsMiddlewareRequest(validMiddlewareRequest as unknown as TRequest);
+    const result = isNextJsMiddlewareRequest(validMiddlewareRequest as unknown as Request);
 
     expect(result).toBe(true);
   });
@@ -20,13 +20,13 @@ describe('isNextJsMiddlewareRequest', () => {
       query: {},
     };
 
-    const result = isNextJsMiddlewareRequest(objectWithoutCookies as unknown as TRequest);
+    const result = isNextJsMiddlewareRequest(objectWithoutCookies as unknown as Request);
 
     expect(result).toBe(false);
   });
 
   it('should return false for an empty object', () => {
-    const result = isNextJsMiddlewareRequest({} as unknown as TRequest);
+    const result = isNextJsMiddlewareRequest({} as unknown as Request);
 
     expect(result).toBe(false);
   });

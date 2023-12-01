@@ -14,7 +14,7 @@ import { BasicTypes } from '../interfaces';
  * // flattenedObject will be {order_amount: 1, order_delivered: false}
  * ```
  */
-export function flattenObject(data: IFlattenObjectDataParameters) {
+export function flattenObject(data: FlattenObjectDataParameters) {
   const { currentKey, object } = data;
   const newObject = data.newObject ?? {};
 
@@ -38,22 +38,22 @@ export function flattenObject(data: IFlattenObjectDataParameters) {
 /**
  * Interface for the data object parameter of the flattenObject function
  */
-interface IFlattenObjectDataParameters {
-  object: INestedObject;
+interface FlattenObjectDataParameters {
+  object: NestedObject;
   currentKey?: string;
-  newObject?: IFlattenedObject;
+  newObject?: FlattenedObject;
 }
 
 /**
  * Interface for the return object of the flattenObject function
  */
-export interface IFlattenedObject {
+export interface FlattenedObject {
   [key: string]: BasicTypes;
 }
 
 /**
  * Interface of the object to flatten
  */
-export interface INestedObject {
-  [key: string]: BasicTypes | INestedObject;
+export interface NestedObject {
+  [key: string]: BasicTypes | NestedObject;
 }

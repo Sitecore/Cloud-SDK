@@ -1,7 +1,7 @@
-import { IMiddlewareNextResponse, IMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { ISettings } from '../settings/interfaces';
+import { Settings } from '../settings/interfaces';
 import { COOKIE_NAME_PREFIX } from '../consts';
 import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
@@ -17,7 +17,7 @@ describe('handleMiddlewareRequest', () => {
   const mockFetch = Promise.resolve({
     json: () => Promise.resolve(mockFetchResponse),
   });
-  const options: ISettings = {
+  const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
@@ -39,14 +39,14 @@ describe('handleMiddlewareRequest', () => {
     'getBrowserIdFromMiddlewareRequest'
   );
 
-  const request: IMiddlewareRequest = {
+  const request: MiddlewareRequest = {
     cookies: { get: jest.fn(), set: jest.fn() },
     headers: {
       get: jest.fn(),
     },
   };
 
-  const response: IMiddlewareNextResponse = {
+  const response: MiddlewareNextResponse = {
     cookies: {
       set: jest.fn(),
     },
@@ -78,7 +78,7 @@ describe('handleMiddlewareRequest', () => {
 
     const mockBrowserId = 'dac13bc5-cdae-4e65-8868-13443409d05e';
 
-    const request: IMiddlewareRequest = {
+    const request: MiddlewareRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),

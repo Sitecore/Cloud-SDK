@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { IEPResponse, ISettingsParamsBrowser } from '@sitecore-cloudsdk/core';
+import { EPResponse, SettingsParamsBrowser } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -26,7 +26,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('form function', () => {
-  const settingsParams: ISettingsParamsBrowser = {
+  const settingsParams: SettingsParamsBrowser = {
     sitecoreEdgeContextId: '123',
     cookieDomain: 'cDomain',
     siteName: '456',
@@ -42,7 +42,7 @@ describe('form function', () => {
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
 
-    const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as IEPResponse) });
+    const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as EPResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     await init(settingsParams);

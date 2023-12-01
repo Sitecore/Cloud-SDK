@@ -3,7 +3,7 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
-import { IServerPersonalize, getServerDependencies, initServer, setDependencies } from './initializer';
+import { ServerPersonalize, getServerDependencies, initServer, setDependencies } from './initializer';
 import * as callFlowEdgeProxyClient from '../../personalization/callflow-edge-proxy-client';
 
 jest.mock('../../personalization/personalizer');
@@ -22,7 +22,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  const settingsParams: core.ISettingsParamsServer = {
+  const settingsParams: core.SettingsParamsServer = {
     sitecoreEdgeContextId: '456',
     cookieDomain: 'cDomain',
     enableServerCookie: true,
@@ -58,7 +58,7 @@ describe('initializer', () => {
   });
 
   beforeEach(() => {
-    setDependencies(null as unknown as IServerPersonalize);
+    setDependencies(null as unknown as ServerPersonalize);
   });
   const initCoreSpy = jest.spyOn(core, 'initCoreServer');
 
@@ -76,7 +76,7 @@ describe('initializer', () => {
 
   describe('getDependencies', () => {
     beforeEach(() => {
-      setDependencies(null as unknown as IServerPersonalize);
+      setDependencies(null as unknown as ServerPersonalize);
     });
 
     it('should throw error if settings are not initialized', () => {

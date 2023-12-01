@@ -1,4 +1,4 @@
-import { ISettings } from '../settings/interfaces';
+import { Settings } from '../settings/interfaces';
 import { handleServerCookie } from './handle-server-cookie';
 import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
 import * as HandleHttpCookie from './handle-http-cookie';
@@ -33,7 +33,7 @@ describe('handleServerCookie', () => {
   });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
-  const options: ISettings = {
+  const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
@@ -66,13 +66,13 @@ describe('handleServerCookie', () => {
   });
 
   it('should call handleNextJsMiddlewareCookie when request is a isNextJsMiddlewareRequest', async () => {
-    const request: utils.TRequest = {
+    const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const response: utils.IMiddlewareNextResponse = {
+    const response: utils.MiddlewareNextResponse = {
       cookies: {
         set: jest.fn(),
       },
@@ -83,7 +83,7 @@ describe('handleServerCookie', () => {
 
     await handleServerCookie(request, response, undefined);
 
-    expect(handleNextJsMiddlewareCookieSpy).toHaveBeenCalledWith(request,response,options,undefined);
+    expect(handleNextJsMiddlewareCookieSpy).toHaveBeenCalledWith(request, response, options, undefined);
     expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
     expect(isNextJsMiddlewareRequestSpy).toHaveBeenCalledTimes(1);
     expect(isNextJsMiddlewareResponseSpy).toHaveBeenCalledTimes(1);
@@ -92,7 +92,7 @@ describe('handleServerCookie', () => {
   });
 
   it('should call handleHttpCookie when request is an HTTP Request', async () => {
-    const request: utils.TRequest = {
+    const request: utils.Request = {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'content-language': 'EN',
@@ -102,7 +102,7 @@ describe('handleServerCookie', () => {
       url: 'test',
     };
 
-    const response: utils.IHttpResponse = {
+    const response: utils.HttpResponse = {
       setHeader: jest.fn(),
     };
 
@@ -119,15 +119,14 @@ describe('handleServerCookie', () => {
     expect(isNextJsMiddlewareResponseSpy).not.toHaveBeenCalled();
   });
 
-
   it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when request is not isNextJsMiddlewareRequest or isHttpRequest', async () => {
-    const request: utils.TRequest = {
+    const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
         get: jest.fn(),
       },
     };
-    const response = {} as unknown as utils.IMiddlewareNextResponse | utils.IHttpResponse;
+    const response = {} as unknown as utils.MiddlewareNextResponse | utils.HttpResponse;
 
     await handleServerCookie(request, response, undefined);
 
@@ -136,5 +135,4 @@ describe('handleServerCookie', () => {
     expect(handleHttpCookieSpy).not.toHaveBeenCalled();
     expect(handleNextJsMiddlewareCookieSpy).not.toHaveBeenCalled();
   });
-
 });

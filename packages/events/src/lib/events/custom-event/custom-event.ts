@@ -1,21 +1,21 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
-import { IEventAttributesInput } from '../common-interfaces';
-import { IEventApiClient } from '../../ep/EventApiClient';
-import { IEPResponse, ISettings } from '@sitecore-cloudsdk/core';
-import { BasicTypes, IFlattenedObject, INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { EventAttributesInput } from '../common-interfaces';
+import { EventApiClient } from '../../ep/EventApiClient';
+import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import { BasicTypes, FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 export class CustomEvent extends BaseEvent {
-  customEventPayload: ICustomEventPayload;
-  private eventApiClient: IEventApiClient;
-  private extensionData: IFlattenedObject = {};
+  customEventPayload: CustomEventPayload;
+  private eventApiClient: EventApiClient;
+  private extensionData: FlattenedObject = {};
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
    * @param args - Unified object containing the required properties
    */
-  constructor(args: ICustomEventArguments) {
+  constructor(args: CustomEventArguments) {
     const { channel, currency, language, page, ...rest } = args.eventData;
     super({ channel, currency, language, page }, args.settings, args.id);
 
@@ -42,7 +42,7 @@ export class CustomEvent extends BaseEvent {
    * Sends the event to Sitecore EP
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
-  async send(): Promise<IEPResponse | null> {
+  async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const fetchBody = Object.assign({}, this.customEventPayload, baseAttr);
 
@@ -53,19 +53,19 @@ export class CustomEvent extends BaseEvent {
 /**
  * Interface of the unified arguments object for custom event
  */
-export interface ICustomEventArguments {
-  eventApiClient: IEventApiClient;
-  eventData: ICustomEventData;
+export interface CustomEventArguments {
+  eventApiClient: EventApiClient;
+  eventData: CustomEventData;
   id: string;
-  extensionData?: INestedObject;
-  settings: ISettings;
+  extensionData?: NestedObject;
+  settings: Settings;
   type: string;
 }
 
 /**
  * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
-export interface ICustomEventPayload extends INestedObject {
+export interface CustomEventPayload extends NestedObject {
   ext?: {
     [key: string]: BasicTypes;
   };
@@ -74,9 +74,9 @@ export interface ICustomEventPayload extends INestedObject {
 /**
  * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
-export interface ICustomEventInput extends IEventAttributesInput, INestedObject {}
+export interface CustomEventInput extends EventAttributesInput, NestedObject {}
 
 /**
  * Internal interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
-interface ICustomEventData extends Partial<IEventAttributesInput>, INestedObject {}
+interface CustomEventData extends Partial<EventAttributesInput>, NestedObject {}

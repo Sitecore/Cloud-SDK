@@ -15,12 +15,12 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('clearEventQueue', () => {
   const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
 
-  const settingsParams: core.ISettingsParamsBrowser = {
+  const settingsParams: core.SettingsParamsBrowser = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
   };
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.IEPResponse) });
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
     jest.clearAllMocks();

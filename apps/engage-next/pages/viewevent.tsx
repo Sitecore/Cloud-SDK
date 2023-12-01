@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { useEffect, useState } from 'react';
-import { IPageViewEventInput, pageView, init } from '@sitecore-cloudsdk/events/browser';
+import { PageViewEventInput, pageView, init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
-import { INestedObject } from '@sitecore-cloudsdk/utils';
+import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
 export function ViewEvent(props: { res: string | number | readonly string[] }) {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -17,7 +17,7 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
     const extensionDataNested = eventAttributes.has('nested') ? JSON.parse(eventAttributes.get('nested')!) : {};
     const noExt = eventAttributes.get('no-ext') === 'true';
 
-    const event: IPageViewEventInput = {
+    const event: PageViewEventInput = {
       channel: 'WEB',
       currency: 'EUR',
     };
@@ -41,7 +41,7 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
       extensionDataExt[key as keyof typeof extensionDataExt] = value;
     });
 
-    const extensionData: INestedObject = {};
+    const extensionData: NestedObject = {};
     if (extensionDataNested && Object.keys(extensionDataNested).length)
       extensionData.nested = { ...extensionDataNested };
 
@@ -132,7 +132,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let EPResponse;
   try {
     EPResponse = await pageViewServer(
-      event as unknown as IPageViewEventInput,
+      event as unknown as PageViewEventInput,
       context.req,
       noExt ? undefined : extensionData
     );

@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ISettings, ISettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
+import { Settings, SettingsParamsServer, getSettingsServer, initCoreServer } from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../ep/EventApiClient';
-import { IHttpResponse, IMiddlewareNextResponse, TRequest } from '@sitecore-cloudsdk/utils';
+import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
 
-let serverDependencies: IServerEventsSettings | null = null;
+let serverDependencies: ServerEventsSettings | null = null;
 
-export function setServerDependencies(settings: IServerEventsSettings | null) {
+export function setServerDependencies(settings: ServerEventsSettings | null) {
   serverDependencies = settings;
 }
 
@@ -17,7 +17,7 @@ export function setServerDependencies(settings: IServerEventsSettings | null) {
  * @returns The server event settings object.
  * @throws Error if the server event settings haven't been initialized with the required properties.
  */
-export function getServerDependencies(): IServerEventsSettings {
+export function getServerDependencies(): ServerEventsSettings {
   if (!serverDependencies) {
     throw Error(`[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`);
   }
@@ -28,10 +28,10 @@ export function getServerDependencies(): IServerEventsSettings {
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function initServer<TResponse extends IMiddlewareNextResponse | IHttpResponse>(
-  settingsInput: ISettingsParamsServer,
-  request: TRequest,
-  response: TResponse
+export async function initServer<Response extends MiddlewareNextResponse | HttpResponse>(
+  settingsInput: SettingsParamsServer,
+  request: Request,
+  response: Response
 ): Promise<void> {
   await initCoreServer(settingsInput, request, response);
 
@@ -48,7 +48,7 @@ export async function initServer<TResponse extends IMiddlewareNextResponse | IHt
   });
 }
 
-export interface IServerEventsSettings {
-  settings: ISettings;
+export interface ServerEventsSettings {
+  settings: Settings;
   eventApiClient: EventApiClient;
 }

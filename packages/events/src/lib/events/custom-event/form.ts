@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { IEPResponse } from '@sitecore-cloudsdk/core';
+import { EPResponse } from '@sitecore-cloudsdk/core';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { CustomEvent } from './custom-event';
 /**
@@ -10,7 +10,7 @@ import { CustomEvent } from './custom-event';
  *  settings object, you must specify it here
  * @returns The response object that Sitecore EP returns or null
  */
-export function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTED'): Promise<IEPResponse | null> {
+export function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTED'): Promise<EPResponse | null> {
   const { eventApiClient, id, settings } = getDependencies();
   const formEvent = new CustomEvent({
     eventApiClient,

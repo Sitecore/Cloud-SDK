@@ -3,20 +3,20 @@
 /**
  * Extends the global settings object with additional properties
  */
-export interface ISettings extends IBasicSettings {
-  cookieSettings: ICookieSettings;
+export interface Settings extends BasicSettings {
+  cookieSettings: CookieSettings;
   sitecoreEdgeUrl: string;
 }
 
-export interface ISettingsParamsBrowser extends ISettingsParams {
+export interface SettingsParamsBrowser extends SettingsParams {
   enableBrowserCookie?: boolean;
 }
 
-export interface ISettingsParamsServer extends ISettingsParams {
+export interface SettingsParamsServer extends SettingsParams {
   enableServerCookie?: boolean;
 }
 
-export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
+export interface SettingsParams extends BasicSettings, CookieSettingsInput {
   timeout?: number;
   sitecoreEdgeUrl?: string;
 }
@@ -24,12 +24,12 @@ export interface ISettingsParams extends IBasicSettings, ICookieSettingsInput {
 /**
  * Properties for the global settings object
  */
-interface IBasicSettings {
+interface BasicSettings {
   sitecoreEdgeContextId: string;
   siteName: string;
 }
 
-interface ICookieSettingsInput {
+interface CookieSettingsInput {
   cookiePath?: string;
   cookieExpiryDays?: number;
   cookieDomain?: string;
@@ -38,7 +38,7 @@ interface ICookieSettingsInput {
 /**
  * Properties for the cookie object
  */
-export interface ICookieSettings {
+export interface CookieSettings {
   cookieName: string;
   cookieDomain?: string;
   cookieExpiryDays: number;
@@ -48,6 +48,6 @@ export interface ICookieSettings {
 /**
  * Properties for the cookie object
  */
-export interface ICookieSettingsBrowser extends ICookieSettings {
+export interface CookieSettingsBrowser extends CookieSettings {
   enableBrowserCookie: boolean;
 }

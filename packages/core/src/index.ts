@@ -24,10 +24,5 @@ export {
   SITECORE_EDGE_URL,
 } from './lib/consts';
 
-export type { IEPResponse, IInfer } from './lib/interfaces';
-export type {
-  ICookieSettings,
-  ISettings,
-  ISettingsParamsBrowser,
-  ISettingsParamsServer,
-} from './lib/settings/interfaces';
+export type { EPResponse, Infer } from './lib/interfaces';
+export type { CookieSettings, Settings, SettingsParamsBrowser, SettingsParamsServer } from './lib/settings/interfaces';

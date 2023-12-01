@@ -1,5 +1,5 @@
 import { isHttpRequest } from './is-http-request';
-import { TRequest } from '../interfaces';
+import { Request } from '../interfaces';
 
 describe('isHttpRequest', () => {
   it('should return true for a valid HTTP Request', () => {
@@ -21,13 +21,13 @@ describe('isHttpRequest', () => {
       },
     };
 
-    const result = isHttpRequest(nonHttpRequest as unknown as TRequest);
+    const result = isHttpRequest(nonHttpRequest as unknown as Request);
 
     expect(result).toBe(false);
   });
 
   it('should return false for an empty object', () => {
-    const result = isHttpRequest({} as unknown as TRequest);
+    const result = isHttpRequest({} as unknown as Request);
 
     expect(result).toBe(false);
   });

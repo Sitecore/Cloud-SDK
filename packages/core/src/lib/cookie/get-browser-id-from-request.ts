@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { TRequest, getCookieServerSide, isHttpRequest, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { Request, getCookieServerSide, isHttpRequest, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
 
 /**
@@ -9,7 +9,7 @@ import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middlew
  * @param cookieName - The name of the cookie to retrieve the browser ID from.
  * @returns The browser ID extracted from the cookie or an empty string if not found.
  */
-export function getBrowserIdFromRequest<T extends TRequest>(request: T, cookieName: string) {
+export function getBrowserIdFromRequest<T extends Request>(request: T, cookieName: string) {
   let browserId: string | undefined = undefined;
   if (isNextJsMiddlewareRequest(request)) {
     browserId = getBrowserIdFromMiddlewareRequest(request, cookieName);

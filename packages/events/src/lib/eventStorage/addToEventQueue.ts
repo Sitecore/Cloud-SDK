@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ICustomEventInput, ExtensionData } from '../events';
+import { CustomEventInput, ExtensionData } from '../events';
 import { getDependencies } from '../initializer/browser/initializer';
 import { QueueEventPayload } from './eventStorage';
 /**
@@ -9,7 +9,7 @@ import { QueueEventPayload } from './eventStorage';
  * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
  * This object will be flattened and sent in the ext object of the payload
  */
-export function addToEventQueue(type: string, eventData: ICustomEventInput, extensionData?: ExtensionData): void {
+export function addToEventQueue(type: string, eventData: CustomEventInput, extensionData?: ExtensionData): void {
   const { id, settings, eventQueue } = getDependencies();
   const queueEventPayload: QueueEventPayload = {
     eventData,

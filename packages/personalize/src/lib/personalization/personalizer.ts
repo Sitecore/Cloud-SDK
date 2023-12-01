@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { language } from '@sitecore-cloudsdk/core';
-import { IEPCallFlowsBody, IFailedCalledFlowsResponse, IPersonalizeClient } from './callflow-edge-proxy-client';
-import { INestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { EPCallFlowsBody, FailedCalledFlowsResponse, PersonalizeClient } from './callflow-edge-proxy-client';
+import { NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 
 export class Personalizer {
   /**
@@ -11,7 +11,7 @@ export class Personalizer {
    * @param infer - The source of methods to estimate language and page parameters
    */
 
-  constructor(private personalizeClient: IPersonalizeClient, private id: string) {}
+  constructor(private personalizeClient: PersonalizeClient, private id: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
@@ -19,9 +19,9 @@ export class Personalizer {
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
-    personalizeInput: IPersonalizerInput,
+    personalizeInput: PersonalizerInput,
     timeout?: number
-  ): Promise<unknown | null | IFailedCalledFlowsResponse> {
+  ): Promise<unknown | null | FailedCalledFlowsResponse> {
     this.validate(personalizeInput);
 
     const sanitizedInput = this.sanitizeInput(personalizeInput);
@@ -38,8 +38,8 @@ export class Personalizer {
    * A function that sanitizes the personalize input data
    * @returns - The sanitized object
    */
-  private sanitizeInput(personalizerInput: IPersonalizerInput) {
-    const sanitizedInput: IPersonalizerInput = {
+  private sanitizeInput(personalizerInput: PersonalizerInput) {
+    const sanitizedInput: PersonalizerInput = {
       channel: personalizerInput.channel,
       currency: personalizerInput.currency,
       friendlyId: personalizerInput.friendlyId,
@@ -65,8 +65,8 @@ export class Personalizer {
    * A function that maps the personalize input data with the EP
    * @returns - The EP object
    */
-  private mapPersonalizeInputToEPData(input: IPersonalizerInput): IEPCallFlowsBody {
-    const mappedData: IEPCallFlowsBody = {
+  private mapPersonalizeInputToEPData(input: PersonalizerInput): EPCallFlowsBody {
+    const mappedData: EPCallFlowsBody = {
       channel: input.channel,
       clientKey: '',
       currencyCode: input.currency,
@@ -84,7 +84,7 @@ export class Personalizer {
   /**
    * A validation method to throw error for the mandatory property for runtime users
    */
-  private validate({ friendlyId }: IPersonalizerInput) {
+  private validate({ friendlyId }: PersonalizerInput) {
     if (!friendlyId || friendlyId.trim().length === 0) throw new Error(`[MV-0004] "friendlyId" is required.`);
   }
 }
@@ -92,20 +92,20 @@ export class Personalizer {
 /**
  * An interface that describes the flow execution model attributes input for the library
  */
-export interface IPersonalizerInput {
+export interface PersonalizerInput {
   channel: string;
   currency: string;
   email?: string;
   friendlyId: string;
-  identifier?: IPersonalizeIdentifierInput;
+  identifier?: PersonalizeIdentifierInput;
   language?: string;
-  params?: IPersonalizeInputParams;
+  params?: PersonalizeInputParams;
 }
 
 /**
  * An interface that describes the identifier model attributes for the library
  */
-export interface IPersonalizeIdentifierInput {
+export interface PersonalizeIdentifierInput {
   id: string;
   provider: string;
 }
@@ -113,4 +113,4 @@ export interface IPersonalizeIdentifierInput {
 /**
  * A type that describes the params field
  */
-export type IPersonalizeInputParams = INestedObject;
+export type PersonalizeInputParams = NestedObject;

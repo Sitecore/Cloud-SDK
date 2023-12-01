@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import React from 'react';
 import Link from 'next/link';
-interface ITemplatesHeaderProps {
+interface TemplatesHeaderProps {
   prev: string;
   next: string;
 }
-function TemplatesHeader({ prev, next }: ITemplatesHeaderProps) {
+function TemplatesHeader({ prev, next }: TemplatesHeaderProps) {
   return (
     <header style={{ marginBottom: 16 }}>
       <h2>Web Experiences Templates</h2>

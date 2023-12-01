@@ -1,6 +1,6 @@
 import { pageView } from './page-view';
 import { getDependencies } from '../../initializer/browser/initializer';
-import { IPageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewEventInput, PageViewEvent } from './page-view-event';
 
 jest.mock('../../initializer/browser/initializer', () => {
   return {
@@ -43,7 +43,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('pageView', () => {
-  let eventData: IPageViewEventInput;
+  let eventData: PageViewEventInput;
   afterEach(() => {
     eventData = {
       channel: 'WEB',

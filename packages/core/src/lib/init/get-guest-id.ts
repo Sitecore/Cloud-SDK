@@ -21,26 +21,26 @@ export async function getGuestId(
   const data = await response.json();
 
   if (!response.ok) {
-    const { error_msg: errorMsg, moreInfo } = data as IGetGuestRefResponseError;
+    const { error_msg: errorMsg, moreInfo } = data as GetGuestRefResponseError;
 
     throw new Error(`${errorMsg}, for more info: ${moreInfo}`);
   }
 
-  return (data as IGetGuestRefResponse).customer.ref;
+  return (data as GetGuestRefResponse).customer.ref;
 }
 
-interface IGetGuestRefCommon {
+interface GetGuestRefCommon {
   status: string;
   version: string;
   clientKey: string;
 }
 
-export interface IGetGuestRefResponse extends IGetGuestRefCommon {
+export interface GetGuestRefResponse extends GetGuestRefCommon {
   ref: string;
   customer: { ref: string };
 }
 
-export interface IGetGuestRefResponseError extends IGetGuestRefCommon {
+export interface GetGuestRefResponseError extends GetGuestRefCommon {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   error_msg: string;
   moreInfo: string;

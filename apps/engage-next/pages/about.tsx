@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { init as initServer, IPageViewEventInput } from '@sitecore-cloudsdk/events/server';
+import { init as initServer, PageViewEventInput } from '@sitecore-cloudsdk/events/server';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 
 export function About() {
-  const [eventData, seteventData] = useState<IPageViewEventInput>({
+  const [eventData, seteventData] = useState<PageViewEventInput>({
     channel: 'WEB',
     currency: 'EUR',
   });

@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 export { getBrowserId } from '@sitecore-cloudsdk/core';
 export { init } from './lib/initializer/browser/initializer';
-export type { IPageViewEventInput, ICustomEventInput, IIdentityEventAttributesInput } from './lib/events';
+export type { PageViewEventInput, CustomEventInput, IdentityEventAttributesInput } from './lib/events';
 export { addToEventQueue } from './lib/eventStorage/addToEventQueue';
 export { processEventQueue } from './lib/eventStorage/processEventQueue';
 export { clearEventQueue } from './lib/eventStorage/clearEventQueue';

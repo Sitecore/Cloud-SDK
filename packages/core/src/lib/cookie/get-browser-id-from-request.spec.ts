@@ -149,7 +149,7 @@ describe('getBrowserIdFromRequest', () => {
   });
 
   it('should not call any functions if request is not of type isMiddlewareRequest or isHttpRequest', async () => {
-    const request = {} as unknown as utils.TRequest;
+    const request = {} as unknown as utils.Request;
 
     const result = getBrowserIdFromRequest(request, cookieName);
 
