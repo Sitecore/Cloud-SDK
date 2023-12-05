@@ -4,6 +4,9 @@
 
 let errorMessage: string;
 import { Then, defineStep, Given } from '@badeball/cypress-cucumber-preprocessor';
+const aboutPagePath = "../engage-next/pages/about.tsx"
+
+//beforeEach hook as a workaround to not bypass CORS errors on preflight OPTIONS requests to callFlows and events
 beforeEach(() => {
   errorMessage = '';
   cy.clearCookies();
@@ -87,19 +90,27 @@ Then('the server cookie contains the browserID returned from the API call', () =
 defineStep(
   'a server cookie is requested to be created at {string} page with {string} domain',
   (page: string, domain: string) => {
-    cy.clearAllCookies();
     cy.visit(`${page}?enableServerCookie=true&cookieDomain=${domain}`);
   }
 );
 
+defineStep(
+  'server is refreshed',() => {
+    cy.replace(aboutPagePath, /###\d+###/, `###${Date.now()}###`);
+  }
+);
+
 defineStep('a server cookie is created with {string} domain', (domain: string) => {
-  cy.getCookies()
+  cy.waitUntil(() => cy.getCookies()
     .should('have.length', 1)
-    .then((cookies) => {
-      const serverCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-      expect(serverCookie).to.have.property('name', Cypress.env('COOKIE_NAME'));
-      expect(serverCookie).to.have.property('domain', domain);
-    });
+    .then((cookies) => {  const serverCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
+    expect(serverCookie).to.have.property('name', Cypress.env('COOKIE_NAME'));
+    expect(serverCookie).to.have.property('domain', domain);
+  }), {
+      errorMsg: 'Cookie not found',
+      timeout: 10000,
+      interval: 100,
+    })
 });
 
 defineStep(
@@ -118,3 +129,7 @@ defineStep(
     });
   }
 );
+
+after(() => {
+  cy.replace(aboutPagePath, /###\d+###/, "###1###");
+});

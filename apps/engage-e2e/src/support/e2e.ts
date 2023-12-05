@@ -19,7 +19,6 @@ import 'cypress-wait-until';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addContext = require('../../../../node_modules/mochawesome/addContext');
-
 Cypress.on('test:after:run', (test, runnable) => {
   if (test.state === 'failed') {
     // eslint-disable-next-line max-len
@@ -32,14 +31,3 @@ Cypress.on('test:after:run', (test, runnable) => {
   }
 });
 
-//beforeEach hook as a workaround to not bypass CORS errors on preflight OPTIONS requests to callFlows and events
-beforeEach(() => {
-  // eslint-disable-next-line max-len
-  cy.intercept(
-    'OPTIONS',
-    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
-  ).as('personalizeOPTIONS');
-  cy.intercept('OPTIONS', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
-    'eventOPTIONS'
-  );
-});

@@ -17,6 +17,7 @@ declare global {
       readLocal(fileName: string): any;
       visit(url: string, options: string): void;
       requestGuestContext(): any;
+      replace(filePath: string, regex: any, text: string): void;
     }
   }
 }
@@ -92,7 +93,6 @@ Cypress.Commands.add('requestGuestContext', () => {
   cy.getCookie(Cypress.env('COOKIE_NAME'))
     .should('exist')
     .then((c) => {
-      console.log('test');
       const options = {
         method: 'GET',
         url: 
@@ -118,4 +118,14 @@ Cypress.Commands.add('requestGuestContext', () => {
             };
         });
     });
+});
+
+Cypress.Commands.add('replace', (filePath, regexMatch, text) => {
+  cy.readFile(filePath)
+  .then((data) => {
+    const pageData = data;
+    cy.
+    writeFile(filePath, 
+    pageData.replace(regexMatch, text));
+  })
 });

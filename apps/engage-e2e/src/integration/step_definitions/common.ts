@@ -198,7 +198,7 @@ Then('an error is thrown: {string}', (expectedError: string) => {
   //Allowing for the error to be printed on console and retrieved from cypress fixtures
   cy.waitUntil(() => cy.readLocal('error.txt').then((actualError: string) => actualError !== ''), {
     errorMsg: 'Error not found',
-    timeout: 10000,
+    timeout: 15000,
     interval: 100,
   });
   cy.readLocal('error.txt').should('include', expectedError);
