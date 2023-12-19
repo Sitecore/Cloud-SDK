@@ -1,0 +1,36 @@
+// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { init } from '@sitecore-cloudsdk/events/server';
+import { GetServerSidePropsContext } from 'next';
+
+export function serverSidePropsServerCookie() {
+  return (
+    <div>
+      <h1 data-testid='serverSidePropsServerCookiePageTitle'>ServerSideProps Server Cookie page ###1###</h1>
+    </div>
+  );
+}
+
+export default serverSidePropsServerCookie;
+
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const timeout =
+    typeof context.query.timeout === 'string' && context.query.timeout ? +context.query.timeout : undefined;
+  await init(
+    {
+      cookieDomain:
+        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+      cookieExpiryDays: 400,
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      enableServerCookie: true,
+      siteName: process.env.SITE_ID || '',
+      timeout: timeout,
+    },
+    context.req,
+    context.res
+  );
+
+  return {
+    props: {
+    },
+  };
+}

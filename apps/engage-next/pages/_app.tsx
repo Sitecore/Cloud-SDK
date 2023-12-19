@@ -33,7 +33,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (
       router.pathname.startsWith('/edge-proxy-settings-events') ||
-      router.pathname.startsWith('/edge-proxy-settings-personalize')
+      router.pathname.startsWith('/edge-proxy-settings-personalize') ||
+      router.pathname.startsWith('/middleware-server-cookie') ||
+      router.pathname.startsWith('/server-side-props-server-cookie')
     )
       return;
 
@@ -55,7 +57,9 @@ function CustomApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     if (
       router.pathname.startsWith('/edge-proxy-settings-events') ||
-      router.pathname.startsWith('/edge-proxy-settings-personalize')
+      router.pathname.startsWith('/edge-proxy-settings-personalize') ||
+      router.pathname.startsWith('/middleware-server-cookie') ||
+      router.pathname.startsWith('/server-side-props-server-cookie')
     )
       return;
     loadPersonalize();

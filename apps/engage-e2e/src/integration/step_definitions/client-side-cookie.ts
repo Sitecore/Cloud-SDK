@@ -111,7 +111,7 @@ Given(
       return false;
     });
 
-    cy.visit(`${page}?enableBrowserCookie=true&badSitecoreEdgeContextIdBrowser=banana`, {
+    cy.visit(`${page}?enableBrowserCookie=true&badSitecoreEdgeContextIdBrowser=test`, {
       failOnStatusCode: false,
     }).then(() => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
