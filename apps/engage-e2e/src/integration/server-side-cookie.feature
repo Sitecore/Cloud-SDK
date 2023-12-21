@@ -1,11 +1,10 @@
 Feature: Developer is setting for the creation of a server-set cookie
 
-# CDK-116 causes the error to never be thrown on server side. Commented out until fixed
-# @Middleware-Server-Side-Cookie
-# Scenario: Error is thrown if no browser id is retrieved
-#     #Artificial way to make the get cookie from EP fail by passing a valid random url
-#     Given '/middleware-server-cookie' page is loaded with enableServerCookie true and an invalid sitecoreEdgeContextId parameter
-#     Then an error is thrown: '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+@Middleware-Server-Side-Cookie
+Scenario: Error is thrown if no browser id is retrieved
+    #Artificial way to make the get cookie from EP fail by passing a valid random url
+    Given '/middleware-server-cookie' page is loaded with enableServerCookie true and an invalid sitecoreEdgeContextId parameter
+    Then an error is thrown: '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
 
 @Smoke-Test-Events @Middleware-Server-Side-Cookie
 Scenario: create a server site cookie when no cookie exists on a page

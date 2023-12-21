@@ -24,21 +24,21 @@ export async function fetchBrowserIdFromEdgeProxy(
 
   const url = constructGetBrowserIdUrl(sitecoreEdgeUrl, sitecoreEdgeContextId);
 
-  let response;
+  let payload;
   if (timeout !== undefined) {
-    response = await fetchWithTimeout(url, timeout, fetchOptions);
+    payload = await fetchWithTimeout(url, timeout, fetchOptions);
   } else {
-    response = await fetch(url, fetchOptions)
+    payload = await fetch(url, fetchOptions)
       .then((res) => res.json())
       .then((data) => data)
       .catch(() => undefined);
   }
 
-  if (!response)
+  if (!payload?.ref)
     throw new Error(
       '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
     );
 
-  const { ref: browserId }: EPResponse = response;
+  const { ref: browserId }: EPResponse = payload;
   return { browserId };
 }
