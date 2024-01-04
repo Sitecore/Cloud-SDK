@@ -6,10 +6,9 @@ This package provides browser- and server-side functions to run personalization 
 
 ## Prerequisites
 
-To use the Sitecore Cloud SDK, you need:
+To use the Sitecore Cloud SDK, you need an XM Cloud project. This project has to be created from the [XM Cloud foundation template](https://github.com/sitecorelabs/xmcloud-foundation-head) and deployed on XM Cloud.
 
-- A Next.js 13 app deployed on Sitecore XM Cloud.
-- An XM Cloud Plus subscription.
+The foundation template contains an XM Cloud JSS Next.js app. You use the Sitecore Cloud SDK in this app. To be able to use the Sitecore Cloud SDK, you need JSS version 21.6.0 or newer.
 
 ## Installation
 
@@ -24,12 +23,20 @@ npm install @sitecore-cloudsdk/personalize
 
 ## Code examples
 
+---
+
+**NOTE**
+
+These code examples illustrate how the Sitecore Cloud SDK works in a standalone Next.js app. In production, you implement Sitecore Cloud SDK functionality differently, in a JSS Next.js app. See code examples for that environment in the official documentation.
+
+---
+
 Run personalization from the browser side:
 
 ```ts
-"use client";
-import { useEffect } from "react";
-import { init, personalize } from "@sitecore-cloudsdk/personalize/browser";
+'use client';
+import { useEffect } from 'react';
+import { init, personalize } from '@sitecore-cloudsdk/personalize/browser';
 
 export default function Home() {
   useEffect(() => {
@@ -38,8 +45,8 @@ export default function Home() {
 
   const initPersonalize = async () => {
     await init({
-      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || "",
-      siteName: process.env.NEXT_PUBLIC_SITENAME || "",
+      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+      siteName: process.env.NEXT_PUBLIC_SITENAME || '',
       enableBrowserCookie: true,
     });
 
@@ -48,15 +55,15 @@ export default function Home() {
 
   const runPersonalization = async () => {
     const personalizationData = {
-      channel: "WEB",
-      currency: "USD",
-      friendlyId: "personalize_test",
-      language: "EN",
+      channel: 'WEB',
+      currency: 'USD',
+      friendlyId: 'personalize_test',
+      language: 'EN',
     };
 
     await personalize(personalizationData);
 
-    console.log("Ran personalization.");
+    console.log('Ran personalization.');
   };
 
   return (
@@ -70,17 +77,17 @@ export default function Home() {
 Run personalization from the server side:
 
 ```ts
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { init, personalize } from "@sitecore-cloudsdk/personalize/server";
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { init, personalize } from '@sitecore-cloudsdk/personalize/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
   await init(
     {
-      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || "",
-      siteName: process.env.NEXT_PUBLIC_SITENAME || "",
+      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+      siteName: process.env.NEXT_PUBLIC_SITENAME || '',
       enableServerCookie: true,
     },
     req,
@@ -90,15 +97,15 @@ export async function middleware(req: NextRequest) {
   console.log(`Initialized "@sitecore-cloudsdk/personalize/server".`);
 
   const personalizationData = {
-    channel: "WEB",
-    currency: "EUR",
-    friendlyId: "personalize_test",
-    language: "EN",
+    channel: 'WEB',
+    currency: 'EUR',
+    friendlyId: 'personalize_test',
+    language: 'EN',
   };
 
   const personalizeRes = await personalize(personalizationData, req);
 
-  console.log("personalizeResponse:", personalizeRes);
+  console.log('personalizeResponse:', personalizeRes);
 
   return res;
 }
@@ -106,7 +113,7 @@ export async function middleware(req: NextRequest) {
 
 ## Documentation
 
-Coming soon.
+[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-cloud-sdk.html)
 
 ### License
 
