@@ -1,6 +1,7 @@
 import { pageView } from './page-view';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import * as core from '@sitecore-cloudsdk/core';
 
 jest.mock('../../initializer/browser/initializer', () => {
   return {
@@ -14,6 +15,15 @@ jest.mock('../../initializer/browser/initializer', () => {
   };
 });
 
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+  };
+});
 jest.mock('./page-view-event', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -43,6 +53,10 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('pageView', () => {
+  const id = 'test_id';
+
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+
   let eventData: PageViewEventInput;
   afterEach(() => {
     eventData = {
@@ -63,10 +77,11 @@ describe('pageView', () => {
       eventApiClient: 'mockedEventApiClient',
       eventData,
       extensionData,
-      id: 'mockedId',
+      id,
       searchParams: window.location.search,
       settings: expect.objectContaining({}),
     });
     expect(response).toBe('mockedResponse');
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

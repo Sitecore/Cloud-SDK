@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { FailedCalledFlowsResponse } from './callflow-edge-proxy-client';
+import { getBrowserId } from '@sitecore-cloudsdk/core';
 import { getDependencies } from '../initializer/client/initializer';
 import { PersonalizerInput, Personalizer } from './personalizer';
 /**
@@ -14,6 +15,8 @@ export function personalize(
   personalizeData: PersonalizerInput,
   timeout?: number
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  const { callFlowEdgeProxyClient, id } = getDependencies();
+  const { callFlowEdgeProxyClient } = getDependencies();
+  const id = getBrowserId();
+  
   return new Personalizer(callFlowEdgeProxyClient, id).getInteractiveExperienceData(personalizeData, timeout);
 }

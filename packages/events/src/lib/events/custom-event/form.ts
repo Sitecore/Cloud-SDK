@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EPResponse } from '@sitecore-cloudsdk/core';
+import { getBrowserId, EPResponse } from '@sitecore-cloudsdk/core';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { CustomEvent } from './custom-event';
 /**
@@ -11,7 +11,8 @@ import { CustomEvent } from './custom-event';
  * @returns The response object that Sitecore EP returns or null
  */
 export function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTED'): Promise<EPResponse | null> {
-  const { eventApiClient, id, settings } = getDependencies();
+  const { eventApiClient, settings } = getDependencies();
+  const id = getBrowserId();
   const formEvent = new CustomEvent({
     eventApiClient,
     eventData: {},

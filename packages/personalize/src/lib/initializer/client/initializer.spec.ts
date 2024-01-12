@@ -89,7 +89,6 @@ describe('initializer', () => {
       expect(settings).toBeDefined();
       expect(core.initCore).toHaveBeenCalledTimes(1);
       expect(core.getSettings).toHaveBeenCalledTimes(1);
-      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
 
       expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
@@ -98,7 +97,6 @@ describe('initializer', () => {
       await initPersonalize.init(settingsParams);
       expect(core.initCore).toHaveBeenCalledTimes(1);
       expect(core.getSettings).toHaveBeenCalledTimes(1);
-      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
 
       expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
@@ -112,7 +110,7 @@ describe('initializer', () => {
       await initPersonalize.init(settingsParams);
 
       if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-      expect(core.getBrowserId).toHaveBeenCalledTimes(2);
+      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
     });
     it('adds method to get ID to window Engage property when engage is on window', async () => {
       await initPersonalize.init(settingsParams);

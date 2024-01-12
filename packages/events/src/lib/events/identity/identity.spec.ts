@@ -1,4 +1,5 @@
 import { identity } from './identity';
+import * as core from '@sitecore-cloudsdk/core';
 import { getDependencies } from '../../initializer/browser/initializer';
 import { IdentityEvent } from './identity-event';
 
@@ -11,6 +12,16 @@ jest.mock('../../initializer/browser/initializer', () => {
         settings: {},
       };
     }),
+  };
+});
+
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
   };
 });
 
@@ -46,6 +57,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 describe('identity', () => {
   it('should send an IdentityEvent to the server', async () => {
+    const id = 'test_id';
+
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     const eventData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -53,7 +67,7 @@ describe('identity', () => {
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
-          id: '',
+          id,
           provider: 'email',
         },
       ],
@@ -70,9 +84,10 @@ describe('identity', () => {
       eventApiClient: 'mockedEventApiClient',
       eventData,
       extensionData,
-      id: 'mockedId',
+      id,
       settings: expect.objectContaining({}),
     });
     expect(response).toBe('mockedResponse');
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

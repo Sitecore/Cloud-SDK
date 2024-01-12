@@ -31,6 +31,8 @@ describe('Test Personalizer Class', () => {
   let personalizeInputMock: PersonalizerInput;
   const id = 'test_id';
 
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+
   beforeEach(() => {
     jest.spyOn(core as any, 'language').mockImplementation(() => 'EN');
     personalizeInputMock = {
@@ -298,7 +300,7 @@ describe('Test Personalizer Class', () => {
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(sanitizeInputSpy).toHaveReturnedWith(expected);
-    });
+     });
 
     it('Test return object of the sanitizeInput method with empty space email ', () => {
       personalizeInputMock.email = ' ';

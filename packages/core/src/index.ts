@@ -6,7 +6,7 @@ export { getDefaultCookieAttributes } from './lib/cookie/get-default-cookie-attr
 export { handleHttpCookie } from './lib/cookie/handle-http-cookie';
 export { handleNextJsMiddlewareCookie } from './lib/cookie/handle-next-js-middleware-cookie';
 export { handleServerCookie } from './lib/cookie/handle-server-cookie';
-export { getBrowserId } from './lib/init/get-browser-id';
+export { getBrowserId } from './lib/cookie/get-browser-id';
 export { fetchBrowserIdFromEdgeProxy } from './lib/init/fetch-browser-id-from-edge-proxy';
 export { getGuestId } from './lib/init/get-guest-id';
 export { createSettings } from './lib/settings/create-settings';

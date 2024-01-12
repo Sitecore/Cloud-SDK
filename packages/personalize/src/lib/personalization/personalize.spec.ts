@@ -19,6 +19,9 @@ describe('personalize', () => {
   const { window } = global;
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  const id = 'test_id';
+
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   jest.spyOn(core, 'createCookie').mock;
   const settingsObj: core.Settings = {
@@ -50,7 +53,6 @@ describe('personalize', () => {
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
     jest.spyOn(init, 'getDependencies').mockReturnValueOnce({
       callFlowEdgeProxyClient: new CallFlowEdgeProxyClient(settingsObj),
-      id: 'mitsos',
       settings: settingsObj,
     });
 
@@ -60,5 +62,6 @@ describe('personalize', () => {
     expect(init.getDependencies).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

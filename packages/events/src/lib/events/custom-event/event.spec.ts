@@ -1,6 +1,7 @@
 import { event } from './event';
 import { CustomEvent, CustomEventInput } from './custom-event';
 import * as init from '../../initializer/browser/initializer';
+import * as core from '@sitecore-cloudsdk/core';
 import { EventApiClient } from '../../ep/EventApiClient';
 import { EventQueue } from '../../eventStorage/eventStorage';
 
@@ -21,6 +22,8 @@ describe('eventServer', () => {
   let eventData: CustomEventInput;
   const type = 'CUSTOM_TYPE';
   const extensionData = { extKey: 'extValue' };
+  const id = 'test_id';
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   afterEach(() => {
     jest.clearAllMocks();
@@ -51,7 +54,6 @@ describe('eventServer', () => {
   const getServerDependenciesSpy = jest.spyOn(init, 'getDependencies').mockReturnValueOnce({
     eventApiClient: eventApiClient,
     eventQueue: eventQueue,
-    id: '123',
     settings: settings,
   });
 
@@ -70,7 +72,7 @@ describe('eventServer', () => {
       extensionData: {
         extKey: 'extValue',
       },
-      id: '123',
+      id,
       settings: {
         cookieSettings: {
           cookieDomain: 'cDomain',
@@ -85,5 +87,6 @@ describe('eventServer', () => {
       type: 'CUSTOM_TYPE',
     });
     expect(CustomEvent).toHaveBeenCalledTimes(1);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

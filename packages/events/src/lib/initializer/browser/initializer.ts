@@ -26,13 +26,6 @@ export function getDependencies(): BrowserEventsSettings {
   return dependencies;
 }
 
-export interface BrowserEventsSettings {
-  id: string;
-  settings: Settings;
-  eventQueue: EventQueue;
-  eventApiClient: EventApiClient;
-}
-
 /**
  * Initiates the Events library using the global settings added by the developer
  * @param settingsInput - Global settings added by the developer
@@ -49,8 +42,6 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
   await initCore(settingsInput);
 
   const settings = getSettings();
-
-  const id = getBrowserId();
   const eventApiClient = new EventApiClient(
     settings.sitecoreEdgeUrl,
     settingsInput.sitecoreEdgeContextId,
@@ -61,7 +52,6 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
   setDependencies({
     eventApiClient,
     eventQueue,
-    id,
     settings,
   });
 
@@ -73,4 +63,10 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
       events: LIBRARY_VERSION,
     },
   };
+}
+
+export interface BrowserEventsSettings {
+  settings: Settings;
+  eventQueue: EventQueue;
+  eventApiClient: EventApiClient;
 }

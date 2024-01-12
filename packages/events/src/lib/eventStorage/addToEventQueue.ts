@@ -2,6 +2,8 @@
 import { CustomEventInput, ExtensionData } from '../events';
 import { getDependencies } from '../initializer/browser/initializer';
 import { QueueEventPayload } from './eventStorage';
+import { getBrowserId } from '@sitecore-cloudsdk/core';
+
 /**
  * A function that adds event to the queue
  * @param type - The required type of the event
@@ -10,7 +12,9 @@ import { QueueEventPayload } from './eventStorage';
  * This object will be flattened and sent in the ext object of the payload
  */
 export function addToEventQueue(type: string, eventData: CustomEventInput, extensionData?: ExtensionData): void {
-  const { id, settings, eventQueue } = getDependencies();
+  const { settings, eventQueue } = getDependencies();
+  const id = getBrowserId();
+  
   const queueEventPayload: QueueEventPayload = {
     eventData,
     extensionData,

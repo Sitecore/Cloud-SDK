@@ -44,14 +44,12 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
   await initCore(settingsInput);
 
   const settings = getSettings();
-  const id = getBrowserId();
   const callFlowEdgeProxyClient = new CallFlowEdgeProxyClient(settings);
 
   window.Engage ??= {};
 
   setDependencies({
     callFlowEdgeProxyClient,
-    id,
     settings,
   });
 
@@ -66,7 +64,6 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
 }
 
 export interface BrowserPersonalizeSettings {
-  id: string;
   settings: Settings;
   callFlowEdgeProxyClient: CallFlowEdgeProxyClient;
 }

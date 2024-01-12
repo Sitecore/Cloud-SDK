@@ -15,7 +15,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('getGuestId', () => {
   const getDependenciesSpy = jest.spyOn(EventSettings, 'getDependencies');
   const getGuestIdSpy = jest.spyOn(core, 'getGuestId');
-
+  const id = 'test_id';
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+  
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   afterEach(() => {
@@ -24,7 +26,7 @@ describe('getGuestId', () => {
 
   it('should call getGuestIdFromCore with the correct parameters and resolve with guestId', async () => {
     getDependenciesSpy.mockReturnValueOnce({
-      id: '_id',
+      id,
       settings: {
         cookieSettings: {
           cookieDomain: 'cDomain',

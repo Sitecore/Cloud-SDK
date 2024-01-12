@@ -115,12 +115,10 @@ When('the cookies are removed from the browser', () => {
   cy.wait(1000);
 });
 
-Then('the event is sent with the initial browser id', () => {
+Then('the event is sent with empty browserId', () => {
   cy.get('[data-testid="sendEvent"]').click();
   cy.waitForRequest('@eventRequest').then((request: any) => {
-    cy.get('@browser_id').then((browserId) => {
-      expect(request.body.browser_id).to.equal(browserId);
-    });
+      expect(request.body.browser_id).to.equal("");
   });
 });
 

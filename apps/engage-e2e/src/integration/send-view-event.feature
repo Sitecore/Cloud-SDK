@@ -99,7 +99,7 @@ Scenario: Developer uses pageView to send an event to EP when no cookie exists
     Given the '/' page is loaded
     When the cookies are removed from the browser
     And the pageView function is called
-    Then the event is sent with the initial browser id
+    Then the event is sent with empty browserId
 
 Scenario: Developer sends VIEW event with a user-defined object
     Given the '/viewevent' page is loaded with query parameters
