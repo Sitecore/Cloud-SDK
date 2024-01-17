@@ -9,7 +9,7 @@ jobs:
   lint-and-build:
     strategy:
       matrix:
-        node: [16, 18]
+        node: [18, 20]
       fail-fast: true
     runs-on: ubuntu-latest
     name: Lint & Build on Node v${{ matrix.node }}
