@@ -1,11 +1,10 @@
 import * as initPersonalize from './initializer';
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
-import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 import '../../global.d.ts';
 
 jest.mock('../../personalization/personalizer');
-jest.mock('../../personalization/callflow-edge-proxy-client');
+jest.mock('../../personalization/send-call-flows-request');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -52,60 +51,22 @@ describe('initializer', () => {
     global.window ??= Object.create(window);
   });
 
-  beforeEach(() => {
-    initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-  });
-
-  describe('getDependencies', () => {
-    beforeEach(() => {
-      initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-    });
-    it('should throw error if settings are not initialized', () => {
-      expect(() => initPersonalize.getDependencies()).toThrow(
-        `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
-      );
-    });
-    it('should throw error if settings are not initialized v2', () => {
-      let settings;
-      expect(() => {
-        settings = initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-      expect(settings).toBeUndefined();
-    });
-
-    it('should throw error if settings are not initialized v3', () => {
-      expect(() => {
-        initPersonalize.setDependencies(null);
-        initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-    });
-  });
   describe('init', () => {
     it('should call all the necessary functions if all properties are set correctly', async () => {
       await initPersonalize.init(settingsParams);
-      const settings = initPersonalize.getDependencies();
 
-      expect(settings.settings.sitecoreEdgeContextId).toBe('123');
-      expect(settings).toBeDefined();
+      expect(settingsParams.sitecoreEdgeContextId).toBe('123');
+      expect(settingsParams).toBeDefined();
       expect(core.initCore).toHaveBeenCalledTimes(1);
-      expect(core.getSettings).toHaveBeenCalledTimes(1);
-
-      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
 
     it('should call all the necessary functions if all properties are set correctly', async () => {
       await initPersonalize.init(settingsParams);
       expect(core.initCore).toHaveBeenCalledTimes(1);
-      expect(core.getSettings).toHaveBeenCalledTimes(1);
-
-      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('window object', () => {
-    beforeEach(() => {
-      initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-    });
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
       await initPersonalize.init(settingsParams);
 

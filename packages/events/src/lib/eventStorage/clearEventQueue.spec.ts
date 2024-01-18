@@ -13,24 +13,25 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('clearEventQueue', () => {
-  const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
-
   const settingsParams: core.SettingsParamsBrowser = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
   };
+
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   it('should clear the queue', async () => {
-    const clearQueueSpy = jest.spyOn(eventQueue.EventQueue.prototype, 'clearQueue');
+    const clearQueueSpy = jest.spyOn(eventQueue.eventQueue, 'clearQueue');
 
     await init.init(settingsParams);
     clearEventQueue();
-    expect(getDependenciesSpy).toHaveBeenCalledTimes(1);
+
     expect(clearQueueSpy).toHaveBeenCalledTimes(1);
   });
 });

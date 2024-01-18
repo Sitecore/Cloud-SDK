@@ -1,16 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
 import { ExtensionData, EventAttributesInput } from '../common-interfaces';
-import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { isShortISODateString, isValidEmail, FlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
+import { SendEvent } from '../send-event/sendEvent';
 
 export class IdentityEvent extends BaseEvent {
   private eventData: IdentityEventAttributesInput;
-  private eventApiClient: EventApiClient;
+  private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
+  private settings: Settings;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -19,12 +20,13 @@ export class IdentityEvent extends BaseEvent {
   constructor(args: IdentityEventArguments) {
     const { channel, currency, language, page } = args.eventData;
 
-    super({ channel, currency, language, page }, args.settings, args.id);
+    super({ channel, currency, language, page }, args.id);
 
     this.validateAttributes(args.eventData);
 
     this.eventData = args.eventData;
-    this.eventApiClient = args.eventApiClient;
+    this.sendEvent = args.sendEvent;
+    this.settings = args.settings;
 
     if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
 
@@ -100,7 +102,7 @@ export class IdentityEvent extends BaseEvent {
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
-    return await this.eventApiClient.send(fetchBody);
+    return await this.sendEvent(fetchBody, this.settings);
   }
 }
 
@@ -170,7 +172,7 @@ export interface IdentityEventPayload {
  * Interface of the unified arguments object for identity event
  */
 export interface IdentityEventArguments {
-  eventApiClient: EventApiClient;
+  sendEvent: SendEvent;
   eventData: IdentityEventAttributesInput;
   extensionData?: ExtensionData;
   id: string;

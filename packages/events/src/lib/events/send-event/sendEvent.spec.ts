@@ -1,6 +1,7 @@
 import { EPResponse } from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../ep/EventApiClient';
-import { LIBRARY_VERSION } from '../consts';
+import { sendEvent } from './sendEvent';
+import { LIBRARY_VERSION } from '../../consts';
+import * as core from '@sitecore-cloudsdk/core';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -11,6 +12,19 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     ...originalModule,
   };
 });
+
+const settingsObj: core.Settings = {
+  cookieSettings: {
+    cookieDomain: 'cDomain',
+    cookieExpiryDays: 730,
+    cookieName: 'name',
+    cookiePath: '/',
+  },
+  siteName: 'site',
+  sitecoreEdgeContextId: '123',
+  sitecoreEdgeUrl: 'http://testurl',
+};
+
 describe('EventApiClient', () => {
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -37,11 +51,11 @@ describe('EventApiClient', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    const eventApiClient = new EventApiClient('http://testurl', '123', 'site');
-    const expectedUrl = 'http://testurl/events/v1.2/events?sitecoreContextId=123&siteId=site';
     const expectedBody = JSON.stringify(eventData);
+    const expectedUrl = 'http://testurl/events/v1.2/events?sitecoreContextId=123&siteId=site';
 
-    eventApiClient.send(eventData);
+    sendEvent(eventData, settingsObj);
+
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
       body: expectedBody,
@@ -52,7 +66,8 @@ describe('EventApiClient', () => {
       },
       method: 'POST',
     });
-    return eventApiClient.send(eventData).then((data) => {
+
+    return sendEvent(eventData, settingsObj).then((data) => {
       expect(data).toEqual({
         status: 'OK',
       });
@@ -61,7 +76,9 @@ describe('EventApiClient', () => {
 
   it('should return null if an error occurs', async () => {
     const mockFetch = Promise.reject('Error');
+
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
     const eventData = {
       /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
@@ -74,7 +91,8 @@ describe('EventApiClient', () => {
       type: 'CUSTOM_TYPE',
     };
 
-    const response = await new EventApiClient('http://testurl', '123', '').send(eventData);
+    const response = await sendEvent(eventData, settingsObj);
+
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(response).toEqual(null);
   });

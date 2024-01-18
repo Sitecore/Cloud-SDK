@@ -1,8 +1,7 @@
 import { eventServer } from './eventServer';
 import { CustomEvent, CustomEventInput } from './custom-event';
-import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../../ep/EventApiClient';
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/server/initializer');
 jest.mock('./custom-event');
@@ -43,6 +42,7 @@ describe('eventServer', () => {
     ip: undefined,
     url: '',
   };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -57,32 +57,27 @@ describe('eventServer', () => {
   });
 
   const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
-  const eventApiClient = new EventApiClient('http://test.com', '123', '456');
-  const settings: core.Settings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'bid_name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
-  };
-  const getServerDependenciesSpy = jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
-    eventApiClient: eventApiClient,
-    settings: settings,
-  });
 
   it('should send a custom event to the server', async () => {
+    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
+    getSettingsServerSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
     await eventServer(type, eventData, req, extensionData);
 
     // Assert
-    expect(getServerDependenciesSpy).toHaveBeenCalled();
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(CustomEvent).toHaveBeenCalledWith({
-      eventApiClient: new EventApiClient('http://test.com', '123', '456'),
       eventData: {
         channel: 'WEB',
         currency: 'EUR',
@@ -93,6 +88,7 @@ describe('eventServer', () => {
         extKey: 'extValue',
       },
       id: '1234',
+      sendEvent,
       settings: {
         cookieSettings: {
           cookieDomain: 'cDomain',

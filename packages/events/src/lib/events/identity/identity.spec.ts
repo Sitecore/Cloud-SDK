@@ -1,19 +1,7 @@
 import { identity } from './identity';
 import * as core from '@sitecore-cloudsdk/core';
-import { getDependencies } from '../../initializer/browser/initializer';
 import { IdentityEvent } from './identity-event';
-
-jest.mock('../../initializer/browser/initializer', () => {
-  return {
-    getDependencies: jest.fn(() => {
-      return {
-        eventApiClient: 'mockedEventApiClient',
-        id: 'mockedId',
-        settings: {},
-      };
-    }),
-  };
-});
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -75,16 +63,28 @@ describe('identity', () => {
       page: 'identity',
     };
 
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
     const extensionData = { extKey: 'extValue' };
 
     const response = await identity(eventData, extensionData);
 
-    expect(getDependencies).toHaveBeenCalled();
     expect(IdentityEvent).toHaveBeenCalledWith({
-      eventApiClient: 'mockedEventApiClient',
       eventData,
       extensionData,
       id,
+      sendEvent,
       settings: expect.objectContaining({}),
     });
     expect(response).toBe('mockedResponse');

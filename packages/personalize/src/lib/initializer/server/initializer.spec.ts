@@ -3,11 +3,10 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import packageJson from '../../../../package.json';
-import { ServerPersonalize, getServerDependencies, initServer, setDependencies } from './initializer';
-import * as callFlowEdgeProxyClient from '../../personalization/callflow-edge-proxy-client';
+import { initServer } from './initializer';
 
 jest.mock('../../personalization/personalizer');
-jest.mock('../../personalization/callflow-edge-proxy-client');
+jest.mock('../../personalization/send-call-flows-request');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -57,9 +56,6 @@ describe('initializer', () => {
     jest.clearAllMocks();
   });
 
-  beforeEach(() => {
-    setDependencies(null as unknown as ServerPersonalize);
-  });
   const initCoreSpy = jest.spyOn(core, 'initCoreServer');
 
   jest.spyOn(core, 'getSettingsServer').mockReturnValue({
@@ -74,37 +70,15 @@ describe('initializer', () => {
     sitecoreEdgeUrl: '',
   });
 
-  describe('getDependencies', () => {
-    beforeEach(() => {
-      setDependencies(null as unknown as ServerPersonalize);
-    });
-
-    it('should throw error if settings are not initialized', () => {
-      let settings;
-      expect(() => {
-        setDependencies(null);
-        settings = getServerDependencies();
-      }).toThrow(`[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`);
-      expect(settings).toBeUndefined();
-    });
-  });
-
   describe('init', () => {
-    it('should throw error if settings are not initialized', () => {
-      expect(() => getServerDependencies()).toThrow(
-        `[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`
-      );
-    });
-
     it('should initialize the server functionality', async () => {
       initCoreSpy.mockImplementationOnce(() => Promise.resolve());
       await initServer(settingsParams, req, res);
-      const settings = getServerDependencies();
+      const settings = core.getSettingsServer();
       expect(settings).toBeDefined();
-      expect(settings.settings.sitecoreEdgeContextId).toBe('456');
+      expect(settings.sitecoreEdgeContextId).toBe('456');
       expect(core.initCoreServer).toHaveBeenCalledTimes(1);
       expect(core.getSettingsServer).toHaveBeenCalledTimes(1);
-      expect(callFlowEdgeProxyClient.CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
       expect(LIBRARY_VERSION).toBe(packageJson.version);
     });
   });

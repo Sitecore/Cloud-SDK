@@ -48,3 +48,5 @@ Thumbs.db
 # Next.js
 .next
 
+# Nx caching
+.nx

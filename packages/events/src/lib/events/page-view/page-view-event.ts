@@ -3,17 +3,18 @@
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
 import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
-import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { EventAttributesInput } from '../common-interfaces';
+import { SendEvent } from '../send-event/sendEvent';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
-  private eventApiClient: EventApiClient;
+  private sendEvent: SendEvent;
   private eventData: PageViewEventInput;
   private extensionData: FlattenedObject = {};
   private urlSearchParams: URLSearchParams;
   private includeUTMParameters: boolean;
+  settings: Settings;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -28,13 +29,14 @@ export class PageViewEvent extends BaseEvent {
         language,
         page,
       },
-      args.settings,
       args.id
     );
 
     this.eventData = args.eventData;
-
+    this.sendEvent = args.sendEvent;
+    this.settings = args.settings;
     this.urlSearchParams = new URLSearchParams(decodeURI(args.searchParams));
+
     if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
@@ -42,7 +44,7 @@ export class PageViewEvent extends BaseEvent {
       throw new Error(
         `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
       );
-    this.eventApiClient = args.eventApiClient;
+
     this.includeUTMParameters =
       args.eventData.includeUTMParameters === undefined ? true : args.eventData.includeUTMParameters;
   }
@@ -122,7 +124,8 @@ export class PageViewEvent extends BaseEvent {
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
     PageViewEvent.isFirstPageView = false;
-    return await this.eventApiClient.send(fetchBody);
+
+    return await this.sendEvent(fetchBody, this.settings);
   }
 
   /**
@@ -146,7 +149,7 @@ export class PageViewEvent extends BaseEvent {
  * Interface of the unified arguments object for page view event
  */
 export interface PageViewEventArguments {
-  eventApiClient: EventApiClient;
+  sendEvent: SendEvent;
   eventData: PageViewEventInput;
   id: string;
   settings: Settings;

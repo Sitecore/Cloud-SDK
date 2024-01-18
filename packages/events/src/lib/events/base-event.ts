@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { language, pageName } from '@sitecore-cloudsdk/core';
-import type { Settings } from '@sitecore-cloudsdk/core';
 import { EventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
@@ -14,7 +13,7 @@ export class BaseEvent {
    * @param id - The browser id
    * @param infer - The source of methods to estimate language and page parameters
    */
-  constructor(private baseEventData: BaseEventData, protected settings: Settings, id: string) {
+  constructor(private baseEventData: BaseEventData, id: string) {
     this.browserId = id;
     this.language = this.baseEventData.language ?? language();
     this.page = this.baseEventData.page ?? pageName();

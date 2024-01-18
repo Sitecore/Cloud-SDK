@@ -1,8 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { Personalizer } from './personalizer';
 import { personalizeServer } from './personalizeServer';
-import * as init from '../initializer/server/initializer';
-import { CallFlowEdgeProxyClient } from './callflow-edge-proxy-client';
+
 jest.mock('./personalizer');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -45,17 +44,7 @@ describe('personalize', () => {
   };
 
   jest.spyOn(core, 'createCookie').mock;
-  const settingsObj: core.Settings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
-  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -63,16 +52,22 @@ describe('personalize', () => {
   it('should return an object with available functionality', async () => {
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
     const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest');
-
-    jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
-      callFlowEdgeProxyClient: new CallFlowEdgeProxyClient(settingsObj),
-      settings: settingsObj,
+    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
+    getSettingsServerSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
     });
 
     expect(typeof personalizeServer).toBe('function');
 
     personalizeServer(eventData, req);
-    expect(init.getServerDependencies).toHaveBeenCalledTimes(1);
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
   });

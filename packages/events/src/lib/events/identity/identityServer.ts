@@ -2,9 +2,9 @@
 
 import { ExtensionData } from '../common-interfaces';
 import { Request } from '@sitecore-cloudsdk/utils';
-import { EPResponse, getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
-import { getServerDependencies } from '../../initializer/server/initializer';
+import { EPResponse, getBrowserIdFromRequest, getSettingsServer } from '@sitecore-cloudsdk/core';
 import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API
@@ -19,13 +19,14 @@ export function identityServer(
   request: Request,
   extensionData?: ExtensionData
 ): Promise<EPResponse | null> {
-  const { eventApiClient, settings } = getServerDependencies();
+  const settings = getSettingsServer();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
+
   return new IdentityEvent({
-    eventApiClient,
     eventData,
     extensionData,
     id,
+    sendEvent,
     settings: settings,
   }).send();
 }

@@ -1,30 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EventApiClient } from '../../ep/EventApiClient';
-import { Settings, SettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
+import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
-import { EventQueue } from '../../eventStorage/eventStorage';
-
-let dependencies: BrowserEventsSettings | null = null;
-
-export function setDependencies(settings: BrowserEventsSettings | null) {
-  dependencies = settings;
-}
-
-/**
- * Retrieves the browser event settings object.
- *
- * This function ensures that the browser event settings have been initialized and contain essential properties like `settings`, `eventQueue`, and `eventApiClient`.
- *
- * @returns The browser event settings object.
- * @throws Error if the event settings haven't been initialized with the required properties.
- */
-export function getDependencies(): BrowserEventsSettings {
-  if (!dependencies) {
-    throw Error(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
-  }
-  return dependencies;
-}
 
 /**
  * Initiates the Events library using the global settings added by the developer
@@ -41,20 +18,6 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
 
   await initCore(settingsInput);
 
-  const settings = getSettings();
-  const eventApiClient = new EventApiClient(
-    settings.sitecoreEdgeUrl,
-    settingsInput.sitecoreEdgeContextId,
-    settingsInput.siteName
-  );
-  const eventQueue = new EventQueue(sessionStorage, eventApiClient);
-
-  setDependencies({
-    eventApiClient,
-    eventQueue,
-    settings,
-  });
-
   window.Engage = {
     ...window.Engage,
     getBrowserId: () => getBrowserId(),
@@ -63,10 +26,4 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
       events: LIBRARY_VERSION,
     },
   };
-}
-
-export interface BrowserEventsSettings {
-  settings: Settings;
-  eventQueue: EventQueue;
-  eventApiClient: EventApiClient;
 }

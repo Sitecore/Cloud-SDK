@@ -14,20 +14,20 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('addToEventQueue', () => {
-  const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
-
   const settingsParams: core.SettingsParamsBrowser = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
   };
+
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
   afterEach(() => {
     jest.clearAllMocks();
   });
   it('should add an event to the queue with the correct payload', async () => {
-    const enqueueEventSpy = jest.spyOn(eventQueue.EventQueue.prototype, 'enqueueEvent');
+    const enqueueEventSpy = jest.spyOn(eventQueue.eventQueue, 'enqueueEvent');
 
     const eventData: EventAttributesInput = {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -39,7 +39,7 @@ describe('addToEventQueue', () => {
 
     await init.init(settingsParams);
     addToEventQueue('TEST_TYPE', { ...eventData });
-    expect(getDependenciesSpy).toHaveBeenCalledTimes(1);
+
     expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
   });
 });

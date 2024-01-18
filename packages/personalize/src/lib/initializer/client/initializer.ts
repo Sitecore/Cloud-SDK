@@ -1,33 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { Settings, SettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
+import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
-import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
 
-let dependencies: BrowserPersonalizeSettings | null = null;
-/**
- * Sets the personalize settings to be used by the application.
- *
- * @param settings - The personalize settings to be set, or `null` to clear the settings.
- */
-export function setDependencies(settings: BrowserPersonalizeSettings | null) {
-  dependencies = settings;
-}
-
-/**
- * Retrieves the browser personalize settings object.
- *
- * This function ensures that the browser personalize settings have been initialized and contain essential properties like `settings` and `callFlowEPClient`.
- *
- * @returns The browser personalize settings object.
- * @throws Error if the personalize settings haven't been initialized with the required properties.
- */
-export function getDependencies(): BrowserPersonalizeSettings {
-  if (!dependencies) {
-    throw Error(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-  }
-  return dependencies;
-}
 /**
  * Initiates the Engage library using the global settings added by the developer
  * @param settingsInput - Global settings added by the developer
@@ -43,15 +18,7 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
 
   await initCore(settingsInput);
 
-  const settings = getSettings();
-  const callFlowEdgeProxyClient = new CallFlowEdgeProxyClient(settings);
-
   window.Engage ??= {};
-
-  setDependencies({
-    callFlowEdgeProxyClient,
-    settings,
-  });
 
   window.Engage = {
     ...window.Engage,
@@ -61,9 +28,4 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
       personalize: LIBRARY_VERSION,
     },
   };
-}
-
-export interface BrowserPersonalizeSettings {
-  settings: Settings;
-  callFlowEdgeProxyClient: CallFlowEdgeProxyClient;
 }

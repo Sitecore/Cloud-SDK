@@ -36,6 +36,13 @@ const links = [
     path: '/server-side-props-identity-event',
     testId: 'serverSidePropsIdentityEventPage',
   },
+  {
+    text: 'Personalize',
+    path: '/personalize',
+    testId: 'personalizePage',
+  },
+  
+
 ];
 
 function Navbar() {

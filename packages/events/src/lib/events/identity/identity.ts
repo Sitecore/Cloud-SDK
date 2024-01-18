@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { ExtensionData } from '../common-interfaces';
-import { getBrowserId, EPResponse } from '@sitecore-cloudsdk/core';
-import { getDependencies } from '../../initializer/browser/initializer';
+import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
 import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API
@@ -16,14 +16,15 @@ export function identity(
   eventData: IdentityEventAttributesInput,
   extensionData?: ExtensionData
 ): Promise<EPResponse | null> {
-  const { eventApiClient, settings } = getDependencies();
+  const settings = getSettings();
+
   const id = getBrowserId();
-  
+
   return new IdentityEvent({
-    eventApiClient,
     eventData,
     extensionData,
     id,
+    sendEvent,
     settings,
   }).send();
 }

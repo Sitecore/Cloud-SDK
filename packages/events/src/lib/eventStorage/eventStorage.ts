@@ -1,23 +1,19 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { pageName, language } from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../ep/EventApiClient';
 import { CustomEventArguments, CustomEvent } from '../events';
+import { sendEvent } from '../events/send-event/sendEvent';
 
-export class EventQueue {
+class EventQueue {
   /**
    * Initialize the Event Storage
-   * @param storage - Interface that describes the storage functionality
-   * @param eventApiClient - The API client which sends events to EP
-   * @param infer - The instance of the infer class
    */
   private key = 'EventQueue';
-  constructor(private storage: Storage, private eventApiClient: EventApiClient) {}
 
   /** Returns the stored array of data with type QueueEventPayload, or empty array if the given key does not exist. */
   private getEventQueue(): QueueEventPayload[] {
-    const storedQueue = this.storage.getItem(this.key);
+    const sessionStorage = this.getSessionStorage();
 
-    if (!storedQueue) return [];
+    const storedQueue = sessionStorage.getItem(this.key) ?? '""';
 
     try {
       const parsedQueueEvent: QueueEventPayload[] = JSON.parse(storedQueue);
@@ -34,18 +30,20 @@ export class EventQueue {
    * Performs validation by creating a new CustomEvent.
    */
   enqueueEvent(queueEventPayload: QueueEventPayload) {
+    const sessionStorage = this.getSessionStorage();
+
     queueEventPayload.eventData.page = queueEventPayload.eventData.page ?? pageName();
     queueEventPayload.eventData.language = queueEventPayload.eventData.language ?? language();
 
     new CustomEvent({
-      eventApiClient: this.eventApiClient,
+      sendEvent,
       ...queueEventPayload,
     });
 
     const eventQueue = this.getEventQueue();
     eventQueue.push(queueEventPayload);
 
-    this.storage.setItem(this.key, JSON.stringify(eventQueue));
+    sessionStorage.setItem(this.key, JSON.stringify(eventQueue));
   }
   /**
    * Iterates the queue, and sends sequently the custom events to Sitecore EP.
@@ -55,10 +53,10 @@ export class EventQueue {
 
     for (const queueEventPayload of eventQueue) {
       await new CustomEvent({
-        eventApiClient: this.eventApiClient,
         eventData: queueEventPayload.eventData,
         extensionData: queueEventPayload.extensionData,
         id: queueEventPayload.id,
+        sendEvent,
         settings: queueEventPayload.settings,
         type: queueEventPayload.type,
       }).send();
@@ -71,7 +69,12 @@ export class EventQueue {
    * Clears the queue from storage.
    */
   clearQueue() {
-    this.storage.removeItem(this.key);
+    const sessionStorage = this.getSessionStorage();
+    sessionStorage.removeItem(this.key);
+  }
+
+  private getSessionStorage() {
+    return sessionStorage;
   }
 }
 
@@ -85,3 +88,5 @@ export interface Storage {
 }
 
 export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'extensionData' | 'type' | 'settings' | 'id'>;
+
+export const eventQueue = new EventQueue();
