@@ -72,7 +72,7 @@ jobs:
         run: |
           for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
           do
-            gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag"
+            gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag" --generate-notes
           done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
