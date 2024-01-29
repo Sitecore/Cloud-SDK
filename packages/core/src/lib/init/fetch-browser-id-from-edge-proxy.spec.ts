@@ -96,4 +96,55 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
     }).rejects.toThrow(expectedError);
   });
+
+  it('should throw IE-0003 error if fetch returns null - fetchWithTimeout', async () => {
+    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
+
+    const expectedError =
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+
+    expect(async () => {
+      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+    }).rejects.toThrow(expectedError);
+    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw IE-0003 error if fetch rejects - fetchWithTimeout', async () => {
+    const fetchWithTimeoutSpy = jest
+      .spyOn(utils, 'fetchWithTimeout')
+      .mockRejectedValueOnce({ message: 'random error' });
+
+    const expectedError =
+      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+
+    expect(async () => {
+      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+    }).rejects.toThrow(expectedError);
+    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw [IV-0006] when we pass negative timeout value', async () => {
+    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
+      message:
+        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.',
+    });
+
+    expect(async () => {
+      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
+    }).rejects.toThrowError(
+      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+    );
+    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw [IE-0002] when we get an AbortError', async () => {
+    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
+      message: '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.',
+    });
+
+    await expect(async () => {
+      await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
+    }).rejects.toThrowError('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+  });
 });

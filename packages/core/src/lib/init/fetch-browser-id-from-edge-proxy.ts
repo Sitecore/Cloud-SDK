@@ -23,14 +23,22 @@ export async function fetchBrowserIdFromEdgeProxy(
   };
 
   const url = constructGetBrowserIdUrl(sitecoreEdgeUrl, sitecoreEdgeContextId);
-
   let payload;
+
   if (timeout !== undefined) {
-    payload = await fetchWithTimeout(url, timeout, fetchOptions);
+    payload = await fetchWithTimeout(url, timeout, fetchOptions)
+      .then((response) => {
+        return (response && response.json()) || null;
+      })
+      .catch((err) => {
+        if (err.message.includes('IV-0006') || err.message.includes('IE-0002')) {
+          throw new Error(err.message);
+        }
+        return null;
+      });
   } else {
     payload = await fetch(url, fetchOptions)
       .then((res) => res.json())
-      .then((data) => data)
       .catch(() => undefined);
   }
 

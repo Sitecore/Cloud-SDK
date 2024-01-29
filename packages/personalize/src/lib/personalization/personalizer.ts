@@ -30,9 +30,11 @@ export class Personalizer {
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
 
-    const response = await sendCallFlowsRequest(mappedData, settings, timeout);
-
-    return response;
+    return sendCallFlowsRequest(mappedData, settings, timeout)
+      .then((payload) => payload)
+      .catch((err) => {
+        throw err;
+      });
   }
 
   /**

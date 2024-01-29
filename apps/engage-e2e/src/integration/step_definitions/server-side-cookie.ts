@@ -4,8 +4,8 @@
 
 let errorMessage: string;
 import { Then, defineStep, Given, Before, After } from '@badeball/cypress-cucumber-preprocessor';
-const middlewarePath = "../engage-next/middleware.ts"
-const serverSidePropsPath = "../engage-next/pages/server-side-props-server-cookie.tsx"
+const middlewarePath = '../engage-next/middleware.ts';
+const serverSidePropsPath = '../engage-next/pages/server-side-props-server-cookie.tsx';
 
 //beforeEach hook as a workaround to not bypass CORS errors on preflight OPTIONS requests to callFlows and events
 beforeEach(() => {
@@ -15,11 +15,11 @@ beforeEach(() => {
 
 Before({ tags: '@Middleware-Server-Side-Cookie' }, () => {
   cy.replace(middlewarePath, /###\d+###/, `###${Date.now()}###`);
-})
+});
 
 Before({ tags: '@Server-Side-Props-Server-Cookie' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, `###${Date.now()}###`);
-})
+});
 
 defineStep('a server cookie is created on the {string} page', (page) => {
   cy.intercept(`${Cypress.config('baseUrl')}${page}*`).as('callToServer');
@@ -103,13 +103,17 @@ defineStep(
 );
 
 defineStep('a server cookie is created with {string} domain', (domain: string) => {
-  cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => {
-    expect(cookie?.domain).to.eq(domain);
-  }), {
-    errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 100,
-  });
+  cy.waitUntil(
+    () =>
+      cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => {
+        expect(cookie?.domain).to.eq(domain);
+      }),
+    {
+      errorMsg: 'Cookie not found',
+      timeout: 10000,
+      interval: 100,
+    }
+  );
 });
 
 defineStep(
@@ -130,9 +134,9 @@ defineStep(
 );
 
 After({ tags: '@Middleware-Server-Side-Cookie' }, () => {
-  cy.replace(middlewarePath, /###\d+###/, "###1###");
-})
+  cy.replace(middlewarePath, /###\d+###/, '###1###');
+});
 
 After({ tags: '@Server-Side-Props-Server-Cookie' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, '###1###');
-})
+});

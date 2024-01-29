@@ -176,31 +176,34 @@ describe('Test Personalizer Class', () => {
       new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
 
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith({
-        channel: 'WEB',
-        currency: 'EUR',
-        email: 'test',
-        friendlyId: 'personalizeintegrationtest',
-        identifier: {
-          id: '1',
-          provider: 'email',
+      expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+        {
+          channel: 'WEB',
+          currency: 'EUR',
+          email: 'test',
+          friendlyId: 'personalizeintegrationtest',
+          identifier: {
+            id: '1',
+            provider: 'email',
+          },
+          language: undefined,
+          params: {
+            customNumber: 123,
+            customString: 'example value',
+          },
         },
-        language: undefined,
-        params: {
-          customNumber: 123,
-          customString: 'example value',
-        },
-      },
-      { cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'bid_name',
-        cookiePath: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: "https://edge-platform.sitecorecloud.io",
-    });
+        {
+          cookieSettings: {
+            cookieDomain: 'cDomain',
+            cookieExpiryDays: 730,
+            cookieName: 'bid_name',
+            cookiePath: '/',
+          },
+          siteName: '456',
+          sitecoreEdgeContextId: '123',
+          sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+        }
+      );
 
       expect(core.language).toBeCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
@@ -299,7 +302,6 @@ describe('Test Personalizer Class', () => {
         sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
       };
 
-  
       new Personalizer(id).getInteractiveExperienceData(interactiveExperienceDataMock, settingsMock);
 
       const expectedResult = {
@@ -319,7 +321,7 @@ describe('Test Personalizer Class', () => {
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(sanitizeInputSpy).toHaveReturnedWith(expected);
-     });
+    });
 
     it('Test return object of the sanitizeInput method with empty space email ', () => {
       personalizeInputMock.email = ' ';
@@ -597,7 +599,7 @@ describe('Test Personalizer Class', () => {
 
     it('should return the response', async () => {
       const expectedResponse = { test: '420' };
-     
+
       global.fetch = jest
         .fn()
         .mockImplementation(() => Promise.resolve({ json: () => Promise.resolve(expectedResponse) }));
@@ -622,7 +624,6 @@ describe('Test Personalizer Class', () => {
       const expectedErrorMessage =
         '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
 
-  
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, -10);
       }).rejects.toThrowError(expectedErrorMessage);
@@ -631,7 +632,7 @@ describe('Test Personalizer Class', () => {
     it('should throw error if a float number is used for timeout value', async () => {
       const expectedErrorMessage =
         '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
-  
+
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 420.69);
       }).rejects.toThrowError(expectedErrorMessage);
@@ -639,7 +640,7 @@ describe('Test Personalizer Class', () => {
 
     it("should call abort method of AbortController if didn't get a response in time", async () => {
       jest.useFakeTimers();
-  
+
       global.fetch = jest.fn().mockImplementation(() => Promise.resolve({ json: () => Promise.resolve('anything') }));
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
@@ -660,7 +661,7 @@ describe('Test Personalizer Class', () => {
         }
       }
       const expectedError = '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.';
-  
+
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       try {
@@ -679,7 +680,7 @@ describe('Test Personalizer Class', () => {
         }
       }
       const expectedError = '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.';
-  
+
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100).catch((err) => {
@@ -718,7 +719,6 @@ describe('Test Personalizer Class', () => {
     });
 
     it('should return null if an unhandled error occurs', async () => {
-   
       global.fetch = jest.fn().mockImplementation(() => Promise.resolve('bad object'));
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');

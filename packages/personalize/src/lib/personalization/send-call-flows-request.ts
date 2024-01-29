@@ -27,12 +27,20 @@ export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, set
   if (timeout === undefined)
     return fetch(requestUrl, fetchOptions)
       .then((response) => response.json())
-      .then((data) => data)
       .catch(() => {
         return null;
       });
 
-  return fetchWithTimeout(requestUrl, timeout, fetchOptions);
+  return fetchWithTimeout(requestUrl, timeout, fetchOptions)
+    .then((response) => {
+      return (response && response.json()) || null;
+    })
+    .catch((err) => {
+      if (err.message.includes('IV-0006') || err.message.includes('IE-0002')) {
+        throw new Error(err.message);
+      }
+      return null;
+    });
 }
 
 /**
