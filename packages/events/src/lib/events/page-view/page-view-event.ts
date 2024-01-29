@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
 import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { EventAttributesInput } from '../common-interfaces';
 import { SendEvent } from '../send-event/sendEvent';
+import { ErrorMessages } from '../../consts';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
@@ -40,10 +40,7 @@ export class PageViewEvent extends BaseEvent {
     if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
-    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(
-        `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
-      );
+    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
     this.includeUTMParameters =
       args.eventData.includeUTMParameters === undefined ? true : args.eventData.includeUTMParameters;

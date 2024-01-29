@@ -2,6 +2,7 @@ import { pageView } from './page-view';
 import { PageViewEventInput, PageViewEvent } from './page-view-event';
 import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -57,6 +58,7 @@ describe('pageView', () => {
   });
 
   it('should send a PageViewEvent to the server', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue({
       cookieSettings: {

@@ -1,9 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { awaitInit } from '../initializer/browser/initializer';
 import { eventQueue } from './eventStorage';
 
 /**
  * Deletes the queue from session.
  */
-export function clearEventQueue(): void {
+export async function clearEventQueue(): Promise<void> {
+  await awaitInit();
+
   eventQueue.clearQueue();
 }

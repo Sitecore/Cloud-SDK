@@ -5,6 +5,7 @@ import { SendEvent } from '../send-event/sendEvent';
 import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { BasicTypes, FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
+import { ErrorMessages } from '../../consts';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
@@ -32,10 +33,7 @@ export class CustomEvent extends BaseEvent {
 
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
-    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(
-        `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
-      );
+    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
     if (numberOfExtensionDataProperties > 0) this.customEventPayload.ext = this.extensionData;
   }

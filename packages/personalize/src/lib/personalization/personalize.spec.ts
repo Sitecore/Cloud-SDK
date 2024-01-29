@@ -1,6 +1,8 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { Personalizer } from './personalizer';
 import { personalize } from './personalize';
+import * as initializerModule from '../initializer/client/initializer';
+
 jest.mock('./personalizer');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -38,6 +40,7 @@ describe('personalize', () => {
   };
 
   it('should return an object with available functionality', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
 
     expect(typeof personalize).toBe('function');
@@ -55,7 +58,7 @@ describe('personalize', () => {
       sitecoreEdgeUrl: '',
     });
 
-    personalize(eventData);
+    await personalize(eventData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);

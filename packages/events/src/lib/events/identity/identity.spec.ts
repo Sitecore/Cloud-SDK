@@ -2,6 +2,7 @@ import { identity } from './identity';
 import * as core from '@sitecore-cloudsdk/core';
 import { IdentityEvent } from './identity-event';
 import { sendEvent } from '../send-event/sendEvent';
+import * as initializerModule from '../../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -45,8 +46,8 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 describe('identity', () => {
   it('should send an IdentityEvent to the server', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const id = 'test_id';
-
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     const eventData = {
       channel: 'WEB',

@@ -2,6 +2,7 @@ import { event } from './event';
 import { CustomEvent, CustomEventInput } from './custom-event';
 import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../../initializer/browser/initializer';
 
 jest.mock('../../initializer/browser/initializer');
 jest.mock('./custom-event');
@@ -38,6 +39,8 @@ describe('eventServer', () => {
 
   it('should send a custom event to the server', async () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+
     getSettingsSpy.mockReturnValue({
       cookieSettings: {
         cookieDomain: 'cDomain',

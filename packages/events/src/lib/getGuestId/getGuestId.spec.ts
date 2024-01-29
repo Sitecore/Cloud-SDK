@@ -1,5 +1,6 @@
 import { getGuestId } from './getGuestId';
 import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -17,6 +18,7 @@ describe('getGuestId', () => {
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   const getSettingsSpy = jest.spyOn(core, 'getSettings');
+  const awaitInitSpy = jest.spyOn(initializerModule, 'awaitInit');
 
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
@@ -25,6 +27,7 @@ describe('getGuestId', () => {
   });
 
   it('should call getGuestIdFromCore with the correct parameters and resolve with guestId', async () => {
+    awaitInitSpy.mockResolvedValueOnce();
     getSettingsSpy.mockReturnValue({
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -45,11 +48,12 @@ describe('getGuestId', () => {
   });
 
   it('should throw error if settings have not been configured properly', async () => {
+    awaitInitSpy.mockResolvedValue();
     getSettingsSpy.mockImplementation(() => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(() => getGuestId()).toThrow(
+    await expect(async () => await getGuestId()).rejects.toThrow(
       `[IE-0008] You must first initialize the "core" package. Run the "init" function.`
     );
   });

@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import { Settings } from '@sitecore-cloudsdk/core';
 import { NestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { LIBRARY_VERSION } from '../consts';
@@ -35,7 +34,6 @@ export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, set
 
   return fetchWithTimeout(requestUrl, timeout, fetchOptions);
 }
-
 
 /**
  * An interface with the basic functionality that the derived classes needs to implement

@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import { ExtensionData } from '../common-interfaces';
 import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
 import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 
 /**
@@ -12,12 +12,13 @@ import { sendEvent } from '../send-event/sendEvent';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function identity(
+export async function identity(
   eventData: IdentityEventAttributesInput,
   extensionData?: ExtensionData
 ): Promise<EPResponse | null> {
-  const settings = getSettings();
+  await awaitInit();
 
+  const settings = getSettings();
   const id = getBrowserId();
 
   return new IdentityEvent({

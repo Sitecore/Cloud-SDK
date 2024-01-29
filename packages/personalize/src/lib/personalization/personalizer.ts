@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import { Settings, language } from '@sitecore-cloudsdk/core';
 import { sendCallFlowsRequest, EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 
 export class Personalizer {
   /**
@@ -86,7 +86,7 @@ export class Personalizer {
    * A validation method to throw error for the mandatory property for runtime users
    */
   private validate({ friendlyId }: PersonalizerInput) {
-    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(`[MV-0004] "friendlyId" is required.`);
+    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(ErrorMessages.MV_0004);
   }
 }
 

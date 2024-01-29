@@ -6,6 +6,7 @@ import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { form } from './form';
 import { init } from '../../initializer/browser/initializer';
+import * as initializerModule from '../../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -41,12 +42,13 @@ describe('form function', () => {
   it('should send the form event without EP optional attributes', async () => {
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as EPResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     await init(settingsParams);
-    form('1234', 'SUBMITTED');
+    await form('1234', 'SUBMITTED');
 
     const expectedBody = JSON.stringify({
       type: 'FORM',

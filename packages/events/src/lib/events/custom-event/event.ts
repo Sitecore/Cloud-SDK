@@ -3,6 +3,7 @@
 import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
 import { ExtensionData } from '../common-interfaces';
 import { CustomEventInput, CustomEvent } from './custom-event';
+import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 
 /**
@@ -13,13 +14,14 @@ import { sendEvent } from '../send-event/sendEvent';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function event(
+export async function event(
   type: string,
   eventData: CustomEventInput,
   extensionData?: ExtensionData
 ): Promise<EPResponse | null> {
-  const settings = getSettings();
+  await awaitInit();
 
+  const settings = getSettings();
   const id = getBrowserId();
 
   return new CustomEvent({

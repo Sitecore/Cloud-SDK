@@ -2,6 +2,7 @@
 import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 
 /**
@@ -11,7 +12,12 @@ import { sendEvent } from '../send-event/sendEvent';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function pageView(eventData: PageViewEventInput, extensionData?: NestedObject): Promise<EPResponse | null> {
+export async function pageView(
+  eventData: PageViewEventInput,
+  extensionData?: NestedObject
+): Promise<EPResponse | null> {
+  await awaitInit();
+
   const settings = getSettings();
   const id = getBrowserId();
 

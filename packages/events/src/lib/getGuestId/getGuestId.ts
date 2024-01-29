@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
+import { awaitInit } from '../initializer/browser/initializer';
 import { getBrowserId, getGuestId as getGuestIdFromCore, getSettings } from '@sitecore-cloudsdk/core';
 
 /**
@@ -7,7 +7,9 @@ import { getBrowserId, getGuestId as getGuestIdFromCore, getSettings } from '@si
  * @returns - A promise that resolves with the guest id
  * @throws - Will throw an error if the clientKey/browser id is invalid
  */
-export function getGuestId(): Promise<string> {
+export async function getGuestId(): Promise<string> {
+  await awaitInit();
+
   const settings = getSettings();
   const id = getBrowserId();
 

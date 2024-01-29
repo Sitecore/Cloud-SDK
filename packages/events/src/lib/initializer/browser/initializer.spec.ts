@@ -1,6 +1,6 @@
-import { init } from './initializer';
+import { init, awaitInit } from './initializer';
 import packageJson from '../../../../package.json';
-import { LIBRARY_VERSION } from '../../consts';
+import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import '../../../global.d.ts';
@@ -121,5 +121,38 @@ describe('initializer', () => {
       events: LIBRARY_VERSION,
       testV: '1.0.0',
     });
+  });
+  it('should reset the initPromise if initCore fails', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
+      throw new Error('error');
+    });
+
+    await expect(async () => {
+      await init(settingsParams);
+    }).rejects.toThrowError('error');
+  });
+});
+
+describe('awaitInit', () => {
+  it('should throw error if initPromise is null', async () => {
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrowError(ErrorMessages.IE_0004);
+  });
+  it('should not throw if initPromise is a Promise', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
+
+    const settingsParams: core.SettingsParamsBrowser = {
+      cookieDomain: 'cDomain',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://localhost',
+    };
+
+    await init(settingsParams);
+
+    expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
   });
 });

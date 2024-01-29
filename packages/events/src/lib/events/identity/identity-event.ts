@@ -5,6 +5,7 @@ import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { isShortISODateString, isValidEmail, FlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
 import { SendEvent } from '../send-event/sendEvent';
+import { ErrorMessages } from '../../consts';
 
 export class IdentityEvent extends BaseEvent {
   private eventData: IdentityEventAttributesInput;
@@ -32,10 +33,7 @@ export class IdentityEvent extends BaseEvent {
 
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
-    if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(
-        `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
-      );
+    if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
   }
 
   /**
@@ -43,18 +41,15 @@ export class IdentityEvent extends BaseEvent {
    *  * @param eventData - The data to be validated
    */
   private validateAttributes(eventData: IdentityEventAttributesInput) {
-    if (eventData.identifiers.length === 0) throw new Error(`[MV-0003] "identifiers" is required.`);
+    if (eventData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
 
-    if (eventData.dob !== undefined && !isShortISODateString(eventData.dob))
-      throw new Error(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
+    if (eventData.dob !== undefined && !isShortISODateString(eventData.dob)) throw new Error(ErrorMessages.IV_0002);
 
     eventData.identifiers.forEach((identifier: Identifier) => {
-      if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
-        throw new Error(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
+      if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate)) throw new Error(ErrorMessages.IV_0004);
     });
 
-    if (eventData.email && !isValidEmail(eventData.email))
-      throw new Error(`[IV-0003] Incorrect value for "email". Set the value to a valid email address.`);
+    if (eventData.email && !isValidEmail(eventData.email)) throw new Error(ErrorMessages.IV_0003);
   }
 
   /**
