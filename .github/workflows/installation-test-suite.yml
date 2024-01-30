@@ -1,0 +1,38 @@
+name: Test Installation of Engage release candidate across various frameworks
+
+on:
+  # workflow_run:
+  #   workflows: ['Pull Request']
+  #   types:
+  #     - completed
+  workflow_dispatch:
+
+jobs:
+  next-app-13:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.workflow_run.head_branch }}
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Create npm link for personalize
+        run: |
+          pwd
+          npx nx run personalize:build && npx nx run events:build
+          cd .\packages\events
+          pwd
+          npm link
+          cd ..\personalize\
+          npm link
+      - name: Create Next app
+        run: |
+          pwd
+          cd ../          
+          npx create-next-app my-next-app --ts --no-eslint --no-tailwind --no-src-dir --no-app --import-alias '@/*'
+
+  
