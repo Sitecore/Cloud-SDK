@@ -57,9 +57,7 @@ jobs:
 
       - name: Create a new branch
         run: |
-          git stash
           git checkout -b release/${{steps.get-version.outputs.new_release_version}}
-          git stash pop
 
       - name: Commit to branch
         run: |
