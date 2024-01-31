@@ -61,6 +61,7 @@ jobs:
 
       - name: Commit to branch
         run: |
+          echo "// just a commit change" >> ./packages/events/src/lib/consts.ts
           git commit -a -m "chore: Bumping package.json to new version: ${{steps.get-version.outputs.new_release_version}} [skip ci]"
 
       - name: Push to branch
