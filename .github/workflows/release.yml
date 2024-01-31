@@ -119,7 +119,6 @@ jobs:
           registry: https://registry.npmjs.org/
           access: public
           package: ./${{matrix.package-folder}}/package.json
-          dry-run: true
         env:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
