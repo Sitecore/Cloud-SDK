@@ -6,3 +6,4 @@ import packageJson from '../../package.json';
  * Returns the version of the library.
  */
 export const LIBRARY_VERSION = packageJson.version;
+// just a commit change
