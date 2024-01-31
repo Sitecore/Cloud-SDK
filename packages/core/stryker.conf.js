@@ -3,7 +3,7 @@ const config = {
   mutate: ['./packages/core/src/**/*.ts', '!./packages/core/src/**/*spec.ts', '!./packages/core/src/lib/consts.ts'],
   thresholds: { high: 80, low: 60, break: 100 },
   // ignoreStatic: true,
-  incremental: true,
+  incremental: false,
   testRunner: 'jest',
   htmlReporter: { fileName: 'reports/mutation/core/mutation.html' },
   reporters: ['html', 'clear-text', 'progress'],

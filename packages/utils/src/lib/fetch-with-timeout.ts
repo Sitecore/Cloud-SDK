@@ -15,7 +15,7 @@ export async function fetchWithTimeout(
   fetchOptions: {
     [key: string]: unknown;
   }
-): Promise<null | unknown> {
+): Promise<Response | null> {
   if (!Number.isInteger(timeout) || timeout < 0)
     throw new Error(
       '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
@@ -31,13 +31,11 @@ export async function fetchWithTimeout(
   return fetch(url, { ...fetchOptions, signal })
     .then((response) => {
       clearTimeout(timeoutHandler);
-      return response.json();
+      return response;
     })
-    .then((data) => data)
     .catch((error) => {
       if (error.name === 'AbortError')
         throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
-
       return null;
     });
 }

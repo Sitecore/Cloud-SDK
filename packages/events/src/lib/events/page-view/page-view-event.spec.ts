@@ -7,7 +7,8 @@ import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EventApiClient } from '../../ep/EventApiClient';
+import * as sendEvent from '../send-event/sendEvent';
+
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -27,8 +28,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('PageViewEvent', () => {
-  const eventApiClient = new EventApiClient('http://testurl', '123', '456');
-  const fetchCallSpy = jest.spyOn(EventApiClient.prototype, 'send');
+  const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
   const id = 'test_id';
 
   let expectedBasicAttributes = {};
@@ -36,7 +36,7 @@ describe('PageViewEvent', () => {
   let settings: Settings;
 
   function callPageEvent(
-    eventApiClient: any,
+    sendEvent: any,
     eventData: any,
     id: any,
     settings: any,
@@ -44,7 +44,7 @@ describe('PageViewEvent', () => {
     searchParams?: any
   ) {
     new PageViewEvent({
-      eventApiClient,
+      sendEvent: sendEvent.sendEvent,
       eventData,
       id,
       settings,
@@ -103,7 +103,7 @@ describe('PageViewEvent', () => {
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
       const event = new PageViewEvent({
-        eventApiClient,
+        sendEvent: sendEvent.sendEvent,
         eventData,
         id,
         searchParams: '',
@@ -153,13 +153,13 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
 
     it('should return the variantid if exists in the search params that is passed from the server and not present in the event data', async () => {
-      callPageEvent(eventApiClient, eventData, id, settings, undefined, '?variantid=test_pageVariantId');
+      callPageEvent(sendEvent, eventData, id, settings, undefined, '?variantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
     it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
@@ -171,7 +171,9 @@ describe('PageViewEvent', () => {
       });
       eventData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
-      callPageEvent(eventApiClient, eventData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
+
+      callPageEvent(sendEvent, eventData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
+
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
 
@@ -185,7 +187,9 @@ describe('PageViewEvent', () => {
 
       eventData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
-      callPageEvent(eventApiClient, eventData, id, settings, extensionData);
+
+      callPageEvent(sendEvent, eventData, id, settings, extensionData);
+
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
     it('should return null if the variantid does not exist in the search params property and event data', async () => {
@@ -195,7 +199,9 @@ describe('PageViewEvent', () => {
         },
         writable: true,
       });
-      callPageEvent(eventApiClient, eventData, id, settings);
+
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getPageVariantIdSpy).toHaveReturnedWith(null);
     });
     it('should not call flatten object method when no extension data is passed', async () => {
@@ -207,7 +213,8 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
     it('should prioritize pageVariantId value from event data over extension data when provided in both', async () => {
@@ -221,7 +228,8 @@ describe('PageViewEvent', () => {
 
       eventData.pageVariantId = 'vid';
 
-      callPageEvent(eventApiClient, eventData, id, settings, extensionData);
+      callPageEvent(sendEvent, eventData, id, settings, extensionData);
+
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -229,7 +237,8 @@ describe('PageViewEvent', () => {
           ext: { pageVariantId: 'vid' },
         },
       };
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
     it('should send an event with fetch without the pageVariantId', async () => {
       Object.defineProperty(window, 'location', {
@@ -239,14 +248,16 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
           type: 'VIEW',
         },
       };
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
   });
 
@@ -257,7 +268,9 @@ describe('PageViewEvent', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
-    callPageEvent(eventApiClient, eventData, id, settings, extensionData);
+
+    callPageEvent(sendEvent, eventData, id, settings, extensionData);
+
     const expectedAttributes = {
       ...expectedBasicAttributes,
       ...{
@@ -265,7 +278,8 @@ describe('PageViewEvent', () => {
         ext: { test_a_b: 'b', test_c: 11, testz: 22 },
       },
     };
-    expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+
+    expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
   });
 
   describe('Should throw error', () => {
@@ -276,7 +290,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(eventApiClient, eventData, id, settings, extensionData);
+        callPageEvent(sendEvent, eventData, id, settings, extensionData);
       }).toThrowError(extErrorMessage);
     });
 
@@ -287,7 +301,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(eventApiClient, eventData, id, settings, extensionData);
+        callPageEvent(sendEvent, eventData, id, settings, extensionData);
       }).not.toThrowError(extErrorMessage);
     });
   });
@@ -306,14 +320,16 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should return null if isFirstPageView is false ', async () => {
       PageViewEvent.isFirstPageView = false;
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(PageViewEvent.isFirstPageView).toBeFalsy();
     });
     it('getReferrer should return null if isFirstPageView is true and document referrer is empty string ', async () => {
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(document.referrer).toBe('');
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -333,15 +349,17 @@ describe('PageViewEvent', () => {
       });
 
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{ type: 'VIEW' },
         referrer: 'http://test.com/extra_path?search=test',
       };
+
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith('http://test.com/extra_path?search=test');
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
 
     it('should return null if host name is the same', async () => {
@@ -356,7 +374,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(eventApiClient, eventData, id, settings, undefined);
+      callPageEvent(sendEvent, eventData, id, settings, undefined);
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith(null);
     });
@@ -367,17 +385,20 @@ describe('PageViewEvent', () => {
         // writable: true,
       });
 
-      expect(global.window).toBeUndefined();
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(eventApiClient, eventData, id, settings, undefined, '');
+
+      callPageEvent(sendEvent, eventData, id, settings, undefined, '');
+
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{ type: 'VIEW' },
       };
+
+      expect(global.window).toBeUndefined();
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith(null);
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
 
     it('getReferrer should be retrieved if provided eventData and window is undefined', async () => {
@@ -387,7 +408,9 @@ describe('PageViewEvent', () => {
       });
       PageViewEvent.isFirstPageView = true;
       eventData.referrer = 'campaign';
-      callPageEvent(eventApiClient, eventData, id, settings, undefined, '');
+
+      callPageEvent(sendEvent, eventData, id, settings, undefined, '');
+
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith('campaign');
@@ -429,7 +452,8 @@ describe('PageViewEvent', () => {
 
       eventData.includeUTMParameters = false;
 
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(0);
     });
 
@@ -441,7 +465,9 @@ describe('PageViewEvent', () => {
       }));
 
       eventData.includeUTMParameters = true;
-      callPageEvent(eventApiClient, eventData, id, settings);
+
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -451,7 +477,9 @@ describe('PageViewEvent', () => {
           search: '',
         },
       }));
-      callPageEvent(eventApiClient, eventData, id, settings);
+
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getUTMParametersSpy).toHaveLastReturnedWith({});
     });
 
@@ -461,7 +489,9 @@ describe('PageViewEvent', () => {
           search: '?banana=banana',
         },
       }));
-      callPageEvent(eventApiClient, eventData, id, settings);
+
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getUTMParametersSpy).toHaveReturnedWith({});
     });
 
@@ -471,7 +501,9 @@ describe('PageViewEvent', () => {
           search: '?utm_campaign=campaign&utm_medium=email',
         },
       }));
-      callPageEvent(eventApiClient, eventData, id, settings);
+
+      callPageEvent(sendEvent, eventData, id, settings);
+
       expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
     });
 
@@ -482,19 +514,20 @@ describe('PageViewEvent', () => {
 
       jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
 
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
           type: 'VIEW',
         },
       };
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
 
     it('should send an event with utm_ params if the returned object is not empty', () => {
       getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
-      callPageEvent(eventApiClient, eventData, id, settings);
+      callPageEvent(sendEvent, eventData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -502,7 +535,7 @@ describe('PageViewEvent', () => {
           utm_test: 'test',
         },
       };
-      expect(fetchCallSpy).toHaveBeenCalledWith(expectedAttributes);
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
   });
 });

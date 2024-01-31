@@ -1,6 +1,6 @@
 import { getGuestId } from './getGuestId';
 import * as core from '@sitecore-cloudsdk/core';
-import * as EventSettings from '../../lib/initializer/browser/initializer';
+import * as initializerModule from '../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -13,8 +13,12 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 describe('getGuestId', () => {
-  const getDependenciesSpy = jest.spyOn(EventSettings, 'getDependencies');
   const getGuestIdSpy = jest.spyOn(core, 'getGuestId');
+  const id = 'test_id';
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+
+  const getSettingsSpy = jest.spyOn(core, 'getSettings');
+  const awaitInitSpy = jest.spyOn(initializerModule, 'awaitInit');
 
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
@@ -23,31 +27,34 @@ describe('getGuestId', () => {
   });
 
   it('should call getGuestIdFromCore with the correct parameters and resolve with guestId', async () => {
-    getDependenciesSpy.mockReturnValueOnce({
-      id: '_id',
-      settings: {
-        cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieName: 'name',
-          cookiePath: '/',
-        },
-        includeUTMParameters: true,
-        targetURL: 'https://domain',
+    awaitInitSpy.mockResolvedValueOnce();
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
       },
-    } as any);
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://localhost',
+    });
 
     getGuestIdSpy.mockResolvedValueOnce('guestID');
 
     const guestID = await getGuestId();
-    expect(getDependenciesSpy).toHaveBeenCalledTimes(1);
     expect(getGuestIdSpy).toHaveBeenCalledTimes(1);
     expect(guestID).toBe('guestID');
   });
 
   it('should throw error if settings have not been configured properly', async () => {
-    expect(() => getGuestId()).toThrow(
-      '[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.'
+    awaitInitSpy.mockResolvedValue();
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    await expect(async () => await getGuestId()).rejects.toThrow(
+      `[IE-0008] You must first initialize the "core" package. Run the "init" function.`
     );
   });
 });

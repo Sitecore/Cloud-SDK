@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import { language } from '@sitecore-cloudsdk/core';
-import { EPCallFlowsBody, FailedCalledFlowsResponse, PersonalizeClient } from './callflow-edge-proxy-client';
+import { Settings, language } from '@sitecore-cloudsdk/core';
+import { sendCallFlowsRequest, EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 
 export class Personalizer {
   /**
@@ -11,7 +11,7 @@ export class Personalizer {
    * @param infer - The source of methods to estimate language and page parameters
    */
 
-  constructor(private personalizeClient: PersonalizeClient, private id: string) {}
+  constructor(private id: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
@@ -20,6 +20,7 @@ export class Personalizer {
    */
   async getInteractiveExperienceData(
     personalizeInput: PersonalizerInput,
+    settings: Settings,
     timeout?: number
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
     this.validate(personalizeInput);
@@ -29,9 +30,11 @@ export class Personalizer {
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
 
-    const response = await this.personalizeClient.sendCallFlowsRequest(mappedData, timeout);
-
-    return response;
+    return sendCallFlowsRequest(mappedData, settings, timeout)
+      .then((payload) => payload)
+      .catch((err) => {
+        throw err;
+      });
   }
 
   /**
@@ -85,7 +88,7 @@ export class Personalizer {
    * A validation method to throw error for the mandatory property for runtime users
    */
   private validate({ friendlyId }: PersonalizerInput) {
-    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(`[MV-0004] "friendlyId" is required.`);
+    if (!friendlyId || friendlyId.trim().length === 0) throw new Error(ErrorMessages.MV_0004);
   }
 }
 

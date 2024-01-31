@@ -1,11 +1,10 @@
-import * as initPersonalize from './initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION } from '../../consts';
-import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
+import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
 import '../../global.d.ts';
+import { init, awaitInit } from './initializer';
 
 jest.mock('../../personalization/personalizer');
-jest.mock('../../personalization/callflow-edge-proxy-client');
+jest.mock('../../personalization/send-call-flows-request');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -52,70 +51,30 @@ describe('initializer', () => {
     global.window ??= Object.create(window);
   });
 
-  beforeEach(() => {
-    initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-  });
-
-  describe('getDependencies', () => {
-    beforeEach(() => {
-      initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-    });
-    it('should throw error if settings are not initialized', () => {
-      expect(() => initPersonalize.getDependencies()).toThrow(
-        `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
-      );
-    });
-    it('should throw error if settings are not initialized v2', () => {
-      let settings;
-      expect(() => {
-        settings = initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-      expect(settings).toBeUndefined();
-    });
-
-    it('should throw error if settings are not initialized v3', () => {
-      expect(() => {
-        initPersonalize.setDependencies(null);
-        initPersonalize.getDependencies();
-      }).toThrowError(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-    });
-  });
   describe('init', () => {
     it('should call all the necessary functions if all properties are set correctly', async () => {
-      await initPersonalize.init(settingsParams);
-      const settings = initPersonalize.getDependencies();
+      await init(settingsParams);
 
-      expect(settings.settings.sitecoreEdgeContextId).toBe('123');
-      expect(settings).toBeDefined();
+      expect(settingsParams.sitecoreEdgeContextId).toBe('123');
+      expect(settingsParams).toBeDefined();
       expect(core.initCore).toHaveBeenCalledTimes(1);
-      expect(core.getSettings).toHaveBeenCalledTimes(1);
-      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-
-      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
 
     it('should call all the necessary functions if all properties are set correctly', async () => {
-      await initPersonalize.init(settingsParams);
+      await init(settingsParams);
       expect(core.initCore).toHaveBeenCalledTimes(1);
-      expect(core.getSettings).toHaveBeenCalledTimes(1);
-      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-
-      expect(CallFlowEdgeProxyClient).toHaveBeenCalledTimes(1);
     });
   });
 
   describe('window object', () => {
-    beforeEach(() => {
-      initPersonalize.setDependencies(null as unknown as initPersonalize.BrowserPersonalizeSettings);
-    });
     it('should invoke get browser id method when calling the getBrowserId method', async () => {
-      await initPersonalize.init(settingsParams);
+      await init(settingsParams);
 
       if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-      expect(core.getBrowserId).toHaveBeenCalledTimes(2);
+      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
     });
     it('adds method to get ID to window Engage property when engage is on window', async () => {
-      await initPersonalize.init(settingsParams);
+      await init(settingsParams);
       expect(global.window.Engage).toBeDefined();
       /* eslint-disable @typescript-eslint/no-explicit-any */
       global.window.Engage = { test: 'test' } as any;
@@ -129,7 +88,7 @@ describe('initializer', () => {
 
       expect(global.window.Engage).toBeUndefined();
 
-      await initPersonalize.init(settingsParams);
+      await init(settingsParams);
 
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({ personalize: LIBRARY_VERSION });
@@ -141,7 +100,7 @@ describe('initializer', () => {
       delete global.window;
 
       await expect(async () => {
-        await initPersonalize.init(settingsParams);
+        await init(settingsParams);
       }).rejects.toThrowError(
         // eslint-disable-next-line max-len
         `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
@@ -150,7 +109,7 @@ describe('initializer', () => {
 
     it('should expand the window.Engage object', async () => {
       global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
-      await initPersonalize.init(settingsParams);
+      await init(settingsParams);
 
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({
@@ -158,5 +117,39 @@ describe('initializer', () => {
         testV: '1.0.0',
       });
     });
+
+    it('should reset the initPromise if initCore fails', async () => {
+      jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
+        throw new Error('error');
+      });
+
+      await expect(async () => {
+        await init(settingsParams);
+      }).rejects.toThrowError('error');
+    });
+  });
+});
+
+describe('awaitInit', () => {
+  it('should throw error if initPromise is null', async () => {
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrowError(ErrorMessages.IE_0006);
+  });
+  it('should not throw if initPromise is a Promise', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
+
+    const settingsParams: core.SettingsParamsBrowser = {
+      cookieDomain: 'cDomain',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://localhost',
+    };
+
+    await init(settingsParams);
+
+    expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
   });
 });

@@ -1,8 +1,8 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { Personalizer } from './personalizer';
 import { personalize } from './personalize';
-import * as init from '../initializer/client/initializer';
-import { CallFlowEdgeProxyClient } from './callflow-edge-proxy-client';
+import * as initializerModule from '../initializer/client/initializer';
+
 jest.mock('./personalizer');
 
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -19,19 +19,12 @@ describe('personalize', () => {
   const { window } = global;
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  const id = 'test_id';
+
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   jest.spyOn(core, 'createCookie').mock;
-  const settingsObj: core.Settings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
-  };
+
   afterEach(() => {
     jest.clearAllMocks();
     global.window ??= Object.create(window);
@@ -47,18 +40,28 @@ describe('personalize', () => {
   };
 
   it('should return an object with available functionality', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
-    jest.spyOn(init, 'getDependencies').mockReturnValueOnce({
-      callFlowEdgeProxyClient: new CallFlowEdgeProxyClient(settingsObj),
-      id: 'mitsos',
-      settings: settingsObj,
-    });
 
     expect(typeof personalize).toBe('function');
 
-    personalize(eventData);
-    expect(init.getDependencies).toHaveBeenCalledTimes(1);
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
+    await personalize(eventData);
+
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

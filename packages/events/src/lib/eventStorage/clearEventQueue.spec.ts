@@ -1,7 +1,7 @@
 import { clearEventQueue } from './clearEventQueue';
-import * as init from '../../lib/initializer/browser/initializer';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
+import * as initializerModule from '../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -13,24 +13,19 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('clearEventQueue', () => {
-  const getDependenciesSpy = jest.spyOn(init, 'getDependencies');
-
-  const settingsParams: core.SettingsParamsBrowser = {
-    cookieDomain: 'cDomain',
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-  };
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
   afterEach(() => {
     jest.clearAllMocks();
   });
-  it('should clear the queue', async () => {
-    const clearQueueSpy = jest.spyOn(eventQueue.EventQueue.prototype, 'clearQueue');
 
-    await init.init(settingsParams);
-    clearEventQueue();
-    expect(getDependenciesSpy).toHaveBeenCalledTimes(1);
+  it('should clear the queue', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const clearQueueSpy = jest.spyOn(eventQueue.eventQueue, 'clearQueue');
+
+    await clearEventQueue();
+
     expect(clearQueueSpy).toHaveBeenCalledTimes(1);
   });
 });

@@ -14,9 +14,11 @@ describe('handleMiddlewareRequest', () => {
     status: 'OK',
     version: '1.2',
   };
+
   const mockFetch = Promise.resolve({
     json: () => Promise.resolve(mockFetchResponse),
   });
+
   const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',

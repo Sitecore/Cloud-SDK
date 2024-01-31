@@ -22,7 +22,7 @@ describe('fetchWithTimeout', () => {
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions);
 
-    expect(result).toEqual({ ref: 'ref' });
+    expect(await result?.json()).toEqual({ ref: 'ref' });
   });
 
   it('should handle a timeout and return null when the server does not respond within the timeout', async () => {
@@ -91,7 +91,7 @@ describe('fetchWithTimeout', () => {
     expect(result).toBeUndefined();
   });
 
-  it('should catch an error with the appropriate message error if the fetch request failsdddddddd', async () => {
+  it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
     const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
@@ -150,5 +150,13 @@ describe('fetchWithTimeout', () => {
     }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
   });
 
-  //
+  it('should return bad object if response has no .json method', async () => {
+    const timeout = 1000; // 1 second timeout
+
+    global.fetch = jest.fn().mockImplementation(() => Promise.resolve('bad object'));
+
+    const result = await fetchWithTimeout(url, timeout, fetchOptions);
+
+    expect(result).toBe('bad object');
+  });
 });

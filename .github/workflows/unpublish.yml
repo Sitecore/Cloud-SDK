@@ -1,0 +1,19 @@
+name: Unpublish all libraries to NPM
+
+on:
+  workflow_dispatch:
+
+jobs:
+  unpublish:
+    name: 'unpublish'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create npm token file
+        run: echo //registry.npmjs.org/:_authToken=${{secrets.NPMJS_PUBLISH_TOKEN}} > .npmrc
+
+      - name: Unpublish step
+        run: |
+          npm unpublish @sitecore-cloudsdk/events@0.1.4
+          npm unpublish @sitecore-cloudsdk/personalize@0.1.4
+          npm unpublish @sitecore-cloudsdk/core@0.1.4
+          npm unpublish @sitecore-cloudsdk/utils@0.1.4

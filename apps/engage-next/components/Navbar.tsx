@@ -36,6 +36,21 @@ const links = [
     path: '/server-side-props-identity-event',
     testId: 'serverSidePropsIdentityEventPage',
   },
+  {
+    text: 'Personalize',
+    path: '/personalize',
+    testId: 'personalizePage',
+  },
+  {
+    text: 'Async events',
+    path: '/async-init-events',
+    testId: 'asyncInitEvents',
+  },
+  {
+    text: 'Async personalize',
+    path: '/async-init-personalize',
+    testId: 'asyncInitPersonalize',
+  },
 ];
 
 function Navbar() {

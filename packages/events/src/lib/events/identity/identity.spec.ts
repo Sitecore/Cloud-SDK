@@ -1,16 +1,16 @@
 import { identity } from './identity';
-import { getDependencies } from '../../initializer/browser/initializer';
+import * as core from '@sitecore-cloudsdk/core';
 import { IdentityEvent } from './identity-event';
+import { sendEvent } from '../send-event/sendEvent';
+import * as initializerModule from '../../initializer/browser/initializer';
 
-jest.mock('../../initializer/browser/initializer', () => {
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+
   return {
-    getDependencies: jest.fn(() => {
-      return {
-        eventApiClient: 'mockedEventApiClient',
-        id: 'mockedId',
-        settings: {},
-      };
-    }),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
   };
 });
 
@@ -46,6 +46,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 describe('identity', () => {
   it('should send an IdentityEvent to the server', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const id = 'test_id';
+    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
     const eventData = {
       channel: 'WEB',
       currency: 'EUR',
@@ -53,7 +56,7 @@ describe('identity', () => {
         {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
-          id: '',
+          id,
           provider: 'email',
         },
       ],
@@ -61,18 +64,31 @@ describe('identity', () => {
       page: 'identity',
     };
 
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
     const extensionData = { extKey: 'extValue' };
 
     const response = await identity(eventData, extensionData);
 
-    expect(getDependencies).toHaveBeenCalled();
     expect(IdentityEvent).toHaveBeenCalledWith({
-      eventApiClient: 'mockedEventApiClient',
       eventData,
       extensionData,
-      id: 'mockedId',
+      id,
+      sendEvent,
       settings: expect.objectContaining({}),
     });
     expect(response).toBe('mockedResponse');
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

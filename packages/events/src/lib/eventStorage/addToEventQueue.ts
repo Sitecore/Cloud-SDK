@@ -1,7 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { awaitInit } from '../initializer/browser/initializer';
 import { CustomEventInput, ExtensionData } from '../events';
-import { getDependencies } from '../initializer/browser/initializer';
-import { QueueEventPayload } from './eventStorage';
+import { QueueEventPayload, eventQueue } from './eventStorage';
+import { getBrowserId, getSettings } from '@sitecore-cloudsdk/core';
+
 /**
  * A function that adds event to the queue
  * @param type - The required type of the event
@@ -9,8 +11,16 @@ import { QueueEventPayload } from './eventStorage';
  * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
  * This object will be flattened and sent in the ext object of the payload
  */
-export function addToEventQueue(type: string, eventData: CustomEventInput, extensionData?: ExtensionData): void {
-  const { id, settings, eventQueue } = getDependencies();
+export async function addToEventQueue(
+  type: string,
+  eventData: CustomEventInput,
+  extensionData?: ExtensionData
+): Promise<void> {
+  await awaitInit();
+
+  const settings = getSettings();
+  const id = getBrowserId();
+
   const queueEventPayload: QueueEventPayload = {
     eventData,
     extensionData,
@@ -18,5 +28,6 @@ export function addToEventQueue(type: string, eventData: CustomEventInput, exten
     settings,
     type,
   };
+
   eventQueue.enqueueEvent(queueEventPayload);
 }

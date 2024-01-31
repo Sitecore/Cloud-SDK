@@ -1,59 +1,28 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
+import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
 
-import { Settings, SettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION } from '../../consts';
-import { CallFlowEdgeProxyClient } from '../../personalization/callflow-edge-proxy-client';
+export let initPromise: Promise<void> | null = null;
 
-let dependencies: BrowserPersonalizeSettings | null = null;
-/**
- * Sets the personalize settings to be used by the application.
- *
- * @param settings - The personalize settings to be set, or `null` to clear the settings.
- */
-export function setDependencies(settings: BrowserPersonalizeSettings | null) {
-  dependencies = settings;
-}
-
-/**
- * Retrieves the browser personalize settings object.
- *
- * This function ensures that the browser personalize settings have been initialized and contain essential properties like `settings` and `callFlowEPClient`.
- *
- * @returns The browser personalize settings object.
- * @throws Error if the personalize settings haven't been initialized with the required properties.
- */
-export function getDependencies(): BrowserPersonalizeSettings {
-  if (!dependencies) {
-    throw Error(`[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`);
-  }
-  return dependencies;
-}
 /**
  * Initiates the Engage library using the global settings added by the developer
  * @param settingsInput - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
 export async function init(settingsInput: SettingsParamsBrowser): Promise<void> {
-  if (typeof window === 'undefined') {
-    throw new Error(
-      // eslint-disable-next-line max-len
-      `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
-    );
+  if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
+
+  try {
+    initPromise = initCore(settingsInput);
+
+    await initPromise;
+  } catch (error) {
+    initPromise = null;
+
+    throw new Error(error as string);
   }
 
-  await initCore(settingsInput);
-
-  const settings = getSettings();
-  const id = getBrowserId();
-  const callFlowEdgeProxyClient = new CallFlowEdgeProxyClient(settings);
-
   window.Engage ??= {};
-
-  setDependencies({
-    callFlowEdgeProxyClient,
-    id,
-    settings,
-  });
 
   window.Engage = {
     ...window.Engage,
@@ -65,8 +34,11 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
   };
 }
 
-export interface BrowserPersonalizeSettings {
-  id: string;
-  settings: Settings;
-  callFlowEdgeProxyClient: CallFlowEdgeProxyClient;
+/**
+ * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ */
+export async function awaitInit() {
+  if (initPromise === null) throw new Error(ErrorMessages.IE_0006);
+
+  await initPromise;
 }

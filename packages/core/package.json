@@ -26,5 +26,9 @@
   "files": [
     "dist",
     "README.md"
-  ]
+  ],
+  "engines": {
+    "node": ">=18",
+    "npm": ">=9"
+  }
 }

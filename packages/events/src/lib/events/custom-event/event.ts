@@ -1,9 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EPResponse } from '@sitecore-cloudsdk/core';
+import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
 import { ExtensionData } from '../common-interfaces';
 import { CustomEventInput, CustomEvent } from './custom-event';
-import { getDependencies } from '../../initializer/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an event to SitecoreCloud API with the specified type
@@ -13,18 +14,21 @@ import { getDependencies } from '../../initializer/browser/initializer';
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export function event(
+export async function event(
   type: string,
   eventData: CustomEventInput,
   extensionData?: ExtensionData
 ): Promise<EPResponse | null> {
-  const { eventApiClient, id, settings } = getDependencies();
+  await awaitInit();
+
+  const settings = getSettings();
+  const id = getBrowserId();
 
   return new CustomEvent({
-    eventApiClient,
     eventData,
     extensionData,
     id,
+    sendEvent,
     settings,
     type,
   }).send();

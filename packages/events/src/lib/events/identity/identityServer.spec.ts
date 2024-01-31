@@ -1,8 +1,7 @@
 import { identityServer } from './identityServer'; // Import the function to be tested
-import * as init from '../../initializer/server/initializer';
 import * as core from '@sitecore-cloudsdk/core';
-import { EventApiClient } from '../../ep/EventApiClient';
 import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/server/initializer');
 jest.mock('./identity-event');
@@ -64,31 +63,26 @@ describe('eventServer', () => {
   });
 
   const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
-  const eventApiClient = new EventApiClient('http://test.com', '123', '456');
-  const settings: core.Settings = {
-    cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieName: 'bid_name',
-      cookiePath: '/',
-    },
-    siteName: '456',
-    sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
-  };
-  const getServerDependenciesSpy = jest.spyOn(init, 'getServerDependencies').mockReturnValueOnce({
-    eventApiClient: eventApiClient,
-    settings: settings,
-  });
 
   it('should send a custom event to the server', async () => {
+    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
+    getSettingsServerSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
     await identityServer(eventData, req, extensionData);
 
-    expect(getServerDependenciesSpy).toHaveBeenCalled();
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
     expect(IdentityEvent).toHaveBeenCalledTimes(1);
     expect(IdentityEvent).toHaveBeenCalledWith({
-      eventApiClient: new EventApiClient('http://test.com', '123', '456'),
       eventData: {
         channel: 'WEB',
         currency: 'EUR',
@@ -106,6 +100,7 @@ describe('eventServer', () => {
         extKey: 'extValue',
       },
       id: '1234',
+      sendEvent,
       settings: {
         cookieSettings: {
           cookieDomain: 'cDomain',

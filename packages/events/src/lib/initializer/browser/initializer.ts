@@ -1,37 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
+import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
 
-import { EventApiClient } from '../../ep/EventApiClient';
-import { Settings, SettingsParamsBrowser, getBrowserId, getSettings, initCore } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION } from '../../consts';
-import { EventQueue } from '../../eventStorage/eventStorage';
-
-let dependencies: BrowserEventsSettings | null = null;
-
-export function setDependencies(settings: BrowserEventsSettings | null) {
-  dependencies = settings;
-}
-
-/**
- * Retrieves the browser event settings object.
- *
- * This function ensures that the browser event settings have been initialized and contain essential properties like `settings`, `eventQueue`, and `eventApiClient`.
- *
- * @returns The browser event settings object.
- * @throws Error if the event settings haven't been initialized with the required properties.
- */
-export function getDependencies(): BrowserEventsSettings {
-  if (!dependencies) {
-    throw Error(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
-  }
-  return dependencies;
-}
-
-export interface BrowserEventsSettings {
-  id: string;
-  settings: Settings;
-  eventQueue: EventQueue;
-  eventApiClient: EventApiClient;
-}
+export let initPromise: Promise<void> | null = null;
 
 /**
  * Initiates the Events library using the global settings added by the developer
@@ -39,31 +10,17 @@ export interface BrowserEventsSettings {
  * @returns A promise that resolves with an object that handles the library functionality
  */
 export async function init(settingsInput: SettingsParamsBrowser): Promise<void> {
-  if (typeof window === 'undefined') {
-    throw new Error(
-      // eslint-disable-next-line max-len
-      `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
-    );
+  if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
+
+  try {
+    initPromise = initCore(settingsInput);
+
+    await initPromise;
+  } catch (error) {
+    initPromise = null;
+
+    throw new Error(error as string);
   }
-
-  await initCore(settingsInput);
-
-  const settings = getSettings();
-
-  const id = getBrowserId();
-  const eventApiClient = new EventApiClient(
-    settings.sitecoreEdgeUrl,
-    settingsInput.sitecoreEdgeContextId,
-    settingsInput.siteName
-  );
-  const eventQueue = new EventQueue(sessionStorage, eventApiClient);
-
-  setDependencies({
-    eventApiClient,
-    eventQueue,
-    id,
-    settings,
-  });
 
   window.Engage = {
     ...window.Engage,
@@ -73,4 +30,13 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
       events: LIBRARY_VERSION,
     },
   };
+}
+
+/**
+ * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ */
+export async function awaitInit() {
+  if (initPromise === null) throw new Error(ErrorMessages.IE_0004);
+
+  await initPromise;
 }

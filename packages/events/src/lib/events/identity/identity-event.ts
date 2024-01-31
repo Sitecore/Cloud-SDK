@@ -1,16 +1,18 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
 import { ExtensionData, EventAttributesInput } from '../common-interfaces';
-import { EventApiClient } from '../../ep/EventApiClient';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import { isShortISODateString, isValidEmail, FlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
+import { SendEvent } from '../send-event/sendEvent';
+import { ErrorMessages } from '../../consts';
 
 export class IdentityEvent extends BaseEvent {
   private eventData: IdentityEventAttributesInput;
-  private eventApiClient: EventApiClient;
+  private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
+  private settings: Settings;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -19,21 +21,19 @@ export class IdentityEvent extends BaseEvent {
   constructor(args: IdentityEventArguments) {
     const { channel, currency, language, page } = args.eventData;
 
-    super({ channel, currency, language, page }, args.settings, args.id);
+    super({ channel, currency, language, page }, args.id);
 
     this.validateAttributes(args.eventData);
 
     this.eventData = args.eventData;
-    this.eventApiClient = args.eventApiClient;
+    this.sendEvent = args.sendEvent;
+    this.settings = args.settings;
 
     if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
 
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
-    if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(
-        `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
-      );
+    if (this.numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
   }
 
   /**
@@ -41,18 +41,15 @@ export class IdentityEvent extends BaseEvent {
    *  * @param eventData - The data to be validated
    */
   private validateAttributes(eventData: IdentityEventAttributesInput) {
-    if (eventData.identifiers.length === 0) throw new Error(`[MV-0003] "identifiers" is required.`);
+    if (eventData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
 
-    if (eventData.dob !== undefined && !isShortISODateString(eventData.dob))
-      throw new Error(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
+    if (eventData.dob !== undefined && !isShortISODateString(eventData.dob)) throw new Error(ErrorMessages.IV_0002);
 
     eventData.identifiers.forEach((identifier: Identifier) => {
-      if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate))
-        throw new Error(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
+      if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate)) throw new Error(ErrorMessages.IV_0004);
     });
 
-    if (eventData.email && !isValidEmail(eventData.email))
-      throw new Error(`[IV-0003] Incorrect value for "email". Set the value to a valid email address.`);
+    if (eventData.email && !isValidEmail(eventData.email)) throw new Error(ErrorMessages.IV_0003);
   }
 
   /**
@@ -100,7 +97,7 @@ export class IdentityEvent extends BaseEvent {
     const eventAttrs = this.mapAttributes();
     const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
-    return await this.eventApiClient.send(fetchBody);
+    return await this.sendEvent(fetchBody, this.settings);
   }
 }
 
@@ -170,7 +167,7 @@ export interface IdentityEventPayload {
  * Interface of the unified arguments object for identity event
  */
 export interface IdentityEventArguments {
-  eventApiClient: EventApiClient;
+  sendEvent: SendEvent;
   eventData: IdentityEventAttributesInput;
   extensionData?: ExtensionData;
   id: string;

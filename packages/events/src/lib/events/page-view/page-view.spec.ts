@@ -1,19 +1,18 @@
 import { pageView } from './page-view';
-import { getDependencies } from '../../initializer/browser/initializer';
 import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { sendEvent } from '../send-event/sendEvent';
+import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../../initializer/browser/initializer';
 
-jest.mock('../../initializer/browser/initializer', () => {
+jest.mock('@sitecore-cloudsdk/core', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+
   return {
-    getDependencies: jest.fn(() => {
-      return {
-        eventApiClient: 'mockedEventApiClient',
-        id: 'mockedId',
-        settings: {},
-      };
-    }),
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
   };
 });
-
 jest.mock('./page-view-event', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -43,6 +42,10 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('pageView', () => {
+  const id = 'test_id';
+
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+
   let eventData: PageViewEventInput;
   afterEach(() => {
     eventData = {
@@ -55,18 +58,32 @@ describe('pageView', () => {
   });
 
   it('should send a PageViewEvent to the server', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/',
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: '',
+    });
+
     const extensionData = { extKey: 'extValue' };
     const response = await pageView(eventData, extensionData);
 
-    expect(getDependencies).toHaveBeenCalled();
     expect(PageViewEvent).toHaveBeenCalledWith({
-      eventApiClient: 'mockedEventApiClient',
       eventData,
       extensionData,
-      id: 'mockedId',
+      id,
       searchParams: window.location.search,
+      sendEvent,
       settings: expect.objectContaining({}),
     });
     expect(response).toBe('mockedResponse');
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 });

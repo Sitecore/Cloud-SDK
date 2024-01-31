@@ -1,8 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getBrowserIdFromRequest } from '@sitecore-cloudsdk/core';
-import { FailedCalledFlowsResponse } from './callflow-edge-proxy-client';
+import { getBrowserIdFromRequest, getSettingsServer } from '@sitecore-cloudsdk/core';
+import { FailedCalledFlowsResponse } from './send-call-flows-request';
 import { Request } from '@sitecore-cloudsdk/utils';
-import { getServerDependencies } from '../initializer/server/initializer';
 import { PersonalizerInput, Personalizer } from './personalizer';
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -17,7 +16,7 @@ export function personalizeServer<T extends Request>(
   request: T,
   timeout?: number
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
-  const { callFlowEdgeProxyClient, settings } = getServerDependencies();
+  const settings = getSettingsServer();
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
-  return new Personalizer(callFlowEdgeProxyClient, id).getInteractiveExperienceData(personalizeData, timeout);
+  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, timeout);
 }

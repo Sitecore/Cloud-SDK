@@ -1,12 +1,10 @@
-import { initServer, getServerDependencies, setServerDependencies, ServerEventsSettings } from './initializer';
+import { initServer } from './initializer';
 import packageJson from '../../../../package.json';
 import { SettingsParamsServer } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
-import { EventApiClient } from '../../ep/EventApiClient';
 import * as core from '@sitecore-cloudsdk/core';
 
-jest.mock('../../ep/EventApiClient');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -25,17 +23,16 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     ...originalModule,
   };
 });
+
 describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
-
+  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
   const settingsParams: SettingsParamsServer = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
     sitecoreEdgeUrl: undefined,
   };
-
   const req = {
     cookies: {
       get() {
@@ -50,7 +47,6 @@ describe('initializer', () => {
     ip: undefined,
     url: '',
   };
-
   const res: MiddlewareNextResponse = {
     cookies: {
       set() {
@@ -59,37 +55,22 @@ describe('initializer', () => {
     },
   };
 
+  global.fetch = jest.fn().mockImplementation(() => mockFetch);
+
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
-  beforeEach(() => {
-    setServerDependencies(null as unknown as ServerEventsSettings);
-  });
-
-  describe('getServerDependencies', () => {
-    it('should throw error if settings are not initialized', () => {
-      let settings;
-      expect(() => {
-        settings = getServerDependencies();
-      }).toThrow(`[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`);
-
-      expect(settings).toBeUndefined();
-    });
   });
 
   describe('init Server', () => {
     it('should run all necessary functionality during init', async () => {
       const eventsServer = await initServer(settingsParams, req, res);
-      const eventServerSettings = getServerDependencies();
+      const eventServerSettings = core.getSettingsServer();
 
       expect(typeof LIBRARY_VERSION).toBe('string');
       expect(getSettingsServerSpy).toHaveBeenCalledTimes(1);
       expect(LIBRARY_VERSION).toBe(packageJson.version);
-      expect(EventApiClient).toHaveBeenCalledTimes(1);
-      expect(eventServerSettings.settings.sitecoreEdgeContextId).toBe('123');
-      expect(eventServerSettings.settings.sitecoreEdgeUrl).toBe('https://edge-platform.sitecorecloud.io');
+      expect(eventServerSettings.sitecoreEdgeContextId).toBe('123');
+      expect(eventServerSettings.sitecoreEdgeUrl).toBe('https://edge-platform.sitecorecloud.io');
       expect(typeof eventsServer).toBe('undefined');
     });
 

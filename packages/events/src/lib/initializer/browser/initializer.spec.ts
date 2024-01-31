@@ -1,13 +1,10 @@
-import { BrowserEventsSettings, init, setDependencies } from './initializer';
+import { init, awaitInit } from './initializer';
 import packageJson from '../../../../package.json';
-import { LIBRARY_VERSION } from '../../consts';
+import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import * as EventApiClient from '../../ep/EventApiClient';
-import { EventQueue } from '../../eventStorage/eventStorage';
 import '../../../global.d.ts';
 
-jest.mock('../../ep/EventApiClient');
 jest.mock('../../eventStorage/eventStorage');
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -38,26 +35,19 @@ const settingsParams: core.SettingsParamsBrowser = {
 
 describe('initializer', () => {
   const { window } = global;
-  const id = 'test_id';
 
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
+
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  jest.spyOn(core, 'getBrowserId');
 
   afterEach(() => {
     jest.clearAllMocks();
     global.window ??= Object.create(window);
   });
 
-  beforeEach(() => {
-    setDependencies(null as unknown as BrowserEventsSettings);
-  });
-  const eventApiClientSpy = jest.spyOn(EventApiClient, 'EventApiClient');
-  const getSettingsSpy = jest.spyOn(core, 'getSettings');
-
   jest.spyOn(core, 'createCookie').mock;
-  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
   jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-  jest.spyOn(core, 'getSettings');
   jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
   jest.spyOn(core, 'initCore');
 
@@ -66,12 +56,6 @@ describe('initializer', () => {
       await init(settingsParams);
 
       expect(core.initCore).toHaveBeenCalledTimes(1);
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
-      expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-      expect(eventApiClientSpy).toHaveBeenCalledTimes(1);
-      expect(eventApiClientSpy).toHaveBeenCalledWith('https://localhost', '123', '456');
-      expect(eventApiClientSpy).not.toHaveBeenCalledWith('https://edge-platform.sitecorecloud.io', '123', '456');
-      expect(EventQueue).toHaveBeenCalledTimes(1);
     }).not.toThrow(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
   });
 
@@ -83,28 +67,6 @@ describe('initializer', () => {
     expect(LIBRARY_VERSION).toBe(packageJson.version);
   });
 
-  it('should return the browser id when calling the getBrowserId method from the window Engage property', async () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-
-    global.window.Engage = { test: 'test' } as any;
-    expect(global.window.Engage).toBeDefined();
-    await init(settingsParams);
-    if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-    expect(core.getBrowserId).toHaveBeenCalledTimes(2);
-  });
-
-  it('should return the browser id when calling the getBrowserId method from the window while Engage property is missing from the window', async () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-
-    jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    global.window.Engage = undefined as any;
-
-    expect(global.window.Engage).toBeUndefined();
-    await init(settingsParams);
-    if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-    expect(core.getBrowserId).toHaveBeenCalledTimes(2);
-  });
-
   it('adds method to get ID to window Engage property when engage is on window', async () => {
     await init(settingsParams);
     expect(global.window.Engage).toBeDefined();
@@ -113,6 +75,16 @@ describe('initializer', () => {
     expect((global.window.Engage as any).test).toEqual('test');
     /* eslint-enable @typescript-eslint/no-explicit-any */
     expect(global.window.Engage?.getBrowserId).toBeDefined;
+  });
+
+  it('should return the browser id when calling the getBrowserId method from the window Engage property', async () => {
+    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+
+    global.window.Engage = { test: 'test' } as any;
+    expect(global.window.Engage).toBeDefined();
+    await init(settingsParams);
+    if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 
   it('should throw error if window is undefined', async () => {
@@ -149,5 +121,38 @@ describe('initializer', () => {
       events: LIBRARY_VERSION,
       testV: '1.0.0',
     });
+  });
+  it('should reset the initPromise if initCore fails', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
+      throw new Error('error');
+    });
+
+    await expect(async () => {
+      await init(settingsParams);
+    }).rejects.toThrowError('error');
+  });
+});
+
+describe('awaitInit', () => {
+  it('should throw error if initPromise is null', async () => {
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrowError(ErrorMessages.IE_0004);
+  });
+  it('should not throw if initPromise is a Promise', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
+
+    const settingsParams: core.SettingsParamsBrowser = {
+      cookieDomain: 'cDomain',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://localhost',
+    };
+
+    await init(settingsParams);
+
+    expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
   });
 });

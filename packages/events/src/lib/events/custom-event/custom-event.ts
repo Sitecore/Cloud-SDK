@@ -1,15 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
 import { EventAttributesInput } from '../common-interfaces';
-import { EventApiClient } from '../../ep/EventApiClient';
+import { SendEvent } from '../send-event/sendEvent';
 import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { BasicTypes, FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
+import { ErrorMessages } from '../../consts';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;
-  private eventApiClient: EventApiClient;
+  private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
+  private settings: Settings;
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
@@ -17,9 +19,10 @@ export class CustomEvent extends BaseEvent {
    */
   constructor(args: CustomEventArguments) {
     const { channel, currency, language, page, ...rest } = args.eventData;
-    super({ channel, currency, language, page }, args.settings, args.id);
+    super({ channel, currency, language, page }, args.id);
 
-    this.eventApiClient = args.eventApiClient;
+    this.sendEvent = args.sendEvent;
+    this.settings = args.settings;
 
     this.customEventPayload = {
       type: args.type,
@@ -30,10 +33,7 @@ export class CustomEvent extends BaseEvent {
 
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
-    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES)
-      throw new Error(
-        `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`
-      );
+    if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
     if (numberOfExtensionDataProperties > 0) this.customEventPayload.ext = this.extensionData;
   }
@@ -46,7 +46,7 @@ export class CustomEvent extends BaseEvent {
     const baseAttr = this.mapBaseEventPayload();
     const fetchBody = Object.assign({}, this.customEventPayload, baseAttr);
 
-    return await this.eventApiClient.send(fetchBody);
+    return await this.sendEvent(fetchBody, this.settings);
   }
 }
 
@@ -54,7 +54,7 @@ export class CustomEvent extends BaseEvent {
  * Interface of the unified arguments object for custom event
  */
 export interface CustomEventArguments {
-  eventApiClient: EventApiClient;
+  sendEvent: SendEvent;
   eventData: CustomEventData;
   id: string;
   extensionData?: NestedObject;

@@ -19,6 +19,9 @@ beforeEach(() => {
   cy.intercept(`https://${Cypress.env('HOSTNAME_STAGING')}/events/${Cypress.env('API_VERSION')}/browser/*`).as(
     'initialCallStg'
   );
+  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
+    'eventRequest'
+  );
   cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/pageview-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/identity-event*`).as('sendTriggerEvent');
@@ -63,10 +66,6 @@ defineStep('the {string} page is loaded', (page: string) => {
     'POST',
     `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
   ).as('personalizeRequest');
-  // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
-    'eventRequest'
-  );
   cy.visit(page);
 
   cy.wait('@initialCall', { timeout: 30000 });
@@ -84,7 +83,7 @@ defineStep('the {string} string is printed in {string} element', (message: strin
 
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);
-  cy.waitUntil(() =>  cy.get(selector).contains(message), {
+  cy.waitUntil(() => cy.get(selector).contains(message), {
     errorMsg: 'Server error not found',
     timeout: 10000,
     interval: 100,
