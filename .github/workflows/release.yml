@@ -68,14 +68,14 @@ jobs:
       - name: Push to branch
         run: git push --set-upstream origin release/${{steps.get-version.outputs.new_release_version}}
 
-      # - name: Create release
-      #   run: |
-      #     for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
-      #     do
-      #       gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag"
-      #     done
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        run: |
+          for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
+          do
+            gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: Create pull request
       #   run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
@@ -131,33 +131,33 @@ jobs:
       - name: Show the result
         run: echo "Version changed ${{ steps.npm-publish.outputs.old-version }} => ${{ steps.npm-publish.outputs.version }}"
 
-  # cleanup-github:
-  #   name: Clean up git tags and PRs
-  #   runs-on: ubuntu-latest
-  #   needs: [bump-and-build, publish-npm-packages]
-  #   if: failure() && (needs.publish-npm-packages.result == 'failure')
-  #   env:
-  #     new_release_version: ${{ needs.bump-and-build.outputs.new_release_version }}
-  #     new_release_number: ${{ needs.bump-and-build.outputs.new_release_number}}
+  cleanup-github:
+    name: Clean up git tags and PRs
+    runs-on: ubuntu-latest
+    needs: [bump-and-build, publish-npm-packages]
+    if: failure() && (needs.publish-npm-packages.result == 'failure')
+    env:
+      new_release_version: ${{ needs.bump-and-build.outputs.new_release_version }}
+      new_release_number: ${{ needs.bump-and-build.outputs.new_release_number}}
 
-  #   steps:
-  #     - name: Checkout
-  #       uses: actions/checkout@v3
-  #       with:
-  #         ref: 'release/${{env.new_release_version}}'
-  #         fetch-depth: 0
-  #         token: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: 'release/${{env.new_release_version}}'
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-  #     - name: Cleanup GitHub releases
-  #       run: |
-  #         for crt_tag in $(git tag -l '*-${{env.new_release_number}}')
-  #         do
-  #           gh release delete $crt_tag -y --cleanup-tag
-  #         done
-  #       env:
-  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Cleanup GitHub releases
+        run: |
+          for crt_tag in $(git tag -l '*-${{env.new_release_number}}')
+          do
+            gh release delete $crt_tag -y --cleanup-tag
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  #     - name: Close PR
-  #       run: gh pr close release/${{env.new_release_version}} -d
-  #       env:
-  #         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Close PR
+        run: gh pr close release/${{env.new_release_version}} -d
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
