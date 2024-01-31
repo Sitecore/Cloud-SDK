@@ -73,5 +73,4 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
       events: LIBRARY_VERSION,
     },
   };
-  
 }
