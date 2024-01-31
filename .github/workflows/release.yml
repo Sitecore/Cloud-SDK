@@ -77,10 +77,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # - name: Create pull request
-      #   run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
-      #   env:
-      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create pull request
+        run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build NPM packages
         run: npx nx run-many -t build -p 'events,personalize'
