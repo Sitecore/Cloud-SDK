@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-cloudsdk/core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "license": "Apache-2.0",
   "main": "dist/cjs/src/index.js",
   "module": "dist/esm/src/index.js",
@@ -16,7 +16,7 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/utils": "0.1.4"
+    "@sitecore-cloudsdk/utils": "^0.1.5"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",
