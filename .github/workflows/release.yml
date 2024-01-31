@@ -45,8 +45,8 @@ jobs:
           git config user.email builds@sitecore.com
           git config user.name "Automated Build"
 
-      - name: Bump version
-        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit --baseBranch master
+      # - name: Bump version
+      #   run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
         id: get-version
