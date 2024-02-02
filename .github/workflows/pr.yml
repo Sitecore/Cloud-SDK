@@ -108,3 +108,16 @@ jobs:
         with:
           name: e2e-report
           path: apps/engage-e2e/cypress/results/
+  add-label:
+    name: Create a label based on last commit
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - name: Try to add the label based on the last commit message
+        run: |
+          commit_label=$(git show -s --format=%s | cut -d':' -f1)
+          gh pr edit ${{ github.event.pull_request.number }} --add-label "$commit_label"
