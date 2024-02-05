@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
   // Setting cookies on the response
   const response = NextResponse.next();
   const updateMiddleware = '###1###';
-  
+
   const enableServerCookie =
     request?.nextUrl?.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true' ||
     (request.nextUrl.pathname.startsWith('/middleware') &&
@@ -35,7 +35,7 @@ export async function middleware(request: NextRequest) {
   let basicEventData: any = {
     channel: 'WEB',
     currency: 'EUR',
-    updateMiddleware
+    updateMiddleware,
   };
 
   const identityEventData = {
@@ -97,5 +97,12 @@ export async function middleware(request: NextRequest) {
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: ['/', '/middleware-view-event', '/middleware-custom-event', '/middleware-identity-event', '/personalize', '/middleware-server-cookie'],
+  matcher: [
+    '/',
+    '/middleware-view-event',
+    '/middleware-custom-event',
+    '/middleware-identity-event',
+    '/personalize',
+    '/middleware-server-cookie',
+  ],
 };
