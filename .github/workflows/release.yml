@@ -45,8 +45,18 @@ jobs:
           git config user.email builds@sitecore.com
           git config user.name "Automated Build"
 
+      - name: Clean CHANGELOG.md files
+        run: |
+          packages=("events" "personalize" "utils" "core")
+          for package in "${packages[@]}"; do
+              file_path="./packages/$package/CHANGELOG.md"
+              if [ -e $file_path ]; then
+                  >"$file_path"
+              fi
+          done
+
       - name: Bump version
-        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipProjectChangelog --skipCommit --baseBranch master
+        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
         id: get-version
@@ -72,7 +82,8 @@ jobs:
         run: |
           for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
           do
-            gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag" --generate-notes
+            package=$(cut -d'-' -f1 <<<$crt_tag)
+            gh release create $crt_tag --target release/${{steps.get-version.outputs.new_release_version}} --notes "$crt_tag release" --title "Release for library $crt_tag" --notes-file="./packages/$package/CHANGELOG.md"
           done
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,6 +131,7 @@ jobs:
           registry: https://registry.npmjs.org/
           access: public
           package: ./${{matrix.package-folder}}/package.json
+          dry-run: false
         env:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 

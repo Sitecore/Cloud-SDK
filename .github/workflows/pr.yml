@@ -29,8 +29,6 @@ jobs:
         run: npx nx affected --target=lint --base=remotes/origin/master --head=HEAD
       - name: Build Packages
         run: npx nx affected --target=build --base=remotes/origin/master --head=HEAD
-      # - name: Build Apps
-      #   run: npm run build-apps
   unit-test:
     runs-on: ubuntu-latest
     name: Run unit tests
@@ -109,15 +107,37 @@ jobs:
           name: e2e-report
           path: apps/engage-e2e/cypress/results/
   add-label:
-    name: Create a label based on last commit
+    name: Create labels based on commits
     runs-on: ubuntu-latest
+    continue-on-error: true
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
-      - name: Try to add the label based on the last commit message
+          fetch-depth: 0
+      - name: Add the labels
         run: |
-          commit_label=$(git show -s --format=%s | cut -d':' -f1)
-          gh pr edit ${{ github.event.pull_request.number }} --add-label "$commit_label"
+          before_ref="${{ github.event.before }}"
+          after_ref="${{ github.event.after }}"
+
+          readarray -t commits < <(git log --pretty=format:%s $before_ref...$after_ref)
+          for commit in "${commits[@]}"; do
+            commit_info=$(cut -d':' -f1 <<<$commit)
+
+            if [[ "$commit_info" = "Merge branch"* ]]; then
+              continue
+            fi
+
+            if [[ "$commit_info" =~ "!" ]]; then
+              gh pr edit ${{ github.event.pull_request.number }} --add-label "BREAKING CHANGE"
+              commit_info="${commit_info//!/}"
+            fi
+            
+            if [[ "$commit_info" =~ "(" ]]; then
+              type=$(cut -d'(' -f1 <<<$commit_info)
+              gh pr edit ${{ github.event.pull_request.number }} --add-label "$type"
+            else
+              gh pr edit ${{ github.event.pull_request.number }} --add-label "$commit_info"
+            fi
+          done
