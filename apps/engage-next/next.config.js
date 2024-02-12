@@ -12,6 +12,8 @@ const nextConfig = {
     /* eslint-disable @typescript-eslint/naming-convention */
     CONTEXT_ID: process.env.CONTEXT_ID || '',
     SITE_ID: process.env.SITE_ID || '',
+    DEBUG_MULTILINE: process.env.DEBUG_MULTILINE || 'false',
+    DEBUG: process.env.DEBUG || '',
     /* eslint-enable @typescript-eslint/naming-convention */
   },
   nx: {
@@ -20,7 +22,7 @@ const nextConfig = {
     svgr: false,
   },
   removeConsole: {
-    exclude: [""],
+    exclude: [''],
   },
 };
 

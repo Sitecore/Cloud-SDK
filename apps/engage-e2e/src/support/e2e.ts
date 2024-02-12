@@ -31,3 +31,6 @@ Cypress.on('test:after:run', (test, runnable) => {
   }
 });
 
+Cypress.on('window:before:load', (win) => {
+  cy.spy(win.console, 'debug').as('consoleLogOutput');
+});

@@ -10,6 +10,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
+      getLogOutput(): any;
       waitForRequest(alias: string): any;
       waitForResponse(alias: string): any;
       convertToSnakeCase(str: string): string;
@@ -19,6 +20,10 @@ declare global {
       requestGuestContext(): any;
       replace(filePath: string, regex: any, text: string): void;
     }
+  }
+
+  interface JQuery {
+    args: [];
   }
 }
 
@@ -95,8 +100,9 @@ Cypress.Commands.add('requestGuestContext', () => {
     .then((c) => {
       const options = {
         method: 'GET',
-        url: 
-        `${Cypress.env('GUEST_API_URL')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`,
+        url: `${Cypress.env('GUEST_API_URL')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${
+          c?.value
+        }`,
         headers: {
           authorization,
         },
@@ -121,11 +127,22 @@ Cypress.Commands.add('requestGuestContext', () => {
 });
 
 Cypress.Commands.add('replace', (filePath, regexMatch, text) => {
-  cy.readFile(filePath)
-  .then((data) => {
+  cy.readFile(filePath).then((data) => {
     const pageData = data;
-    cy.
-    writeFile(filePath, 
-    pageData.replace(regexMatch, text));
-  })
+    cy.writeFile(filePath, pageData.replace(regexMatch, text));
+  });
+});
+
+Cypress.Commands.add('getLogOutput', () => {
+  const logs: string[] = [];
+
+  // eslint-disable-next-line cypress/unsafe-to-chain-command
+  cy.get('@consoleLogOutput')
+    .invoke('getCalls')
+    .each((call) => {
+      call.args.forEach((arg) => {
+        logs.push(arg);
+      });
+    })
+    .then(() => logs);
 });

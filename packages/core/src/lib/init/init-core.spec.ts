@@ -4,6 +4,8 @@ import { Settings, SettingsParamsBrowser } from '../settings/interfaces';
 import * as createCookieInit from '../cookie/create-cookie';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as createSetting from '../settings/create-settings';
+import debug from 'debug';
+import { CORE_NAMESPACE } from '../debug/namespaces';
 
 // Mock the dependencies
 jest.mock('../cookie/create-cookie', () => ({
@@ -13,6 +15,14 @@ jest.mock('../cookie/create-cookie', () => ({
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   cookieExists: jest.fn(),
 }));
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn()))),
+  };
+});
 
 const mockSettings = {
   cookieSettings: {
@@ -39,7 +49,7 @@ describe('initCore', () => {
   });
 
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
   it('should run initialize without creating a cookie', async () => {
     jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
@@ -83,6 +93,17 @@ describe('initCore', () => {
 
     expect(createSettingsSpy).toHaveBeenCalledTimes(1);
     expect(createCookieSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:test' as a namespace`, async () => {
+    const debugMock = debug as unknown as jest.Mock;
+
+    await initCore(mockSettingsInput);
+
+    expect(debugMock).toHaveBeenCalledTimes(1);
+    expect(debugMock).toHaveBeenCalledWith(CORE_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('initializing %o');
+    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe('initCoreClient initialized');
   });
 });
 

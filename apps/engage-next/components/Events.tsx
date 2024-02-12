@@ -18,7 +18,6 @@ const Events = () => {
       return;
 
     const badSitecoreEdgeContextId = getSettingFromUrlParams('badSitecoreEdgeContextIdBrowser') ?? undefined;
-
     init({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,

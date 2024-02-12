@@ -16,7 +16,8 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/utils": "^0.2.0"
+    "@sitecore-cloudsdk/utils": "^0.2.0",
+    "debug": "^4.3.4"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",
@@ -30,5 +31,8 @@
   "engines": {
     "node": ">=18",
     "npm": ">=9"
+  },
+  "devDependencies": {
+    "@types/debug": "^4.1.12"
   }
 }

@@ -26,3 +26,4 @@ export {
 
 export type { EPResponse, Infer } from './lib/interfaces';
 export type { CookieSettings, Settings, SettingsParamsBrowser, SettingsParamsServer } from './lib/settings/interfaces';
+export { debug } from './lib/debug/debug';

@@ -2,6 +2,8 @@
 import { createCookie } from '../cookie/create-cookie';
 import { createSettings } from '../settings/create-settings';
 import { Settings, SettingsParamsBrowser } from '../settings/interfaces';
+import { debug } from '../debug/debug';
+import { CORE_NAMESPACE } from '../debug/namespaces';
 
 /**
  * Internal settings object to be used by all functions in module caching.
@@ -36,6 +38,8 @@ let createCookiePromise: Promise<void> | null = null;
  * @returns A Promise that resolves when initialization is complete.
  */
 export async function initCore(settingsInput: SettingsParamsBrowser): Promise<void> {
+  debug(CORE_NAMESPACE)('initializing %o', 'initCoreClient initialized');
+
   if (coreSettings === null) coreSettings = createSettings(settingsInput);
 
   if (settingsInput.enableBrowserCookie && createCookiePromise === null)

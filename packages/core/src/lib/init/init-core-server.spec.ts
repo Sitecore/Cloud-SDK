@@ -3,8 +3,18 @@ import { getSettingsServer, initCoreServer, setCoreSettings } from './init-core-
 import { SettingsParamsServer } from '../settings/interfaces';
 import * as handleServer from '../cookie/handle-server-cookie';
 import * as createSettings from '../settings/create-settings';
+import debug from 'debug';
+import { CORE_NAMESPACE } from '../debug/namespaces';
 
 jest.mock('../cookie/handle-server-cookie');
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn()))),
+  };
+});
 
 describe('core-server', () => {
   const handleServerSpy = jest.spyOn(handleServer, 'handleServerCookie');
@@ -109,5 +119,19 @@ describe('core-server', () => {
       await initCoreServer(settingsInput, request, response);
       expect(createSettingsSpy).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:test' as a namespace`, async () => {
+    const request = {} as any;
+    const response = {} as any;
+
+    const debugMock = debug as unknown as jest.Mock;
+
+    await initCoreServer(settingsInput, request, response);
+
+    expect(debugMock).toHaveBeenCalledTimes(1);
+    expect(debugMock).toHaveBeenCalledWith(CORE_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('initializing %o');
+    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe('initCoreServer initialized');
   });
 });
