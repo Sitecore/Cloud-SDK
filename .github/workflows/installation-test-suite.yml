@@ -1,4 +1,4 @@
-name: Test Installation of Engage release candidate across various frameworks
+name: Test Installation of sitecore-cloudsdk release candidate across various frameworks
 
 on:
   workflow_run:
