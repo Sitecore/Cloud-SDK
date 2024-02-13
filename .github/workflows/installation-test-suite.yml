@@ -30,7 +30,7 @@ jobs:
       - name: Create Next app
         run: |
           cd ../          
-          npx create-next-app@14.1 my-next-app --ts --no-eslint --no-tailwind --no-src-dir --no-app --import-alias '@/*'      
+          npx create-next-app@14.1 my-next-app --ts --no-eslint --no-tailwind --no-src-dir --no-app --import-alias '@/*'
       - name: Install Cypress, dependencies and supporting files
         run: |
           cd ../my-next-app          
