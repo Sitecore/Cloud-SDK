@@ -52,7 +52,7 @@ describe('EventApiClient', () => {
     };
 
     const expectedBody = JSON.stringify(eventData);
-    const expectedUrl = 'http://testurl/events/v1.2/events?sitecoreContextId=123&siteId=site';
+    const expectedUrl = 'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site';
 
     sendEvent(eventData, settingsObj);
 

@@ -60,7 +60,7 @@ describe('form function', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenLastCalledWith(
-      'https://edge-platform.sitecorecloud.io/events/v1.2/events?sitecoreContextId=123&siteId=456',
+      'https://edge-platform.sitecorecloud.io/v1/events/v1.2/events?sitecoreContextId=123&siteId=456',
       {
         body: expectedBody,
         headers: {

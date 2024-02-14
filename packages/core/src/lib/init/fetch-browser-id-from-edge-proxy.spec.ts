@@ -40,7 +40,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     const res = await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 3000);
     expect(fetchWithTimeoutSpy).toHaveBeenCalled();
     expect(fetchWithTimeoutSpy).toHaveBeenCalledWith(
-      `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       3000,
       {
         headers: {
@@ -51,7 +51,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     );
 
     expect(fetch).toHaveBeenCalledWith(
-      `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+      `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -74,7 +74,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       expect(res).toMatchObject({ browserId: mockResponse.ref });
       expect(fetch).toHaveBeenCalledTimes(1);
       expect(fetch).toHaveBeenCalledWith(
-        `${SITECORE_EDGE_URL}/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
+        `${SITECORE_EDGE_URL}/v1/events/v1.2/browser/create.json?sitecoreContextId=83d8199c-2837-4c29-a8ab-1bf234fea2d1&client_key=`,
         {
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -15,14 +15,22 @@ beforeEach(() => {
   cy.window().then((win) => {
     win.sessionStorage.clear();
   });
-  // eslint-disable-next-line max-len
-  cy.intercept(`https://${Cypress.env('HOSTNAME_STAGING')}/events/${Cypress.env('API_VERSION')}/browser/*`).as(
-    'initialCallStg'
-  );
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
-    'eventRequest'
-  );
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME_STAGING')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/browser/*`
+  ).as('initialCallStg');
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/browser/*`
+  ).as('initialCall');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/pageview-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/identity-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/custom-event*`).as('sendTriggerEvent');
@@ -110,9 +118,12 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
     )}/callFlows*`
   ).as('personalizeRequest');
   // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
-    'eventRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
 
   let searchString = '';
   const parameters = JSON.parse(params);
@@ -142,10 +153,12 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
       'CALLFLOW_API_VERSION'
     )}/callFlows*`
   ).as('personalizeRequest');
-  // eslint-disable-next-line max-len
-  cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
-    'eventRequest'
-  );
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
   const attributesArray: { key: string; value: string }[] = [];
   const attributes = datatable.hashes()[0];
   let searchString = '';

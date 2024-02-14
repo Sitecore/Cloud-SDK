@@ -29,7 +29,7 @@ describe('getGuestId', () => {
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
 
-    const expectedUrl = `${SITECORE_EDGE_URL}/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=&api_token=`;
+    const expectedUrl = `${SITECORE_EDGE_URL}/v1/events/${API_VERSION}/browser/${bid}/show.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=&api_token=`;
     await getGuestId(bid, sitecoreEdgeContextId, SITECORE_EDGE_URL);
 
     expect(fetch).toHaveBeenCalledTimes(1);

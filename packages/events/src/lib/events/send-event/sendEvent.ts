@@ -9,7 +9,7 @@ import { LIBRARY_VERSION } from '../../consts';
  * @param settings - The global settings
  */
 export async function sendEvent(body: EPFetchBody & BasePayload, settings: Settings): Promise<EPResponse | null> {
-  const eventUrl = `${settings.sitecoreEdgeUrl}/events/${API_VERSION}/events?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
+  const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
 
   const fetchOptions = {
     body: JSON.stringify(body),

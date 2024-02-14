@@ -5,7 +5,11 @@ import { When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor'
 
 beforeEach(() => {
   // eslint-disable-next-line max-len
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/browser/*`).as('initialCall');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/browser/*`
+  ).as('initialCall');
 });
 
 defineStep('the pageView function is called', (datatable: any) => {
@@ -23,7 +27,11 @@ defineStep('the pageView function is called', (datatable: any) => {
 // Scenario: Developer uses pageView to send a VIEW event with referrer
 When('the {string} page is loaded with a different document.referrer hostname', (page: string) => {
   // eslint-disable-next-line max-len
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -50,7 +58,11 @@ Then('the event is sent with the referrer', () => {
 // Scenario: Developer uses pageView to send a VIEW event without referrer
 When('the {string} page is loaded with the same document.referrer hostname', (page: string) => {
   // eslint-disable-next-line max-len
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -118,13 +130,13 @@ When('the cookies are removed from the browser', () => {
 Then('the event is sent with empty browserId', () => {
   cy.get('[data-testid="sendEvent"]').click();
   cy.waitForRequest('@eventRequest').then((request: any) => {
-      expect(request.body.browser_id).to.equal("");
+    expect(request.body.browser_id).to.equal('');
   });
 });
 
 When('a cookie exists on the page with the respective {string} environment contextId', (environment: string) => {
-  const cookieName = environment.toLowerCase() == 'production' 
-  ? Cypress.env('COOKIE_NAME') : Cypress.env('COOKIE_NAME_STAGING');
+  const cookieName =
+    environment.toLowerCase() == 'production' ? Cypress.env('COOKIE_NAME') : Cypress.env('COOKIE_NAME_STAGING');
   cy.waitUntil(() => cy.getCookie(cookieName), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
@@ -132,10 +144,13 @@ When('a cookie exists on the page with the respective {string} environment conte
   });
 });
 
-
 Then('the bid value set in the cookie for the user is returned', () => {
   // eslint-disable-next-line max-len
-  cy.intercept(`https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as('eventRequest');
+  cy.intercept(
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('eventRequest');
   cy.waitForRequest('@eventRequest').then((request: any) => {
     expect(request.body.browser_id).not.be.empty;
   });

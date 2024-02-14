@@ -8,5 +8,5 @@ import { API_VERSION } from '../consts';
  */
 
 export function constructGetBrowserIdUrl(sitecoreEdgeUrl: string, sitecoreEdgeContextId: string): string {
-  return `${sitecoreEdgeUrl}/events/${API_VERSION}/browser/create.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=`;
+  return `${sitecoreEdgeUrl}/v1/events/${API_VERSION}/browser/create.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=`;
 }
