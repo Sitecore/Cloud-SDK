@@ -11,7 +11,9 @@ beforeEach(() => {
   // eslint-disable-next-line max-len
   cy.intercept(
     'POST',
-    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize/${Cypress.env(
+      'CALLFLOW_API_VERSION'
+    )}/callFlows*`
   ).as('personalizeRequest');
 });
 

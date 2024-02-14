@@ -64,7 +64,9 @@ defineStep('the {string} page is loaded', (page: string) => {
   // eslint-disable-next-line max-len
   cy.intercept(
     'POST',
-    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize/${Cypress.env(
+      'CALLFLOW_API_VERSION'
+    )}/callFlows*`
   ).as('personalizeRequest');
   cy.visit(page);
 
@@ -103,7 +105,9 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
   // eslint-disable-next-line max-len
   cy.intercept(
     'POST',
-    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize/${Cypress.env(
+      'CALLFLOW_API_VERSION'
+    )}/callFlows*`
   ).as('personalizeRequest');
   // eslint-disable-next-line max-len
   cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(
@@ -134,7 +138,9 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
   // eslint-disable-next-line max-len
   cy.intercept(
     'POST',
-    `https://${Cypress.env('HOSTNAME')}/personalize/${Cypress.env('CALLFLOW_API_VERSION')}/callFlows*`
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize/${Cypress.env(
+      'CALLFLOW_API_VERSION'
+    )}/callFlows*`
   ).as('personalizeRequest');
   // eslint-disable-next-line max-len
   cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/events/${Cypress.env('API_VERSION')}/events*`).as(

@@ -11,7 +11,7 @@ import { LIBRARY_VERSION } from '../consts';
  * @returns - A promise that resolves with either the Sitecore EP response object or unknown
  */
 export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, settings: Settings, timeout?: number) {
-  const requestUrl = `${settings.sitecoreEdgeUrl}/personalize/v2/callFlows?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
+  const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize/v2/callFlows?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
 
   const fetchOptions = {
     body: JSON.stringify(epCallFlowsBody),

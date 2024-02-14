@@ -1,7 +1,7 @@
 describe("my-app", () => {
   it("should initialize cookie and event is sent to CDP", () => {
     cy.intercept("POST", `https://edge-platform.sitecorecloud.io/events/v1.2/events*`).as("eventRequest");
-    cy.intercept("POST", `https://edge-platform.sitecorecloud.io/personalize/v2/callFlows*`).as('personalizeRequest');
+    cy.intercept("POST", `https://edge-platform.sitecorecloud.io/v1/personalize/v2/callFlows*`).as('personalizeRequest');
     
     cy.wait(1000);
     cy.visit("http://localhost:3000");

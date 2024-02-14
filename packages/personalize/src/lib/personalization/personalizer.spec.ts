@@ -607,7 +607,7 @@ describe('Test Personalizer Class', () => {
       const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
 
       expect(fetch).toHaveBeenCalledWith(
-        `${core.SITECORE_EDGE_URL}/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
+        `${core.SITECORE_EDGE_URL}/v1/personalize/v2/callFlows?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
           // eslint-disable-next-line @typescript-eslint/naming-convention
