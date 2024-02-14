@@ -121,13 +121,19 @@ jobs:
           before_ref="${{ github.event.before }}"
           after_ref="${{ github.event.after }}"
 
-          readarray -t commits < <(git log --pretty=format:%s $before_ref...$after_ref)
-          for commit in "${commits[@]}"; do
-            commit_info=$(cut -d':' -f1 <<<$commit)
+          readarray -t commits < <(git log --pretty=format:%s $before_ref..$after_ref)
 
-            if [[ "$commit_info" = "Merge branch"* ]]; then
+          if [ "${#commits[@]}" -eq 0 ]; then
+            readarray -t commits < <(git show -s --format=%s)
+          fi
+
+          for commit in "${commits[@]}"; do
+
+            if [[ "$commit" != *":"* || "$commit" = "Merge branch"* || "$commit" = "CDK-"* ]]; then
               continue
             fi
+
+            commit_info=$(cut -d':' -f1 <<<$commit)
 
             if [[ "$commit_info" =~ "!" ]]; then
               gh pr edit ${{ github.event.pull_request.number }} --add-label "BREAKING CHANGE"
