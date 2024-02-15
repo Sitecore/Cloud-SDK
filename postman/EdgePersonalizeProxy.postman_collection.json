@@ -173,9 +173,9 @@
           }
         },
         "url": {
-          "raw": "{{targetURL}}/v1/personalize/v2/callFlows?siteId=resource-cdp",
+          "raw": "{{targetURL}}/v1/personalize?siteId=resource-cdp",
           "host": ["{{targetURL}}"],
-          "path": ["personalize", "v2", "callFlows"],
+          "path": ["v1", "personalize"],
           "query": [
             {
               "key": "siteId",

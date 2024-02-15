@@ -72,7 +72,7 @@ GET {{targetURL}}/events/v1.2/browser/{{browserID}}/show.json?sitecoreContextId=
 
 ### PERSONALIZE API ###
 ### Send Callflow
-POST {{targetURL}}/v1/personalize/v2/callFlows?sitecoreContextId={{contextID}}&siteId={{siteId}}
+POST {{targetURL}}/v1/personalize?sitecoreContextId={{contextID}}&siteId={{siteId}}
 Content-Type: application/json
 
 {
