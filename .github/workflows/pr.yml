@@ -121,7 +121,7 @@ jobs:
           before_ref="${{ github.event.before }}"
           after_ref="${{ github.event.after }}"
 
-          readarray -t commits < <(git log --pretty=format:%s $before_ref..$after_ref)
+          readarray -t commits < <(git log --pretty=format:%s $before_ref...$after_ref)
 
           if [ "${#commits[@]}" -eq 0 ]; then
             readarray -t commits < <(git show -s --format=%s)
