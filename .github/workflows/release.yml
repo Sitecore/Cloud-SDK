@@ -44,7 +44,6 @@ jobs:
         run: npm ci
 
       - name: Git config
-        if: ${{ !github.event.inputs.dryRun }}
         run: |
           git config user.email builds@sitecore.com
           git config user.name "Automated Build"
