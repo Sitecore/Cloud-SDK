@@ -21,33 +21,8 @@ on:
         default: true
         type: boolean
 jobs:
-  dry-run:
-    name: 'Perform a dry run to show the output'
-    if: ${{ github.event.inputs.dryRun }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Run a dry run Bump version
-        run: |
-          npx nx run-many -t version -p utils core events personalize --dryRun --skipProjectChangelog --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
-
   bump-and-build:
     name: 'Build new package versions'
-    if: ${{ !github.event.inputs.dryRun }}
     runs-on: ubuntu-latest
     outputs:
       new_release_number: ${{ steps.get-version.outputs.new_release_number }}
@@ -69,6 +44,7 @@ jobs:
         run: npm ci
 
       - name: Git config
+        if: ${{ !github.event.inputs.dryRun }}
         run: |
           git config user.email builds@sitecore.com
           git config user.name "Automated Build"
@@ -84,9 +60,10 @@ jobs:
           done
 
       - name: Bump version
-        run: npx nx run-many -t version -p utils core events personalize --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run-many -t version -p utils core events personalize --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
+        if: ${{ !github.event.inputs.dryRun }}
         id: get-version
         run: |
           cd packages/events
@@ -94,19 +71,23 @@ jobs:
           echo "new_release_version=v.$(npm pkg get version  | jq -r '.[]')" >> $GITHUB_OUTPUT
 
       - name: Create a new branch
+        if: ${{ !github.event.inputs.dryRun }}
         run: |
           git stash
           git checkout -b release/${{steps.get-version.outputs.new_release_version}}
           git stash pop
 
       - name: Commit to branch
+        if: ${{ !github.event.inputs.dryRun }}
         run: |
           git commit -a -m "chore: Bumping package.json to new version: ${{steps.get-version.outputs.new_release_version}} [skip ci]"
 
       - name: Push to branch
+        if: ${{ !github.event.inputs.dryRun }}
         run: git push --set-upstream origin release/${{steps.get-version.outputs.new_release_version}}
 
       - name: Create release
+        if: ${{ !github.event.inputs.dryRun }}
         run: |
           for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
           do
@@ -117,6 +98,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
+        if: ${{ !github.event.inputs.dryRun }}
         run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -132,7 +114,6 @@ jobs:
 
   publish-npm-packages:
     name: 'Publish packages to NPM registry'
-    if: ${{ !github.event.inputs.dryRun }}
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -160,6 +141,7 @@ jobs:
           registry: https://registry.npmjs.org/
           access: public
           package: ./${{matrix.package-folder}}/package.json
+          dry-run: ${{ github.event.inputs.dryRun }}
         env:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
