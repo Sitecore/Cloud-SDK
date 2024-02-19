@@ -1,8 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { FailedCalledFlowsResponse } from './send-call-flows-request';
-import { getBrowserId, getSettings } from '@sitecore-cloudsdk/core';
+import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { PersonalizerInput, Personalizer } from './personalizer';
 import { awaitInit } from '../initializer/client/initializer';
+import { ErrorMessages } from '../consts';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -17,8 +18,8 @@ export async function personalize(
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   await awaitInit();
 
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0006);
   const id = getBrowserId();
-  const settings = getSettings();
 
   return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, timeout);
 }

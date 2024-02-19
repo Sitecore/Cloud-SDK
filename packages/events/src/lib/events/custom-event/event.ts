@@ -1,10 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
+import { getBrowserId, EPResponse, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ExtensionData } from '../common-interfaces';
 import { CustomEventInput, CustomEvent } from './custom-event';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
+import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends an event to SitecoreCloud API with the specified type
@@ -21,7 +22,7 @@ export async function event(
 ): Promise<EPResponse | null> {
   await awaitInit();
 
-  const settings = getSettings();
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
   const id = getBrowserId();
 
   return new CustomEvent({

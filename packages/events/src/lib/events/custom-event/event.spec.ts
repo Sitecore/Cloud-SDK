@@ -24,6 +24,8 @@ describe('eventServer', () => {
   const id = 'test_id';
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
+  const getSettingsSpy = jest.spyOn(core, 'getSettings');
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -38,7 +40,6 @@ describe('eventServer', () => {
   });
 
   it('should send a custom event to the server', async () => {
-    const getSettingsSpy = jest.spyOn(core, 'getSettings');
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
     getSettingsSpy.mockReturnValue({
@@ -83,5 +84,17 @@ describe('eventServer', () => {
 
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await event(type, eventData, extensionData)).rejects.toThrow(
+      `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
+    );
   });
 });

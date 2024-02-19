@@ -26,15 +26,16 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     ...originalModule,
   };
 });
-describe('form function', () => {
-  const settingsParams: SettingsParamsBrowser = {
-    sitecoreEdgeContextId: '123',
-    cookieDomain: 'cDomain',
-    siteName: '456',
-    sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
-  };
-  const id = 'test_id';
 
+const settingsParams: SettingsParamsBrowser = {
+  sitecoreEdgeContextId: '123',
+  cookieDomain: 'cDomain',
+  siteName: '456',
+  sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+};
+const id = 'test_id';
+
+describe('form function', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -70,6 +71,19 @@ describe('form function', () => {
         },
         method: 'POST',
       }
+    );
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await form('1234', 'SUBMITTED')).rejects.toThrow(
+      `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });
 });

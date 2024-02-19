@@ -71,4 +71,15 @@ describe('personalize', () => {
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('should throw error if settings have not been configured properly', () => {
+    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
+    getSettingsServerSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => personalizeServer(eventData, req)).rejects.toThrow(
+      `[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`
+    );
+  });
 });

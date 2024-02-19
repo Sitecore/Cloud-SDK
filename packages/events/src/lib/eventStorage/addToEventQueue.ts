@@ -2,7 +2,8 @@
 import { awaitInit } from '../initializer/browser/initializer';
 import { CustomEventInput, ExtensionData } from '../events';
 import { QueueEventPayload, eventQueue } from './eventStorage';
-import { getBrowserId, getSettings } from '@sitecore-cloudsdk/core';
+import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { ErrorMessages } from '../consts';
 
 /**
  * A function that adds event to the queue
@@ -18,7 +19,7 @@ export async function addToEventQueue(
 ): Promise<void> {
   await awaitInit();
 
-  const settings = getSettings();
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
   const id = getBrowserId();
 
   const queueEventPayload: QueueEventPayload = {

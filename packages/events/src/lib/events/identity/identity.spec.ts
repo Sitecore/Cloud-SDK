@@ -44,27 +44,34 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
+const getSettingsSpy = jest.spyOn(core, 'getSettings');
+const id = 'test_id';
+const eventData = {
+  channel: 'WEB',
+  currency: 'EUR',
+  identifiers: [
+    {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      expiryDate: undefined,
+      id,
+      provider: 'email',
+    },
+  ],
+  language: 'EN',
+  page: 'identity',
+};
+
+const extensionData = { extKey: 'extValue' };
+
+afterEach(() => {
+  jest.clearAllMocks();
+});
+
 describe('identity', () => {
   it('should send an IdentityEvent to the server', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    const id = 'test_id';
     jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-    const eventData = {
-      channel: 'WEB',
-      currency: 'EUR',
-      identifiers: [
-        {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          expiryDate: undefined,
-          id,
-          provider: 'email',
-        },
-      ],
-      language: 'EN',
-      page: 'identity',
-    };
 
-    const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue({
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -77,8 +84,6 @@ describe('identity', () => {
       sitecoreEdgeUrl: '',
     });
 
-    const extensionData = { extKey: 'extValue' };
-
     const response = await identity(eventData, extensionData);
 
     expect(IdentityEvent).toHaveBeenCalledWith({
@@ -90,5 +95,18 @@ describe('identity', () => {
     });
     expect(response).toBe('mockedResponse');
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await identity(eventData, extensionData)).rejects.toThrow(
+      `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
+    );
   });
 });

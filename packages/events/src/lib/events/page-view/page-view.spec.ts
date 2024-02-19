@@ -41,6 +41,9 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     ...originalModule,
   };
 });
+
+const extensionData = { extKey: 'extValue' };
+
 describe('pageView', () => {
   const id = 'test_id';
 
@@ -72,7 +75,6 @@ describe('pageView', () => {
       sitecoreEdgeUrl: '',
     });
 
-    const extensionData = { extKey: 'extValue' };
     const response = await pageView(eventData, extensionData);
 
     expect(PageViewEvent).toHaveBeenCalledWith({
@@ -85,5 +87,18 @@ describe('pageView', () => {
     });
     expect(response).toBe('mockedResponse');
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await pageView(eventData, extensionData)).rejects.toThrow(
+      `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
+    );
   });
 });

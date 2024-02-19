@@ -18,6 +18,8 @@ describe('getGuestId', () => {
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
   const getSettingsSpy = jest.spyOn(core, 'getSettings');
+  const getSettingsWrapperSpy = jest.spyOn(core, 'handleGetSettingsError');
+
   const awaitInitSpy = jest.spyOn(initializerModule, 'awaitInit');
 
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
@@ -45,6 +47,7 @@ describe('getGuestId', () => {
     const guestID = await getGuestId();
     expect(getGuestIdSpy).toHaveBeenCalledTimes(1);
     expect(guestID).toBe('guestID');
+    expect(getSettingsWrapperSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw error if settings have not been configured properly', async () => {
@@ -54,7 +57,7 @@ describe('getGuestId', () => {
     });
 
     await expect(async () => await getGuestId()).rejects.toThrow(
-      `[IE-0008] You must first initialize the "core" package. Run the "init" function.`
+      `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });
 });

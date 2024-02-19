@@ -1,9 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
+import { getBrowserId, EPResponse, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { CustomEvent } from './custom-event';
 import { sendEvent } from '../send-event/sendEvent';
 import { awaitInit } from '../../initializer/browser/initializer';
+import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends a form event to SitecoreCloud API
@@ -15,7 +16,7 @@ import { awaitInit } from '../../initializer/browser/initializer';
 export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTED'): Promise<EPResponse | null> {
   await awaitInit();
 
-  const settings = getSettings();
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
   const id = getBrowserId();
 
   const formEvent = new CustomEvent({

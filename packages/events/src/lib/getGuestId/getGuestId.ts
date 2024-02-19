@@ -1,6 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { ErrorMessages } from '../consts';
 import { awaitInit } from '../initializer/browser/initializer';
-import { getBrowserId, getGuestId as getGuestIdFromCore, getSettings } from '@sitecore-cloudsdk/core';
+import {
+  getBrowserId,
+  getGuestId as getGuestIdFromCore,
+  getSettings,
+  handleGetSettingsError,
+} from '@sitecore-cloudsdk/core';
 
 /**
  * A function that returns the guest id.
@@ -10,7 +16,7 @@ import { getBrowserId, getGuestId as getGuestIdFromCore, getSettings } from '@si
 export async function getGuestId(): Promise<string> {
   await awaitInit();
 
-  const settings = getSettings();
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
   const id = getBrowserId();
 
   return getGuestIdFromCore(id, settings.sitecoreEdgeContextId, settings.sitecoreEdgeUrl);

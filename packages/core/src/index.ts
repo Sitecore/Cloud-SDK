@@ -15,6 +15,7 @@ export { getSettingsServer, initCoreServer } from './lib/init/init-core-server';
 export { validateSettings } from './lib/settings/validate-settings';
 export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
+export { handleGetSettingsError } from './lib/settings/handle-get-settings-error';
 export {
   API_VERSION,
   COOKIE_NAME_PREFIX,

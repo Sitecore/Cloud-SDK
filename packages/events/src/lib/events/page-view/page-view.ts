@@ -1,9 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getBrowserId, EPResponse, getSettings } from '@sitecore-cloudsdk/core';
+import { getBrowserId, EPResponse, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { PageViewEventInput, PageViewEvent } from './page-view-event';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
+import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -18,7 +19,7 @@ export async function pageView(
 ): Promise<EPResponse | null> {
   await awaitInit();
 
-  const settings = getSettings();
+  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
   const id = getBrowserId();
 
   return new PageViewEvent({

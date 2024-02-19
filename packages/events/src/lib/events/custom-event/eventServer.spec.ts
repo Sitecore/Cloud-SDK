@@ -57,9 +57,9 @@ describe('eventServer', () => {
   });
 
   const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
+  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
 
   it('should send a custom event to the server', async () => {
-    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue({
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -102,5 +102,15 @@ describe('eventServer', () => {
       },
       type: 'CUSTOM_TYPE',
     });
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    getSettingsServerSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await eventServer(type, eventData, req, extensionData)).rejects.toThrow(
+      `[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`
+    );
   });
 });

@@ -34,6 +34,10 @@ jest.mock('./page-view-event', () => {
   };
 });
 
+const extensionData = { extKey: 'extValue' };
+
+const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
+
 describe('pageViewServer', () => {
   let eventData: PageViewEventInput;
 
@@ -63,8 +67,6 @@ describe('pageViewServer', () => {
   });
 
   it('should send a PageViewEvent to the server', async () => {
-    const extensionData = { extKey: 'extValue' };
-    const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue({
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -98,5 +100,15 @@ describe('pageViewServer', () => {
       },
     });
     expect(response).toBe('mockedResponse');
+  });
+
+  it('should throw error if settings have not been configured properly', () => {
+    getSettingsServerSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await pageViewServer(eventData, req, extensionData)).rejects.toThrow(
+      `[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`
+    );
   });
 });

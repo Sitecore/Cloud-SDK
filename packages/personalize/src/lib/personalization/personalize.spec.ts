@@ -64,4 +64,16 @@ describe('personalize', () => {
     expect(Personalizer).toHaveBeenCalledTimes(1);
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
+
+  it('should throw error if settings have not been configured properly', () => {
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    });
+
+    expect(async () => await personalize(eventData)).rejects.toThrow(
+      `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
+    );
+  });
 });
