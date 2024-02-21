@@ -76,6 +76,11 @@ jobs:
           git checkout -b release/${{steps.get-version.outputs.new_release_version}}
           git stash pop
 
+      - name: Bump dependencies
+        run: |
+          chmod +x ./tools/ci-scripts/bump-dependencies.sh
+          ./tools/ci-scripts/bump-dependencies.sh ${{ github.ref_name }}
+
       - name: Commit to branch
         if: ${{ !github.event.inputs.dryRun }}
         run: |
