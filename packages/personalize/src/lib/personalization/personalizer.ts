@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { Settings, language } from '@sitecore-cloudsdk/core';
 import { sendCallFlowsRequest, EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
-import { NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../consts';
 
 export class Personalizer {
@@ -60,8 +60,7 @@ export class Personalizer {
       sanitizedInput.email = personalizerInput.email;
 
     if (personalizerInput.params && Object.keys(personalizerInput.params).length > 0)
-      sanitizedInput.params = flattenObject({ object: personalizerInput.params });
-
+      sanitizedInput.params = personalizerInput.params;
     return sanitizedInput;
   }
   /**

@@ -134,7 +134,7 @@ Scenario: Developer requests personalize with customParams
         {
             "friendlyId": "personalizeintegrationtest", 
             "email": "personalize@test.com",
-            "params": {"customString": "example"}
+            "params": {"customString": "example", "customValue": { "value": "123" }}
         }
     """
     And the 'requestPersonalizeFromClient' button is clicked
@@ -143,7 +143,7 @@ Scenario: Developer requests personalize with customParams
         {
             "friendlyId": "personalizeintegrationtest", 
             "email": "personalize@test.com",
-            "params": {"customString": "example"}
+            "params": {"customString": "example", "customValue": { "value": "123" }}
         }
     """
     Then we display the callflow's content to UI: 

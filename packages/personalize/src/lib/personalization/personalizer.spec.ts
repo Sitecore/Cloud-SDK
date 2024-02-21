@@ -2,7 +2,6 @@ import { PersonalizeIdentifierInput, PersonalizerInput, Personalizer } from './p
 import * as CallFlowsRequest from './send-call-flows-request';
 import { LIBRARY_VERSION } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
-import * as flatten from '@sitecore-cloudsdk/utils';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -261,7 +260,6 @@ describe('Test Personalizer Class', () => {
 
   describe('Test sanitizeInput', () => {
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
-    const flattenObjectSpy = jest.spyOn(flatten as any, 'flattenObject');
     let expected: PersonalizerInput;
     beforeEach(() => {
       const mockFetch = Promise.resolve({
@@ -379,9 +377,7 @@ describe('Test Personalizer Class', () => {
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      expected.params = { customNumber: 123, customString: 'example value', customValue_value: 123 };
-      expect(flattenObjectSpy).toHaveBeenCalledTimes(1);
+      expected.params = { customNumber: 123, customString: 'example value', customValue: { value: 123 } };
       expect(sanitizeInputSpy).toHaveReturnedWith(expected);
     });
 
@@ -392,7 +388,6 @@ describe('Test Personalizer Class', () => {
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
-      expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(sanitizeInputSpy).toHaveReturnedWith(expected);
     });
   });
@@ -482,8 +477,7 @@ describe('Test Personalizer Class', () => {
         params: {
           customNumber: 123,
           customString: 'example value',
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          customValue_value: 123,
+          customValue: { value: 123 },
         },
       });
 
@@ -496,8 +490,7 @@ describe('Test Personalizer Class', () => {
         friendlyId: 'personalizeintegrationtest',
         identifiers: undefined,
         language: 'EN',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        params: { customNumber: 123, customString: 'example value', customValue_value: 123 },
+        params: { customNumber: 123, customString: 'example value', customValue: { value: 123 } },
         pointOfSale: '',
       });
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledTimes(1);
@@ -516,7 +509,7 @@ describe('Test Personalizer Class', () => {
             customNumber: 123,
             customString: 'example value',
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            customValue_value: 123,
+            customValue: { value: 123 },
           },
           pointOfSale: '',
         },

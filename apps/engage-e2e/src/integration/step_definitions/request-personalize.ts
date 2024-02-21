@@ -40,9 +40,7 @@ defineStep('a personalize request is sent with parameters:', (params: string) =>
     }
     if (parameters.params) {
       const params = parameters.params;
-      Object.keys(params).forEach((value) => {
-        expect(request.body.params[value]).to.equal(params[value]);
-      });
+      expect(request.body.params).to.deep.equal(params);
     }
   });
 });
