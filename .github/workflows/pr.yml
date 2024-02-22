@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Lint & Build on Node v${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node }}
           cache: 'npm'
@@ -33,11 +33,11 @@ jobs:
     runs-on: ubuntu-latest
     name: Run unit tests
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: 'npm'
@@ -55,9 +55,9 @@ jobs:
     runs-on: ubuntu-latest
     name: Run mutation tests for ${{ matrix.mutation-package }} package
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18.x'
           cache: 'npm'
@@ -68,9 +68,9 @@ jobs:
     name: Run Events E2E
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
@@ -81,17 +81,17 @@ jobs:
         run: npm run generate-e2e-report
       - name: Upload Events E2E Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: e2e-report
+          name: events-e2e-report
           path: apps/engage-e2e/cypress/results/
   personalize-e2e-tests:
     name: Run Personalize E2E
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
@@ -102,9 +102,9 @@ jobs:
         run: npm run generate-e2e-report
       - name: Upload Personalize E2E Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: e2e-report
+          name: personalize-e2e-report
           path: apps/engage-e2e/cypress/results/
   add-label:
     name: Create labels based on commits
@@ -113,7 +113,7 @@ jobs:
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Add the labels

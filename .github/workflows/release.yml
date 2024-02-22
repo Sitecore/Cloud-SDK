@@ -29,13 +29,13 @@ jobs:
       new_release_version: ${{ steps.get-version.outputs.new_release_version }}
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
@@ -111,7 +111,7 @@ jobs:
         run: npx nx run-many -t build -p 'events,personalize'
 
       - name: Upload NPM package artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: engage-packages
           path: packages/*
@@ -125,7 +125,7 @@ jobs:
     needs: bump-and-build
     steps:
       - name: Download package artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: engage-packages
 
@@ -137,7 +137,7 @@ jobs:
         run: echo //registry.npmjs.org/:_authToken=${{secrets.NPMJS_PUBLISH_TOKEN}} > .npmrc
 
       - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v1
+        uses: JS-DevTools/npm-publish@v3
         id: npm-publish
         with:
           token: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
@@ -150,7 +150,7 @@ jobs:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
       - name: Fail the workflow when unsuccessful publish
-        if: steps.npm-publish.outputs.type == 'none'
+        if: steps.npm-publish.outputs.type == ''
         run: exit 1
 
       - name: Show the result
@@ -167,7 +167,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: 'release/${{env.new_release_version}}'
           fetch-depth: 0

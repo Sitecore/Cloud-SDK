@@ -10,11 +10,11 @@ jobs:
   chrome-personalize-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
@@ -25,18 +25,18 @@ jobs:
         run: npm run generate-e2e-report
       - name: Upload Chrome Personalize Smoke Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-next-regression-chrome-report
           path: apps/engage-e2e/cypress/results/
   edge-personalize-test:
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
@@ -47,18 +47,18 @@ jobs:
         run: npm run generate-e2e-report
       - name: Upload Edge Personalize Smoke Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-next-regression-edge-report
           path: apps/engage-e2e/cypress/results/
   firefox-personalize-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_branch }}
       - name: Use Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
@@ -69,7 +69,7 @@ jobs:
         run: npm run generate-e2e-report
       - name: Upload Firefox Personalize Smoke Test Report
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: cypress-next-regression-firefox-report
           path: apps/engage-e2e/cypress/results/
