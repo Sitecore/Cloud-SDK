@@ -13,6 +13,7 @@ import { cookieExists } from './lib/cookies/cookie-exists';
 import { flattenObject, NestedObject, FlattenedObject } from './lib/converters/flatten-object';
 import { isShortISODateString } from './lib/validators/is-short-iso-date-string';
 import { isValidEmail } from './lib/validators/is-valid-email';
+import { omit } from './lib/objects/omit';
 
 // Types
 import type {
@@ -40,6 +41,7 @@ export {
   flattenObject,
   isShortISODateString,
   isValidEmail,
+  omit,
 };
 export type {
   NestedObject,
