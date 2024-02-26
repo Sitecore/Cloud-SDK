@@ -1,7 +1,5 @@
 # events
 
-© Sitecore Corporation A/S. All rights reserved. Sitecore© is a registered trademark of Sitecore Corporation A/S.
-
 This package provides browser- and server-side functions to ​capture events in your app and send them to Sitecore. Events are for collecting behavioral data about your users as they interact with your app.
 
 ## Prerequisites
@@ -122,7 +120,3 @@ export async function middleware(req: NextRequest) {
 ## Documentation
 
 [Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-cloud-sdk.html)
-
-### License
-
-The Sitecore Cloud SDK uses the [Apache 2.0 license](https://www.apache.org/licenses/LICENSE-2.0).
