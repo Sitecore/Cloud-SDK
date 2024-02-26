@@ -134,6 +134,54 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
         <br></br>
         <button
           type='button'
+          data-testid='requestPersonalizeFromClientWithGeo'
+          onClick={async () => {
+            const personalizeDataWithGeo: PersonalizerInput = {
+              ...personalizeData,
+              geo: { city: 'T1', country: 'T2', region: 'T3' },
+            };
+            const response = await personalize(personalizeDataWithGeo);
+
+            const res = document.getElementById('response') as HTMLInputElement;
+            res.value = response ? JSON.stringify(response) : '';
+          }}>
+          Request Personalize with geo
+        </button>
+        <br></br>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromClientWithPartialGeo'
+          onClick={async () => {
+            const personalizeDataWithPartialGeo: PersonalizerInput = {
+              ...personalizeData,
+              geo: { city: 'T1' },
+            };
+            const response = await personalize(personalizeDataWithPartialGeo);
+
+            const res = document.getElementById('response') as HTMLInputElement;
+            res.value = response ? JSON.stringify(response) : '';
+          }}>
+          Request Personalize with partial geo
+        </button>
+        <br></br>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromClientWithEmptyGeo'
+          onClick={async () => {
+            const personalizeDataWithEmptyGeo: PersonalizerInput = {
+              ...personalizeData,
+              geo: {},
+            };
+            const response = await personalize(personalizeDataWithEmptyGeo);
+
+            const res = document.getElementById('response') as HTMLInputElement;
+            res.value = response ? JSON.stringify(response) : '';
+          }}>
+          Request Personalize with empty geo
+        </button>
+        <br></br>
+        <button
+          type='button'
           data-testid='requestPersonalizeFromAPI'
           onClick={sendRequestToNextApi}>
           Request Personalize from API

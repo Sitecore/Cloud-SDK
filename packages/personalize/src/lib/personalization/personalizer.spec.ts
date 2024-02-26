@@ -390,6 +390,60 @@ describe('Test Personalizer Class', () => {
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(sanitizeInputSpy).toHaveReturnedWith(expected);
     });
+
+    it('should return an object with geo in params if provided', () => {
+      personalizeInputMock.geo = {
+        city: 'T1',
+        country: 'T2',
+        region: 'T3',
+      };
+      const expectedSanitized = {
+        ...expected,
+        params: {
+          geo: {
+            city: 'T1',
+            country: 'T2',
+            region: 'T3',
+          },
+        },
+      };
+
+      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
+
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
+      expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(sanitizeInputSpy).toHaveReturnedWith(expectedSanitized);
+    });
+
+    it('should return an object with partial geo in params if provided', () => {
+      personalizeInputMock.geo = {
+        city: 'T1',
+      };
+      const expectedSanitized = {
+        ...expected,
+        params: {
+          geo: {
+            city: 'T1',
+          },
+        },
+      };
+
+      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
+
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
+      expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(sanitizeInputSpy).toHaveReturnedWith(expectedSanitized);
+    });
+
+    it('should return an object without params if empty geo is provided', () => {
+      personalizeInputMock.geo = {};
+
+      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
+
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
+      expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(sanitizeInputSpy).toHaveReturnedWith(expected);
+    });
   });
 
   describe('Test mapPersonalizeInputToEpData functionality and APICall', () => {

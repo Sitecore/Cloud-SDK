@@ -60,3 +60,9 @@ defineStep('Personalize API responds with {string} status code', (expectedStatus
     expect(response?.statusCode).to.equal(+expectedStatus);
   });
 });
+
+defineStep('a personalize request is sent with no geolocation data', () => {
+  cy.wait('@personalizeRequest').then(({ request }) => {
+    expect(request.body.params).to.not.exist;
+  });
+});

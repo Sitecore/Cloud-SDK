@@ -61,6 +61,10 @@ export class Personalizer {
 
     if (personalizerInput.params && Object.keys(personalizerInput.params).length > 0)
       sanitizedInput.params = personalizerInput.params;
+
+    if (personalizerInput.geo && Object.keys(personalizerInput.geo).length > 0)
+      sanitizedInput.params = { ...sanitizedInput.params, geo: { ...personalizerInput.geo } };
+
     return sanitizedInput;
   }
   /**
@@ -92,6 +96,15 @@ export class Personalizer {
 }
 
 /**
+ * An interface that describes the geolocation attributes.
+ */
+export interface PersonalizeGeolocation {
+  city?: string;
+  country?: string;
+  region?: string;
+}
+
+/**
  * An interface that describes the flow execution model attributes input for the library
  */
 export interface PersonalizerInput {
@@ -99,6 +112,7 @@ export interface PersonalizerInput {
   currency: string;
   email?: string;
   friendlyId: string;
+  geo?: PersonalizeGeolocation;
   identifier?: PersonalizeIdentifierInput;
   language?: string;
   params?: PersonalizeInputParams;

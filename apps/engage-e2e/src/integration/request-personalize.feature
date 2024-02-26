@@ -208,4 +208,62 @@ Scenario: Developer requests personalize with empty string language
         }
     """
     And the 'requestPersonalizeWithEmptyStringLanguage' button is clicked
-    But Personalize API responds with '400' status code   
+    But Personalize API responds with '400' status code 
+
+Scenario Outline: Developer requests personalize with full geolocation data
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeFromClientWithGeo' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "params": {"geo": {"city":"T1","country":"T2","region":"T3"}}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario Outline: Developer requests personalize with partial geolocation data
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeFromClientWithPartialGeo' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "params": {"geo": {"city":"T1"}}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario Outline: Developer requests personalize with empty geolocation data
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeFromClientWithEmptyGeo' button is clicked
+    Then a personalize request is sent with no geolocation data
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
