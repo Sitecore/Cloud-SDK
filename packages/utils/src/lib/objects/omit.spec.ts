@@ -54,7 +54,7 @@ describe('omit', () => {
   });
 
   it(`should ignore the prototype chain properties`, () => {
-    const actualResult = omit(originalObject, ['toString']);
-    expect(actualResult).toEqual(originalObject);
+    const result = omit(originalObject, ['toString']);
+    expect(result).toEqual(originalObject);
   });
 });
