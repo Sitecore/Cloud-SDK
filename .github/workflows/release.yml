@@ -137,7 +137,7 @@ jobs:
         run: echo //registry.npmjs.org/:_authToken=${{secrets.NPMJS_PUBLISH_TOKEN}} > .npmrc
 
       - name: Publish to NPM
-        uses: JS-DevTools/npm-publish@v3
+        uses: JS-DevTools/npm-publish@v1
         id: npm-publish
         with:
           token: ${{ secrets.NPMJS_PUBLISH_TOKEN }}
@@ -150,7 +150,7 @@ jobs:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
       - name: Fail the workflow when unsuccessful publish
-        if: steps.npm-publish.outputs.type == ''
+        if: steps.npm-publish.outputs.type == 'none'
         run: exit 1
 
       - name: Show the result
