@@ -62,7 +62,7 @@ jobs:
         run: npx nx run-many -t version -p utils core events personalize --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         id: get-version
         run: |
           cd packages/events
@@ -70,7 +70,7 @@ jobs:
           echo "new_release_version=v.$(npm pkg get version  | jq -r '.[]')" >> $GITHUB_OUTPUT
 
       - name: Create a new branch
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         run: |
           git stash
           git checkout -b release/${{steps.get-version.outputs.new_release_version}}
@@ -82,16 +82,16 @@ jobs:
           ./tools/ci-scripts/bump-dependencies.sh ${{ github.ref_name }}
 
       - name: Commit to branch
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         run: |
           git commit -a -m "chore: Bumping package.json to new version: ${{steps.get-version.outputs.new_release_version}} [skip ci]"
 
       - name: Push to branch
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         run: git push --set-upstream origin release/${{steps.get-version.outputs.new_release_version}}
 
       - name: Create release
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         run: |
           for crt_tag in $(git tag -l '*-${{steps.get-version.outputs.new_release_number}}')
           do
@@ -102,7 +102,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
-        if: ${{ !github.event.inputs.dryRun }}
+        if: ${{ github.event.inputs.dryRun == 'false' }}
         run: gh pr create --title "Update libraries to ${{inputs.release_type}} version ${{steps.get-version.outputs.new_release_version}}" --body "[skip ci]" --head release/${{steps.get-version.outputs.new_release_version}}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -145,7 +145,7 @@ jobs:
           registry: https://registry.npmjs.org/
           access: public
           package: ./${{matrix.package-folder}}/package.json
-          dry-run: ${{ github.event.inputs.dryRun }}
+          dry-run: ${{ github.event.inputs.dryRun == 'true' }}
         env:
           release-tag: ${{steps.get-tag.outputs.release-tag}}
 
@@ -160,7 +160,7 @@ jobs:
     name: Clean up git tags and PRs
     runs-on: ubuntu-latest
     needs: [bump-and-build, publish-npm-packages]
-    if: failure() && (needs.publish-npm-packages.result == 'failure') && (!github.event.inputs.dryRun)
+    if: failure() && (needs.publish-npm-packages.result == 'failure') && (github.event.inputs.dryRun == 'false')
     env:
       new_release_version: ${{ needs.bump-and-build.outputs.new_release_version }}
       new_release_number: ${{ needs.bump-and-build.outputs.new_release_number}}
