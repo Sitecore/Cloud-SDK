@@ -14,3 +14,8 @@ export enum ErrorMessages {
   IE_0007 = '[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.',
   MV_0004 = '[MV-0004] "friendlyId" is required.',
 }
+
+/**
+ * Returns the namespace of the library.
+ */
+export const PERSONALIZE_NAMESPACE = 'sitecore-cloudsdk:personalize' as const;

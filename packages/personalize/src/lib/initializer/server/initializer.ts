@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { SettingsParamsServer, initCoreServer } from '@sitecore-cloudsdk/core';
+import { SettingsParamsServer, initCoreServer, debug } from '@sitecore-cloudsdk/core';
 import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import { PERSONALIZE_NAMESPACE } from '../../consts';
 
 /**
  * Initiates the server Engage library using the global settings added by the developer
@@ -13,5 +14,11 @@ export async function initServer<Response extends MiddlewareNextResponse | HttpR
   request: Request,
   response: Response
 ): Promise<void> {
-  await initCoreServer(settingsInput, request, response);
+  try {
+    await initCoreServer(settingsInput, request, response);
+    debug(PERSONALIZE_NAMESPACE)('personalizeServer library initialized');
+  } catch (error) {
+    debug(PERSONALIZE_NAMESPACE)('Error on initializing personalizeServer library with error: %o', error);
+    throw new Error(error as string);
+  }
 }

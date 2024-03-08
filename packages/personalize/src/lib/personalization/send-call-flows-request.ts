@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { Settings } from '@sitecore-cloudsdk/core';
+import { debug, Settings } from '@sitecore-cloudsdk/core';
 import { NestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
-import { LIBRARY_VERSION } from '../consts';
+import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 
 /**
  * A function that sends a CallFlow request to Sitecore EP
@@ -24,20 +24,28 @@ export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, set
     method: 'POST',
   };
 
+  debug(PERSONALIZE_NAMESPACE)('Personalize request: %s with options: %O' as const, requestUrl, fetchOptions);
+
   if (timeout === undefined)
     return fetch(requestUrl, fetchOptions)
-      .then((response) => response.json())
-      .catch(() => {
+      .then((response) => {
+        debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
+        return response.json();
+      })
+      .catch((error) => {
+        debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
         return null;
       });
 
   return fetchWithTimeout(requestUrl, timeout, fetchOptions)
     .then((response) => {
+      debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
       return (response && response.json()) || null;
     })
-    .catch((err) => {
-      if (err.message.includes('IV-0006') || err.message.includes('IE-0002')) {
-        throw new Error(err.message);
+    .catch((error) => {
+      debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
+      if (error.message.includes('IV-0006') || error.message.includes('IE-0002')) {
+        throw new Error(error.message);
       }
       return null;
     });

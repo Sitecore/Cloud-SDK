@@ -9,6 +9,7 @@ import {
   LIBRARY_VERSION as eventVersion,
 } from '@sitecore-cloudsdk/events/browser';
 import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
+import { capturedDebugLogs } from '../utils/debugLogs';
 
 export function Index() {
   const [eventData, seteventData] = useState<PageViewEventInput>({
@@ -160,6 +161,18 @@ export function Index() {
             {version}
           </span>
         </fieldset>
+        <div>
+          <label htmlFor='debug'>Debug:</label>
+          <textarea
+            style={{ color: 'black' }}
+            id='debug'
+            data-testid='debug'
+            name='debug'
+            value={capturedDebugLogs ? JSON.stringify(capturedDebugLogs) : ''}
+            rows={4}
+            cols={50}></textarea>
+          <input />
+        </div>
       </div>
     </div>
   );

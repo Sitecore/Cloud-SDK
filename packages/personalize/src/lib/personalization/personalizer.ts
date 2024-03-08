@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { Settings, language } from '@sitecore-cloudsdk/core';
+import { Settings, language, debug } from '@sitecore-cloudsdk/core';
 import { sendCallFlowsRequest, EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../consts';
+import { ErrorMessages, PERSONALIZE_NAMESPACE } from '../consts';
 
 export class Personalizer {
   /**
@@ -31,7 +31,10 @@ export class Personalizer {
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
 
     return sendCallFlowsRequest(mappedData, settings, timeout)
-      .then((payload) => payload)
+      .then((payload) => {
+        debug(PERSONALIZE_NAMESPACE)('Personalize payload: %O' as const, payload);
+        return payload;
+      })
       .catch((err) => {
         throw err;
       });

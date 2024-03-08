@@ -1,7 +1,8 @@
 import { PersonalizeIdentifierInput, PersonalizerInput, Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
-import { LIBRARY_VERSION } from '../consts';
+import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
+import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -20,6 +21,14 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+  };
+});
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn()),
   };
 });
 
@@ -64,7 +73,7 @@ describe('Test Personalizer Class', () => {
       const action = async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
       };
-      expect(() => action()).rejects.toThrowError(errorMessage);
+      expect(() => action()).rejects.toThrow(errorMessage);
       expect(validateSpy).toHaveBeenCalledTimes(1);
     }
     const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');
@@ -83,8 +92,8 @@ describe('Test Personalizer Class', () => {
     it('should not throw error when friendlyId are provided', async () => {
       await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
       expect(validateSpy).toHaveBeenCalledTimes(1);
-      expect(() => validateSpy).not.toThrowError(`[MV-0004] "friendlyId" is required.`);
-      expect(sanitizeInputSpy).toBeCalledTimes(1);
+      expect(() => validateSpy).not.toThrow(`[MV-0004] "friendlyId" is required.`);
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw error when friendlyId is undefined ', async () => {
@@ -125,7 +134,7 @@ describe('Test Personalizer Class', () => {
       personalizeInputMock.language = undefined;
       new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toBeCalledTimes(1);
+      expect(core.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
         browserId: 'test_id',
         channel: 'WEB',
@@ -144,7 +153,7 @@ describe('Test Personalizer Class', () => {
       personalizeInputMock.language = undefined;
       new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
-      expect(core.language).toBeCalledTimes(1);
+      expect(core.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
         browserId: 'test_id',
         channel: 'WEB',
@@ -204,7 +213,7 @@ describe('Test Personalizer Class', () => {
         }
       );
 
-      expect(core.language).toBeCalledTimes(1);
+      expect(core.language).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
 
@@ -640,6 +649,7 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('timeout', () => {
+    const debugMock = debug as unknown as jest.Mock;
     afterEach(() => {
       jest.clearAllMocks();
     });
@@ -663,6 +673,14 @@ describe('Test Personalizer Class', () => {
           signal: new AbortController().signal,
         }
       );
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
+      expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+        'https://edge-platform.sitecorecloud.io/v1/personalize?sitecoreContextId=123&siteId=456'
+      );
+      expect(debugMock.mock.results[2].value.mock.calls[0][0]).toBe('Personalize payload: %O');
+      expect(debugMock.mock.results[2].value.mock.calls[0][1]).toEqual({ test: '420' });
 
       expect(response).toBe(expectedResponse);
     });
@@ -673,7 +691,7 @@ describe('Test Personalizer Class', () => {
 
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, -10);
-      }).rejects.toThrowError(expectedErrorMessage);
+      }).rejects.toThrow(expectedErrorMessage);
     });
 
     it('should throw error if a float number is used for timeout value', async () => {
@@ -682,7 +700,7 @@ describe('Test Personalizer Class', () => {
 
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 420.69);
-      }).rejects.toThrowError(expectedErrorMessage);
+      }).rejects.toThrow(expectedErrorMessage);
     });
 
     it("should call abort method of AbortController if didn't get a response in time", async () => {

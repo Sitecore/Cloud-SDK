@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
-import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
+import { SettingsParamsBrowser, getBrowserId, initCore, debug } from '@sitecore-cloudsdk/core';
+import { ErrorMessages, LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 
 export let initPromise: Promise<void> | null = null;
 
@@ -14,9 +14,11 @@ export async function init(settingsInput: SettingsParamsBrowser): Promise<void> 
 
   try {
     initPromise = initCore(settingsInput);
-
     await initPromise;
+
+    debug(PERSONALIZE_NAMESPACE)('personalizeClient library initialized');
   } catch (error) {
+    debug(PERSONALIZE_NAMESPACE)('Error on initializing personalizeClient library with error: %o', error);
     initPromise = null;
 
     throw new Error(error as string);

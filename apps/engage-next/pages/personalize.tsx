@@ -2,10 +2,10 @@
 import { init as initServer, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
 import { PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
-
 import { GetServerSidePropsContext } from 'next';
+import { capturedDebugLogs } from '../utils/debugLogs';
 
-export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: string }) {
+export function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSidePropsRes: string; debugLogs: string }) {
   let timeout: number;
   const [personalizeData, setPersonalizetData] = useState<any>({
     channel: 'WEB',
@@ -221,6 +221,18 @@ export function PersonalizeCall({ serverSidePropsRes }: { serverSidePropsRes: st
           data-testid='response'
           name='response'
         />
+        <div>
+          <label htmlFor='debug'>Debug:</label>
+          <textarea
+            style={{ color: 'black' }}
+            id='debug'
+            data-testid='debug'
+            name='debug'
+            value={debugLogs ? JSON.stringify(debugLogs) : ''}
+            rows={4}
+            cols={50}></textarea>
+          <input />
+        </div>
       </div>
     </div>
   );
@@ -256,6 +268,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
+      debugLogs: JSON.stringify(capturedDebugLogs),
       serverSidePropsRes: JSON.stringify(EPResponse),
     },
   };

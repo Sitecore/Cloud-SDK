@@ -1,7 +1,8 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
+import { ErrorMessages, LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import '../../global.d.ts';
 import { init, awaitInit } from './initializer';
+import debug from 'debug';
 
 jest.mock('../../personalization/personalizer');
 jest.mock('../../personalization/send-call-flows-request');
@@ -13,6 +14,14 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+  };
+});
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn()),
   };
 });
 
@@ -101,7 +110,7 @@ describe('initializer', () => {
 
       await expect(async () => {
         await init(settingsParams);
-      }).rejects.toThrowError(
+      }).rejects.toThrow(
         // eslint-disable-next-line max-len
         `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
       );
@@ -125,7 +134,35 @@ describe('initializer', () => {
 
       await expect(async () => {
         await init(settingsParams);
-      }).rejects.toThrowError('error');
+      }).rejects.toThrow('error');
+    });
+  });
+
+  describe('debug library in personalize', () => {
+    const debugMock = debug as unknown as jest.Mock;
+
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:personalize' as a namespace`, async () => {
+      await init(settingsParams);
+
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
+    });
+
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:personalize' as a namespace when error occur`, async () => {
+      jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
+        throw new Error('error');
+      });
+
+      await expect(async () => {
+        await init(settingsParams);
+      }).rejects.toThrow(`Error`);
+
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(
+        `Error on initializing personalizeClient library with error: %o`
+      );
     });
   });
 });
