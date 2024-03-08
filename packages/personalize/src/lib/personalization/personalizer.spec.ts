@@ -661,7 +661,9 @@ describe('Test Personalizer Class', () => {
         .fn()
         .mockImplementation(() => Promise.resolve({ json: () => Promise.resolve(expectedResponse) }));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
+      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, {
+        timeout: 100,
+      });
 
       expect(fetch).toHaveBeenCalledWith(
         `${core.SITECORE_EDGE_URL}/v1/personalize?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
@@ -690,7 +692,7 @@ describe('Test Personalizer Class', () => {
         '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
-        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, -10);
+        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, { timeout: -10 });
       }).rejects.toThrow(expectedErrorMessage);
     });
 
@@ -699,7 +701,9 @@ describe('Test Personalizer Class', () => {
         '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
-        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 420.69);
+        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, {
+          timeout: 420.69,
+        });
       }).rejects.toThrow(expectedErrorMessage);
     });
 
@@ -710,7 +714,7 @@ describe('Test Personalizer Class', () => {
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
+      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, { timeout: 100 });
       jest.advanceTimersByTime(1000);
 
       expect(abortSpy).toHaveBeenCalledTimes(1);
@@ -730,7 +734,7 @@ describe('Test Personalizer Class', () => {
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       try {
-        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 0);
+        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, { timeout: 0 });
       } catch (error) {
         expect((error as FetchError).message).toBe(expectedError);
       }
@@ -748,9 +752,11 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100).catch((err) => {
-        expect(err.message).toEqual(expectedError);
-      });
+      new Personalizer(id)
+        .getInteractiveExperienceData(personalizeInputMock, settingsMock, { timeout: 100 })
+        .catch((err) => {
+          expect(err.message).toEqual(expectedError);
+        });
     });
 
     it('should return null if an unhandled error occurs with RandomError name', async () => {
@@ -763,7 +769,9 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
+      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, {
+        timeout: 100,
+      });
 
       expect(response).toBeNull();
     });
@@ -778,7 +786,9 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
+      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, {
+        timeout: 100,
+      });
 
       expect(response).toBeNull();
     });
@@ -788,11 +798,36 @@ describe('Test Personalizer Class', () => {
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, 100);
+      const response = await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, {
+        timeout: 100,
+      });
 
       expect(response).toBeNull();
 
       expect(abortSpy).toHaveBeenCalledTimes(0);
+    });
+  });
+
+  describe('Opts object', () => {
+    it('should call sendCallFlowsRequest with the opts from the params', () => {
+      const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
+      const mapPersonalizeInputToEPDataSpy = jest.spyOn(Personalizer.prototype as any, 'mapPersonalizeInputToEPData');
+      const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
+      const id = 'test_id';
+      const settings = {} as core.Settings;
+      const data = {} as PersonalizerInput;
+      const opts = { timeout: 100, userAgent: 'test_ua' };
+      const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');
+      validateSpy.mockImplementationOnce(() => {
+        return;
+      });
+
+      sanitizeInputSpy.mockReturnValue({});
+      mapPersonalizeInputToEPDataSpy.mockReturnValue({});
+
+      new Personalizer(id).getInteractiveExperienceData(data, settings, opts);
+
+      expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith({ browserId: 'test_id' }, settings, opts);
     });
   });
 });

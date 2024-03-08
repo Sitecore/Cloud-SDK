@@ -16,13 +16,15 @@ export type BasicTypes =
  * Interface for supporting request IncomingMessage http node type
  */
 export interface HttpRequest {
+  /* eslint-disable @typescript-eslint/naming-convention */
   headers: {
     'cookie'?: string;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     'content-language'?: string;
     'referer'?: string;
+    'user-agent'?: string;
   };
   url?: string;
+  /* eslint-enable @typescript-eslint/naming-convention */
 }
 
 /**

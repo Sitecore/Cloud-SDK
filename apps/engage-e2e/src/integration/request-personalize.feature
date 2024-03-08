@@ -24,6 +24,11 @@ Scenario Outline: Developer requests personalize from middleware
         {"Key":"value"}
     """
 
+Scenario Outline: Developer requests personalize from middleware with User Agent
+    Given the '/personalize' page is loaded
+    When the 'requestPersonalizeFromMiddlewareWithUA' button is clicked
+    Then we display 'Mozilla/5.0' User Agent to UI
+
 Scenario Outline: Developer requests personalize from serverSideProps
     Given the '/personalize' page is loaded
     And the 'requestPersonalizeFromServerSideProps' button is clicked
@@ -126,6 +131,19 @@ Scenario Outline: Developer requests personalize with valid parameters
         | personalizeintegrationtest | personalize@test.com |                      |
         | personalizeintegrationtest |                      | personalize@test.com | 
 
+Scenario Outline: Developer requests personalize on the client and contains User Agent header
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeFromClientWithUA' button is clicked
+    Then the '@personalizeRequest' request contains headers
+        | name       | value       |
+        | user-agent | Mozilla/5.0 | 
 
 Scenario: Developer requests personalize with customParams
     Given the '/personalize' page is loaded

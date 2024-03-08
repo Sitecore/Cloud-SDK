@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
 import { init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { capturedFetch } from './utils/fetch-wrapper';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -89,6 +90,7 @@ export async function middleware(request: NextRequest) {
 
     const personalizeRes = await personalize(personalizeData, request);
 
+    response.cookies.set('EPRequestUA', capturedFetch.pop() as string);
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
   }
 

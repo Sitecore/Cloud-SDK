@@ -33,21 +33,27 @@ jest.mock('debug', () => {
   };
 });
 
-const settingsObj: core.Settings = {
-  cookieSettings: {
-    cookieDomain: 'cDomain',
-    cookieExpiryDays: 730,
-    cookieName: 'name',
-    cookiePath: '/',
-  },
-  siteName: 'site',
-  sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: 'http://testurl',
-};
-
-describe('CallFlow sendCallFlowsRequest', () => {
-  let personalizeData: EPCallFlowsBody;
-  const debugMock = debug as unknown as jest.Mock;
+describe('sendCallFlowsRequest', () => {
+  const settingsObj: core.Settings = {
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 730,
+      cookieName: 'name',
+      cookiePath: '/',
+    },
+    siteName: 'site',
+    sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: 'http://testurl',
+  };
+  const personalizeDataOriginal = {
+    channel: 'WEB',
+    clientKey: '',
+    currencyCode: 'EUR',
+    friendlyId: 'personalizeintegrationtest',
+    language: 'EN',
+    pointOfSale: '',
+  };
+  let personalizeData: EPCallFlowsBody = { ...personalizeDataOriginal };
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -55,39 +61,15 @@ describe('CallFlow sendCallFlowsRequest', () => {
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    personalizeData = {
-      channel: 'WEB',
-      clientKey: '',
-      currencyCode: 'EUR',
-      friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
-      pointOfSale: '',
-    };
+    personalizeData = { ...personalizeDataOriginal };
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
-  it('sends personalize with the correct values', async () => {
-    personalizeData = {
-      channel: 'WEB',
-      clientKey: 'key',
-      currencyCode: 'EUR',
-      friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
-      pointOfSale: '',
-    };
-
-    const payload = await sendCallFlowsRequest(personalizeData, settingsObj);
-
-    expect(payload).toEqual({ status: 'OK' });
-  });
-
-  it('should return null if an error occurs and show debug', async () => {
-    const mockFetch = Promise.reject('Error');
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
-
+  describe('requests', () => {
+    const debugMock = debug as unknown as jest.Mock;
     personalizeData.email = 'test';
     personalizeData.identifiers = {
       id: '1',
@@ -98,184 +80,203 @@ describe('CallFlow sendCallFlowsRequest', () => {
       customString: 'example value',
     };
 
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj);
+    it('sends personalize with the correct values', async () => {
+      personalizeData = {
+        channel: 'WEB',
+        clientKey: 'key',
+        currencyCode: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        pointOfSale: '',
+      };
 
-    expect(response).toEqual(null);
+      const payload = await sendCallFlowsRequest(personalizeData, settingsObj);
 
-    expect(debugMock).toHaveBeenCalled();
-    expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
-    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
-      'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
-    );
-    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Error personalize response: %O');
-    expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBe('Error');
-  });
+      expect(payload).toEqual({ status: 'OK' });
+    });
 
-  it('should return null if resolved response equals null and show debug', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
+    it('should return null if an error occurs and show debug', async () => {
+      const mockFetch = Promise.reject('Error');
+      global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj);
+      expect(response).toEqual(null);
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
+      expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+      );
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Error personalize response: %O');
+      expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBe('Error');
+    });
 
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj, 100);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(response).toEqual(null);
+    it('should return null if resolved response equals null and show debug', async () => {
+      const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
 
-    expect(debugMock).toHaveBeenCalled();
-    expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
-    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
-      'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
-    );
-    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Personalize response: %O');
-    expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBeNull();
-  });
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(null);
 
-  it('should return null if resolved response does not contain .json()', async () => {
-    const fetchWithTimeoutSpy = jest
-      .spyOn(utils, 'fetchWithTimeout')
-      .mockResolvedValue({ test: () => Promise.resolve({ status: 'OK' }) } as any);
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
+      expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+      );
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Personalize response: %O');
+      expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBeNull();
+    });
 
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
+    it('should return null if resolved response does not contain .json()', async () => {
+      const fetchWithTimeoutSpy = jest
+        .spyOn(utils, 'fetchWithTimeout')
+        .mockResolvedValue({ test: () => Promise.resolve({ status: 'OK' }) } as any);
 
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj, 100);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(response).toEqual(null);
-  });
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(null);
+    });
 
-  it('should return null if resolved response does not contain .json() (part 2)', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(false as any);
+    it('should return null if resolved response does not contain .json() (part 2)', async () => {
+      const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(false as any);
 
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(null);
+    });
 
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj, 100);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(response).toEqual(null);
-  });
+    it('should return the resolved value and show debug', async () => {
+      const fetchWithTimeoutSpy = jest
+        .spyOn(utils, 'fetchWithTimeout')
+        .mockResolvedValue({ json: () => Promise.resolve({ status: 'OK' }), status: 200 } as any);
 
-  it('should return the resolved value and show debug', async () => {
-    const fetchWithTimeoutSpy = jest
-      .spyOn(utils, 'fetchWithTimeout')
-      .mockResolvedValue({ json: () => Promise.resolve({ status: 'OK' }), status: 200 } as any);
-
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
-
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj, 100);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(response).toEqual({ status: 'OK' });
-
-    expect(debugMock).toHaveBeenCalled();
-    expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
-    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
-      'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
-    );
-    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Personalize response: %O');
-    expect(debugMock.mock.results[1].value.mock.calls[0][1]).toEqual(
-      expect.objectContaining({
-        json: expect.any(Function),
-        status: 200,
-      })
-    );
-  });
-
-  it('should throw [IV-0006] when we pass negative timeout value', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
-      throw new Error(
-        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(response).toEqual({ status: 'OK' });
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Personalize request: %s with options: %O');
+      expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+        'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site'
+      );
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Personalize response: %O');
+      expect(debugMock.mock.results[1].value.mock.calls[0][1]).toEqual(
+        expect.objectContaining({
+          json: expect.any(Function),
+          status: 200,
+        })
       );
     });
 
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
+    it('should throw [IV-0006] when we pass negative timeout value', async () => {
+      const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
+        throw new Error(
+          '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+        );
+      });
 
-    await expect(async () => {
-      await sendCallFlowsRequest(personalizeData, settingsObj, -100);
-    }).rejects.toThrow(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
-    );
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-  });
-
-  it('should throw [IE-0002] when we get an AbortError', async () => {
-    const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
-      throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      await expect(async () => {
+        await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
+      }).rejects.toThrow(
+        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+      );
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
-    };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
+    it('should throw [IE-0002] when we get an AbortError', async () => {
+      const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
+        throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      });
 
-    await expect(async () => {
-      await sendCallFlowsRequest(personalizeData, settingsObj, -100);
-    }).rejects.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      await expect(async () => {
+        await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
+      }).rejects.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should return null if generic error is thrown', async () => {
+      const fetchWithTimeoutSpy = jest
+        .spyOn(utils, 'fetchWithTimeout')
+        .mockReturnValueOnce(Promise.reject({ message: 'random error' }));
+
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(response).toEqual(null);
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Error personalize response: %O');
+      expect(debugMock.mock.results[1].value.mock.calls[0][1]).toEqual({ message: 'random error' });
+    });
   });
 
-  it('should return null if generic error is thrown', async () => {
-    const fetchWithTimeoutSpy = jest
-      .spyOn(utils, 'fetchWithTimeout')
-      .mockReturnValueOnce(Promise.reject({ message: 'random error' }));
-
-    personalizeData.email = 'test';
-    personalizeData.identifiers = {
-      id: '1',
-      provider: 'email',
+  describe('opts object', () => {
+    const personalizeData: EPCallFlowsBody = { ...personalizeDataOriginal, email: 'test' };
+    const expectedUrl = 'http://testurl/v1/personalize?sitecoreContextId=123&siteId=site';
+    const expectedOpts = {
+      body: JSON.stringify({
+        channel: 'WEB',
+        clientKey: '',
+        currencyCode: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        pointOfSale: '',
+        // eslint-disable-next-line sort-keys
+        email: 'test',
+      }),
+      headers: {
+        /* eslint-disable @typescript-eslint/naming-convention */
+        'Content-Type': 'application/json',
+        'X-Library-Version': '0.2.2',
+        /* eslint-enable @typescript-eslint/naming-convention */
+      },
+      method: 'POST',
     };
-    personalizeData.params = {
-      customNumber: 123,
-      customString: 'example value',
-    };
 
-    const response = await sendCallFlowsRequest(personalizeData, settingsObj, 100);
-    expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
-    expect(response).toEqual(null);
-    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Error personalize response: %O');
-    expect(debugMock.mock.results[1].value.mock.calls[0][1]).toEqual({ message: 'random error' });
+    it('should call fetchWithTimeout with user agent if provided', async () => {
+      const fetchWithTimeoutSpy = jest
+        .spyOn(utils, 'fetchWithTimeout')
+        .mockReturnValueOnce(Promise.reject({ message: 'random error' }));
+
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100, userAgent: 'test_ua' });
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+
+      const expectedOptsWithUA = {
+        ...expectedOpts,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' },
+      };
+
+      expect(fetchWithTimeoutSpy).toHaveBeenLastCalledWith(expectedUrl, 100, expectedOptsWithUA);
+      expect(response).toEqual(null);
+    });
+
+    it('should call fetchWithTimeout without user agent if not provided', async () => {
+      const fetchWithTimeoutSpy = jest
+        .spyOn(utils, 'fetchWithTimeout')
+        .mockReturnValueOnce(Promise.reject({ message: 'random error' }));
+
+      const response = await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: 100 });
+
+      expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
+      expect(fetchWithTimeoutSpy).toHaveBeenLastCalledWith(expectedUrl, 100, expectedOpts);
+      expect(response).toEqual(null);
+    });
+
+    it('should call fetch without user agent if not provided', async () => {
+      await sendCallFlowsRequest(personalizeData, settingsObj);
+
+      expect(global.fetch).toHaveBeenLastCalledWith(expectedUrl, expectedOpts);
+    });
+
+    it('should call fetch with user agent if provided', async () => {
+      await sendCallFlowsRequest(personalizeData, settingsObj, { userAgent: 'test_ua' });
+
+      const expectedOptsWithUA = {
+        ...expectedOpts,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' },
+      };
+
+      expect(global.fetch).toHaveBeenLastCalledWith(expectedUrl, expectedOptsWithUA);
+    });
   });
 });

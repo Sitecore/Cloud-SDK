@@ -7,21 +7,21 @@ import { ErrorMessages, PERSONALIZE_NAMESPACE } from '../consts';
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
-   * @param personalizeClient - The data to be send to Sitecore EP
-   * @param infer - The source of methods to estimate language and page parameters
+   * @param id - The browser id of the user
    */
-
   constructor(private id: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
-   * @param timeout - Optional timeout in milliseconds to cancel the request
+   * @param personalizeInput - The personalize input from the developer
+   * @param settings - The setting that was set during initialization
+   * @param opts - Optional object that contains options for timeout and UA
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
     personalizeInput: PersonalizerInput,
     settings: Settings,
-    timeout?: number
+    opts?: { timeout?: number; userAgent?: string | null }
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
     this.validate(personalizeInput);
 
@@ -30,7 +30,7 @@ export class Personalizer {
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
 
-    return sendCallFlowsRequest(mappedData, settings, timeout)
+    return sendCallFlowsRequest(mappedData, settings, opts)
       .then((payload) => {
         debug(PERSONALIZE_NAMESPACE)('Personalize payload: %O' as const, payload);
         return payload;

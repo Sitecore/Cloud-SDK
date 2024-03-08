@@ -51,6 +51,12 @@ Then('the api server personalize request responds with status code {string}', (e
   });
 });
 
+Then('we display {string} User Agent to UI', (userAgent: string) => {
+  cy.get("[data-testid='response']").then((el) => {
+    expect(el.val()).to.contain(userAgent);
+  });
+});
+
 Then("we display the callflow's content to UI:", (personalizeContent: string) => {
   cy.get("[data-testid='response']").should('have.value', personalizeContent.trim(), { timeout: 6000 });
 });

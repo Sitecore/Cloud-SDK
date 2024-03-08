@@ -21,5 +21,5 @@ export async function personalize(
   const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0006);
   const id = getBrowserId();
 
-  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, timeout);
+  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, { timeout });
 }

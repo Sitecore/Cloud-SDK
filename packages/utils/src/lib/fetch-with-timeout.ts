@@ -12,9 +12,7 @@
 export async function fetchWithTimeout(
   url: string,
   timeout: number,
-  fetchOptions: {
-    [key: string]: unknown;
-  }
+  fetchOptions: RequestInit
 ): Promise<Response | null> {
   if (!Number.isInteger(timeout) || timeout < 0)
     throw new Error(

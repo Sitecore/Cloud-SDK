@@ -93,6 +93,17 @@ export function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSideP
           }}>
           Request Personalize from Client{' '}
         </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromClientWithUA'
+          onClick={async () => {
+            const response = await personalize(personalizeData as unknown as PersonalizerInput);
+
+            const res = document.getElementById('response') as HTMLInputElement;
+            res.value = response ? JSON.stringify(response) : '';
+          }}>
+          Request Personalize from Client with UA
+        </button>
         <br></br>
         <button
           type='button'
@@ -211,7 +222,23 @@ export function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSideP
             const cookie = decodeURIComponent(EPResponse);
             middlewareRes.value = cookie;
           }}>
-          Request Personalize from Middleware{' '}
+          Request Personalize from Middleware
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromMiddlewareWithUA'
+          onClick={async () => {
+            const middlewareRes = document.getElementById('response') as HTMLInputElement;
+            const EPRequestUA =
+              document?.cookie
+                ?.split('; ')
+                ?.find((cookie) => cookie.split('=')[0] === 'EPRequestUA')
+                ?.split('EPRequestUA=')[1] || '';
+
+            const cookie = decodeURIComponent(EPRequestUA);
+            middlewareRes.value = cookie;
+          }}>
+          Request Personalize from Middleware With UA
         </button>
         <p></p>
         <label htmlFor='response'>EP Response:</label>

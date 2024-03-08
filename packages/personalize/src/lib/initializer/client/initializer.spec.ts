@@ -171,7 +171,7 @@ describe('awaitInit', () => {
   it('should throw error if initPromise is null', async () => {
     await expect(async () => {
       await awaitInit();
-    }).rejects.toThrowError(ErrorMessages.IE_0006);
+    }).rejects.toThrow(ErrorMessages.IE_0006);
   });
   it('should not throw if initPromise is a Promise', async () => {
     jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());

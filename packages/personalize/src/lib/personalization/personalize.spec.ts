@@ -16,19 +16,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 describe('personalize', () => {
-  const { window } = global;
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
   const id = 'test_id';
-
-  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
-
-  jest.spyOn(core, 'createCookie').mock;
-
-  afterEach(() => {
-    jest.clearAllMocks();
-    global.window ??= Object.create(window);
-  });
   const eventData = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     channel: 'WEB',
@@ -39,6 +27,29 @@ describe('personalize', () => {
     pointOfSale: 'spinair.com',
   };
 
+  const settings = {
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 730,
+      cookieName: 'bid_name',
+      cookiePath: '/',
+    },
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: '',
+  };
+
+  const { window } = global;
+  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
+  global.fetch = jest.fn().mockImplementation(() => mockFetch);
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+  jest.spyOn(core, 'createCookie').mock;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+    global.window ??= Object.create(window);
+  });
+
   it('should return an object with available functionality', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
@@ -46,17 +57,7 @@ describe('personalize', () => {
     expect(typeof personalize).toBe('function');
 
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
-    getSettingsSpy.mockReturnValue({
-      cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieName: 'bid_name',
-        cookiePath: '/',
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
-    });
+    getSettingsSpy.mockReturnValue(settings);
 
     await personalize(eventData);
 
@@ -75,5 +76,43 @@ describe('personalize', () => {
     expect(async () => await personalize(eventData)).rejects.toThrow(
       `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
     );
+  });
+
+  it('should call getInteractiveExperience with timeout in opts object', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
+
+    expect(typeof personalize).toBe('function');
+
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue(settings);
+
+    await personalize(eventData, 100);
+
+    const expectedOpts = { timeout: 100 };
+    const expectedData = eventData;
+    const expectedSettings = settings;
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(expectedData, expectedSettings, expectedOpts);
+  });
+
+  it('should call getInteractiveExperience without opts object', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
+
+    expect(typeof personalize).toBe('function');
+
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue(settings);
+
+    await personalize(eventData);
+
+    const expectedOpts = { timeout: undefined };
+    const expectedData = eventData;
+    const expectedSettings = settings;
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(expectedData, expectedSettings, expectedOpts);
   });
 });

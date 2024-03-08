@@ -10,6 +10,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
+      assertRequestHeaders(request: any, expectedReqHeaders: any): void;
       getLogOutput(): any;
       waitForRequest(alias: string): any;
       waitForResponse(alias: string): any;
@@ -63,6 +64,12 @@ Cypress.Commands.add('readLocal', (fileName) => {
   let value: any;
   cy.readFile(`src/fixtures/local/${fileName}`).then((content) => (value = content));
   return value;
+});
+
+Cypress.Commands.add('assertRequestHeaders', (request, expectedReqHeaders) => {
+  for (const entry of expectedReqHeaders) {
+    expect(request.headers[entry.name]).to.contain(entry.value);
+  }
 });
 
 Cypress.Commands.add('assertRequest', (request, expectedReq) => {

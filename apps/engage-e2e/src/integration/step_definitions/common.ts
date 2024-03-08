@@ -46,6 +46,14 @@ Then('the event is sent with {string} type', (eventType: string, datatable) => {
   });
 });
 
+Then('the {string} request contains headers', (targetRequest: string, params: any) => {
+  cy.waitForRequest(targetRequest).then((request: any) => {
+    const expectedReqHeaders = params.hashes();
+
+    cy.assertRequestHeaders(request, expectedReqHeaders);
+  });
+});
+
 Then('the event is sent successfully from the server', () => {
   cy.waitForResponse('@sendTriggerEvent').then((response: any) => {
     const actualStatus = response.statusCode;

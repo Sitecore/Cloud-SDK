@@ -10,23 +10,29 @@ import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
  * @param timeout - Optional timeout in milliseconds to cancel the request
  * @returns - A promise that resolves with either the Sitecore EP response object or unknown
  */
-export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, settings: Settings, timeout?: number) {
+export async function sendCallFlowsRequest(
+  epCallFlowsBody: EPCallFlowsBody,
+  settings: Settings,
+  opts?: { timeout?: number; userAgent?: string | null }
+) {
   const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
 
-  const fetchOptions = {
+  const fetchOptions: FetchOptions = {
     body: JSON.stringify(epCallFlowsBody),
     headers: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      /* eslint-disable @typescript-eslint/naming-convention */
       'Content-Type': 'application/json',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'X-Library-Version': LIBRARY_VERSION,
+      /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST',
   };
 
+  if (opts?.userAgent) fetchOptions.headers['User-Agent'] = opts.userAgent;
+
   debug(PERSONALIZE_NAMESPACE)('Personalize request: %s with options: %O' as const, requestUrl, fetchOptions);
 
-  if (timeout === undefined)
+  if (opts?.timeout === undefined)
     return fetch(requestUrl, fetchOptions)
       .then((response) => {
         debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
@@ -37,7 +43,7 @@ export async function sendCallFlowsRequest(epCallFlowsBody: EPCallFlowsBody, set
         return null;
       });
 
-  return fetchWithTimeout(requestUrl, timeout, fetchOptions)
+  return fetchWithTimeout(requestUrl, opts.timeout, fetchOptions)
     .then((response) => {
       debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
       return (response && response.json()) || null;
@@ -101,3 +107,10 @@ export interface EPCallFlowsBody {
  * A type that describes the params property of the EPCallFlowsBody
  */
 export type EPCallFlowsParams = NestedObject;
+
+/**
+ * Interface for the fetch options we need
+ */
+interface FetchOptions extends RequestInit {
+  headers: Record<string, string>;
+}

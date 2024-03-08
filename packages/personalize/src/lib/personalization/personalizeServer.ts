@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { FailedCalledFlowsResponse } from './send-call-flows-request';
-import { Request } from '@sitecore-cloudsdk/utils';
+import { Request, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { PersonalizerInput, Personalizer } from './personalizer';
 import { ErrorMessages } from '../consts';
 /**
@@ -19,5 +19,10 @@ export function personalizeServer<T extends Request>(
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0007);
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
-  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, timeout);
+
+  const userAgent = isNextJsMiddlewareRequest(request)
+    ? request.headers.get('user-agent')
+    : request.headers['user-agent'];
+
+  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, { timeout, userAgent });
 }
