@@ -38,7 +38,7 @@ let createCookiePromise: Promise<void> | null = null;
  * @returns A Promise that resolves when initialization is complete.
  */
 export async function initCore(settingsInput: SettingsParamsBrowser): Promise<void> {
-  debug(CORE_NAMESPACE)('initializing %o', 'initCoreClient initialized');
+  debug(CORE_NAMESPACE)('coreClient library initialized');
 
   if (coreSettings === null) coreSettings = createSettings(settingsInput);
 

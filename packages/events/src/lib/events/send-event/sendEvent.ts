@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { API_VERSION, EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import { API_VERSION, EPResponse, Settings, debug } from '@sitecore-cloudsdk/core';
 import type { BasePayload, PageViewEventPayload, IdentityEventPayload, CustomEventPayload } from '..';
-import { LIBRARY_VERSION } from '../../consts';
+import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 
 /**
  * This factory function sends an event to Edge Proxy
@@ -22,10 +22,21 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
     method: 'POST',
   };
 
+  debug(EVENTS_NAMESPACE)('Events request: %s with options: %O', eventUrl, fetchOptions);
+
   return await fetch(eventUrl, fetchOptions)
-    .then((response) => response.json())
-    .then((data) => data)
-    .catch(() => null);
+    .then((response) => {
+      debug(EVENTS_NAMESPACE)('Events response: %O', response);
+      return response.json()
+    })
+    .then((data) => { 
+      debug(EVENTS_NAMESPACE)('Events payload: %O', data);
+      return data;
+    })
+    .catch((error) => {
+      debug(EVENTS_NAMESPACE)('Error: events response: %O', error);
+      return null
+    });
 }
 
 /**

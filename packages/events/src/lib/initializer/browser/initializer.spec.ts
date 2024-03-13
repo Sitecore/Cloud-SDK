@@ -1,9 +1,10 @@
 import { init, awaitInit } from './initializer';
 import packageJson from '../../../../package.json';
-import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
+import { ErrorMessages, LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import '../../../global.d.ts';
+import debug from 'debug';
 
 jest.mock('../../eventStorage/eventStorage');
 
@@ -16,6 +17,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     ...originalModule,
   };
 });
+
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
@@ -23,6 +25,14 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+  };
+});
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn()),
   };
 });
 
@@ -155,4 +165,37 @@ describe('awaitInit', () => {
       await awaitInit();
     }).not.toThrow();
   });
+});
+
+describe('debug library in events', () => {
+  const debugMock = debug as unknown as jest.Mock;
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace`, async () => {
+    await init(settingsParams);
+
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsClient library initialized');
+  });
+
+  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace when error occur`, async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
+      throw new Error('error');
+    });
+
+    try {
+      await init(settingsParams);
+    } catch (error) {
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(
+        `Error on initializing eventsClient library: %o`
+      );
+    }
+  });
+
 });

@@ -102,8 +102,7 @@ describe('initCore', () => {
 
     expect(debugMock).toHaveBeenCalledTimes(1);
     expect(debugMock).toHaveBeenCalledWith(CORE_NAMESPACE);
-    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('initializing %o');
-    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe('initCoreClient initialized');
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('coreClient library initialized');
   });
 });
 

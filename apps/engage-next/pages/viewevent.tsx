@@ -1,14 +1,18 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { PageViewEventInput, pageView, init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
-export function ViewEvent(props: { res: string | number | readonly string[] }) {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [res] = useState(props.res);
+import { capturedDebugLogs } from '../utils/debugLogs';
 
+interface ViewEventProps {
+  res: string | number | readonly string[]
+  debugLogs: string
+}
+
+export default function ViewEvent({ res, debugLogs}: ViewEventProps) {
   useEffect(() => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const includeUTMSearchParameter = eventAttributes.get('includeUTMParameters');
@@ -81,11 +85,21 @@ export function ViewEvent(props: { res: string | number | readonly string[] }) {
           defaultValue={res}
         />
       </div>
+      <div>
+        <label htmlFor='debug'>Debug:</label>
+        <textarea
+          style={{ color: 'black' }}
+          id='debug'
+          data-testid='debug'
+          name='debug'
+          value={debugLogs ? JSON.stringify(debugLogs) : ''}
+          rows={4}
+          cols={50}></textarea>
+        <input />
+      </div>
     </>
   );
 }
-
-export default ViewEvent;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const requestUrl = new URL(context.req.url || '', `https://${context.req.headers.host}`);
@@ -142,6 +156,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
+      debugLogs: JSON.stringify(capturedDebugLogs),
       res: JSON.stringify(EPResponse),
     },
   };

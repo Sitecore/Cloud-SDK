@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { SettingsParamsBrowser, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
-import { ErrorMessages, LIBRARY_VERSION } from '../../consts';
+import { SettingsParamsBrowser, getBrowserId, initCore, debug } from '@sitecore-cloudsdk/core';
+import { ErrorMessages, LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 
 export let initPromise: Promise<void> | null = null;
 
@@ -12,11 +12,18 @@ export let initPromise: Promise<void> | null = null;
 export async function init(settingsInput: SettingsParamsBrowser): Promise<void> {
   if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
 
+
   try {
     initPromise = initCore(settingsInput);
 
     await initPromise;
+
+    debug(EVENTS_NAMESPACE)('eventsClient library initialized');
+
   } catch (error) {
+
+    debug(EVENTS_NAMESPACE)('Error on initializing eventsClient library: %o', error);
+
     initPromise = null;
 
     throw new Error(error as string);

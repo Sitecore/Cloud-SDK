@@ -18,3 +18,6 @@ export enum ErrorMessages {
   IV_0005 = `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`,
   MV_0003 = '[MV-0003] "identifiers" is required.',
 }
+
+export const EVENTS_NAMESPACE = 'sitecore-cloudsdk:events';
+ 

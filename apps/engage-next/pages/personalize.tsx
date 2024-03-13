@@ -5,7 +5,7 @@ import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
 
-export function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSidePropsRes: string; debugLogs: string }) {
+export default function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSidePropsRes: string; debugLogs: string }) {
   let timeout: number;
   const [personalizeData, setPersonalizetData] = useState<any>({
     channel: 'WEB',
@@ -264,8 +264,6 @@ export function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSideP
     </div>
   );
 }
-
-export default PersonalizeCall;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const event: PersonalizerInput = {

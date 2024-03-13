@@ -1,9 +1,10 @@
 import { initServer } from './initializer';
 import packageJson from '../../../../package.json';
 import { SettingsParamsServer } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION } from '../../consts';
+import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
 import * as core from '@sitecore-cloudsdk/core';
+import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -14,6 +15,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     ...originalModule,
   };
 });
+
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
 
@@ -21,6 +23,14 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+  };
+});
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn()),
   };
 });
 
@@ -57,11 +67,18 @@ describe('initializer', () => {
 
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
+  const initCoreSpy = jest.spyOn(core, 'initCoreServer');
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('init Server', () => {
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should run all necessary functionality during init', async () => {
       const eventsServer = await initServer(settingsParams, req, res);
       const eventServerSettings = core.getSettingsServer();
@@ -88,5 +105,41 @@ describe('initializer', () => {
 
       expect(handleServerCookieSpy).toHaveBeenCalledTimes(0);
     });
+
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace`, async () => {
+      const debugMock = debug as unknown as jest.Mock;
+  
+      initCoreSpy.mockImplementationOnce(() => Promise.resolve());
+      await initServer(settingsParams, req, res);
+  
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsServer library initialized');
+    });
+
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace and log the error`, async () => {
+      const debugMock = debug as unknown as jest.Mock;
+  
+      initCoreSpy.mockImplementationOnce(() => Promise.reject('Error'));
+  
+      await expect(async () => {
+        await initServer(settingsParams, req, res);
+      }).rejects.toThrow(`Error`);
+  
+      expect(debugMock).toHaveBeenCalled();
+      expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(
+        `Error on initializing eventsServer library with error: %o`
+      );
+      expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(`Error`);
+    });
+
+
+
   });
 });
+
+
+
+  
+

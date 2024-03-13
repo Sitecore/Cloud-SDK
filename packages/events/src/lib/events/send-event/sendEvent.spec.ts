@@ -1,7 +1,8 @@
 import { EPResponse } from '@sitecore-cloudsdk/core';
 import { sendEvent } from './sendEvent';
-import { LIBRARY_VERSION } from '../../consts';
+import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
+import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -10,6 +11,14 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+  };
+});
+
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn()),
   };
 });
 
@@ -26,6 +35,9 @@ const settingsObj: core.Settings = {
 };
 
 describe('EventApiClient', () => {
+
+  const debugMock = debug as unknown as jest.Mock;
+
   beforeEach(() => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' } as EPResponse),
@@ -35,7 +47,7 @@ describe('EventApiClient', () => {
     jest.clearAllMocks();
   });
 
-  it('Sends event with the correct values to Sitecore Cloud', () => {
+  it('Sends event with the correct values to Sitecore Cloud and show debug', async() => {
     const eventData = {
       /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
@@ -54,7 +66,11 @@ describe('EventApiClient', () => {
     const expectedBody = JSON.stringify(eventData);
     const expectedUrl = 'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site';
 
-    sendEvent(eventData, settingsObj);
+    await sendEvent(eventData, settingsObj).then((data) => {
+      expect(data).toEqual({
+        status: 'OK',
+      });
+    });
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
@@ -67,14 +83,17 @@ describe('EventApiClient', () => {
       method: 'POST',
     });
 
-    return sendEvent(eventData, settingsObj).then((data) => {
-      expect(data).toEqual({
-        status: 'OK',
-      });
-    });
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Events request: %s with options: %O');
+    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+      'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site'
+    );
+    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Events response: %O');
+    expect(debugMock.mock.results[2].value.mock.calls[0][0]).toBe('Events payload: %O');
   });
 
-  it('should return null if an error occurs', async () => {
+  it('should return null if an error occurs and show debug', async () => {
     const mockFetch = Promise.reject('Error');
 
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
@@ -95,5 +114,14 @@ describe('EventApiClient', () => {
 
     expect(fetch).toHaveBeenCalledTimes(1);
     expect(response).toEqual(null);
+
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('Events request: %s with options: %O');
+    expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
+      'http://testurl/v1/events/v1.2/events?sitecoreContextId=123&siteId=site'
+    );
+    expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Error: events response: %O');
+    expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBe('Error');
   });
 });

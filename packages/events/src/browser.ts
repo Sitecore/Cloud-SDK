@@ -10,4 +10,4 @@ export { event } from './lib/events/custom-event/event';
 export { identity } from './lib/events/identity/identity';
 export { pageView } from './lib/events/page-view/page-view';
 export { getGuestId } from './lib/getGuestId/getGuestId';
-export { LIBRARY_VERSION } from './lib/consts';
+export { LIBRARY_VERSION, EVENTS_NAMESPACE } from './lib/consts';
