@@ -2,7 +2,7 @@
 import { Settings, language, debug } from '@sitecore-cloudsdk/core';
 import { sendCallFlowsRequest, EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PERSONALIZE_NAMESPACE } from '../consts';
+import { ErrorMessages, PERSONALIZE_NAMESPACE, UTM_PREFIX } from '../consts';
 
 export class Personalizer {
   /**
@@ -21,11 +21,17 @@ export class Personalizer {
   async getInteractiveExperienceData(
     personalizeInput: PersonalizerInput,
     settings: Settings,
+    searchParams: string,
     opts?: { timeout?: number; userAgent?: string | null }
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
     this.validate(personalizeInput);
 
     const sanitizedInput = this.sanitizeInput(personalizeInput);
+
+    if (searchParams.includes(UTM_PREFIX) && !sanitizedInput.params?.utm) {
+      sanitizedInput.params = sanitizedInput.params || {};
+      sanitizedInput.params.utm = this.extractUrlParamsWithPrefix(searchParams, UTM_PREFIX);
+    }
 
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
     if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
@@ -95,6 +101,28 @@ export class Personalizer {
    */
   private validate({ friendlyId }: PersonalizerInput) {
     if (!friendlyId || friendlyId.trim().length === 0) throw new Error(ErrorMessages.MV_0004);
+  }
+
+  /**
+   * Retrieves UTM parameters from the url query string e.g. `utm_test1=123&utm_test2=456`
+   * @param urlParams - The url params passed
+   * @param prefix - The prefix we want to extract from the params
+   * @returns - an object containing the UTM parameters (if they exist) in the form: `utm: {test1: 123, test2: 456}`
+   */
+  private extractUrlParamsWithPrefix(urlParams: string, prefix: string): { [key: string]: string } {
+    const urlSearchParams = new URLSearchParams(decodeURI(urlParams));
+    const extractedParams: { [key: string]: string } = {};
+
+    urlSearchParams.forEach((value: string, key: string) => {
+      const paramKey = key.toLowerCase();
+
+      if (paramKey.indexOf(prefix) === 0) {
+        const paramName = paramKey.substring(prefix.length);
+        extractedParams[paramName] = value;
+      }
+    });
+
+    return extractedParams;
   }
 }
 

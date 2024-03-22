@@ -61,6 +61,14 @@ Then("we display the callflow's content to UI:", (personalizeContent: string) =>
   cy.get("[data-testid='response']").should('have.value', personalizeContent.trim(), { timeout: 6000 });
 });
 
+Then("we display the callflow's request params to UI containing:", (personalizeContent: string) => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(3000);
+  cy.get("[data-testid='response']").then((el) => {
+    expect(el.val()).to.contain(personalizeContent);
+  });
+});
+
 defineStep('Personalize API responds with {string} status code', (expectedStatus: string) => {
   cy.wait('@personalizeRequest').then(({ response }) => {
     expect(response?.statusCode).to.equal(+expectedStatus);

@@ -39,15 +39,16 @@ describe('personalize', () => {
     sitecoreEdgeUrl: '',
   };
 
-  const { window } = global;
+  let windowSpy: jest.SpyInstance;
+
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
   jest.spyOn(core, 'createCookie').mock;
 
-  afterEach(() => {
+  beforeEach(() => {
     jest.clearAllMocks();
-    global.window ??= Object.create(window);
+    windowSpy = jest.spyOn(globalThis, 'window', 'get');
   });
 
   it('should return an object with available functionality', async () => {
@@ -94,7 +95,12 @@ describe('personalize', () => {
     const expectedSettings = settings;
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(expectedData, expectedSettings, expectedOpts);
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      expectedData,
+      expectedSettings,
+      window.location.search,
+      expectedOpts
+    );
   });
 
   it('should call getInteractiveExperience without opts object', async () => {
@@ -113,6 +119,35 @@ describe('personalize', () => {
     const expectedSettings = settings;
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(expectedData, expectedSettings, expectedOpts);
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      expectedData,
+      expectedSettings,
+      window.location.search,
+      expectedOpts
+    );
+  });
+
+  it('should call getInteractiveExperience without search params', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
+
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue(settings);
+
+    windowSpy.mockImplementation(() => ({
+      location: {
+        search: '?utm_campaign=campaign&utm_medium=email',
+      },
+    }));
+
+    await personalize(eventData);
+
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      eventData,
+      settings,
+      '?utm_campaign=campaign&utm_medium=email',
+      { timeout: undefined }
+    );
   });
 });

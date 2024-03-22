@@ -285,3 +285,168 @@ Scenario Outline: Developer requests personalize with empty geolocation data
     """
         {"Key":"value"}
     """
+
+Scenario Outline: Developer sends callflows request with UTM as query params
+    Given the '/personalize' page is loaded with query parameters
+        | UTM_medium | UTM_source   | utm_campaign   | utm_content       |
+        | email      | active users | feature launch | bottom cta button |
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com"
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"utm": {"medium": "email", "source": "active users", "campaign": "feature launch", "content": "bottom cta button"}}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario Outline: Developer sends callflows request with UTM as custom params
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"utm": {"medium": "email"}}
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"utm": {"medium": "email"}}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario Outline: Developer sends callflows request with both UTM as query (url) and custom params
+    Given the '/personalize' page is loaded with query parameters
+        | UTM_medium | UTM_source   | utm_campaign   | utm_content       |
+        | email      | active users | feature launch | bottom cta button |
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"utm": {"medium": "email"}}
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "personalize@test.com",
+            "params": {"utm": {"medium": "email"}}
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario: Developer requests personalize from API route with UTM params
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test" 
+        }
+    """
+    And the 'requestPersonalizeFromAPIWithUTMParams' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign","source":"test"}}
+    """
+
+Scenario: Developer requests personalize from API route with UTM url params only
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test"
+        }
+    """
+    And the 'requestPersonalizeFromAPIWithUTMParamsFromUrl' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign2","source":"test2"}}
+    """
+
+Scenario: Developer requests personalize from API route with both UTM params (in url and manually)
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test"
+        }
+    """
+    And the 'requestPersonalizeFromAPIWithBothUTMParams' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign","source":"test"}}
+    """
+
+Scenario: Developer requests personalize from Middleware with UTM params
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test"
+        }
+    """
+    And the 'requestPersonalizeFromMiddlewareWithUTMParams' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign","source":"test"}}
+    """
+
+Scenario: Developer requests personalize from Middleware with UTM url params only
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test"
+        }
+    """
+    And the 'requestPersonalizeFromMiddlewareWithUTMParamsFromUrl' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign4","source":"test4"}}
+    """
+
+Scenario: Developer requests personalize from Middleware with both UTM params (in url and manually)
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        { 
+            "friendlyId": "personalizeintegrationtest", 
+            "email": "test"
+        }
+    """
+    And the 'requestPersonalizeFromMiddlewareWithBothUTMParams' button is clicked
+    Then we display the callflow's request params to UI containing: 
+    """
+    {"utm":{"campaign":"campaign","source":"test"}}
+    """

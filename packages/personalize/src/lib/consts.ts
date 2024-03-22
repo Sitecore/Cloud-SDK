@@ -19,3 +19,4 @@ export enum ErrorMessages {
  * Returns the namespace of the library.
  */
 export const PERSONALIZE_NAMESPACE = 'sitecore-cloudsdk:personalize' as const;
+export const UTM_PREFIX = 'utm_';

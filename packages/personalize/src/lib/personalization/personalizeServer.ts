@@ -20,9 +20,14 @@ export function personalizeServer<T extends Request>(
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0007);
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
 
+  const requestUrl = new URL(request.url as string, `https://localhost`);
+
   const userAgent = isNextJsMiddlewareRequest(request)
     ? request.headers.get('user-agent')
     : request.headers['user-agent'];
 
-  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, { timeout, userAgent });
+  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
+    timeout,
+    userAgent,
+  });
 }

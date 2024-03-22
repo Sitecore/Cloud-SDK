@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { init, PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { capturedDebugLogs } from '../../utils/debugLogs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -10,6 +11,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     friendlyId: requestUrl.searchParams?.get('friendlyId') || '',
     language: 'EN',
   };
+
+  if (requestUrl.searchParams?.get('includeUTMParams') === 'true') {
+    event.params = {
+      utm: {
+        campaign: 'campaign',
+        source: 'test',
+      },
+    };
+  }
 
   await init(
     {
@@ -27,5 +37,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const EPResponse = await personalize(event, req, timeout);
 
-  res.status(200).json(EPResponse);
+  res.status(200).json({
+    EPResponse,
+    capturedDebugLogs: capturedDebugLogs
+      .filter((item) => (item as unknown as string).includes('Personalize request'))
+      .pop(),
+  });
 }

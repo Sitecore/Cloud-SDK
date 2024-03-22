@@ -2,8 +2,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
-import { init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
-import { capturedFetch } from './utils/fetch-wrapper';
+import { PersonalizerInput, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -80,7 +80,7 @@ export async function middleware(request: NextRequest) {
       response
     );
 
-    const personalizeData = {
+    const personalizeData: PersonalizerInput = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
@@ -88,10 +88,20 @@ export async function middleware(request: NextRequest) {
       language: 'EN',
     };
 
+    if (request.nextUrl.searchParams?.get('includeUTMParams') === 'true') {
+      personalizeData.params = {
+        utm: {
+          campaign: 'campaign',
+          source: 'test',
+        },
+      };
+    }
+
     const personalizeRes = await personalize(personalizeData, request);
 
     response.cookies.set('EPRequestUA', capturedFetch.pop() as string);
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
+    response.cookies.set('EPPersonalizeRequestCookie', capturedRequestBody.pop() as unknown as string);
   }
 
   return response;

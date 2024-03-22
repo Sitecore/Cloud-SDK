@@ -70,7 +70,7 @@ describe('personalize', () => {
     personalizeServer(eventData, req);
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, {
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, '', {
       timeout: undefined,
       userAgent: null,
     });
@@ -89,7 +89,7 @@ describe('personalize', () => {
 
     personalizeServer(eventData, httpReq);
 
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, { userAgent: 'test_ua' });
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, '', { userAgent: 'test_ua' });
   });
 
   it('should include the user agent header if in middleware request', async () => {
@@ -100,7 +100,7 @@ describe('personalize', () => {
 
     personalizeServer(eventData, req, 100);
 
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, {
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(eventData, settings, '', {
       timeout: 100,
       userAgent: 'test_ua',
     });

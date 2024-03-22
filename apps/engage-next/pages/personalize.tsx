@@ -5,7 +5,13 @@ import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
 
-export default function PersonalizeCall({ serverSidePropsRes, debugLogs }: { serverSidePropsRes: string; debugLogs: string }) {
+export default function PersonalizeCall({
+  serverSidePropsRes,
+  debugLogs,
+}: {
+  serverSidePropsRes: string;
+  debugLogs: string;
+}) {
   let timeout: number;
   const [personalizeData, setPersonalizetData] = useState<any>({
     channel: 'WEB',
@@ -24,12 +30,84 @@ export default function PersonalizeCall({ serverSidePropsRes, debugLogs }: { ser
     return params;
   }
 
+  const getEPPersonalizeRequestCookie = () => {
+    const EPPersonalizeRequestCookie =
+      document?.cookie
+        ?.split('; ')
+        ?.find((cookie) => cookie.split('=')[0] === 'EPPersonalizeRequestCookie')
+        ?.split('EPPersonalizeRequestCookie=')[1] || '';
+
+    const cookie = decodeURIComponent(EPPersonalizeRequestCookie);
+    return cookie;
+  };
+
   const sendRequestToNextApi = async () => {
     const response = await fetch(`/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}`);
     const EPResponse = await response.json();
 
     const res = document.getElementById('response') as HTMLInputElement;
-    res.value = JSON.stringify(EPResponse);
+    res.value = JSON.stringify(EPResponse.EPResponse);
+  };
+
+  const sendUTMParamsManuallyToApi = async () => {
+    const response = await fetch(
+      `/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true`
+    );
+    const EPResponse = await response.json();
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    res.value = EPResponse.capturedDebugLogs;
+  };
+
+  const sendUTMParamsFromUrlToApi = async () => {
+    const response = await fetch(
+      `/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&utm_campaign=campaign2&utm_source=test2`
+    );
+
+    const EPResponse = await response.json();
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    res.value = EPResponse.capturedDebugLogs;
+  };
+
+  const sendBothUTMParamsToApi = async () => {
+    const response = await fetch(
+      `/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true&utm_campaign=campaign2&
+      utm_source=test2`
+    );
+
+    const EPResponse = await response.json();
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    res.value = EPResponse.capturedDebugLogs;
+  };
+
+  const sendUTMParamsManuallyToMiddleware = async () => {
+    await fetch(`/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true`);
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    const cookie = getEPPersonalizeRequestCookie();
+    res.value = cookie;
+  };
+
+  const sendUTMParamsFromUrlToMiddleware = async () => {
+    await fetch(
+      `/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&utm_campaign=campaign4&utm_source=test4`
+    );
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    const cookie = getEPPersonalizeRequestCookie();
+    res.value = cookie;
+  };
+
+  const sendBothUTMParamsToMiddleware = async () => {
+    await fetch(
+      `/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true&utm_campaign=campaign5&utm_source=test5`
+    );
+
+    const res = document.getElementById('response') as HTMLInputElement;
+    const cookie = getEPPersonalizeRequestCookie();
+    res.value = cookie;
   };
 
   return (
@@ -239,6 +317,42 @@ export default function PersonalizeCall({ serverSidePropsRes, debugLogs }: { ser
             middlewareRes.value = cookie;
           }}>
           Request Personalize from Middleware With UA
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromAPIWithUTMParams'
+          onClick={sendUTMParamsManuallyToApi}>
+          Request Personalize From API With UTM Params
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromAPIWithUTMParamsFromUrl'
+          onClick={sendUTMParamsFromUrlToApi}>
+          Request Personalize From API With UTM Params from URL
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromAPIWithBothUTMParams'
+          onClick={sendBothUTMParamsToApi}>
+          Request Personalize From API With both UTM Params
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromMiddlewareWithUTMParams'
+          onClick={sendUTMParamsManuallyToMiddleware}>
+          Request Personalize From Middleware With UTM Params
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromMiddlewareWithUTMParamsFromUrl'
+          onClick={sendUTMParamsFromUrlToMiddleware}>
+          Request Personalize From Middleware With UTM Params from URL
+        </button>
+        <button
+          type='button'
+          data-testid='requestPersonalizeFromMiddlewareWithBothUTMParams'
+          onClick={sendBothUTMParamsToMiddleware}>
+          Request Personalize From Middleware With both UTM Params
         </button>
         <p></p>
         <label htmlFor='response'>EP Response:</label>

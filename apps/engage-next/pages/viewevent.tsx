@@ -8,11 +8,11 @@ import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
 
 interface ViewEventProps {
-  res: string | number | readonly string[]
-  debugLogs: string
+  res: string | number | readonly string[];
+  debugLogs: string;
 }
 
-export default function ViewEvent({ res, debugLogs}: ViewEventProps) {
+export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
   useEffect(() => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const includeUTMSearchParameter = eventAttributes.get('includeUTMParameters');
