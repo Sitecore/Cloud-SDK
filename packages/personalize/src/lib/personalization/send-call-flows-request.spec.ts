@@ -3,7 +3,7 @@ import { sendCallFlowsRequest, EPCallFlowsBody } from './send-call-flows-request
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import debug from 'debug';
-import { PERSONALIZE_NAMESPACE } from '../consts';
+import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -225,7 +225,7 @@ describe('sendCallFlowsRequest', () => {
       headers: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/json',
-        'X-Library-Version': '0.2.2',
+        'X-Library-Version': LIBRARY_VERSION,
         /* eslint-enable @typescript-eslint/naming-convention */
       },
       method: 'POST',
