@@ -302,6 +302,7 @@ export default function PersonalizeCall({
           }}>
           Request Personalize from Middleware
         </button>
+        <br></br>
         <button
           type='button'
           data-testid='requestPersonalizeFromMiddlewareWithUA'

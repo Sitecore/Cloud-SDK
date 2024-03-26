@@ -51,6 +51,21 @@ const links = [
     path: '/async-init-personalize',
     testId: 'asyncInitPersonalize',
   },
+  {
+    text: 'Middleware personalize geo',
+    path: '/middleware-personalize-geo',
+    testId: 'middlewarePersonalizeGeo',
+  },
+  {
+    text: 'Middleware personalize geo partial',
+    path: '/middleware-personalize-geo-partial',
+    testId: 'middlewarePersonalizeGeoPartial',
+  },
+  {
+    text: 'Middleware personalize geo omit',
+    path: '/middleware-personalize-geo-omit',
+    testId: 'middlewarePersonalizeGeoOmit',
+  }
 ];
 
 function Navbar() {

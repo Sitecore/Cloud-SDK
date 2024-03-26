@@ -61,6 +61,10 @@ Then("we display the callflow's content to UI:", (personalizeContent: string) =>
   cy.get("[data-testid='response']").should('have.value', personalizeContent.trim(), { timeout: 6000 });
 });
 
+Then("we display the request payload UI:", (requestPayload: string) => {
+  cy.get("[data-testid='requestPayload']").should('have.value', requestPayload.trim(), { timeout: 6000 });
+});
+
 Then("we display the callflow's request params to UI containing:", (personalizeContent: string) => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(3000);

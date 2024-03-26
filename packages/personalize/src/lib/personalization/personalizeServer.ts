@@ -2,7 +2,7 @@
 import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { FailedCalledFlowsResponse } from './send-call-flows-request';
 import { Request, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
-import { PersonalizerInput, Personalizer } from './personalizer';
+import { PersonalizerInput, Personalizer, PersonalizeGeolocation } from './personalizer';
 import { ErrorMessages } from '../consts';
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -25,9 +25,13 @@ export function personalizeServer<T extends Request>(
   const userAgent = isNextJsMiddlewareRequest(request)
     ? request.headers.get('user-agent')
     : request.headers['user-agent'];
+  
+  if (!personalizeData.geo && isNextJsMiddlewareRequest(request) && request.geo && Object.keys(request.geo).length) 
+    personalizeData.geo = request.geo as PersonalizeGeolocation;
 
   return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
     timeout,
     userAgent,
   });
 }
+               

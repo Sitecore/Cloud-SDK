@@ -53,6 +53,11 @@ export interface MiddlewareRequest {
     get: (name: string) => string | null;
   };
   url?: string;
+  geo?: {
+    city?: string;
+    country?: string;
+    region?: string;
+  }
 }
 
 /**

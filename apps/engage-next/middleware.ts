@@ -69,6 +69,54 @@ export async function middleware(request: NextRequest) {
     await identity(identityEventData, request);
   }
 
+  if (request.nextUrl.pathname.startsWith('/middleware-personalize-geo')) {
+
+    const personalizeData: PersonalizerInput = {
+      channel: 'WEB',
+      currency: 'EUR',
+      email: 'test_personalize_callflows@test.com',
+      friendlyId: 'personalizeintegrationtest',
+      language: 'EN'
+    };
+
+    const { geo } = request;
+
+    if (geo) {
+      if (request.nextUrl.pathname === '/middleware-personalize-geo') {
+        geo.city = 'Athens';
+        geo.country = 'GR';
+        geo.region = 'I';
+      }
+      if (request.nextUrl.pathname === '/middleware-personalize-geo-partial') {
+        geo.city = 'Athens';
+        geo.region = 'I';
+      }
+      if (request.nextUrl.pathname === '/middleware-personalize-geo-omit') {
+        personalizeData.geo = {
+          city: 'Tarnów',
+          country: 'PL',
+          region: '12'
+        };
+        geo.city = 'Athens';
+        geo.region = 'I';
+      }
+    }
+
+    await initPersonalize(
+      {
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeUrl,
+      },
+      request,
+      response
+    );
+
+    const personalizeRes = await personalize(personalizeData, request);
+    response.cookies.set('EPRequest', JSON.stringify(personalizeData));
+    response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
+  }
+
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalize(
       {
@@ -116,5 +164,9 @@ export const config = {
     '/middleware-identity-event',
     '/personalize',
     '/middleware-server-cookie',
+    '/middleware-personalize-geo',
+    '/middleware-personalize-geo-partial',
+    '/middleware-personalize-geo-no-data',
+    '/middleware-personalize-geo-omit'
   ],
 };
