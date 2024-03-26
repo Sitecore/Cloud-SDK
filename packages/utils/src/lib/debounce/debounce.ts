@@ -7,16 +7,16 @@
  * over the wait period.
  *
  * @template T The types of the arguments to the function to debounce.
- * @param {(...args: T) => Promise<any> | void} fn The function to debounce.
- * @param {number} wait The number of milliseconds to delay.
- * @param {DebounceOptions} [options={}] The options object.
- * @param {boolean} [options.accumulate=false] Whether to accumulate arguments of each call during the wait time.
- * @returns {(...args: T) => Promise<unknown> | void} A new debounced function.
+ * @param fn The function to debounce.
+ * @param wait The number of milliseconds to delay.
+ * @param opts The options object.
+ * @param options.accumulate Whether to accumulate arguments of each call during the wait time.
+ * @returns A new debounced function.
  */
 export function debounce<T extends any[]>(
   fn: (...args: T) => Promise<any> | void,
   wait: number,
-  options: DebounceOptions = {}
+  opts: DebounceOptions = {}
 ): (...args: T) => Promise<unknown> | void {
   let deferred: Deferred<any> | undefined;
   let timer: ReturnType<typeof setTimeout> | undefined;
@@ -34,7 +34,7 @@ export function debounce<T extends any[]>(
       flush();
     }, wait);
 
-    if (options.accumulate) {
+    if (opts.accumulate) {
       const argsIndex = pendingArgs.length - 1;
       return deferred.promise.then((results) => results[argsIndex]);
     }
@@ -42,17 +42,17 @@ export function debounce<T extends any[]>(
     return deferred.promise;
   };
 
-  function flush(): void {
+  const flush = (): void => {
     const thisDeferred = deferred;
     clearTimeout(timer);
 
     Promise.resolve(
-      options.accumulate ? fn(...(pendingArgs as unknown as T)) : fn(...pendingArgs[pendingArgs.length - 1])
+      opts.accumulate ? fn(...(pendingArgs as unknown as T)) : fn(...pendingArgs[pendingArgs.length - 1])
     ).then(thisDeferred!.resolve, thisDeferred!.reject);
 
     pendingArgs.length = 0;
     deferred = undefined;
-  }
+  };
 
   return debounced;
 }
@@ -61,7 +61,7 @@ export function debounce<T extends any[]>(
  * Creates a deferred object with `promise`, `resolve`, and `reject` properties.
  *
  * @template T The promised value's type.
- * @returns {Deferred<T>} The deferred object.
+ * @returns The deferred object.
  */
 function defer<T>(): Deferred<T> {
   let resolve: (value: T) => void = () => {};
@@ -75,9 +75,7 @@ function defer<T>(): Deferred<T> {
 
 /**
  * Options for the debounce function.
- *
- * @typedef {Object} DebounceOptions
- * @property {boolean} [accumulate=false] - Whether to accumulate arguments of each call during the wait time.
+ * @property {boolean} - Whether to accumulate arguments of each call during the wait time.
  */
 type DebounceOptions = {
   accumulate?: boolean;

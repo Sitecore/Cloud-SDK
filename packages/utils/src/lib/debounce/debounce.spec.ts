@@ -11,7 +11,7 @@ describe('debounce', () => {
     mockFn.mockClear();
   });
 
-  test('returns the result of a single operation', async () => {
+  it('returns the result of a single operation', async () => {
     mockFn = jest.fn().mockResolvedValue('foo');
     const debouncedFn = debounce(mockFn, wait);
     const promise = debouncedFn('foo');
@@ -23,7 +23,7 @@ describe('debounce', () => {
     expect(result).toBe('foo');
   });
 
-  test('returns the result of a single operation with a wait function', async () => {
+  it('returns the result of a single operation with a wait function', async () => {
     mockFn = jest.fn().mockResolvedValue('foo');
     const debouncedFn = debounce(mockFn, 100);
     const promise = debouncedFn('foo');
@@ -33,7 +33,7 @@ describe('debounce', () => {
     expect(result).toBe('foo');
   });
 
-  test('debounce function is called only once within the wait period', () => {
+  it('debounce function is called only once within the wait period', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn('test');
     debouncedFn('test');
@@ -44,7 +44,7 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('accumulate multiple calls into a single one', async () => {
+  it('accumulate multiple calls into a single one', async () => {
     const debouncedFn = debounce(mockFn, wait, { accumulate: true });
     debouncedFn('first');
     debouncedFn('second');
@@ -54,7 +54,7 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledWith(['first'], ['second']);
   });
 
-  test('function is called again after wait time expires for subsequent calls', async () => {
+  it('function is called again after wait time expires for subsequent calls', async () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn('first');
     jest.advanceTimersByTime(wait);
@@ -65,7 +65,7 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledWith('second');
   });
 
-  test('captures first call immediately and accumulates subsequent calls', async () => {
+  it('captures first call immediately and accumulates subsequent calls', async () => {
     mockFn = jest.fn((args) => args);
     const debouncedFn = debounce(mockFn, wait, { accumulate: true });
     const firstCallPromise = debouncedFn('first');
@@ -84,7 +84,7 @@ describe('debounce', () => {
     expect(mockFn.mock.calls[0][0]).toEqual(['first']);
   });
 
-  test('calls the function after the specified wait time', () => {
+  it('calls the function after the specified wait time', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     expect(mockFn).not.toHaveBeenCalled();
@@ -93,14 +93,14 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('does not call the function before the wait time expires', () => {
+  it('does not call the function before the wait time expires', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     jest.advanceTimersByTime(99);
     expect(mockFn).not.toHaveBeenCalled();
   });
 
-  test('calls the function only once within the wait time', () => {
+  it('calls the function only once within the wait time', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     debouncedFn();
@@ -110,7 +110,7 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('resets the debounce timer on subsequent calls', () => {
+  it('resets the debounce timer on subsequent calls', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     jest.advanceTimersByTime(50);
@@ -121,7 +121,7 @@ describe('debounce', () => {
     jest.advanceTimersByTime(50);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
-  test('accumulates calls when accumulate option is true', () => {
+  it('accumulates calls when accumulate option is true', () => {
     mockFn = jest.fn().mockImplementation(() => new Promise((resolve) => setTimeout(() => resolve('result'), 50)));
     const debouncedFn = debounce(mockFn, wait, { accumulate: true });
 
@@ -137,7 +137,7 @@ describe('debounce', () => {
     jest.advanceTimersByTime(150);
   });
 
-  test('debounce with rapid successive calls', () => {
+  it('debounce with rapid successive calls', () => {
     const debouncedFn = debounce(mockFn, wait);
 
     for (let i = 0; i < 10; i++) {
@@ -152,7 +152,7 @@ describe('debounce', () => {
     jest.advanceTimersByTime(50);
   });
 
-  test('function call after debounce period ends', () => {
+  it('function call after debounce period ends', () => {
     const debouncedFn = debounce(mockFn, wait);
 
     debouncedFn();
@@ -172,7 +172,7 @@ describe('debounce', () => {
     jest.advanceTimersByTime(10);
   });
 
-  test('executes the debounced function only once for three rapid calls', () => {
+  it('executes the debounced function only once for three rapid calls', () => {
     const mockCallback = jest.fn();
 
     const debouncedFn = debounce(mockCallback, wait);
@@ -190,7 +190,7 @@ describe('debounce', () => {
     expect(mockCallback).toHaveBeenCalledWith('call3');
   });
 
-  test('properly initializes and uses deferred', () => {
+  it('properly initializes and uses deferred', () => {
     const mockCallback = jest.fn();
     const debouncedFn = debounce(mockCallback, wait);
 
@@ -201,27 +201,27 @@ describe('debounce', () => {
     jest.advanceTimersByTime(wait);
   });
 
-  test('should not execute the function if deferred is not set', () => {
+  it('should not execute the function if deferred is not set', () => {
     const mockFn = jest.fn();
     debounce(mockFn, 0);
 
     expect(mockFn).not.toHaveBeenCalled();
   });
 
-  test('function is not called immediately', () => {
+  it('function is not called immediately', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     expect(mockFn).not.toHaveBeenCalled();
   });
 
-  test('function is called after the wait time for a single call', () => {
+  it('function is called after the wait time for a single call', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     jest.advanceTimersByTime(wait);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('rapid successive calls lead to a single function call', () => {
+  it('rapid successive calls lead to a single function call', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     debouncedFn();
@@ -230,7 +230,7 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('function is called after the wait time for spaced-out calls', () => {
+  it('function is called after the wait time for spaced-out calls', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     jest.advanceTimersByTime(wait);
@@ -239,14 +239,14 @@ describe('debounce', () => {
     expect(mockFn).toHaveBeenCalledTimes(2);
   });
 
-  test('function is called right when the wait time is met (boundary condition)', () => {
+  it('function is called right when the wait time is met (boundary condition)', () => {
     const debouncedFn = debounce(mockFn, wait);
     debouncedFn();
     jest.advanceTimersByTime(wait);
     expect(mockFn).toHaveBeenCalledTimes(1);
   });
 
-  test('debounced function is called once when called right at the boundary of the currentWait period', () => {
+  it('debounced function is called once when called right at the boundary of the currentWait period', () => {
     const debouncedFn = debounce(mockFn, wait);
 
     debouncedFn();
