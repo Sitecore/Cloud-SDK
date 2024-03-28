@@ -17,7 +17,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 describe('personalize', () => {
   const id = 'test_id';
-  const eventData = {
+  const personalizeData = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     channel: 'WEB',
     currency: 'EUR',
@@ -60,7 +60,7 @@ describe('personalize', () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue(settings);
 
-    await personalize(eventData);
+    await personalize(personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);
@@ -74,7 +74,7 @@ describe('personalize', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await personalize(eventData)).rejects.toThrow(
+    expect(async () => await personalize(personalizeData)).rejects.toThrow(
       `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
     );
   });
@@ -88,10 +88,10 @@ describe('personalize', () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue(settings);
 
-    await personalize(eventData, 100);
+    await personalize(personalizeData, { timeout: 100 });
 
     const expectedOpts = { timeout: 100 };
-    const expectedData = eventData;
+    const expectedData = personalizeData;
     const expectedSettings = settings;
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
@@ -112,10 +112,10 @@ describe('personalize', () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue(settings);
 
-    await personalize(eventData);
+    await personalize(personalizeData);
 
     const expectedOpts = { timeout: undefined };
-    const expectedData = eventData;
+    const expectedData = personalizeData;
     const expectedSettings = settings;
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
@@ -140,11 +140,11 @@ describe('personalize', () => {
       },
     }));
 
-    await personalize(eventData);
+    await personalize(personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
-      eventData,
+      personalizeData,
       settings,
       '?utm_campaign=campaign&utm_medium=email',
       { timeout: undefined }

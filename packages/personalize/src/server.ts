@@ -3,4 +3,4 @@
 export { initServer as init } from './lib/initializer/server/initializer';
 export { personalizeServer as personalize } from './lib/personalization/personalizeServer';
 export { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from './lib/consts';
-export type { PersonalizerInput } from './lib/personalization/personalizer';
+export type { PersonalizeData } from './lib/personalization/personalizer';

@@ -13,20 +13,20 @@ export class Personalizer {
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
-   * @param personalizeInput - The personalize input from the developer
+   * @param personalizeData - The personalize input from the developer
    * @param settings - The setting that was set during initialization
    * @param opts - Optional object that contains options for timeout and UA
    * @returns - A promise that resolves with either the Sitecore EP response object or null
    */
   async getInteractiveExperienceData(
-    personalizeInput: PersonalizerInput,
+    personalizeData: PersonalizeData,
     settings: Settings,
     searchParams: string,
     opts?: { timeout?: number; userAgent?: string | null }
   ): Promise<unknown | null | FailedCalledFlowsResponse> {
-    this.validate(personalizeInput);
+    this.validate(personalizeData);
 
-    const sanitizedInput = this.sanitizeInput(personalizeInput);
+    const sanitizedInput = this.sanitizeInput(personalizeData);
 
     if (searchParams.includes(UTM_PREFIX) && !sanitizedInput.params?.utm) {
       sanitizedInput.params = sanitizedInput.params || {};
@@ -50,37 +50,32 @@ export class Personalizer {
    * A function that sanitizes the personalize input data
    * @returns - The sanitized object
    */
-  private sanitizeInput(personalizerInput: PersonalizerInput) {
-    const sanitizedInput: PersonalizerInput = {
-      channel: personalizerInput.channel,
-      currency: personalizerInput.currency,
-      friendlyId: personalizerInput.friendlyId,
-      language: personalizerInput.language,
+  private sanitizeInput(personalizeData: PersonalizeData) {
+    const sanitizedData: PersonalizeData = {
+      channel: personalizeData.channel,
+      currency: personalizeData.currency,
+      friendlyId: personalizeData.friendlyId,
+      language: personalizeData.language,
     };
 
-    if (
-      personalizerInput.identifier &&
-      personalizerInput.identifier.id &&
-      personalizerInput.identifier.id.trim().length > 0
-    )
-      sanitizedInput.identifier = personalizerInput.identifier;
+    if (personalizeData.identifier && personalizeData.identifier.id && personalizeData.identifier.id.trim().length > 0)
+      sanitizedData.identifier = personalizeData.identifier;
 
-    if (personalizerInput.email && personalizerInput.email.trim().length > 0)
-      sanitizedInput.email = personalizerInput.email;
+    if (personalizeData.email && personalizeData.email.trim().length > 0) sanitizedData.email = personalizeData.email;
 
-    if (personalizerInput.params && Object.keys(personalizerInput.params).length > 0)
-      sanitizedInput.params = personalizerInput.params;
+    if (personalizeData.params && Object.keys(personalizeData.params).length > 0)
+      sanitizedData.params = personalizeData.params;
 
-    if (personalizerInput.geo && Object.keys(personalizerInput.geo).length > 0)
-      sanitizedInput.params = { ...sanitizedInput.params, geo: { ...personalizerInput.geo } };
+    if (personalizeData.geo && Object.keys(personalizeData.geo).length > 0)
+      sanitizedData.params = { ...personalizeData.params, geo: { ...personalizeData.geo } };
 
-    return sanitizedInput;
+    return sanitizedData;
   }
   /**
    * A function that maps the personalize input data with the EP
    * @returns - The EP object
    */
-  private mapPersonalizeInputToEPData(input: PersonalizerInput): EPCallFlowsBody {
+  private mapPersonalizeInputToEPData(input: PersonalizeData): EPCallFlowsBody {
     const mappedData: EPCallFlowsBody = {
       channel: input.channel,
       clientKey: '',
@@ -99,7 +94,7 @@ export class Personalizer {
   /**
    * A validation method to throw error for the mandatory property for runtime users
    */
-  private validate({ friendlyId }: PersonalizerInput) {
+  private validate({ friendlyId }: PersonalizeData) {
     if (!friendlyId || friendlyId.trim().length === 0) throw new Error(ErrorMessages.MV_0004);
   }
 
@@ -138,7 +133,7 @@ export interface PersonalizeGeolocation {
 /**
  * An interface that describes the flow execution model attributes input for the library
  */
-export interface PersonalizerInput {
+export interface PersonalizeData {
   channel: string;
   currency: string;
   email?: string;

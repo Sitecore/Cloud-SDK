@@ -6,7 +6,9 @@ import { PERSONALIZE_NAMESPACE } from '../../consts';
 
 /**
  * Initiates the server Engage library using the global settings added by the developer
- * @param settings - Global settings added by the developer
+ * @param settingsInput - Global settings added by the developer
+ * @param request - The request object, either a Middleware Request or an HTTP Request
+ * @param response - The response object, either a Middleware Next Response or an HTTP Response.
  * @returns A promise that resolves with an object that handles the library functionality
  */
 export async function initServer<Response extends MiddlewareNextResponse | HttpResponse>(

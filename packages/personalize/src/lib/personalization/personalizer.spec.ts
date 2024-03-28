@@ -1,4 +1,4 @@
-import { PersonalizeIdentifierInput, PersonalizerInput, Personalizer } from './personalizer';
+import { PersonalizeIdentifierInput, PersonalizeData, Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
@@ -35,7 +35,7 @@ jest.mock('debug', () => {
 describe('Test Personalizer Class', () => {
   const { window } = global;
   let settingsMock: core.Settings;
-  let personalizeInputMock: PersonalizerInput;
+  let personalizeInputMock: PersonalizeData;
   const id = 'test_id';
 
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
@@ -69,7 +69,7 @@ describe('Test Personalizer Class', () => {
   });
 
   describe('Test Personalizer validation ', () => {
-    function callValidation(personalizeInputMock: PersonalizerInput, errorMessage: string) {
+    function callValidation(personalizeInputMock: PersonalizeData, errorMessage: string) {
       const action = async () => {
         await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       };
@@ -270,7 +270,7 @@ describe('Test Personalizer Class', () => {
 
   describe('Test sanitizeInput', () => {
     const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
-    let expected: PersonalizerInput;
+    let expected: PersonalizeData;
     beforeEach(() => {
       const mockFetch = Promise.resolve({
         json: () => Promise.resolve({ status: 'OK' } as unknown),
@@ -855,7 +855,7 @@ describe('Test Personalizer Class', () => {
       const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
       const id = 'test_id';
       const settings = {} as core.Settings;
-      const data = {} as PersonalizerInput;
+      const data = {} as PersonalizeData;
       const opts = { timeout: 100, userAgent: 'test_ua' };
       const validateSpy = jest.spyOn(Personalizer.prototype as any, 'validate');
       validateSpy.mockImplementationOnce(() => {

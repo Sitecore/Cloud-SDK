@@ -1,5 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { Personalizer, PersonalizerInput } from './personalizer';
+import { Personalizer, PersonalizeData } from './personalizer';
 import { personalizeServer } from './personalizeServer';
 import { MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 
@@ -20,7 +20,7 @@ describe('personalizeServer', () => {
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   jest.spyOn(core, 'createCookie').mock;
   const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
-  
+
   const originalReq = {
     cookies: {
       get() {
@@ -31,9 +31,9 @@ describe('personalizeServer', () => {
     headers: {
       get: () => '',
     },
-    url: ''
+    url: '',
   };
-  const personalizeData: PersonalizerInput = {
+  const personalizeData: PersonalizeData = {
     channel: 'WEB',
     currency: 'EUR',
     friendlyId: 'personalizeintegrationtest',
@@ -64,7 +64,7 @@ describe('personalizeServer', () => {
 
     expect(typeof personalizeServer).toBe('function');
 
-    personalizeServer(personalizeData, req);
+    personalizeServer(req, personalizeData);
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
 
@@ -84,9 +84,11 @@ describe('personalizeServer', () => {
 
     jest.spyOn(core, 'getSettingsServer').mockReturnValue(settings);
 
-    personalizeServer(personalizeData, httpReq);
+    personalizeServer(httpReq, personalizeData);
 
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', { userAgent: 'test_ua' });
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
+      userAgent: 'test_ua',
+    });
   });
 
   it('should include the user agent header if in middleware request', async () => {
@@ -94,7 +96,7 @@ describe('personalizeServer', () => {
     req.headers.get = getMock;
     jest.spyOn(core, 'getSettingsServer').mockReturnValue(settings);
 
-    personalizeServer(personalizeData, req, 100);
+    personalizeServer(req, personalizeData, { timeout: 100 });
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
       timeout: 100,
@@ -108,58 +110,68 @@ describe('personalizeServer', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => personalizeServer(personalizeData, req)).rejects.toThrow(
+    expect(async () => personalizeServer(req, personalizeData)).rejects.toThrow(
       `[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.`
     );
   });
 
   it('should use the request.geo if personalizeData.geo is empty and request is a valid MiddlewareRequest', async () => {
-    req.geo = { 
-      city: 'Tarnów', 
-      country: 'PL', 
-      region: '12'
+    req.geo = {
+      city: 'Tarnów',
+      country: 'PL',
+      region: '12',
     };
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
 
-    personalizeServer(personalizeData, req);
+    personalizeServer(req, personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith({
-      ...personalizeData, 
-      geo: {
-        city: 'Tarnów',
-        country: 'PL',
-        region: '12',
-      }}, settings, '', { timeout: undefined, userAgent: 'test_ua' 
-    });
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      {
+        ...personalizeData,
+        geo: {
+          city: 'Tarnów',
+          country: 'PL',
+          region: '12',
+        },
+      },
+      settings,
+      '',
+      { timeout: undefined, userAgent: 'test_ua' }
+    );
   });
 
   it('should omit the request.geo if personalizeData.geo has values', async () => {
-    req.geo = { 
-      city: 'Tarnów', 
-      country: 'PL', 
-      region: '12'
+    req.geo = {
+      city: 'Tarnów',
+      country: 'PL',
+      region: '12',
     };
     personalizeData.geo = {
-      city: 'Athens', 
-      country: 'GR', 
-      region: 'I'
+      city: 'Athens',
+      country: 'GR',
+      region: 'I',
     };
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
 
-    personalizeServer(personalizeData, req);
+    personalizeServer(req, personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith({
-      ...personalizeData, 
-      geo: {
-        city: 'Athens',
-        country: 'GR',
-        region: 'I',
-      }}, settings, '', { timeout: undefined, userAgent: 'test_ua' 
-    });
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
+      {
+        ...personalizeData,
+        geo: {
+          city: 'Athens',
+          country: 'GR',
+          region: 'I',
+        },
+      },
+      settings,
+      '',
+      { timeout: undefined, userAgent: 'test_ua' }
+    );
   });
 
   it('should omit the request.geo if request.geo is empty', async () => {
@@ -168,22 +180,27 @@ describe('personalizeServer', () => {
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
 
-    personalizeServer(personalizeData, req);
+    personalizeServer(req, personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', { timeout: undefined, userAgent: 'test_ua'});
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
+      timeout: undefined,
+      userAgent: 'test_ua',
+    });
   });
 
-  it('should omit the request.geo if request.geo doesn\'t exist in the MiddlewareRequest', async () => {
+  it("should omit the request.geo if request.geo doesn't exist in the MiddlewareRequest", async () => {
     personalizeData.geo = undefined;
     req.geo = undefined;
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
-    
-    personalizeServer(personalizeData, req);
+
+    personalizeServer(req, personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
-    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', { timeout: undefined, userAgent: 'test_ua' 
+    expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
+      timeout: undefined,
+      userAgent: 'test_ua',
     });
   });
 });

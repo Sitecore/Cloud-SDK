@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { init as initServer, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
-import { PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/browser';
+import { PersonalizeData, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
@@ -164,7 +164,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClient'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as PersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizeData);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -175,7 +175,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClientWithUA'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as PersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizeData);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -188,7 +188,7 @@ export default function PersonalizeCall({
           data-testid='requestPersonalizeWithEmptyStringLanguage'
           onClick={async () => {
             personalizeData.language = '';
-            const response = await personalize(personalizeData as unknown as PersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizeData);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -201,7 +201,7 @@ export default function PersonalizeCall({
           data-testid='requestPersonalizeWithUndefinedLanguage'
           onClick={async () => {
             personalizeData.language = undefined;
-            const response = await personalize(personalizeData as unknown as PersonalizerInput);
+            const response = await personalize(personalizeData as unknown as PersonalizeData);
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -213,7 +213,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClientWithTimeout'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as PersonalizerInput, timeout);
+            const response = await personalize(personalizeData as unknown as PersonalizeData, { timeout });
 
             const res = document.getElementById('response') as HTMLInputElement;
             res.value = response ? JSON.stringify(response) : '';
@@ -225,7 +225,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClientWithGeo'
           onClick={async () => {
-            const personalizeDataWithGeo: PersonalizerInput = {
+            const personalizeDataWithGeo: PersonalizeData = {
               ...personalizeData,
               geo: { city: 'T1', country: 'T2', region: 'T3' },
             };
@@ -241,7 +241,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClientWithPartialGeo'
           onClick={async () => {
-            const personalizeDataWithPartialGeo: PersonalizerInput = {
+            const personalizeDataWithPartialGeo: PersonalizeData = {
               ...personalizeData,
               geo: { city: 'T1' },
             };
@@ -257,7 +257,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClientWithEmptyGeo'
           onClick={async () => {
-            const personalizeDataWithEmptyGeo: PersonalizerInput = {
+            const personalizeDataWithEmptyGeo: PersonalizeData = {
               ...personalizeData,
               geo: {},
             };
@@ -381,7 +381,7 @@ export default function PersonalizeCall({
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const event: PersonalizerInput = {
+  const event: PersonalizeData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
@@ -404,7 +404,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
-  const EPResponse = await personalizeServer(event, context.req);
+  const EPResponse = await personalizeServer(context.req, event);
 
   return {
     props: {

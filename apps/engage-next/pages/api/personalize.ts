@@ -1,10 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, PersonalizerInput, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { init, PersonalizeData, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { capturedDebugLogs } from '../../utils/debugLogs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
-  const event: PersonalizerInput = {
+  const event: PersonalizeData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
@@ -35,7 +35,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const timeoutParam = requestUrl.searchParams.get('timeout');
   const timeout = timeoutParam !== 'null' && timeoutParam !== 'undefined' ? Number(timeoutParam) : undefined;
 
-  const EPResponse = await personalize(event, req, timeout);
+  const EPResponse = await personalize(req, event, { timeout });
 
   res.status(200).json({
     EPResponse,

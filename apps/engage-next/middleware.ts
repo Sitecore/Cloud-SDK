@@ -2,7 +2,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
-import { PersonalizerInput, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 
 // This function can be marked `async` if using `await` inside
@@ -70,7 +70,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-personalize-geo')) {
-    const personalizeData: PersonalizerInput = {
+    const personalizeData: PersonalizeData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
@@ -111,7 +111,7 @@ export async function middleware(request: NextRequest) {
       response
     );
 
-    const personalizeRes = await personalize(personalizeData, request);
+    const personalizeRes = await personalize(request, personalizeData);
     response.cookies.set('EPRequest', JSON.stringify(personalizeData));
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
   }
@@ -127,7 +127,7 @@ export async function middleware(request: NextRequest) {
       response
     );
 
-    const personalizeData: PersonalizerInput = {
+    const personalizeData: PersonalizeData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
@@ -144,7 +144,7 @@ export async function middleware(request: NextRequest) {
       };
     }
 
-    const personalizeRes = await personalize(personalizeData, request);
+    const personalizeRes = await personalize(request, personalizeData);
 
     response.cookies.set('EPRequestUA', capturedFetch.pop() as string);
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
