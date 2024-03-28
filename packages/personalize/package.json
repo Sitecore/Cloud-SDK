@@ -35,7 +35,6 @@
     "server.d.ts"
   ],
   "engines": {
-    "node": ">=18",
-    "npm": ">=9"
+    "node": ">=18"
   }
 }

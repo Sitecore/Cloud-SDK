@@ -29,8 +29,7 @@
     "README.md"
   ],
   "engines": {
-    "node": ">=18",
-    "npm": ">=9"
+    "node": ">=18"
   },
   "devDependencies": {
     "@types/debug": "^4.1.12"
