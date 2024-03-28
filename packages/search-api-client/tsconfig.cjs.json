@@ -1,0 +1,9 @@
+{
+  "extends": ".",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist/cjs"
+  },
+  "include": ["src/**/*", "package.json"],
+  "exclude": ["jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
+}

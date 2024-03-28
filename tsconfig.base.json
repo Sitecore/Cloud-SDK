@@ -16,11 +16,12 @@
     "types": ["jest", "node"],
     "paths": {
       "@sitecore-cloudsdk/core": ["packages/core/src/index.ts"],
-      "@sitecore-cloudsdk/utils": ["packages/utils/src/index.ts"],
-      "@sitecore-cloudsdk/events/server": ["packages/events/src/server.ts"],
       "@sitecore-cloudsdk/events/browser": ["packages/events/src/browser.ts"],
+      "@sitecore-cloudsdk/events/server": ["packages/events/src/server.ts"],
+      "@sitecore-cloudsdk/personalize/browser": ["packages/personalize/src/browser.ts"],
       "@sitecore-cloudsdk/personalize/server": ["packages/personalize/src/server.ts"],
-      "@sitecore-cloudsdk/personalize/browser": ["packages/personalize/src/browser.ts"]
+      "@sitecore-cloudsdk/search-api-client": ["packages/search-api-client/src/index.ts"],
+      "@sitecore-cloudsdk/utils": ["packages/utils/src/index.ts"]
     }
   },
   "exclude": ["tmp"]

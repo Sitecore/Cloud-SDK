@@ -2,5 +2,5 @@
   "cucumberautocomplete.steps": ["apps/engage-e2e/src/integration/step_definitions/*.ts"],
   "cucumberautocomplete.syncfeatures": "apps/engage-e2e/src/integration/*.feature",
   "cSpell.words": ["cloudsdk", "sitecore"],
-  "conventionalCommits.scopes": ["core", "utils", "events", "personalize"]
+  "conventionalCommits.scopes": ["core", "utils", "events", "personalize", "search-api-client"]
 }

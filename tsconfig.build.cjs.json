@@ -8,6 +8,7 @@
     { "path": "./packages/utils/tsconfig.cjs.json" },
     { "path": "./packages/core/tsconfig.cjs.json" },
     { "path": "./packages/events/tsconfig.cjs.json" },
-    { "path": "./packages/personalize/tsconfig.cjs.json" }
+    { "path": "./packages/personalize/tsconfig.cjs.json" },
+    { "path": "./packages/search-api-client/tsconfig.cjs.json" }
   ]
 }

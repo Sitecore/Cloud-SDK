@@ -8,6 +8,7 @@
     { "path": "./packages/utils" },
     { "path": "./packages/core" },
     { "path": "./packages/events" },
-    { "path": "./packages/personalize" }
+    { "path": "./packages/personalize" },
+    { "path": "./packages/search-api-client" }
   ]
 }
