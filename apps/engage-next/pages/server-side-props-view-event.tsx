@@ -13,7 +13,7 @@ export function serverSidePropsViewEvent() {
 export default serverSidePropsViewEvent;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const event = {
+  const eventData = {
     channel: 'WEB',
     currency: 'EUR',
     page: 'serverSideProps-view',
@@ -38,7 +38,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   let EPResponse;
 
   try {
-    EPResponse = await pageView(event, context.req);
+    EPResponse = await pageView(context.req, eventData);
   } catch {
     EPResponse = 'Error';
   }

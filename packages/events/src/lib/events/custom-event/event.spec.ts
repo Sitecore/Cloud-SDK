@@ -1,5 +1,5 @@
 import { event } from './event';
-import { CustomEvent, CustomEventInput } from './custom-event';
+import { CustomEvent, EventData } from './custom-event';
 import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
@@ -18,9 +18,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 describe('eventServer', () => {
-  let eventData: CustomEventInput;
-  const type = 'CUSTOM_TYPE';
-  const extensionData = { extKey: 'extValue' };
+  let eventData: EventData;
   const id = 'test_id';
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
@@ -34,8 +32,12 @@ describe('eventServer', () => {
     eventData = {
       channel: 'WEB',
       currency: 'EUR',
+      extensionData: {
+        extKey: 'extValue',
+      },
       language: 'EN',
       page: 'races',
+      type: 'CUSTOM_TYPE',
     };
   });
 
@@ -54,18 +56,10 @@ describe('eventServer', () => {
       sitecoreEdgeUrl: '',
     });
 
-    await event(type, eventData, extensionData);
+    await event(eventData);
 
     expect(CustomEvent).toHaveBeenCalledWith({
-      eventData: {
-        channel: 'WEB',
-        currency: 'EUR',
-        language: 'EN',
-        page: 'races',
-      },
-      extensionData: {
-        extKey: 'extValue',
-      },
+      eventData,
       id,
       sendEvent,
       settings: {
@@ -79,21 +73,20 @@ describe('eventServer', () => {
         sitecoreEdgeContextId: '123',
         sitecoreEdgeUrl: '',
       },
-      type: 'CUSTOM_TYPE',
     });
 
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
     getSettingsSpy.mockImplementation(() => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await event(type, eventData, extensionData)).rejects.toThrow(
+    await expect(async () => await event(eventData)).rejects.toThrow(
       `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });

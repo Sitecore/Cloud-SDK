@@ -172,14 +172,14 @@ describe('sendCallFlowsRequest', () => {
     it('should throw [IV-0006] when we pass negative timeout value', async () => {
       const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
         throw new Error(
-          '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+          '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
         );
       });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
       }).rejects.toThrow(
-        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
       );
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });

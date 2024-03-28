@@ -52,7 +52,7 @@ export async function middleware(request: NextRequest) {
     const extensionData = {
       extParam: 'middlewareTest',
     };
-    await pageView(basicEventData, request, extensionData);
+    await pageView(request, { ...basicEventData, extensionData });
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {
@@ -62,21 +62,20 @@ export async function middleware(request: NextRequest) {
       extParam: 'middlewareTest',
     };
 
-    await event('MIDDLEWARE-CUSTOM', basicEventData, request, extensionData);
+    await event(request, { type: 'MIDDLEWARE-CUSTOM', ...basicEventData, extensionData });
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) {
-    await identity(identityEventData, request);
+    await identity(request, identityEventData);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-personalize-geo')) {
-
     const personalizeData: PersonalizerInput = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN'
+      language: 'EN',
     };
 
     const { geo } = request;
@@ -95,7 +94,7 @@ export async function middleware(request: NextRequest) {
         personalizeData.geo = {
           city: 'Tarnów',
           country: 'PL',
-          region: '12'
+          region: '12',
         };
         geo.city = 'Athens';
         geo.region = 'I';
@@ -167,6 +166,6 @@ export const config = {
     '/middleware-personalize-geo',
     '/middleware-personalize-geo-partial',
     '/middleware-personalize-geo-no-data',
-    '/middleware-personalize-geo-omit'
+    '/middleware-personalize-geo-omit',
   ],
 };

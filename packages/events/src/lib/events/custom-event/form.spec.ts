@@ -74,7 +74,7 @@ describe('form function', () => {
     );
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
 
@@ -82,7 +82,7 @@ describe('form function', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await form('1234', 'SUBMITTED')).rejects.toThrow(
+    await expect(async () => await form('1234', 'SUBMITTED')).rejects.toThrow(
       `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });

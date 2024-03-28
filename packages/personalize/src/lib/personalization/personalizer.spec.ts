@@ -695,7 +695,7 @@ describe('Test Personalizer Class', () => {
 
     it('should throw error if a negative number is used for timeout value', async () => {
       const expectedErrorMessage =
-        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
+        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(
@@ -711,7 +711,7 @@ describe('Test Personalizer Class', () => {
 
     it('should throw error if a float number is used for timeout value', async () => {
       const expectedErrorMessage =
-        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.';
+        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
         await new Personalizer(id).getInteractiveExperienceData(

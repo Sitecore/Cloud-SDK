@@ -8,7 +8,7 @@ import { SendEvent } from '../send-event/sendEvent';
 import { ErrorMessages } from '../../consts';
 
 export class IdentityEvent extends BaseEvent {
-  private eventData: IdentityEventAttributesInput;
+  private identityData: IdentityData;
   private sendEvent: SendEvent;
   private extensionData: FlattenedObject = {};
   private numberOfExtensionDataProperties = 0;
@@ -16,20 +16,21 @@ export class IdentityEvent extends BaseEvent {
 
   /**
    * A class that extends from {@link BaseEvent} and has all the required functionality to send a VIEW event
+   *
    * @param args - Unified object containing the required properties
    */
   constructor(args: IdentityEventArguments) {
-    const { channel, currency, language, page } = args.eventData;
+    const { channel, currency, language, page, extensionData } = args.identityData;
 
     super({ channel, currency, language, page }, args.id);
 
-    this.validateAttributes(args.eventData);
+    this.validateAttributes(args.identityData);
 
-    this.eventData = args.eventData;
+    this.identityData = args.identityData;
     this.sendEvent = args.sendEvent;
     this.settings = args.settings;
 
-    if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
+    if (extensionData) this.extensionData = flattenObject({ object: extensionData });
 
     this.numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
@@ -38,18 +39,19 @@ export class IdentityEvent extends BaseEvent {
 
   /**
    * Function that validates the identifiers object, email and date attributes for CDN users
-   *  * @param eventData - The data to be validated
+   *  * @param identityData - The data to be validated
    */
-  private validateAttributes(eventData: IdentityEventAttributesInput) {
-    if (eventData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
+  private validateAttributes(identityData: IdentityData) {
+    if (identityData.identifiers.length === 0) throw new Error(ErrorMessages.MV_0003);
 
-    if (eventData.dob !== undefined && !isShortISODateString(eventData.dob)) throw new Error(ErrorMessages.IV_0002);
+    if (identityData.dob !== undefined && !isShortISODateString(identityData.dob))
+      throw new Error(ErrorMessages.IV_0002);
 
-    eventData.identifiers.forEach((identifier: Identifier) => {
+    identityData.identifiers.forEach((identifier: Identifier) => {
       if (identifier.expiryDate && !isShortISODateString(identifier.expiryDate)) throw new Error(ErrorMessages.IV_0004);
     });
 
-    if (eventData.email && !isValidEmail(eventData.email)) throw new Error(ErrorMessages.IV_0003);
+    if (identityData.email && !isValidEmail(identityData.email)) throw new Error(ErrorMessages.IV_0003);
   }
 
   /**
@@ -58,13 +60,13 @@ export class IdentityEvent extends BaseEvent {
    */
   private mapAttributes(): IdentityEventPayload {
     const identityPayload: IdentityEventPayload = {
-      city: this.eventData.city,
-      country: this.eventData.country,
-      dob: this.eventData.dob,
-      email: this.eventData.email,
-      firstname: this.eventData.firstName,
-      gender: this.eventData.gender,
-      identifiers: this.eventData.identifiers.map((value: Identifier): EPIdentifier => {
+      city: this.identityData.city,
+      country: this.identityData.country,
+      dob: this.identityData.dob,
+      email: this.identityData.email,
+      firstname: this.identityData.firstName,
+      gender: this.identityData.gender,
+      identifiers: this.identityData.identifiers.map((value: Identifier): EPIdentifier => {
         return {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: value.expiryDate,
@@ -72,14 +74,14 @@ export class IdentityEvent extends BaseEvent {
           provider: value.provider,
         };
       }),
-      lastname: this.eventData.lastName,
-      mobile: this.eventData.mobile,
-      phone: this.eventData.phone,
+      lastname: this.identityData.lastName,
+      mobile: this.identityData.mobile,
+      phone: this.identityData.phone,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      postal_code: this.eventData.postalCode,
-      state: this.eventData.state,
-      street: this.eventData.street,
-      title: this.eventData.title,
+      postal_code: this.identityData.postalCode,
+      state: this.identityData.state,
+      street: this.identityData.street,
+      title: this.identityData.title,
       type: 'IDENTITY',
     };
 
@@ -114,7 +116,7 @@ interface EPIdentifier {
 /**
  * Interface with the necessary attributes for the input for sending Identity events
  */
-export interface IdentityEventAttributesInput extends EventAttributesInput {
+export interface IdentityData extends EventAttributesInput {
   city?: string;
   country?: string;
   dob?: string;
@@ -129,6 +131,7 @@ export interface IdentityEventAttributesInput extends EventAttributesInput {
   state?: string;
   street?: string[];
   title?: string;
+  extensionData?: ExtensionData;
 }
 
 /**
@@ -168,8 +171,7 @@ export interface IdentityEventPayload {
  */
 export interface IdentityEventArguments {
   sendEvent: SendEvent;
-  eventData: IdentityEventAttributesInput;
-  extensionData?: ExtensionData;
+  identityData: IdentityData;
   id: string;
   settings: Settings;
   infer?: Infer;

@@ -163,7 +163,7 @@ Scenario Outline: Developer creates VIEW event with ext attributes that exceed t
     Given the '/viewevent' page is loaded with query parameters
         | type    | extAttributesNumber    | nested   |
         | VIEW    | <extAttributesNumber>  | <nested> |
-    Then an error is thrown: '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.'
+    Then an error is thrown: '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.'
 
     Examples:
         | extAttributesNumber  | nested         |

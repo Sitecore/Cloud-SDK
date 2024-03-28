@@ -1,4 +1,4 @@
-import { CustomEvent, CustomEventInput } from './custom-event';
+import { CustomEvent, EventData } from './custom-event';
 import * as sendEvent from '../send-event/sendEvent';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
@@ -38,8 +38,7 @@ describe('CustomEvent', () => {
   });
 
   describe('constructor', () => {
-    let eventData: CustomEventInput;
-    const type = 'CUSTOM_TYPE';
+    let eventData: EventData;
     const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
@@ -58,38 +57,25 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
+        type: 'CUSTOM_TYPE',
       };
     });
     it('should not call flatten object method when no extension data is passed', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
     it('should send a custom event without ext attribute if extensionData is an empty object', () => {
       const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
       const extensionData = {};
-      new CustomEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
-
-      expect(sendEventSpy).toHaveBeenCalledWith(
-        expect.not.objectContaining({ ext: {} }),
-        expect.objectContaining(settings)
-      );
-    });
-
-    it('should not call flatten object method when no extension data is passed', () => {
-      const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
-      Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
-
-      expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('should send a custom event without ext attribute if extensionData is an empty object', () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
-      const extensionData = {};
-      new CustomEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({
+        eventData: { ...eventData, extensionData },
+        id,
+        sendEvent: sendEvent.sendEvent,
+        settings,
+      }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.not.objectContaining({ ext: {} }),
@@ -100,7 +86,12 @@ describe('CustomEvent', () => {
     it('should send a custom event with flattened ext attributes', () => {
       const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
       const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22, za: undefined };
-      new CustomEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({
+        eventData: { ...eventData, extensionData },
+        id,
+        sendEvent: sendEvent.sendEvent,
+        settings,
+      }).send();
 
       const expectedExt = {
         ext: {
@@ -119,27 +110,39 @@ describe('CustomEvent', () => {
     });
 
     it('should throw an error when more than 50 ext attributes are passed', () => {
-      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extErrorMessage =
+        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < 51; i++) {
         extensionData[`key${i}`] = `value${i}`;
       }
 
       expect(() => {
-        new CustomEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings, type });
-      }).toThrowError(extErrorMessage);
+        new CustomEvent({
+          eventData: { ...eventData, extensionData },
+          id,
+          sendEvent: sendEvent.sendEvent,
+          settings,
+        });
+      }).toThrow(extErrorMessage);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
-      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extErrorMessage =
+        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
         extensionData[`key${i}`] = `value${i}`;
       }
 
       expect(() => {
-        new CustomEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings, type });
-      }).not.toThrowError(extErrorMessage);
+        new CustomEvent({
+          eventData: { ...eventData, extensionData },
+          id,
+          sendEvent: sendEvent.sendEvent,
+          settings,
+        });
+      }).not.toThrow(extErrorMessage);
     });
   });
 
@@ -166,9 +169,8 @@ describe('CustomEvent', () => {
         testAttr1: 'test',
         testAttr2: true,
         testAttr3: 22,
+        type: 'CUSTOM_TYPE',
       };
-
-      const type = 'CUSTOM_TYPE';
 
       const expectedExt = {
         testAttr1: 'test',
@@ -176,7 +178,7 @@ describe('CustomEvent', () => {
         testAttr3: 22,
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
@@ -188,11 +190,12 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
+        type: 'CUSTOM_TYPE',
       };
-      const type = 'CUSTOM_TYPE';
+
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -207,9 +210,8 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
+        type: 'CUSTOM_TYPE',
       };
-
-      const type = 'CUSTOM_TYPE';
 
       const expectedData = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -224,7 +226,7 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
       expect(languageSpy).toHaveBeenCalledTimes(0);
@@ -237,9 +239,8 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
+        type: 'CUSTOM_TYPE',
       };
-
-      const type = 'CUSTOM_TYPE';
 
       const expectedData = {
         // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -254,7 +255,7 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings, type }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
       expect(languageSpy).toHaveBeenCalledTimes(1);

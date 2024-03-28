@@ -1,6 +1,6 @@
 import { identityServer } from './identityServer'; // Import the function to be tested
 import * as core from '@sitecore-cloudsdk/core';
-import { IdentityEventAttributesInput, IdentityEvent } from './identity-event';
+import { IdentityData, IdentityEvent } from './identity-event';
 import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/server/initializer');
@@ -24,7 +24,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('eventServer', () => {
-  let eventData: IdentityEventAttributesInput;
+  let identityData: IdentityData;
 
   const extensionData = { extKey: 'extValue' };
   const req = {
@@ -46,12 +46,11 @@ describe('eventServer', () => {
   });
 
   beforeEach(() => {
-    eventData = {
+    identityData = {
       channel: 'WEB',
       currency: 'EUR',
       identifiers: [
         {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
           expiryDate: undefined,
           id: '',
           provider: 'email',
@@ -78,28 +77,13 @@ describe('eventServer', () => {
       sitecoreEdgeUrl: '',
     });
 
-    await identityServer(eventData, req, extensionData);
+    await identityServer(req, { ...identityData, extensionData });
 
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
     expect(IdentityEvent).toHaveBeenCalledTimes(1);
     expect(IdentityEvent).toHaveBeenCalledWith({
-      eventData: {
-        channel: 'WEB',
-        currency: 'EUR',
-        identifiers: [
-          {
-            expiryDate: undefined,
-            id: '',
-            provider: 'email',
-          },
-        ],
-        language: 'EN',
-        page: 'identity',
-      },
-      extensionData: {
-        extKey: 'extValue',
-      },
       id: '1234',
+      identityData: { ...identityData, extensionData },
       sendEvent,
       settings: {
         cookieSettings: {
@@ -115,12 +99,12 @@ describe('eventServer', () => {
     });
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     getSettingsServerSpy.mockImplementation(() => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await identityServer(eventData, req, extensionData)).rejects.toThrow(
+    await expect(async () => await identityServer(req, { ...identityData, extensionData })).rejects.toThrow(
       `[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`
     );
   });

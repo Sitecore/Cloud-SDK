@@ -28,10 +28,10 @@ Scenario Outline: Developer sets invalid sitecoreEdgeUrl parameter for Initializ
 
     Examples:
         | page                                                                                                     |  error                                          |
-        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid        | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined      | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid   | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid        | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-events?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined      | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=invalid   | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize?serverSideTest=true&attribute=sitecoreEdgeUrl&variation=undefined | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
 
 
 Scenario: Developer sets an alternative sitecoreEdgeUrl and contextID for Events on the server
@@ -90,10 +90,10 @@ Scenario Outline: Developer sets invalid sitecoreEdgeUrl parameter for initializ
 
     Examples:
         | page                             | button                              | error                                          |
-        | /edge-proxy-settings-events      | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-events      | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-personalize | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
-        | /edge-proxy-settings-personalize | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string. |
+        | /edge-proxy-settings-events      | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-events      | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize | initInvalidSitecoreEdgesitecoreEdgeUrl    | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
+        | /edge-proxy-settings-personalize | initEmptyStringSitecoreEdgesitecoreEdgeUrl  | [IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string. |
 
 Scenario Outline: Developer sets valid parameters for Initialization settings on the browser
     Given the '/edge-proxy-settings-events' page is loaded without init function

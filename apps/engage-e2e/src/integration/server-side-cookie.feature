@@ -65,7 +65,7 @@ Scenario: Developer requests cookie from server using initServer with timeOut an
 @Smoke-Test-Events @Server-Side-Props-Server-Cookie
 Scenario: Developer requests cookie from server with invalid timeout input
     Given the initServer function is triggered from '/server-side-props-server-cookie' page with timeout: '-10'
-    Then an error is thrown: '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+    Then an error is thrown: '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
 
 @Server-Side-Props-Server-Cookie
 Scenario: Developer requests cookie from server using initServer without specifying timeout

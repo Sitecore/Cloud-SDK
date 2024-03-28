@@ -3,14 +3,14 @@ import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
 import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
 import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
-import { EventAttributesInput } from '../common-interfaces';
+import { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { SendEvent } from '../send-event/sendEvent';
 import { ErrorMessages } from '../../consts';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
   private sendEvent: SendEvent;
-  private eventData: PageViewEventInput;
+  private pageViewData: PageViewData;
   private extensionData: FlattenedObject = {};
   private urlSearchParams: URLSearchParams;
   private includeUTMParameters: boolean;
@@ -21,7 +21,7 @@ export class PageViewEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: PageViewEventArguments) {
-    const { channel, currency, language, page } = args.eventData;
+    const { channel, currency, language, page, extensionData } = args.pageViewData;
     super(
       {
         channel,
@@ -32,18 +32,18 @@ export class PageViewEvent extends BaseEvent {
       args.id
     );
 
-    this.eventData = args.eventData;
+    this.pageViewData = args.pageViewData;
     this.sendEvent = args.sendEvent;
     this.settings = args.settings;
     this.urlSearchParams = new URLSearchParams(decodeURI(args.searchParams));
 
-    if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
+    if (extensionData) this.extensionData = flattenObject({ object: extensionData });
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
     this.includeUTMParameters =
-      args.eventData.includeUTMParameters === undefined ? true : args.eventData.includeUTMParameters;
+      args.pageViewData.includeUTMParameters === undefined ? true : args.pageViewData.includeUTMParameters;
   }
 
   /**
@@ -51,8 +51,8 @@ export class PageViewEvent extends BaseEvent {
    * Gets the variant ID from the extension data if not found from the url
    * @returns - variant ID or null
    */
-  private getPageVariantId(pageVariantIdFromEventData?: string, pageVariantIdFromExt?: string) {
-    if (pageVariantIdFromEventData) return pageVariantIdFromEventData;
+  private getPageVariantId(pageVariantIdFromPageViewData?: string, pageVariantIdFromExt?: string) {
+    if (pageVariantIdFromPageViewData) return pageVariantIdFromPageViewData;
 
     const pageVariantIdFromURL = this.urlSearchParams.get('variantid');
 
@@ -68,7 +68,7 @@ export class PageViewEvent extends BaseEvent {
    * @returns - the referrer
    */
   private getReferrer() {
-    if (this.eventData.referrer) return this.eventData.referrer;
+    if (this.pageViewData.referrer) return this.pageViewData.referrer;
     if (typeof window === 'undefined') return null;
 
     if (!PageViewEvent.isFirstPageView || !document.referrer) return null;
@@ -88,7 +88,7 @@ export class PageViewEvent extends BaseEvent {
     };
 
     const pageVariantId = this.getPageVariantId(
-      this.eventData.pageVariantId,
+      this.pageViewData.pageVariantId,
       this.extensionData['pageVariantId'] as string
     );
 
@@ -147,7 +147,7 @@ export class PageViewEvent extends BaseEvent {
  */
 export interface PageViewEventArguments {
   sendEvent: SendEvent;
-  eventData: PageViewEventInput;
+  pageViewData: PageViewData;
   id: string;
   settings: Settings;
   infer?: Infer;
@@ -158,10 +158,11 @@ export interface PageViewEventArguments {
 /**
  * Type with the required/optional attributes in order to send a view event to SitecoreCloud API
  */
-export interface PageViewEventInput extends EventAttributesInput {
+export interface PageViewData extends EventAttributesInput {
   pageVariantId?: string;
   referrer?: string;
   includeUTMParameters?: boolean;
+  extensionData?: ExtensionData;
 }
 
 /**

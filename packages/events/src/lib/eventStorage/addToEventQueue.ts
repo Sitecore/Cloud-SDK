@@ -1,22 +1,16 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { awaitInit } from '../initializer/browser/initializer';
-import { CustomEventInput, ExtensionData } from '../events';
+import { EventData } from '../events';
 import { QueueEventPayload, eventQueue } from './eventStorage';
 import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
 
 /**
  * A function that adds event to the queue
- * @param type - The required type of the event
+ *
  * @param eventData - The required/optional attributes in order to be send to SitecoreCloud API
- * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
- * This object will be flattened and sent in the ext object of the payload
  */
-export async function addToEventQueue(
-  type: string,
-  eventData: CustomEventInput,
-  extensionData?: ExtensionData
-): Promise<void> {
+export async function addToEventQueue(eventData: EventData): Promise<void> {
   await awaitInit();
 
   const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);
@@ -24,10 +18,8 @@ export async function addToEventQueue(
 
   const queueEventPayload: QueueEventPayload = {
     eventData,
-    extensionData,
     id,
     settings,
-    type,
   };
 
   eventQueue.enqueueEvent(queueEventPayload);

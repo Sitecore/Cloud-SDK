@@ -54,11 +54,9 @@ class EventQueue {
     for (const queueEventPayload of eventQueue) {
       await new CustomEvent({
         eventData: queueEventPayload.eventData,
-        extensionData: queueEventPayload.extensionData,
         id: queueEventPayload.id,
         sendEvent,
         settings: queueEventPayload.settings,
-        type: queueEventPayload.type,
       }).send();
     }
 
@@ -87,6 +85,6 @@ export interface Storage {
   removeItem(key: string): void;
 }
 
-export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'extensionData' | 'type' | 'settings' | 'id'>;
+export type QueueEventPayload = Pick<CustomEventArguments, 'eventData' | 'settings' | 'id'>;
 
 export const eventQueue = new EventQueue();

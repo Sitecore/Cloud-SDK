@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { BaseEvent } from '../base-event';
-import { EventAttributesInput } from '../common-interfaces';
+import { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { SendEvent } from '../send-event/sendEvent';
 import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { BasicTypes, FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
@@ -18,18 +18,18 @@ export class CustomEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: CustomEventArguments) {
-    const { channel, currency, language, page, ...rest } = args.eventData;
+    const { channel, currency, language, page, type, extensionData, ...rest } = args.eventData;
     super({ channel, currency, language, page }, args.id);
 
     this.sendEvent = args.sendEvent;
     this.settings = args.settings;
 
     this.customEventPayload = {
-      type: args.type,
+      type,
       ...rest,
     };
 
-    if (args.extensionData) this.extensionData = flattenObject({ object: args.extensionData });
+    if (extensionData) this.extensionData = flattenObject({ object: extensionData });
 
     const numberOfExtensionDataProperties = Object.entries(this.extensionData).length;
 
@@ -57,9 +57,7 @@ export interface CustomEventArguments {
   sendEvent: SendEvent;
   eventData: CustomEventData;
   id: string;
-  extensionData?: NestedObject;
   settings: Settings;
-  type: string;
 }
 
 /**
@@ -74,9 +72,15 @@ export interface CustomEventPayload extends NestedObject {
 /**
  * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
-export interface CustomEventInput extends EventAttributesInput, NestedObject {}
+export interface EventData extends EventAttributesInput, NestedObject {
+  type: string;
+  extensionData?: ExtensionData;
+}
 
 /**
  * Internal interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
-interface CustomEventData extends Partial<EventAttributesInput>, NestedObject {}
+interface CustomEventData extends Partial<EventAttributesInput>, NestedObject {
+  type: string;
+  extensionData?: ExtensionData;
+}

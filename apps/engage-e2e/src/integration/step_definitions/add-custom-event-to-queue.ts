@@ -20,9 +20,9 @@ Then('the event object is saved to the queue with {string} type', (eventType: st
         const event = queue[0];
         const expectedQueue = Utils.createExpectedQueueEvent(eventType, datatable);
 
-        expect(event.type).to.equal(eventType);
+        expect(event.eventData.type).to.equal(eventType);
         expect(event.eventData).to.deep.contain(expectedQueue.baseEventData);
-        expect(event.extensionData).to.deep.equal(expectedQueue.ext);
+        expect(event.eventData.extensionData).to.deep.equal(expectedQueue.ext);
       }
     });
 });

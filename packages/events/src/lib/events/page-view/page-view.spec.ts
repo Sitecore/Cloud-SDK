@@ -1,5 +1,5 @@
 import { pageView } from './page-view';
-import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewData, PageViewEvent } from './page-view-event';
 import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
@@ -42,16 +42,16 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
-const extensionData = { extKey: 'extValue' };
-
 describe('pageView', () => {
   const id = 'test_id';
+  const extensionData = { extKey: 'extValue' };
+
+  let pageViewData: PageViewData;
 
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
-  let eventData: PageViewEventInput;
   afterEach(() => {
-    eventData = {
+    pageViewData = {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
@@ -75,12 +75,11 @@ describe('pageView', () => {
       sitecoreEdgeUrl: '',
     });
 
-    const response = await pageView(eventData, extensionData);
+    const response = await pageView({ ...pageViewData, extensionData });
 
     expect(PageViewEvent).toHaveBeenCalledWith({
-      eventData,
-      extensionData,
       id,
+      pageViewData: { ...pageViewData, extensionData },
       searchParams: window.location.search,
       sendEvent,
       settings: expect.objectContaining({}),
@@ -89,7 +88,7 @@ describe('pageView', () => {
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
@@ -97,7 +96,7 @@ describe('pageView', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await pageView(eventData, extensionData)).rejects.toThrow(
+    await expect(async () => await pageView({ ...pageViewData, extensionData })).rejects.toThrow(
       `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });

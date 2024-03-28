@@ -125,14 +125,13 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should throw [IV-0006] when we pass negative timeout value', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message:
-        '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.',
+      message: '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.',
     });
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
     }).rejects.toThrowError(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
     );
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });

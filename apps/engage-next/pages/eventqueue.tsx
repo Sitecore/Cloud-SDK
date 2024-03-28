@@ -45,7 +45,7 @@ export function EventToQueue() {
       addMultipleEventsToQueue(type, extensionData, parseInt(multipleEvents));
     }
 
-    addToEventQueue(type, event, extensionData);
+    addToEventQueue({ ...event, type, extensionData });
   };
 
   function addMultipleEventsToQueue(type: string, extensionData: NestedObject, multipleEvents: number) {
@@ -56,7 +56,7 @@ export function EventToQueue() {
         language: 'EN',
         page: `testEvent${index}`,
       };
-      addToEventQueue(type, eventTwo, extensionData);
+      addToEventQueue({ ...eventTwo, type, extensionData });
     }
   }
 
@@ -67,7 +67,7 @@ export function EventToQueue() {
       language: 'EN',
     };
 
-    addToEventQueue(type, event);
+    addToEventQueue({ ...event, type });
   }
 
   const getParamsFromUrl = (parameter: string) => {

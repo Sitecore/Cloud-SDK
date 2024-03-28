@@ -1,6 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import { sendEvent } from '../events/send-event/sendEvent';
-import { CustomEventInput, CustomEvent } from '../events/custom-event/custom-event';
+import { EventData, CustomEvent } from '../events/custom-event/custom-event';
 import * as eventQueue from './eventStorage';
 import * as core from '@sitecore-cloudsdk/core';
 
@@ -25,11 +25,12 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   };
 });
 describe('Event Storage', () => {
-  const eventData: CustomEventInput = {
+  const eventData: EventData = {
     channel: 'WEB',
     currency: 'EUR',
     language: 'EN',
     page: 'races',
+    type: 'CUSTOM_TYPE',
   };
 
   const inferLanguageSpy = jest.spyOn(core, 'language');
@@ -56,8 +57,6 @@ describe('Event Storage', () => {
     sitecoreEdgeUrl: '',
   };
 
-  const type = 'CUSTOM_TYPE';
-
   beforeEach(() => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
@@ -77,7 +76,6 @@ describe('Event Storage', () => {
       eventData,
       id,
       settings,
-      type,
     };
 
     eventQueue.eventQueue.enqueueEvent(queueEventPayload);
@@ -92,15 +90,14 @@ describe('Event Storage', () => {
 
   it('getEventQueue should return an empty array when getItem returns a string thats not parsed as an Array', () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];
+
     const queueEventPayload: eventQueue.QueueEventPayload = {
       eventData,
       id,
       settings,
-      type,
     };
-
-    eventData.page = undefined;
-    eventData.language = undefined;
+    queueEventPayload.eventData.language = undefined;
+    queueEventPayload.eventData.page = undefined;
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
     getSessionStorageSpy.mockImplementation(() => storageMock);
@@ -124,7 +121,6 @@ describe('Event Storage', () => {
       eventData,
       id,
       settings,
-      type,
     };
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
@@ -146,7 +142,6 @@ describe('Event Storage', () => {
       eventData,
       id,
       settings,
-      type,
     };
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
@@ -162,7 +157,6 @@ describe('Event Storage', () => {
       id,
       sendEvent,
       settings,
-      type,
     });
     expect(getEventQueueSpy).toHaveBeenCalledTimes(1);
     expect(getEventQueueSpy).toHaveReturnedWith(mockArray);
@@ -172,9 +166,9 @@ describe('Event Storage', () => {
 
   it('enqueueEvent should update the storage value when storage event in not empty', () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];
-    const queueEventPayload: eventQueue.QueueEventPayload = { eventData, id, settings, type };
-    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings, type };
-    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings, type };
+    const queueEventPayload: eventQueue.QueueEventPayload = { eventData, id, settings };
+    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings };
+    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings };
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
     getSessionStorageSpy.mockImplementation(() => storageMock);
@@ -195,9 +189,9 @@ describe('Event Storage', () => {
 
   it('sendAllEvents should send all stored events to EP.', async () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];
-    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId1', settings, type };
-    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings, type };
-    const queueEventPayloadFour: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings, type };
+    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId1', settings };
+    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings };
+    const queueEventPayloadFour: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings };
 
     jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.EPResponse);
 
@@ -220,8 +214,8 @@ describe('Event Storage', () => {
 
   it('sendAllEvents should send events in the queue and clear the queue', async () => {
     const mockArray: eventQueue.QueueEventPayload[] = [];
-    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings, type };
-    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings, type };
+    const queueEventPayloadTwo: eventQueue.QueueEventPayload = { eventData, id: 'testId2', settings };
+    const queueEventPayloadThree: eventQueue.QueueEventPayload = { eventData, id: 'testId3', settings };
 
     jest.spyOn(CustomEvent.prototype as any, 'send').mockResolvedValue({ status: 'OK' } as core.EPResponse);
 
@@ -237,21 +231,21 @@ describe('Event Storage', () => {
     expect(CustomEvent).toHaveBeenCalledTimes(2);
 
     expect(CustomEvent).toHaveBeenNthCalledWith(1, {
-      eventData: queueEventPayloadTwo.eventData,
-      extensionData: queueEventPayloadTwo.extensionData,
+      eventData: {
+        ...queueEventPayloadTwo.eventData,
+      },
       id: queueEventPayloadTwo.id,
       sendEvent,
       settings: queueEventPayloadTwo.settings,
-      type: queueEventPayloadTwo.type,
     });
 
     expect(CustomEvent).toHaveBeenNthCalledWith(2, {
-      eventData: queueEventPayloadThree.eventData,
-      extensionData: queueEventPayloadThree.extensionData,
+      eventData: {
+        ...queueEventPayloadThree.eventData,
+      },
       id: queueEventPayloadThree.id,
       sendEvent,
       settings: queueEventPayloadThree.settings,
-      type: queueEventPayloadThree.type,
     });
 
     expect(storageMock.removeItem).toHaveBeenCalledTimes(1);

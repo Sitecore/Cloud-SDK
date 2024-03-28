@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { init, PageViewEventInput, pageView } from '@sitecore-cloudsdk/events/server';
+import { init, PageViewData, pageView } from '@sitecore-cloudsdk/events/server';
 import { NextApiRequest, NextApiResponse } from 'next';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const event: PageViewEventInput = {
+  const event: PageViewData = {
     channel: 'WEB',
     currency: 'EUR',
     page: 'api-view',
@@ -21,6 +21,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const EPResponse = await pageView(event, req);
+  const EPResponse = await pageView(req, event);
   res.status(200).json(EPResponse);
 }

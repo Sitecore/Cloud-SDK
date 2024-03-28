@@ -5,33 +5,27 @@ import {
   getSettingsServer,
   handleGetSettingsError,
 } from '@sitecore-cloudsdk/core';
-import { NestedObject, Request } from '@sitecore-cloudsdk/utils';
-import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { Request } from '@sitecore-cloudsdk/utils';
+import { PageViewData, PageViewEvent } from './page-view-event';
 import { sendEvent } from '../send-event/sendEvent';
 import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
- * @param eventData - The required/optional attributes in order to be send to SitecoreCloud API
+ *
  * @param request - Interface with constraint for extending request
- * @param extensionData - The optional extensionData attributes that will be sent to SitecoreCloud API.
- * This object will be flattened and sent in the ext object of the payload
+ * @param pageViewData - The required/optional attributes in order to be send to SitecoreCloud API
  * @returns The response object that Sitecore EP returns
  */
-export function pageViewServer<T extends Request>(
-  eventData: PageViewEventInput,
-  request: T,
-  extensionData?: NestedObject
-): Promise<EPResponse | null> {
+export function pageViewServer<T extends Request>(request: T, pageViewData: PageViewData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   // Host is irrelevant but necessary to support relative URL
   const requestUrl = new URL(request.url as string, `https://localhost`);
 
   return new PageViewEvent({
-    eventData,
-    extensionData,
     id,
+    pageViewData,
     searchParams: requestUrl.search,
     sendEvent,
     settings,

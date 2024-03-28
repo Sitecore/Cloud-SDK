@@ -46,12 +46,11 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 
 const getSettingsSpy = jest.spyOn(core, 'getSettings');
 const id = 'test_id';
-const eventData = {
+const identityData = {
   channel: 'WEB',
   currency: 'EUR',
   identifiers: [
     {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       expiryDate: undefined,
       id,
       provider: 'email',
@@ -84,12 +83,11 @@ describe('identity', () => {
       sitecoreEdgeUrl: '',
     });
 
-    const response = await identity(eventData, extensionData);
+    const response = await identity({ ...identityData, extensionData });
 
     expect(IdentityEvent).toHaveBeenCalledWith({
-      eventData,
-      extensionData,
       id,
+      identityData: { ...identityData, extensionData },
       sendEvent,
       settings: expect.objectContaining({}),
     });
@@ -97,7 +95,7 @@ describe('identity', () => {
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
@@ -105,7 +103,7 @@ describe('identity', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await identity(eventData, extensionData)).rejects.toThrow(
+    await expect(async () => await identity({ ...identityData, extensionData })).rejects.toThrow(
       `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });

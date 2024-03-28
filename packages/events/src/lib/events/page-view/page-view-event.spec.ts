@@ -2,7 +2,7 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewData, PageViewEvent } from './page-view-event';
 import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
@@ -32,12 +32,12 @@ describe('PageViewEvent', () => {
   const id = 'test_id';
 
   let expectedBasicAttributes = {};
-  let eventData: PageViewEventInput;
+  let pageViewData: PageViewData;
   let settings: Settings;
 
   function callPageEvent(
     sendEvent: any,
-    eventData: any,
+    pageViewData: any,
     id: any,
     settings: any,
     extensionData?: any,
@@ -45,11 +45,10 @@ describe('PageViewEvent', () => {
   ) {
     new PageViewEvent({
       sendEvent: sendEvent.sendEvent,
-      eventData,
+      pageViewData: { ...pageViewData, extensionData },
       id,
       settings,
       searchParams: searchParams ?? window.location.search,
-      extensionData,
     }).send();
   }
   beforeEach(() => {
@@ -63,7 +62,7 @@ describe('PageViewEvent', () => {
       pos: '',
     };
 
-    eventData = {
+    pageViewData = {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
@@ -104,7 +103,7 @@ describe('PageViewEvent', () => {
 
       const event = new PageViewEvent({
         sendEvent: sendEvent.sendEvent,
-        eventData,
+        pageViewData,
         id,
         searchParams: '',
         settings,
@@ -118,7 +117,7 @@ describe('PageViewEvent', () => {
 
   describe('check getPageVariantId function', () => {
     const getPageVariantIdSpy = jest.spyOn(PageViewEvent.prototype as any, 'getPageVariantId');
-    let eventData: PageViewEventInput = {
+    let pageViewData: PageViewData = {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
@@ -132,7 +131,7 @@ describe('PageViewEvent', () => {
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-      eventData = {
+      pageViewData = {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
@@ -153,13 +152,13 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
 
     it('should return the variantid if exists in the search params that is passed from the server and not present in the event data', async () => {
-      callPageEvent(sendEvent, eventData, id, settings, undefined, '?variantid=test_pageVariantId');
+      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '?variantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
     it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
@@ -169,10 +168,10 @@ describe('PageViewEvent', () => {
         },
         writable: true,
       });
-      eventData.pageVariantId = undefined;
+      pageViewData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
 
-      callPageEvent(sendEvent, eventData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
+      callPageEvent(sendEvent, pageViewData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
@@ -185,10 +184,10 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      eventData.pageVariantId = undefined;
+      pageViewData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
 
-      callPageEvent(sendEvent, eventData, id, settings, extensionData);
+      callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
@@ -200,7 +199,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith(null);
     });
@@ -213,7 +212,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
@@ -226,9 +225,9 @@ describe('PageViewEvent', () => {
       });
       const extensionData = { pageVariantId: 'extension_data_vid' };
 
-      eventData.pageVariantId = 'vid';
+      pageViewData.pageVariantId = 'vid';
 
-      callPageEvent(sendEvent, eventData, id, settings, extensionData);
+      callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -248,7 +247,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -269,7 +268,7 @@ describe('PageViewEvent', () => {
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
 
-    callPageEvent(sendEvent, eventData, id, settings, extensionData);
+    callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
 
     const expectedAttributes = {
       ...expectedBasicAttributes,
@@ -284,25 +283,27 @@ describe('PageViewEvent', () => {
 
   describe('Should throw error', () => {
     it('should throw an error when more than 50 ext attributes are passed', () => {
-      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extErrorMessage =
+        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < 51; i++) {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(sendEvent, eventData, id, settings, extensionData);
-      }).toThrowError(extErrorMessage);
+        callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+      }).toThrow(extErrorMessage);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
-      const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
+      const extErrorMessage =
+        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(sendEvent, eventData, id, settings, extensionData);
-      }).not.toThrowError(extErrorMessage);
+        callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+      }).not.toThrow(extErrorMessage);
     });
   });
 
@@ -320,7 +321,7 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should return null if isFirstPageView is false ', async () => {
       PageViewEvent.isFirstPageView = false;
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -328,7 +329,7 @@ describe('PageViewEvent', () => {
     });
     it('getReferrer should return null if isFirstPageView is true and document referrer is empty string ', async () => {
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(document.referrer).toBe('');
       expect(window).toBeDefined();
@@ -349,7 +350,7 @@ describe('PageViewEvent', () => {
       });
 
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -374,7 +375,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(sendEvent, eventData, id, settings, undefined);
+      callPageEvent(sendEvent, pageViewData, id, settings, undefined);
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith(null);
     });
@@ -387,7 +388,7 @@ describe('PageViewEvent', () => {
 
       PageViewEvent.isFirstPageView = true;
 
-      callPageEvent(sendEvent, eventData, id, settings, undefined, '');
+      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '');
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -401,15 +402,15 @@ describe('PageViewEvent', () => {
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
 
-    it('getReferrer should be retrieved if provided eventData and window is undefined', async () => {
+    it('getReferrer should be retrieved if provided pageViewData and window is undefined', async () => {
       Object.defineProperty(global, 'window', {
         get: jest.fn().mockReturnValueOnce(undefined),
         // writable: true,
       });
       PageViewEvent.isFirstPageView = true;
-      eventData.referrer = 'campaign';
+      pageViewData.referrer = 'campaign';
 
-      callPageEvent(sendEvent, eventData, id, settings, undefined, '');
+      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '');
 
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -430,7 +431,7 @@ describe('PageViewEvent', () => {
       documentSpy = jest.spyOn(globalThis, 'document', 'get');
 
       PageViewEvent.isFirstPageView = true;
-      eventData.includeUTMParameters = undefined;
+      pageViewData.includeUTMParameters = undefined;
 
       const mockFetch = Promise.resolve({
         json: () => Promise.resolve({ status: 'OK' } as EPResponse),
@@ -450,9 +451,9 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      eventData.includeUTMParameters = false;
+      pageViewData.includeUTMParameters = false;
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(0);
     });
@@ -464,9 +465,9 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      eventData.includeUTMParameters = true;
+      pageViewData.includeUTMParameters = true;
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(1);
     });
@@ -478,7 +479,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveLastReturnedWith({});
     });
@@ -490,7 +491,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveReturnedWith({});
     });
@@ -502,7 +503,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
     });
@@ -514,7 +515,7 @@ describe('PageViewEvent', () => {
 
       jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
 
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -527,7 +528,7 @@ describe('PageViewEvent', () => {
 
     it('should send an event with utm_ params if the returned object is not empty', () => {
       getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
-      callPageEvent(sendEvent, eventData, id, settings);
+      callPageEvent(sendEvent, pageViewData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{

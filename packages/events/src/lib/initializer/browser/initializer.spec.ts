@@ -104,7 +104,7 @@ describe('initializer', () => {
 
     await expect(async () => {
       await init(settingsParams);
-    }).rejects.toThrowError(
+    }).rejects.toThrow(
       // eslint-disable-next-line max-len
       `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
     );
@@ -139,7 +139,7 @@ describe('initializer', () => {
 
     await expect(async () => {
       await init(settingsParams);
-    }).rejects.toThrowError('error');
+    }).rejects.toThrow('error');
   });
 });
 
@@ -147,7 +147,7 @@ describe('awaitInit', () => {
   it('should throw error if initPromise is null', async () => {
     await expect(async () => {
       await awaitInit();
-    }).rejects.toThrowError(ErrorMessages.IE_0004);
+    }).rejects.toThrow(ErrorMessages.IE_0004);
   });
   it('should not throw if initPromise is a Promise', async () => {
     jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());

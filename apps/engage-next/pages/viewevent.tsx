@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { useEffect } from 'react';
-import { PageViewEventInput, pageView, init } from '@sitecore-cloudsdk/events/browser';
+import { PageViewData, pageView, init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
@@ -21,18 +21,18 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     const extensionDataNested = eventAttributes.has('nested') ? JSON.parse(eventAttributes.get('nested')!) : {};
     const noExt = eventAttributes.get('no-ext') === 'true';
 
-    const event: PageViewEventInput = {
+    const eventData: PageViewData = {
       channel: 'WEB',
       currency: 'EUR',
     };
 
     if (eventAttributes.get('variantid')) {
-      event.pageVariantId = eventAttributes.get('variantid') || '';
+      eventData.pageVariantId = eventAttributes.get('variantid') || '';
     }
 
     if (typeof includeUTMSearchParameter === 'string') {
-      if (includeUTMSearchParameter === 'true') event.includeUTMParameters = true;
-      else if (includeUTMSearchParameter === 'false') event.includeUTMParameters = false;
+      if (includeUTMSearchParameter === 'true') eventData.includeUTMParameters = true;
+      else if (includeUTMSearchParameter === 'false') eventData.includeUTMParameters = false;
     }
 
     eventAttributes.delete('nested');
@@ -60,7 +60,9 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
         siteName: process.env.SITE_ID || '',
       });
 
-      pageView(event, noExt ? undefined : extensionData);
+      if (!noExt) eventData.extensionData = extensionData;
+
+      pageView(eventData);
     }
 
     initEventsSetting();
@@ -108,13 +110,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const extensionDataNested = eventAttributes.get('nested') ? JSON.parse(eventAttributes.get('nested')!) : {};
   const noExt = eventAttributes.get('no-ext') === 'true';
 
-  const event: Record<string, unknown> = {
+  const eventData: Record<string, unknown> = {
     channel: 'WEB',
     currency: 'EUR',
   };
 
   if (eventAttributes.get('variantid')) {
-    event['variantid'] = eventAttributes.get('variantid');
+    eventData['variantid'] = eventAttributes.get('variantid');
   }
 
   const extensionDataExt: Record<string, unknown> = {};
@@ -143,13 +145,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     context.res
   );
 
+  if (!noExt) eventData.extensionData = extensionData;
+
   let EPResponse;
   try {
-    EPResponse = await pageViewServer(
-      event as unknown as PageViewEventInput,
-      context.req,
-      noExt ? undefined : extensionData
-    );
+    EPResponse = await pageViewServer(context.req, eventData as unknown as PageViewData);
   } catch {
     EPResponse = 'Error';
   }

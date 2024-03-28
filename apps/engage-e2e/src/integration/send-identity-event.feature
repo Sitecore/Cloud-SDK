@@ -66,5 +66,5 @@ Scenario Outline: Developer creates identity event with ext attributes that exce
         | extAttributesNumber | nested                    |
         | 48                   | {"a":"a","b":1,"c":true} |
     And the 'sendIdentityWithExtObject' button is clicked
-    Then an error is thrown: '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.'
+    Then an error is thrown: '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.'
 

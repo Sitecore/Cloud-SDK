@@ -35,7 +35,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let EPResponse;
   try {
-    EPResponse = await identity(eventData, context.req);
+    EPResponse = await identity(context.req, eventData);
   } catch {
     EPResponse = 'Error';
   }

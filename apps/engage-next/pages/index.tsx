@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import styles from './HomePage.module.css';
 import {
-  PageViewEventInput,
+  PageViewData,
   getBrowserId,
   pageView,
   LIBRARY_VERSION as eventVersion,
@@ -12,7 +12,7 @@ import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/person
 import { capturedDebugLogs } from '../utils/debugLogs';
 
 export function Index() {
-  const [eventData, seteventData] = useState<PageViewEventInput>({
+  const [eventData, seteventData] = useState<PageViewData>({
     channel: 'WEB',
     currency: 'EUR',
   });

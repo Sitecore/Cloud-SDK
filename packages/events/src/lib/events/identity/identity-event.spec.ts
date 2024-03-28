@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable multiline-comment-style */
-import { IdentityEvent, IdentityEventAttributesInput } from './identity-event';
+import { IdentityEvent, IdentityData } from './identity-event';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
@@ -27,7 +27,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('Test Identity', () => {
-  let data: IdentityEventAttributesInput;
+  let data: IdentityData;
   let settingsMock: core.Settings;
   const id = 'test_id';
 
@@ -75,8 +75,8 @@ describe('Test Identity', () => {
     expect(
       () =>
         new IdentityEvent({
-          eventData: data,
           id,
+          identityData: data,
           sendEvent: sendEvent.sendEvent,
           settings: settingsMock,
         })
@@ -98,8 +98,8 @@ describe('Test Identity', () => {
     data.street = [];
 
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -109,8 +109,8 @@ describe('Test Identity', () => {
   it('should not change anything when street is an array with empty string', () => {
     data.street = [''];
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -121,8 +121,8 @@ describe('Test Identity', () => {
     data.street = ['gennimata'];
 
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -133,8 +133,8 @@ describe('Test Identity', () => {
     data.street = ['gennimata', 'ntourma'];
 
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -152,12 +152,12 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData: data,
         id,
+        identityData: data,
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrowError(`[MV-0003] "identifiers" is required.`);
+    }).toThrow(`[MV-0003] "identifiers" is required.`);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -178,23 +178,23 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData: data,
         id,
+        identityData: data,
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).toThrowError('[IV-0003] Incorrect value for "email". Set the value to a valid email address.');
+    }).toThrow('[IV-0003] Incorrect value for "email". Set the value to a valid email address.');
   });
 
   it('should not throw error when the identifiers has object', () => {
     expect(() => {
       new IdentityEvent({
-        eventData: data,
         id,
+        identityData: data,
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       });
-    }).not.toThrowError(`[MV-0003] "identifiers" is required.`);
+    }).not.toThrow(`[MV-0003] "identifiers" is required.`);
   });
 
   it('Should make all values to Title Case', () => {
@@ -254,8 +254,8 @@ describe('Test Identity', () => {
     };
 
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -330,8 +330,8 @@ describe('Test Identity', () => {
 
     const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
     const identity = new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -347,8 +347,8 @@ describe('Test Identity', () => {
   it('Should check if attributeCheckAndValidation is called when IdentityEvent is Created', () => {
     const attributeCheckAndValidationSpy = jest.spyOn(IdentityEvent.prototype as any, 'validateAttributes');
     new IdentityEvent({
-      eventData: data,
       id,
+      identityData: data,
       sendEvent: sendEvent.sendEvent,
       settings: settingsMock,
     });
@@ -362,12 +362,12 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData: data,
         id,
+        identityData: data,
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrowError(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
+    }).toThrow(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
@@ -376,12 +376,12 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData: data,
         id,
+        identityData: data,
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock,
       }).send();
-    }).toThrowError(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
+    }).toThrow(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
@@ -392,7 +392,7 @@ describe('Test Identity', () => {
 
     const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
 
-    const eventData = {
+    const identityData = {
       channel: 'WEB',
       city: 'city',
       country: 'gr',
@@ -420,9 +420,8 @@ describe('Test Identity', () => {
       sitecoreEdgeUrl: '',
     };
     new IdentityEvent({
-      eventData,
-      extensionData,
       id,
+      identityData: { ...identityData, extensionData },
       sendEvent: sendEvent.sendEvent,
       settings,
     }).send();
@@ -436,8 +435,9 @@ describe('Test Identity', () => {
   });
 
   it('should throw an error when more than 50 ext attributes are passed', () => {
-    const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
-    const eventData = {
+    const extErrorMessage =
+      '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
+    const identityData = {
       channel: 'WEB',
       city: 'city',
       country: 'gr',
@@ -470,18 +470,18 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData,
-        extensionData,
         id,
+        identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).toThrowError(extErrorMessage);
+    }).toThrow(extErrorMessage);
   });
 
   it('should not throw an error when no more than 50 ext attributes are passed', () => {
-    const extErrorMessage = '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.';
-    const eventData = {
+    const extErrorMessage =
+      '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
+    const identityData = {
       channel: 'WEB',
       city: 'city',
       country: 'gr',
@@ -513,18 +513,17 @@ describe('Test Identity', () => {
 
     expect(() => {
       new IdentityEvent({
-        eventData,
-        extensionData,
         id,
+        identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
         settings,
       }).send();
-    }).not.toThrowError(extErrorMessage);
+    }).not.toThrow(extErrorMessage);
   });
 
   it('should not call flatten object method when no extension data is passed', () => {
     const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
-    const eventData = {
+    const identityData = {
       channel: 'WEB',
       city: 'city',
       country: 'gr',
@@ -550,14 +549,19 @@ describe('Test Identity', () => {
       sitecoreEdgeUrl: '',
     };
 
-    new IdentityEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+    new IdentityEvent({
+      id,
+      identityData,
+      sendEvent: sendEvent.sendEvent,
+      settings,
+    }).send();
 
     expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should send a custom event without ext attribute if extensionData is an empty object', () => {
     const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
-    const eventData = {
+    const identityData = {
       channel: 'WEB',
       city: 'city',
       country: 'gr',
@@ -586,7 +590,12 @@ describe('Test Identity', () => {
 
     const extensionData = {};
 
-    new IdentityEvent({ eventData, extensionData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+    new IdentityEvent({
+      id,
+      identityData: { ...identityData, extensionData },
+      sendEvent: sendEvent.sendEvent,
+      settings,
+    }).send();
 
     expect(BaseEvent).toHaveBeenCalled();
     expect(BaseEvent).toHaveBeenCalledWith(

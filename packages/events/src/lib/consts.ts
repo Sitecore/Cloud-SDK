@@ -15,9 +15,8 @@ export enum ErrorMessages {
   IV_0002 = '[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.',
   IV_0003 = '[IV-0003] Incorrect value for "email". Set the value to a valid email address.',
   IV_0004 = '[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.',
-  IV_0005 = `[IV-0005] This event supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`,
+  IV_0005 = `[IV-0005] "extensionData" supports maximum ${MAX_EXT_ATTRIBUTES} attributes. Reduce the number of attributes.`,
   MV_0003 = '[MV-0003] "identifiers" is required.',
 }
 
 export const EVENTS_NAMESPACE = 'sitecore-cloudsdk:events';
- 

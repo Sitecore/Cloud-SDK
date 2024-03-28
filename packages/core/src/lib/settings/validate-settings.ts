@@ -19,9 +19,7 @@ export function validateSettings(settings: SettingsParams) {
     try {
       new URL(sitecoreEdgeUrl);
     } catch (e) {
-      throw new Error(
-        `[IV-0001] Incorrect value for "sitecoreEdgeUrl" parameter. Set the value to a valid URL string.`
-      );
+      throw new Error(`[IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string.`);
     }
   }
 }

@@ -85,7 +85,7 @@ Scenario: Developer requests personalize with invalid timeout input
         }
     """
     And the 'requestPersonalizeFromClientWithTimeout' button is clicked
-    Then an error is thrown: '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+    Then an error is thrown: '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
 
 @Smoke-Test-Personalize
 Scenario: Developer requests personalize with timeout from the client and EP responds timely

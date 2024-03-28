@@ -44,7 +44,7 @@ describe('fetchWithTimeout', () => {
     const timeout = -100; // Negative timeout value
 
     await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
     );
   });
 
@@ -52,7 +52,7 @@ describe('fetchWithTimeout', () => {
     const timeout = 5000.5; // Non-integer timeout value
 
     await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
+      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
     );
   });
 

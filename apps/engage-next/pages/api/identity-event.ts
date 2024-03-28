@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, IdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events/server';
+import { init, IdentityData, identity } from '@sitecore-cloudsdk/events/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
-  const event: IdentityEventAttributesInput = {
+  const event: IdentityData = {
     channel: 'WEB',
     currency: 'EUR',
     email: requestUrl.searchParams?.get('email') ?? undefined,
@@ -30,6 +30,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     res
   );
 
-  const EPResponse = await identity(event, req);
+  const EPResponse = await identity(req, event);
   res.status(200).json(EPResponse);
 }

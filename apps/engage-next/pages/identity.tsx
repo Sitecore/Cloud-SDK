@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IdentityEventAttributesInput, identity } from '@sitecore-cloudsdk/events/browser';
+import { IdentityData, identity } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
 export function Identity() {
@@ -28,7 +28,7 @@ export function Identity() {
     const formData = eventTrigger.target as HTMLFormElement & FormData;
 
     // Get data from the form.
-    const data: IdentityEventAttributesInput = {
+    const data: IdentityData = {
       channel: 'WEB',
       city: formData.city.value,
       country: formData.country.value,
@@ -59,24 +59,25 @@ export function Identity() {
     if (formData.expiry_date.value !== '') {
       data.identifiers[0].expiryDate = formData.expiry_date.value;
     }
-
-    identity(data, { banana: null as unknown as string });
+    const identityData = { ...data, banana: null };
+    identity(identityData);
   };
 
   const sendIdentityWithEmptyExt = () => {
-    const event = {
+    const identityData: IdentityData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
       language: 'EN',
+      extensionData: {},
     };
 
-    identity(event, {});
+    identity(identityData);
   };
 
   const sendIdentityWithoutExtObject = () => {
-    const event = {
+    const identityData: IdentityData = {
       channel: 'WEB',
       currency: 'EUR',
       email: 'test@test.com',
@@ -84,20 +85,12 @@ export function Identity() {
       language: 'EN',
     };
 
-    identity(event);
+    identity(identityData);
   };
 
   const sendIdentityWithExtObject = () => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const extensionDataNested = JSON.parse(eventAttributes.get('nested') || '') || {};
-
-    const event = {
-      channel: 'WEB',
-      currency: 'EUR',
-      email: 'test@test.com',
-      identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN',
-    };
 
     eventAttributes.delete('nested');
 
@@ -110,7 +103,16 @@ export function Identity() {
       extensionDataExt[key as keyof typeof extensionDataExt] = value;
     });
 
-    identity(event, extensionDataExt);
+    const identityData: IdentityData = {
+      channel: 'WEB',
+      currency: 'EUR',
+      email: 'test@test.com',
+      identifiers: [{ id: 'test', provider: 'email' }],
+      language: 'EN',
+      extensionData: extensionDataExt,
+    };
+
+    identity(identityData);
   };
 
   const sendRequestToNextApi = () => {

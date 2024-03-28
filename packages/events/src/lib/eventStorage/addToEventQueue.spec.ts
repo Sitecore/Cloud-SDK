@@ -1,8 +1,8 @@
 import { addToEventQueue } from './addToEventQueue';
-import { EventAttributesInput } from '../events/common-interfaces';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import * as initializerModule from '../initializer/browser/initializer';
+import { EventData } from '../events/custom-event/custom-event';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -14,12 +14,13 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
-const eventData: EventAttributesInput = {
+const eventData: EventData = {
   // eslint-disable-next-line @typescript-eslint/naming-convention
   channel: 'WEB',
   currency: 'EUR',
   language: 'EN',
   page: 'races',
+  type: 'TEST_TYPE',
 };
 
 describe('addToEventQueue', () => {
@@ -36,7 +37,7 @@ describe('addToEventQueue', () => {
 
     const enqueueEventSpy = jest.spyOn(eventQueue.eventQueue, 'enqueueEvent');
 
-    await addToEventQueue('TEST_TYPE', { ...eventData });
+    await addToEventQueue(eventData);
 
     expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
   });
@@ -49,7 +50,7 @@ describe('addToEventQueue', () => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await addToEventQueue('TEST_TYPE', { ...eventData })).rejects.toThrow(
+    expect(async () => await addToEventQueue(eventData)).rejects.toThrow(
       `[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`
     );
   });

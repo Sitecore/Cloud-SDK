@@ -1,5 +1,5 @@
 import { eventServer } from './eventServer';
-import { CustomEvent, CustomEventInput } from './custom-event';
+import { CustomEvent, EventData } from './custom-event';
 import * as core from '@sitecore-cloudsdk/core';
 import { sendEvent } from '../send-event/sendEvent';
 
@@ -25,9 +25,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 describe('eventServer', () => {
-  let eventData: CustomEventInput;
-  const type = 'CUSTOM_TYPE';
-  const extensionData = { extKey: 'extValue' };
+  let eventData: EventData;
   const req = {
     cookies: {
       get() {
@@ -51,8 +49,12 @@ describe('eventServer', () => {
     eventData = {
       channel: 'WEB',
       currency: 'EUR',
+      extensionData: {
+        extKey: 'extValue',
+      },
       language: 'EN',
       page: 'races',
+      type: 'CUSTOM_TYPE',
     };
   });
 
@@ -72,21 +74,12 @@ describe('eventServer', () => {
       sitecoreEdgeUrl: '',
     });
 
-    await eventServer(type, eventData, req, extensionData);
+    await eventServer(req, eventData);
 
-    // Assert
     expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(CustomEvent).toHaveBeenCalledWith({
-      eventData: {
-        channel: 'WEB',
-        currency: 'EUR',
-        language: 'EN',
-        page: 'races',
-      },
-      extensionData: {
-        extKey: 'extValue',
-      },
+      eventData,
       id: '1234',
       sendEvent,
       settings: {
@@ -100,16 +93,15 @@ describe('eventServer', () => {
         sitecoreEdgeContextId: '123',
         sitecoreEdgeUrl: '',
       },
-      type: 'CUSTOM_TYPE',
     });
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     getSettingsServerSpy.mockImplementation(() => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await eventServer(type, eventData, req, extensionData)).rejects.toThrow(
+    await expect(async () => await eventServer(req, eventData)).rejects.toThrow(
       `[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`
     );
   });

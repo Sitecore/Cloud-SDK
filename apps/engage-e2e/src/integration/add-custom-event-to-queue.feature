@@ -35,5 +35,5 @@ Scenario: Developer tries to enqueue an invalid payload
         | type         | extAttributesNumber | nested                   | 
         | TEST_TYPE    | 53                  | {"a":"a","b":1,"c":true} | 
     And the 'addEventToQueue' button is clicked
-    Then an error is thrown: '[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.'
+    Then an error is thrown: '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.'
     And the queue is null

@@ -15,9 +15,7 @@ export async function fetchWithTimeout(
   fetchOptions: RequestInit
 ): Promise<Response | null> {
   if (!Number.isInteger(timeout) || timeout < 0)
-    throw new Error(
-      '[IV-0006] Incorrect value for the timeout parameter. Set the value to an integer greater than or equal to 0.'
-    );
+    throw new Error('[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.');
 
   const abortController = new AbortController();
   const signal = abortController.signal;

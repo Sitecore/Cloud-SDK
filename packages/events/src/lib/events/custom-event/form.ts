@@ -8,6 +8,7 @@ import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends a form event to SitecoreCloud API
+ *
  * @param formId - The required form ID string
  * @param interactionType - The required interaction type string. Possible values: "VIEWED", "SUBMITTED"
  *  settings object, you must specify it here
@@ -20,15 +21,16 @@ export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTE
   const id = getBrowserId();
 
   const formEvent = new CustomEvent({
-    eventData: {},
-    extensionData: {
-      formId,
-      interactionType: interactionType.toUpperCase(),
+    eventData: {
+      extensionData: {
+        formId,
+        interactionType: interactionType.toUpperCase(),
+      },
+      type: 'FORM',
     },
     id,
     sendEvent,
     settings,
-    type: 'FORM',
   });
 
   formEvent.page = undefined as unknown as string;

@@ -29,7 +29,7 @@ export function CustomEvent() {
     if (topLevelAttributes) eventData = { ...eventData, ...JSON.parse(topLevelAttributes) };
     extensionData = getExtObject(ext, numberOfExtAttr);
 
-    event(type, eventData, extensionData);
+    event({ ...eventData, type, extensionData });
   };
 
   const sendRequestToNextApi = () => {

@@ -1,5 +1,5 @@
 import { pageViewServer } from './page-view-server';
-import { PageViewEventInput, PageViewEvent } from './page-view-event';
+import { PageViewData, PageViewEvent } from './page-view-event';
 import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
 
@@ -34,12 +34,12 @@ jest.mock('./page-view-event', () => {
   };
 });
 
-const extensionData = { extKey: 'extValue' };
-
-const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
-
 describe('pageViewServer', () => {
-  let eventData: PageViewEventInput;
+  const extensionData = { extKey: 'extValue' };
+
+  let pageViewData: PageViewData;
+
+  const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
 
   const req = {
     cookies: {
@@ -57,7 +57,7 @@ describe('pageViewServer', () => {
   };
 
   afterEach(() => {
-    eventData = {
+    pageViewData = {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
@@ -67,7 +67,7 @@ describe('pageViewServer', () => {
   });
 
   it('should send a PageViewEvent to the server', async () => {
-    getSettingsServerSpy.mockReturnValue({
+    const mockSettings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -77,37 +77,27 @@ describe('pageViewServer', () => {
       siteName: '456',
       sitecoreEdgeContextId: '123',
       sitecoreEdgeUrl: '',
-    });
+    };
+    getSettingsServerSpy.mockReturnValue(mockSettings);
 
-    const response = await pageViewServer(eventData, req, extensionData);
+    const response = await pageViewServer(req, { ...pageViewData, extensionData });
 
     expect(PageViewEvent).toHaveBeenCalledWith({
-      eventData,
-      extensionData,
       id: 'test',
+      pageViewData: { ...pageViewData, extensionData },
       searchParams: '',
       sendEvent,
-      settings: {
-        cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieName: 'bid_name',
-          cookiePath: '/',
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
-      },
+      settings: mockSettings,
     });
     expect(response).toBe('mockedResponse');
   });
 
-  it('should throw error if settings have not been configured properly', () => {
+  it('should throw error if settings have not been configured properly', async () => {
     getSettingsServerSpy.mockImplementation(() => {
       throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
     });
 
-    expect(async () => await pageViewServer(eventData, req, extensionData)).rejects.toThrow(
+    await expect(async () => await pageViewServer(req, { ...pageViewData, extensionData })).rejects.toThrow(
       `[IE-0005] You must first initialize the "events/server" module. Run the "init" function.`
     );
   });

@@ -36,7 +36,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let EPResponse;
   try {
-    EPResponse = await event('SERVERSIDEPROPS_CUSTOM', eventData, context.req);
+    EPResponse = await event(context.req, { ...eventData, type: 'SERVERSIDEPROPS_CUSTOM' });
   } catch {
     EPResponse = 'Error';
   }
