@@ -1,18 +1,25 @@
 /* eslint-disable */
 // Importing @jest/types allows us to have intellisense over InitialOptions of Jest
-import type { Config } from '@jest/types';
+import type { Config } from 'jest';
 import { resolve, join } from 'path';
 
-const config: Config.InitialOptions = {
+const config: Config = {
   displayName: 'search-api-client',
   preset: '../../jest.preset.js',
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: join(resolve(), 'packages', 'search-api-client', 'tsconfig.spec.json') }],
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  testEnvironment: 'node',
-  coverageDirectory: '../../coverage/packages/core',
+  testEnvironment: 'jsdom',
   coverageReporters: ['html-spa', ['text', { skipFull: true }]],
+  coverageDirectory: '../../coverage/packages/search-api-client',
+  coverageThreshold: {
+    global: {
+      branches: 100,
+      functions: 100,
+      lines: 100,
+      statements: -10,
+    },
+  },
 };
-
 export default config;

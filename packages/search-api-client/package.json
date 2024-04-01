@@ -2,17 +2,16 @@
   "name": "@sitecore-cloudsdk/search-api-client",
   "version": "0.0.1",
   "license": "Apache-2.0",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",
-  "types": "dist/esm/src/index.d.ts",
   "exports": {
-    ".": {
-      "types": {
-        "require": "./dist/cjs/src/index.d.ts",
-        "default": "./dist/esm/src/index.d.ts"
-      },
-      "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"
+    "./server": {
+      "import": "./server.js",
+      "require": "./server.cjs",
+      "types": "./server.d.ts"
+    },
+    "./browser": {
+      "import": "./browser.js",
+      "require": "./browser.cjs",
+      "types": "./browser.d.ts"
     }
   },
   "scripts": {
@@ -22,7 +21,13 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "browser.js",
+    "browser.cjs",
+    "browser.d.ts",
+    "server.cjs",
+    "server.js",
+    "server.d.ts"
   ],
   "engines": {
     "node": ">=18"

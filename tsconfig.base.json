@@ -20,7 +20,8 @@
       "@sitecore-cloudsdk/events/server": ["packages/events/src/server.ts"],
       "@sitecore-cloudsdk/personalize/browser": ["packages/personalize/src/browser.ts"],
       "@sitecore-cloudsdk/personalize/server": ["packages/personalize/src/server.ts"],
-      "@sitecore-cloudsdk/search-api-client": ["packages/search-api-client/src/index.ts"],
+      "@sitecore-cloudsdk/search-api-client/browser": ["packages/search-api-client/src/browser.ts"],
+      "@sitecore-cloudsdk/search-api-client/server": ["packages/search-api-client/src/server.ts"],
       "@sitecore-cloudsdk/utils": ["packages/utils/src/index.ts"]
     }
   },
