@@ -6,28 +6,23 @@ import { init as initPersonalize } from "@sitecore-cloudsdk/personalize/server";
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   
-  await initEvents(
-    {
+  initEvents(request, response, {
       sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
       cookieExpiryDays: 400,
       enableServerCookie: true,
       sitecoreEdgeUrl: undefined,
       siteName: "spinair.com",
-    },
-    request,
-    response
+    }
   );
 
-  await initPersonalize(
+  await initPersonalize(request, response, 
     {
       sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
       cookieExpiryDays: 400,
       enableServerCookie: true,
       sitecoreEdgeUrl: undefined,
       siteName: "spinair.com",
-    },
-    request,
-    response
+    }
   );
 
   return response;
