@@ -1,6 +1,6 @@
 import { initServer } from './initializer';
 import packageJson from '../../../../package.json';
-import { SettingsParamsServer } from '@sitecore-cloudsdk/core';
+import { ServerSettings } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
 import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
 import * as core from '@sitecore-cloudsdk/core';
@@ -37,7 +37,7 @@ jest.mock('debug', () => {
 describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
-  const settingsParams: SettingsParamsServer = {
+  const settingsParams: ServerSettings = {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
@@ -74,13 +74,12 @@ describe('initializer', () => {
   });
 
   describe('init Server', () => {
-
     afterEach(() => {
       jest.clearAllMocks();
     });
 
     it('should run all necessary functionality during init', async () => {
-      const eventsServer = await initServer(settingsParams, req, res);
+      const eventsServer = await initServer(req, res, settingsParams);
       const eventServerSettings = core.getSettingsServer();
 
       expect(typeof LIBRARY_VERSION).toBe('string');
@@ -92,14 +91,14 @@ describe('initializer', () => {
     });
 
     it('should not call handleCookie if enableServerCookie is false', async () => {
-      await initServer({ ...settingsParams, enableServerCookie: false }, req, res);
+      await initServer(req, res, { ...settingsParams, enableServerCookie: false });
 
       const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
 
       expect(handleServerCookieSpy).toHaveBeenCalledTimes(0);
     });
     it('should not call handleCookie if enableServerCookie is undefined', async () => {
-      await initServer(settingsParams, req, res);
+      await initServer(req, res, settingsParams);
 
       const handleServerCookieSpy = jest.spyOn(core, 'handleServerCookie');
 
@@ -108,10 +107,10 @@ describe('initializer', () => {
 
     it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace`, async () => {
       const debugMock = debug as unknown as jest.Mock;
-  
+
       initCoreSpy.mockImplementationOnce(() => Promise.resolve());
-      await initServer(settingsParams, req, res);
-  
+      await initServer(req, res, settingsParams);
+
       expect(debugMock).toHaveBeenCalled();
       expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
       expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsServer library initialized');
@@ -119,13 +118,13 @@ describe('initializer', () => {
 
     it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace and log the error`, async () => {
       const debugMock = debug as unknown as jest.Mock;
-  
+
       initCoreSpy.mockImplementationOnce(() => Promise.reject('Error'));
-  
+
       await expect(async () => {
-        await initServer(settingsParams, req, res);
+        await initServer(req, res, settingsParams);
       }).rejects.toThrow(`Error`);
-  
+
       expect(debugMock).toHaveBeenCalled();
       expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
       expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(
@@ -133,13 +132,5 @@ describe('initializer', () => {
       );
       expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(`Error`);
     });
-
-
-
   });
 });
-
-
-
-  
-

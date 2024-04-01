@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { SettingsParamsBrowser, SettingsParamsServer } from '@sitecore-cloudsdk/core';
+import { BrowserSettings, ServerSettings } from '@sitecore-cloudsdk/core';
 import { init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
@@ -9,13 +9,13 @@ export function EdgeProxySettings({ serverResponse }: { serverResponse: string }
     await init({ sitecoreEdgeContextId: ' ', siteName: '456' });
   };
   const handleUndefinedContextId = async () => {
-    await init({ siteName: '456' } as SettingsParamsBrowser);
+    await init({ siteName: '456' } as BrowserSettings);
   };
   const handleInvalidSiteName = async () => {
     await init({ sitecoreEdgeContextId: '123', siteName: ' ' });
   };
   const handleUndefinedSiteName = async () => {
-    await init({ sitecoreEdgeContextId: '123' } as SettingsParamsBrowser);
+    await init({ sitecoreEdgeContextId: '123' } as BrowserSettings);
   };
   const handleHappyPath = async () => {
     await init({ sitecoreEdgeContextId: '123', siteName: '456' });
@@ -134,16 +134,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   try {
-    await initServer(
-      {
-        sitecoreEdgeContextId,
-        siteName,
-        sitecoreEdgeUrl,
-        enableServerCookie,
-      } as SettingsParamsServer,
-      context.req,
-      context.res
-    );
+    await initServer(context.req, context.res, {
+      sitecoreEdgeContextId,
+      siteName,
+      sitecoreEdgeUrl,
+      enableServerCookie,
+    } as ServerSettings);
 
     return {
       props: {

@@ -1,6 +1,6 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { EPResponse, SettingsParamsBrowser } from '@sitecore-cloudsdk/core';
+import { EPResponse, BrowserSettings } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -27,7 +27,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
-const settingsParams: SettingsParamsBrowser = {
+const settingsParams: BrowserSettings = {
   sitecoreEdgeContextId: '123',
   cookieDomain: 'cDomain',
   siteName: '456',

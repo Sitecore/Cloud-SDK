@@ -21,18 +21,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     page: 'serverSideProps-custom',
   };
 
-  await init(
-    {
-      cookieDomain:
-        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toString() : 'localhost',
-      cookieExpiryDays: 400,
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      enableServerCookie: true,
-      siteName: process.env.SITE_ID || '',
-    },
-    context.req,
-    context.res
-  );
+  await init(context.req, context.res, {
+    cookieDomain: typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toString() : 'localhost',
+    cookieExpiryDays: 400,
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+    enableServerCookie: true,
+    siteName: process.env.SITE_ID || '',
+  });
 
   let EPResponse;
   try {

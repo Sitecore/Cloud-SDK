@@ -8,11 +8,11 @@ export interface Settings extends BasicSettings {
   sitecoreEdgeUrl: string;
 }
 
-export interface SettingsParamsBrowser extends SettingsParams {
+export interface BrowserSettings extends SettingsParams {
   enableBrowserCookie?: boolean;
 }
 
-export interface SettingsParamsServer extends SettingsParams {
+export interface ServerSettings extends SettingsParams {
   enableServerCookie?: boolean;
 }
 

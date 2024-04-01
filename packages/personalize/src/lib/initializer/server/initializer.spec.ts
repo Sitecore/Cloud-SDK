@@ -30,7 +30,7 @@ jest.mock('debug', () => {
 describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  const settingsParams: core.SettingsParamsServer = {
+  const settingsParams: core.ServerSettings = {
     sitecoreEdgeContextId: '456',
     cookieDomain: 'cDomain',
     enableServerCookie: true,
@@ -82,7 +82,7 @@ describe('initializer', () => {
   describe('init', () => {
     it('should initialize the server functionality', async () => {
       initCoreSpy.mockImplementationOnce(() => Promise.resolve());
-      await initServer(settingsParams, req, res);
+      await initServer(req, res, settingsParams);
       const settings = core.getSettingsServer();
       expect(settings).toBeDefined();
       expect(settings.sitecoreEdgeContextId).toBe('456');
@@ -96,7 +96,7 @@ describe('initializer', () => {
     const debugMock = debug as unknown as jest.Mock;
 
     initCoreSpy.mockImplementationOnce(() => Promise.resolve());
-    await initServer(settingsParams, req, res);
+    await initServer(req, res, settingsParams);
 
     expect(debugMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
@@ -109,7 +109,7 @@ describe('initializer', () => {
     initCoreSpy.mockImplementationOnce(() => Promise.reject('Error'));
 
     await expect(async () => {
-      await initServer(settingsParams, req, res);
+      await initServer(req, res, settingsParams);
     }).rejects.toThrow(`Error`);
 
     expect(debugMock).toHaveBeenCalled();

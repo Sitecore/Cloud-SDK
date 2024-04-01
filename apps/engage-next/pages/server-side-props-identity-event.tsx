@@ -20,18 +20,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }],
   };
 
-  await init(
-    {
-      cookieDomain:
-        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
-      cookieExpiryDays: 400,
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      enableServerCookie: true,
-      siteName: process.env.SITE_ID || '',
-    },
-    context.req,
-    context.res
-  );
+  await init(context.req, context.res, {
+    cookieDomain:
+      typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+    cookieExpiryDays: 400,
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+    enableServerCookie: true,
+    siteName: process.env.SITE_ID || '',
+  });
 
   let EPResponse;
   try {

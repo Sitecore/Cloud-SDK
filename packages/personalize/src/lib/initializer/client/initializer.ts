@@ -1,19 +1,19 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { SettingsParamsBrowser, getBrowserId, initCore, debug } from '@sitecore-cloudsdk/core';
+import { BrowserSettings, getBrowserId, initCore, debug } from '@sitecore-cloudsdk/core';
 import { ErrorMessages, LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 
 export let initPromise: Promise<void> | null = null;
 
 /**
  * Initiates the Engage library using the global settings added by the developer
- * @param settingsInput - Global settings added by the developer
+ * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function init(settingsInput: SettingsParamsBrowser): Promise<void> {
+export async function init(settings: BrowserSettings): Promise<void> {
   if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
 
   try {
-    initPromise = initCore(settingsInput);
+    initPromise = initCore(settings);
     await initPromise;
 
     debug(PERSONALIZE_NAMESPACE)('personalizeClient library initialized');

@@ -21,16 +21,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     };
   }
 
-  await init(
-    {
-      cookieExpiryDays: 400,
-      enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
-    },
-    req,
-    res
-  );
+  await init(req, res, {
+    cookieExpiryDays: 400,
+    enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+    siteName: process.env.SITE_ID || '',
+  });
 
   const timeoutParam = requestUrl.searchParams.get('timeout');
   const timeout = timeoutParam !== 'null' && timeoutParam !== 'undefined' ? Number(timeoutParam) : undefined;

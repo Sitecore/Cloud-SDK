@@ -25,7 +25,7 @@ jest.mock('debug', () => {
   };
 });
 
-const settingsParams: core.SettingsParamsBrowser = {
+const settingsParams: core.BrowserSettings = {
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
   siteName: '456',
@@ -176,7 +176,7 @@ describe('awaitInit', () => {
   it('should not throw if initPromise is a Promise', async () => {
     jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
 
-    const settingsParams: core.SettingsParamsBrowser = {
+    const settingsParams: core.BrowserSettings = {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',

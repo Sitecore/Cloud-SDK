@@ -2,7 +2,7 @@
 
 import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
 import { handleServerCookie } from '../cookie/handle-server-cookie';
-import { Settings, SettingsParamsServer } from '../settings/interfaces';
+import { Settings, ServerSettings } from '../settings/interfaces';
 import { createSettings } from '../settings/create-settings';
 import { debug } from '../debug/debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
@@ -45,7 +45,7 @@ export function getSettingsServer() {
  * @returns A Promise that resolves when initialization is complete.
  */
 export async function initCoreServer<Response extends MiddlewareNextResponse | HttpResponse>(
-  settingsInput: SettingsParamsServer,
+  settingsInput: ServerSettings,
   request: Request,
   response: Response
 ): Promise<void> {

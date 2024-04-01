@@ -36,7 +36,7 @@ jest.mock('debug', () => {
   };
 });
 
-const settingsParams: core.SettingsParamsBrowser = {
+const settingsParams: core.BrowserSettings = {
   cookieDomain: 'cDomain',
   siteName: '456',
   sitecoreEdgeContextId: '123',
@@ -152,7 +152,7 @@ describe('awaitInit', () => {
   it('should not throw if initPromise is a Promise', async () => {
     jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
 
-    const settingsParams: core.SettingsParamsBrowser = {
+    const settingsParams: core.BrowserSettings = {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -192,10 +192,7 @@ describe('debug library in events', () => {
     } catch (error) {
       expect(debugMock).toHaveBeenCalled();
       expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
-      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(
-        `Error on initializing eventsClient library: %o`
-      );
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(`Error on initializing eventsClient library: %o`);
     }
   });
-
 });

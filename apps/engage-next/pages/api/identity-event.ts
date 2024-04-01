@@ -19,16 +19,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     lastName: 'Doe',
   };
 
-  await init(
-    {
-      cookieExpiryDays: 400,
-      enableServerCookie: true,
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
-    },
-    req,
-    res
-  );
+  await init(req, res, {
+    cookieExpiryDays: 400,
+    enableServerCookie: true,
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+    siteName: process.env.SITE_ID || '',
+  });
 
   const EPResponse = await identity(req, event);
   res.status(200).json(EPResponse);

@@ -20,17 +20,13 @@ export async function middleware(request: NextRequest) {
   const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
   const sitecoreEdgeUrl = request?.nextUrl?.searchParams?.get('sitecoreEdgeUrl') ?? undefined;
 
-  await initEvents(
-    {
-      sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
-      cookieExpiryDays: 400,
-      enableServerCookie,
-      sitecoreEdgeUrl,
-      siteName: process.env.SITE_ID || '',
-    },
-    request,
-    response
-  );
+  await initEvents(request, response, {
+    sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+    cookieExpiryDays: 400,
+    enableServerCookie,
+    sitecoreEdgeUrl,
+    siteName: process.env.SITE_ID || '',
+  });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
@@ -101,15 +97,11 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    await initPersonalize(
-      {
-        sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-        siteName: process.env.SITE_ID || '',
-        sitecoreEdgeUrl,
-      },
-      request,
-      response
-    );
+    await initPersonalize(request, response, {
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
+      sitecoreEdgeUrl,
+    });
 
     const personalizeRes = await personalize(request, personalizeData);
     response.cookies.set('EPRequest', JSON.stringify(personalizeData));
@@ -117,15 +109,11 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
-    await initPersonalize(
-      {
-        sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-        siteName: process.env.SITE_ID || '',
-        sitecoreEdgeUrl,
-      },
-      request,
-      response
-    );
+    await initPersonalize(request, response, {
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+      siteName: process.env.SITE_ID || '',
+      sitecoreEdgeUrl,
+    });
 
     const personalizeData: PersonalizeData = {
       channel: 'WEB',

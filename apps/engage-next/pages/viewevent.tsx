@@ -130,20 +130,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-  await initServer(
-    {
-      cookieDomain:
-        typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
-      cookieExpiryDays: 400,
-      enableServerCookie:
-        typeof context.query.enableServerCookie === 'string' &&
-        context.query.enableServerCookie.toLowerCase() === 'true',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
-    },
-    context.req,
-    context.res
-  );
+  await initServer(context.req, context.res, {
+    cookieDomain:
+      typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
+    cookieExpiryDays: 400,
+    enableServerCookie:
+      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
+    siteName: process.env.SITE_ID || '',
+  });
 
   if (!noExt) eventData.extensionData = extensionData;
 

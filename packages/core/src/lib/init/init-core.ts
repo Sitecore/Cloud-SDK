@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { createCookie } from '../cookie/create-cookie';
 import { createSettings } from '../settings/create-settings';
-import { Settings, SettingsParamsBrowser } from '../settings/interfaces';
+import { Settings, BrowserSettings } from '../settings/interfaces';
 import { debug } from '../debug/debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 
@@ -37,7 +37,7 @@ let createCookiePromise: Promise<void> | null = null;
  * @param settingsInput - The settings input to configure the core settings.
  * @returns A Promise that resolves when initialization is complete.
  */
-export async function initCore(settingsInput: SettingsParamsBrowser): Promise<void> {
+export async function initCore(settingsInput: BrowserSettings): Promise<void> {
   debug(CORE_NAMESPACE)('coreClient library initialized');
 
   if (coreSettings === null) coreSettings = createSettings(settingsInput);
