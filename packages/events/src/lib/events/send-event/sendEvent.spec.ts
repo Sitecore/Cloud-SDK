@@ -35,7 +35,6 @@ const settingsObj: core.Settings = {
 };
 
 describe('EventApiClient', () => {
-
   const debugMock = debug as unknown as jest.Mock;
 
   beforeEach(() => {

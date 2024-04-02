@@ -27,15 +27,15 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
   return await fetch(eventUrl, fetchOptions)
     .then((response) => {
       debug(EVENTS_NAMESPACE)('Events response: %O', response);
-      return response.json()
+      return response.json();
     })
-    .then((data) => { 
+    .then((data) => {
       debug(EVENTS_NAMESPACE)('Events payload: %O', data);
       return data;
     })
     .catch((error) => {
       debug(EVENTS_NAMESPACE)('Error: events response: %O', error);
-      return null
+      return null;
     });
 }
 

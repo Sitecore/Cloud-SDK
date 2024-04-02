@@ -21,6 +21,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
   };
 });
 
@@ -675,8 +676,13 @@ describe('Test Personalizer Class', () => {
         `${core.SITECORE_EDGE_URL}/v1/personalize?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          headers: { 'Content-Type': 'application/json', 'X-Library-Version': LIBRARY_VERSION },
+          /* eslint-disable @typescript-eslint/naming-convention */
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Library-Version': LIBRARY_VERSION,
+            'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7',
+          },
+          /* eslint-enable @typescript-eslint/naming-convention */
           method: 'POST',
           signal: new AbortController().signal,
         }

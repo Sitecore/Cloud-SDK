@@ -15,6 +15,8 @@ export const API_VERSION = 'v1.2';
 
 export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
 
+export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
+
 export enum ErrorMessages {
   IE_0003 = '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.',
   IE_0008 = '[IE-0008] You must first initialize the "core" package. Run the "init" function.',

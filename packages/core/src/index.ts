@@ -16,6 +16,7 @@ export { validateSettings } from './lib/settings/validate-settings';
 export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export { handleGetSettingsError } from './lib/settings/handle-get-settings-error';
+export { generateCorrelationId } from './lib/correlation-id/generate-correlation-id';
 export { debug } from './lib/debug/debug';
 
 export {
@@ -25,6 +26,7 @@ export {
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
   SITECORE_EDGE_URL,
+  CORRELATION_ID_HEADER,
 } from './lib/consts';
 
 export type { EPResponse, Infer } from './lib/interfaces';

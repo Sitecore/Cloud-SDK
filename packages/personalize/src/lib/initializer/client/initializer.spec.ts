@@ -14,6 +14,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
   };
 });
 
@@ -39,7 +40,9 @@ describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
-  jest.spyOn(core, 'initCore');
+  const initCoreSpy = jest.spyOn(core, 'initCore');
+  initCoreSpy.mockResolvedValue();
+
   const getSettingsSpy = jest.spyOn(core, 'getSettings');
   jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
 
@@ -65,13 +68,7 @@ describe('initializer', () => {
       await init(settingsParams);
 
       expect(settingsParams.sitecoreEdgeContextId).toBe('123');
-      expect(settingsParams).toBeDefined();
-      expect(core.initCore).toHaveBeenCalledTimes(1);
-    });
-
-    it('should call all the necessary functions if all properties are set correctly', async () => {
-      await init(settingsParams);
-      expect(core.initCore).toHaveBeenCalledTimes(1);
+      expect(initCoreSpy).toHaveBeenCalledTimes(1);
     });
   });
 
@@ -146,7 +143,7 @@ describe('initializer', () => {
 
       expect(debugMock).toHaveBeenCalled();
       expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
-      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
+      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
     });
 
     it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:personalize' as a namespace when error occur`, async () => {

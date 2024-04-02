@@ -10,6 +10,8 @@ declare global {
   namespace Cypress {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
+      assertRequestHeader(testID: string, headerName: string, headerValue?: string): void;
+      assertLogs(testID: string, log: string): void;
       assertRequestHeaders(request: any, expectedReqHeaders: any): void;
       getLogOutput(): any;
       waitForRequest(alias: string): any;
@@ -27,6 +29,41 @@ declare global {
     args: [];
   }
 }
+
+// Asserts the provided header data from the stored file in fixtures,
+// the data is added by the Next app with the request decorators
+Cypress.Commands.add('assertRequestHeader', (testID: string, headerName: string, headerValue?: string) => {
+  cy.waitUntil(
+    () =>
+      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
+        expect(fileContents[testID].headers).to.have.property(headerName);
+
+        if (headerValue) expect(fileContents[testID].headers[headerName]).to.contain(headerValue);
+      }),
+    {
+      errorMsg: 'Error not found',
+      timeout: 15000,
+      interval: 100,
+    }
+  );
+});
+
+// Asserts the provided logs data from the stored file in fixtures,
+// the data is added by the Next app with the debug decorators
+Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
+  cy.waitUntil(
+    () =>
+      cy.readLocal('logsData.json').then((fileContents: Record<string, any>) => {
+        expect(fileContents).to.have.property(testID);
+        expect(fileContents[testID]).to.contain(log);
+      }),
+    {
+      errorMsg: 'Error not found',
+      timeout: 15000,
+      interval: 100,
+    }
+  );
+});
 
 //Overwrites cy.visit to check if the current baseurl belongs to cdn app in order to add the respective .html extension
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {

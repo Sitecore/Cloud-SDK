@@ -4,6 +4,7 @@ import type { NextRequest } from 'next/server';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
 import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
+import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -108,6 +109,24 @@ export async function middleware(request: NextRequest) {
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
   }
 
+  if (request.nextUrl.pathname.startsWith('/correlation-id')) {
+    const testID = request?.nextUrl?.searchParams?.get('testID');
+
+    if (testID === 'sendPersonalizeFromMiddlewareWithCorrelationID') {
+      const personalizeData: PersonalizeData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        email: 'test_personalize_callflows@test.com',
+      };
+
+      decorateAll(testID);
+      await personalize(request, personalizeData);
+      resetAllDecorators();
+    }
+  }
+
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalize(request, response, {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
@@ -155,5 +174,6 @@ export const config = {
     '/middleware-personalize-geo-partial',
     '/middleware-personalize-geo-no-data',
     '/middleware-personalize-geo-omit',
+    '/correlation-id',
   ],
 };

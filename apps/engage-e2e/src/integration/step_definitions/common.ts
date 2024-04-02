@@ -146,6 +146,38 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
   cy.get('body').should('be.visible');
 });
 
+defineStep(
+  'the {string} page is loaded with {string} name and {string} value query parameter',
+  (page: string, paramName: string, paramValue: string) => {
+    // eslint-disable-next-line max-len
+    cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize*`).as(
+      'personalizeRequest'
+    );
+    // eslint-disable-next-line max-len
+    cy.intercept(
+      'POST',
+      `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+        'API_VERSION'
+      )}/events*`
+    ).as('eventRequest');
+
+    const path = `${page}?${paramName}=${paramValue}`;
+
+    cy.visit(path, {
+      onBeforeLoad(win) {
+        cy.stub(win.console, 'warn').as('consoleWarn');
+      },
+    });
+    cy.wait('@initialCall');
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
+    cy.get('body')
+      .should('be.visible')
+      .then(() => cy.writeLocal(`error.txt`, errorMessage));
+    cy.get('body').should('be.visible');
+  }
+);
+
 //Visit page with the provided query parameters
 defineStep('the {string} page is loaded with query parameters', (page: string, datatable: any) => {
   // eslint-disable-next-line max-len
@@ -363,4 +395,19 @@ Then('the request is sent with staging url', () => {
   cy.wait('@initialCallStg').then(({ request }) => {
     expect(request.url).to.contain(Cypress.env('HOSTNAME_STAGING'));
   });
+});
+
+defineStep('the request with id {string} will contain the {string} header', (testID: string, headerName: string) => {
+  cy.assertRequestHeader(testID, headerName);
+});
+
+defineStep(
+  'the request with id {string} will contain the {string} header with {string} value',
+  (testID: string, headerName: string, headerValue: string) => {
+    cy.assertRequestHeader(testID, headerName, headerValue);
+  }
+);
+
+defineStep('the request with id {string} will contain {string} log', (testID: string, log: string) => {
+  cy.assertLogs(testID, log);
 });

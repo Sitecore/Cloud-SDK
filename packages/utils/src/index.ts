@@ -14,6 +14,7 @@ export { flattenObject } from './lib/converters/flatten-object';
 export { isShortISODateString } from './lib/validators/is-short-iso-date-string';
 export { isValidEmail } from './lib/validators/is-valid-email';
 export { omit } from './lib/objects/omit';
+export { generateV4UUID } from './lib/generators/generate-v4-uuid';
 
 export { ErrorMessages } from './lib/consts';
 
@@ -25,5 +26,6 @@ export type {
   HttpRequest,
   BasicTypes,
 } from './lib/interfaces';
+
 export type { Cookie, CookieProperties } from './lib/cookies/interfaces';
 export type { NestedObject, FlattenedObject } from './lib/converters/flatten-object';

@@ -12,6 +12,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
   };
 });
 
@@ -226,6 +227,7 @@ describe('sendCallFlowsRequest', () => {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/json',
         'X-Library-Version': LIBRARY_VERSION,
+        'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7',
         /* eslint-enable @typescript-eslint/naming-convention */
       },
       method: 'POST',
