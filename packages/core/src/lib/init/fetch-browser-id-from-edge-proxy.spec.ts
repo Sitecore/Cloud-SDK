@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
+import { ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import { EPResponse } from '../interfaces';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
 import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
@@ -89,8 +89,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
   it('should throw IE-0003 error if fetch fails', async () => {
     global.fetch = jest.fn().mockRejectedValue(undefined);
 
-    const expectedError =
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+    const expectedError = ErrorMessages.IE_0003;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId);
@@ -100,8 +99,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
   it('should throw IE-0003 error if fetch returns null - fetchWithTimeout', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockResolvedValue(null);
 
-    const expectedError =
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+    const expectedError = ErrorMessages.IE_0003;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
@@ -114,8 +112,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       .spyOn(utils, 'fetchWithTimeout')
       .mockRejectedValueOnce({ message: 'random error' });
 
-    const expectedError =
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.';
+    const expectedError = ErrorMessages.IE_0003;
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
@@ -125,25 +122,23 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should throw [IV-0006] when we pass negative timeout value', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.',
+      message: utils.ErrorMessages.IV_0006,
     });
 
     expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, -100);
-    }).rejects.toThrowError(
-      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
-    );
+    }).rejects.toThrow(utils.ErrorMessages.IV_0006);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should throw [IE-0002] when we get an AbortError', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.',
+      message: utils.ErrorMessages.IE_0002,
     });
 
     await expect(async () => {
       await fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId, 100);
-    }).rejects.toThrowError('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+    }).rejects.toThrow(utils.ErrorMessages.IE_0002);
     expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
   });
 });

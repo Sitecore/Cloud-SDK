@@ -1,4 +1,5 @@
 import { fetchWithTimeout } from './fetch-with-timeout'; // Update with your actual module path
+import { ErrorMessages } from './consts';
 
 describe('fetchWithTimeout', () => {
   const url = 'https://example.com/api/data';
@@ -43,23 +44,19 @@ describe('fetchWithTimeout', () => {
   it('should throw an error if the timeout value is invalid (negative)', async () => {
     const timeout = -100; // Negative timeout value
 
-    await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
-    );
+    await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(ErrorMessages.IV_0006);
   });
 
   it('should throw an error if the timeout value is not an integer', async () => {
     const timeout = 5000.5; // Non-integer timeout value
 
-    await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(
-      '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
-    );
+    await expect(fetchWithTimeout(url, timeout, fetchOptions)).rejects.toThrow(ErrorMessages.IV_0006);
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
+    const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError';
 
     global.fetch = jest.fn(() => Promise.reject(abortError));
@@ -70,22 +67,22 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeUndefined();
       expect(error).toBeInstanceOf(Error);
       expect(abortError.name).toBe('AbortError');
-      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(error.message).toBe(ErrorMessages.IE_0002);
     }
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails version 2', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
+    const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError';
 
     global.fetch = jest.fn(() => Promise.reject(abortError));
 
     const result = await fetchWithTimeout(url, timeout, fetchOptions).catch((error) => {
       expect(error).toBeInstanceOf(Error);
-      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
-      expect(error.message).toBe('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      expect(error.message).toBe(ErrorMessages.IE_0002);
+      expect(error.message).toBe(ErrorMessages.IE_0002);
     });
 
     expect(result).toBeUndefined();
@@ -94,7 +91,7 @@ describe('fetchWithTimeout', () => {
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
+    const abortError = new Error(ErrorMessages.IE_0002);
     abortError.name = 'AbortError ';
 
     global.fetch = jest.fn(() => Promise.reject(abortError));
@@ -102,13 +99,13 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow(ErrorMessages.IE_0002);
   });
 
   it('should catch an error with the appropriate message error if the fetch request fails', async () => {
     const timeout = 1000; // 1 second timeout
 
-    const abortError = new Error('Timeout exceeded. The server did not respond within the allotted time.');
+    const abortError = new Error(ErrorMessages.IV_0006);
     abortError.name = '  ';
 
     global.fetch = jest.fn(() => Promise.reject(abortError));
@@ -116,7 +113,7 @@ describe('fetchWithTimeout', () => {
     expect(async () => {
       const result = await fetchWithTimeout(url, timeout, fetchOptions);
       expect(result).toBeNull();
-    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow(ErrorMessages.IE_0002);
   });
 
   it('should catch an error and return null if the fetch request fails', async () => {
@@ -147,7 +144,7 @@ describe('fetchWithTimeout', () => {
       expect(result).toBeNull();
       expect(abortError.name.length).toBeGreaterThan(0);
       expect(abortError.name).toEqual('abc');
-    }).not.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+    }).not.toThrow(ErrorMessages.IE_0002);
   });
 
   it('should return bad object if response has no .json method', async () => {

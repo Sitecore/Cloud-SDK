@@ -16,6 +16,8 @@ export { validateSettings } from './lib/settings/validate-settings';
 export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export { handleGetSettingsError } from './lib/settings/handle-get-settings-error';
+export { debug } from './lib/debug/debug';
+
 export {
   API_VERSION,
   COOKIE_NAME_PREFIX,
@@ -27,4 +29,3 @@ export {
 
 export type { EPResponse, Infer } from './lib/interfaces';
 export type { CookieSettings, Settings, BrowserSettings, ServerSettings } from './lib/settings/interfaces';
-export { debug } from './lib/debug/debug';

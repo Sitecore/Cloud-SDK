@@ -6,6 +6,7 @@ import * as utils from '@sitecore-cloudsdk/utils';
 import * as createSetting from '../settings/create-settings';
 import debug from 'debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
+import { ErrorMessages } from '../consts';
 
 // Mock the dependencies
 jest.mock('../cookie/create-cookie', () => ({
@@ -129,8 +130,6 @@ describe('getSettings', () => {
     expect(result).toEqual(mockSettings);
   });
   it('should throw an error if the core settings are not initialized', () => {
-    expect(() => getSettings()).toThrow(
-      `[IE-0008] You must first initialize the "core" package. Run the "init" function.`
-    );
+    expect(() => getSettings()).toThrow(ErrorMessages.IE_0008);
   });
 });

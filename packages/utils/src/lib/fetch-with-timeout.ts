@@ -1,5 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
+import { ErrorMessages } from './consts';
+
 /**
  * Fetches data from the specified URL within the given timeout period.
  *
@@ -14,8 +16,7 @@ export async function fetchWithTimeout(
   timeout: number,
   fetchOptions: RequestInit
 ): Promise<Response | null> {
-  if (!Number.isInteger(timeout) || timeout < 0)
-    throw new Error('[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.');
+  if (!Number.isInteger(timeout) || timeout < 0) throw new Error(ErrorMessages.IV_0006);
 
   const abortController = new AbortController();
   const signal = abortController.signal;
@@ -30,8 +31,7 @@ export async function fetchWithTimeout(
       return response;
     })
     .catch((error) => {
-      if (error.name === 'AbortError')
-        throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      if (error.name === 'AbortError') throw new Error(ErrorMessages.IE_0002);
       return null;
     });
 }

@@ -4,6 +4,7 @@ import { createSettings } from '../settings/create-settings';
 import { Settings, BrowserSettings } from '../settings/interfaces';
 import { debug } from '../debug/debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
+import { ErrorMessages } from '../consts';
 
 /**
  * Internal settings object to be used by all functions in module caching.
@@ -22,7 +23,7 @@ let coreSettings: Settings | null = null;
  */
 export function getSettings() {
   if (!coreSettings) {
-    throw Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+    throw Error(ErrorMessages.IE_0008);
   }
   return coreSettings;
 }

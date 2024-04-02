@@ -1,3 +1,4 @@
+import { ErrorMessages } from '../consts';
 import * as getSettingsServer from '../init/init-core-server';
 import { handleGetSettingsError } from './handle-get-settings-error';
 
@@ -27,7 +28,7 @@ describe('handleGetSettingsError', () => {
 
   it('should throw the corresponding error passed as an argument when getSettingsServer throws an error', () => {
     getSettingsServerSpy.mockImplementation(() => {
-      throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+      throw new Error(ErrorMessages.IE_0008);
     });
     expect(() => handleGetSettingsError(getSettingsServer.getSettingsServer, 'error message to throw')).toThrow(
       'error message to throw'

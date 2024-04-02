@@ -6,6 +6,7 @@ import { Settings, ServerSettings } from '../settings/interfaces';
 import { createSettings } from '../settings/create-settings';
 import { debug } from '../debug/debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
+import { ErrorMessages } from '../consts';
 
 /**
  * Internal settings object to be used by all functions in module caching.
@@ -28,7 +29,7 @@ export function setCoreSettings(settings: Settings) {
  */
 export function getSettingsServer() {
   if (!coreSettings) {
-    throw Error('[IE-0008] You must first initialize the "core" package. Run the "init" function.');
+    throw Error(ErrorMessages.IE_0008);
   }
 
   return coreSettings;

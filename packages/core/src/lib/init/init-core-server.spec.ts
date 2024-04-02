@@ -5,6 +5,7 @@ import * as handleServer from '../cookie/handle-server-cookie';
 import * as createSettings from '../settings/create-settings';
 import debug from 'debug';
 import { CORE_NAMESPACE } from '../debug/namespaces';
+import { ErrorMessages } from '../consts';
 
 jest.mock('../cookie/handle-server-cookie');
 
@@ -47,9 +48,7 @@ describe('core-server', () => {
 
   describe('getSettingsServer', () => {
     it('should throw an error when getSettingsServer are not initialized', () => {
-      expect(() => getSettingsServer()).toThrow(
-        '[IE-0008] You must first initialize the "core" package. Run the "init" function.'
-      );
+      expect(() => getSettingsServer()).toThrow(ErrorMessages.IE_0008);
     });
 
     it('should return valid settings when they are initialized', async () => {
@@ -61,7 +60,7 @@ describe('core-server', () => {
         expect(_settings?.sitecoreEdgeContextId).toBe('0123');
         expect(handleServerSpy).toHaveBeenCalledTimes(0);
         expect(handleServerSpy).not.toHaveBeenCalled();
-      }).not.toThrow('[IE-0008] You must first initialize the "core" package. Run the "init" function.');
+      }).not.toThrow(ErrorMessages.IE_0008);
     });
   });
   describe('initCoreServer', () => {

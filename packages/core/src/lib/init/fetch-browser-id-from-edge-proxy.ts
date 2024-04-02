@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
-import { LIBRARY_VERSION } from '../consts';
+import { fetchWithTimeout, ErrorMessages as UtilsErrorMessages } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, LIBRARY_VERSION } from '../consts';
 import { ProxySettings, EPResponse } from '../interfaces';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';
 
@@ -31,7 +31,7 @@ export async function fetchBrowserIdFromEdgeProxy(
         return (response && response.json()) || null;
       })
       .catch((err) => {
-        if (err.message.includes('IV-0006') || err.message.includes('IE-0002')) {
+        if (err.message === UtilsErrorMessages.IV_0006 || err.message === UtilsErrorMessages.IE_0002) {
           throw new Error(err.message);
         }
         return null;
@@ -42,10 +42,7 @@ export async function fetchBrowserIdFromEdgeProxy(
       .catch(() => undefined);
   }
 
-  if (!payload?.ref)
-    throw new Error(
-      '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
-    );
+  if (!payload?.ref) throw new Error(ErrorMessages.IE_0003);
 
   const { ref: browserId }: EPResponse = payload;
   return { browserId };
