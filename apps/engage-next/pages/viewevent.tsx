@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { PageViewData, pageView, init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
-import { NestedObject } from '@sitecore-cloudsdk/utils';
+import { NestedObject, getCookie } from '@sitecore-cloudsdk/utils';
 import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
 
@@ -13,6 +13,8 @@ interface ViewEventProps {
 }
 
 export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
+  const [response, setResponse] = useState('');
+
   useEffect(() => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const includeUTMSearchParameter = eventAttributes.get('includeUTMParameters');
@@ -21,10 +23,7 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     const extensionDataNested = eventAttributes.has('nested') ? JSON.parse(eventAttributes.get('nested')!) : {};
     const noExt = eventAttributes.get('no-ext') === 'true';
 
-    const eventData: PageViewData = {
-      channel: 'WEB',
-      currency: 'EUR',
-    };
+    const eventData: PageViewData = {};
 
     if (eventAttributes.get('variantid')) {
       eventData.pageVariantId = eventAttributes.get('variantid') || '';
@@ -68,15 +67,43 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     initEventsSetting();
   }, []);
 
+  const sendEventWithoutChannelAndCurencyFromMiddleware = async () => {
+    await fetch('/middleware-view-event');
+
+    const cookie = getCookie(document?.cookie, 'ViewEventRequestCookie');
+    setResponse(decodeURIComponent(cookie?.value || ''));
+  };
+
   if (res === 'Error') {
     throw new Error(`[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.`);
   }
+
+  const sendEventWithChannelAndCurreny = () => {
+    const eventData: PageViewData = {
+      channel: 'WEB',
+      currency: 'EUR',
+    };
+
+    pageView(eventData);
+  };
 
   return (
     <>
       <div>
         <h1 data-testid='viewEventPageTitle'>View Event Page</h1>
       </div>
+      <button
+        type='button'
+        data-testid='sendEventWithChannelAndCurreny'
+        onClick={sendEventWithChannelAndCurreny}>
+        Send Event With Channel And Currency Params
+      </button>
+      <button
+        type='button'
+        data-testid='requestEventWithoutChannelAndCurencyFromMiddleware'
+        onClick={sendEventWithoutChannelAndCurencyFromMiddleware}>
+        Send Event From Middleware Without Channel And Currency Params
+      </button>
       <div>
         <label htmlFor='response'>response</label>
         <input
@@ -85,6 +112,7 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
           data-testid='response'
           name='response'
           defaultValue={res}
+          value={response}
         />
       </div>
       <div>

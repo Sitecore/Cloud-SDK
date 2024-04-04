@@ -55,7 +55,7 @@ export class CustomEvent extends BaseEvent {
  */
 export interface CustomEventArguments {
   sendEvent: SendEvent;
-  eventData: CustomEventData;
+  eventData: EventData;
   id: string;
   settings: Settings;
 }
@@ -73,14 +73,6 @@ export interface CustomEventPayload extends NestedObject {
  * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
 export interface EventData extends EventAttributesInput, NestedObject {
-  type: string;
-  extensionData?: ExtensionData;
-}
-
-/**
- * Internal interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
- */
-interface CustomEventData extends Partial<EventAttributesInput>, NestedObject {
   type: string;
   extensionData?: ExtensionData;
 }

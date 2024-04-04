@@ -4,19 +4,18 @@ import { Given, Then } from '@badeball/cypress-cucumber-preprocessor';
 import { Utils } from '../../support/utils';
 
 const expectedEventData = {
-  channel: 'WEB',
   clientKey: Cypress.env('CLIENT_KEY'),
   type: '',
-  };
+};
 
 Then('EP returns the event with {string} type', (eventType: string, datatable) => {
   expectedEventData.type = eventType;
   const expectedReq = Utils.createExpectedEventReq(eventType, datatable);
 
   //eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const expectedArbitraryData = (({ pos, type, channel, ...o }) => o)(expectedReq);
+  const expectedArbitraryData = (({ type, ...o }) => o)(expectedReq);
   cy.requestGuestContext().then((actualEvent: { arbitraryData: any }) => {
-    if(expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);  
+    if (expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);
     expect(actualEvent).to.deep.contain(expectedEventData);
   });
 });
@@ -28,7 +27,7 @@ Then('EP returns the event with parameters:', (params: string) => {
   const expectedArbitraryData = (({ type, ...o }) => o)(parameters);
   expectedEventData.type = parameters.type;
   cy.requestGuestContext().then((actualEvent: { arbitraryData: any }) => {
-    if(expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);  
+    if (expectedArbitraryData.ext) expect(actualEvent.arbitraryData.ext).to.include(expectedArbitraryData.ext);
     expect(actualEvent).to.deep.contain(expectedEventData);
   });
 });

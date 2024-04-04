@@ -30,7 +30,7 @@ When('multiple events are queued with {string} types', (eventOrder: string) => {
   });
 });
 
-When('an even with null type is added to queue', () => {
+When('an event with null type is added to queue', () => {
   cy.get("[data-testid='typeInput']").clear();
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);

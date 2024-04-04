@@ -261,5 +261,30 @@ describe('CustomEvent', () => {
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('should send the event without channel and currency info', async () => {
+      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+
+      const eventData = {
+        type: 'CUSTOM_TYPE',
+      };
+
+      const expectedData = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        browser_id: id,
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        client_key: '',
+        language: 'EN',
+        page: 'races',
+        pos: '',
+        type: 'CUSTOM_TYPE',
+      };
+
+      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+      expect(languageSpy).toHaveBeenCalledTimes(1);
+      expect(pageNameSpy).toHaveBeenCalledTimes(1);
+    });
   });
 });

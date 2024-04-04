@@ -157,7 +157,7 @@ Scenario: Developer sends VIEW event without ext
     Given the '/viewevent' page is loaded with query parameters
         | no-ext |
         | true   |
-    Then the event is sent without ext
+   Then the event is sent without ext
 
 Scenario Outline: Developer creates VIEW event with ext attributes that exceed the limit
     Given the '/viewevent' page is loaded with query parameters
@@ -170,3 +170,20 @@ Scenario Outline: Developer creates VIEW event with ext attributes that exceed t
         | 51                   |                |
         | 52                   |                |
         | 48                   | {"a":"a","b":1,"c":true} |
+
+Scenario: Developer sends VIEW event without channel and currency params and EP responds successfully without these params existing in payload
+    Given the '/viewevent' page is loaded
+    Then EP API responds with '201' status code
+    And the event is sent without channel and currency
+
+Scenario: Developer sends VIEW event with channel and currency params and EP responds successfully with these params existing in payload
+    Given the '/viewevent' page is loaded
+    And the 'sendEventWithChannelAndCurreny' button is clicked
+    Then EP API responds with '201' status code
+    And the event is sent with 'WEB' channel and 'EUR' currency
+
+Scenario: Developer sends VIEW event from Middleware without channel and currency params
+    Given the '/viewevent' page is loaded
+    And the 'requestEventWithoutChannelAndCurencyFromMiddleware' button is clicked
+    Then we display the event's request params to UI not containing 'channel' parameter
+    And we display the event's request params to UI not containing 'currency' parameter

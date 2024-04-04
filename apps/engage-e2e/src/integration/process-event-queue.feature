@@ -27,7 +27,7 @@ Scenario: Developer sends enqueued event with ext attributes
 
 Scenario Outline: Developer sends multiple enqueued events while one of them is failing to be sent
     Given the '/eventqueue' page is loaded
-    And an even with null type is added to queue
+    And an event with null type is added to queue
     And multiple events are queued with 'TEST_TYPE1, TEST_TYPE2' types 
     When the 'sendEventsFromQueue' button is clicked
     Then the multiple events are sent in the respective order: "null, TEST_TYPE1, TEST_TYPE2" 

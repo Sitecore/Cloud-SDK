@@ -19,13 +19,6 @@ export class Utils {
       eventAttr.type = eventType.toUpperCase();
     }
 
-    //Default attributes if not specified from test level (feature files)
-    if (!eventAttr.currency) {
-      eventAttr.currency = 'EUR';
-    }
-    if (!eventAttr.channel) {
-      eventAttr.channel = 'WEB';
-    }
     if (!Object.getOwnPropertyDescriptor(eventAttr, 'language') && eventType != 'VIEW') {
       eventAttr.language = 'EN';
     }

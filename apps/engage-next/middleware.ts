@@ -31,8 +31,6 @@ export async function middleware(request: NextRequest) {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
-    channel: 'WEB',
-    currency: 'EUR',
     updateMiddleware,
   };
 
@@ -50,6 +48,8 @@ export async function middleware(request: NextRequest) {
       extParam: 'middlewareTest',
     };
     await pageView(request, { ...basicEventData, extensionData });
+
+    response.cookies.set('ViewEventRequestCookie', capturedRequestBody.pop() as unknown as string);
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {

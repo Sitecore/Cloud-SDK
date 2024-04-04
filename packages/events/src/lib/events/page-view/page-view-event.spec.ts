@@ -539,4 +539,36 @@ describe('PageViewEvent', () => {
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
   });
+
+  describe('send event with specific params', () => {
+    let pageViewData = {
+      language: 'EN',
+      page: 'races',
+      includeUTMParameters: false,
+    };
+
+    let expectedData = {
+      browser_id: id,
+      client_key: '',
+      language: 'EN',
+      page: 'races',
+      pos: '',
+      type: 'VIEW',
+    };
+
+    it(`should send an event without 'channel' and currency 'params'`, async () => {
+      callPageEvent(sendEvent, pageViewData, id, settings);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+    });
+
+    it(`should send an event with 'channel' and currency 'params'`, async () => {
+      pageViewData = { ...pageViewData, ...{ channel: 'WEB', currency: 'EUR' } };
+      expectedData = { ...expectedData, ...{ channel: 'WEB', currency: 'EUR' } };
+
+      callPageEvent(sendEvent, pageViewData, id, settings);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+    });
+  });
 });

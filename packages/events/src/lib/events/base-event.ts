@@ -51,4 +51,4 @@ export interface BasePayload {
   pos: string;
 }
 
-type BaseEventData = Partial<EventAttributesInput>;
+type BaseEventData = EventAttributesInput;

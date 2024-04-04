@@ -4,7 +4,13 @@
 import { When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 beforeEach(() => {
-  // eslint-disable-next-line max-len
+  cy.intercept(
+    'POST',
+    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
+      'API_VERSION'
+    )}/events*`
+  ).as('viewEventRequest');
+
   cy.intercept(
     `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
       'API_VERSION'
@@ -26,12 +32,6 @@ defineStep('the pageView function is called', (datatable: any) => {
 
 // Scenario: Developer uses pageView to send a VIEW event with referrer
 When('the {string} page is loaded with a different document.referrer hostname', (page: string) => {
-  // eslint-disable-next-line max-len
-  cy.intercept(
-    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
-      'API_VERSION'
-    )}/events*`
-  ).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -50,19 +50,13 @@ When('the {string} page is loaded with a different document.referrer hostname', 
 });
 
 Then('the event is sent with the referrer', () => {
-  cy.waitForRequest('@eventRequest').then((request: any) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
     expect(request.body.referrer).to.eq('https://referrer.com/test?q=test');
   });
 });
 
 // Scenario: Developer uses pageView to send a VIEW event without referrer
 When('the {string} page is loaded with the same document.referrer hostname', (page: string) => {
-  // eslint-disable-next-line max-len
-  cy.intercept(
-    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
-      'API_VERSION'
-    )}/events*`
-  ).as('eventRequest');
   cy.visit(page, {
     onBeforeLoad: (contentWindow: Cypress.AUTWindow) => {
       Object.defineProperty(contentWindow.document, 'referrer', {
@@ -81,13 +75,13 @@ When('the {string} page is loaded with the same document.referrer hostname', (pa
 });
 
 Then('the event is sent without the referrer', () => {
-  cy.waitForRequest('@eventRequest').then((request: any) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
     expect(request.body.referrer).to.equal(undefined);
   });
 });
 
 Then('the event is sent with the values inferred from window.location.pathname', () => {
-  cy.waitForRequest('@eventRequest').then((request: any) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
     expect(request.body.page).to.equal('about');
   });
 });
@@ -129,7 +123,7 @@ When('the cookies are removed from the browser', () => {
 
 Then('the event is sent with empty browserId', () => {
   cy.get('[data-testid="sendEvent"]').click();
-  cy.waitForRequest('@eventRequest').then((request: any) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
     expect(request.body.browser_id).to.equal('');
   });
 });
@@ -145,13 +139,29 @@ When('a cookie exists on the page with the respective {string} environment conte
 });
 
 Then('the bid value set in the cookie for the user is returned', () => {
-  // eslint-disable-next-line max-len
-  cy.intercept(
-    `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(
-      'API_VERSION'
-    )}/events*`
-  ).as('eventRequest');
-  cy.waitForRequest('@eventRequest').then((request: any) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
     expect(request.body.browser_id).not.be.empty;
+  });
+});
+
+Then("we display the event's request params to UI not containing {string} parameter", (param: string) => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(3000);
+  cy.get("[data-testid='response']").then((el: any) => {
+    expect(el.val()).to.not.contain(param);
+  });
+});
+
+Then('the event is sent without channel and currency', () => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
+    expect(request.body.channel).to.eq(undefined);
+    expect(request.body.currency).to.eq(undefined);
+  });
+});
+
+Then('the event is sent with {string} channel and {string} currency', (channel: string, currency: string) => {
+  cy.waitForRequest('@viewEventRequest').then((request: any) => {
+    expect(request.body.channel).to.eq(channel);
+    expect(request.body.currency).to.eq(currency);
   });
 });

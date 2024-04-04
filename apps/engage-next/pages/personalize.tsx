@@ -4,6 +4,7 @@ import { PersonalizeData, personalize } from '@sitecore-cloudsdk/personalize/bro
 import { useState } from 'react';
 import { GetServerSidePropsContext } from 'next';
 import { capturedDebugLogs } from '../utils/debugLogs';
+import { getCookie } from '@sitecore-cloudsdk/utils';
 
 export default function PersonalizeCall({
   serverSidePropsRes,
@@ -20,6 +21,8 @@ export default function PersonalizeCall({
     page: 'personalize',
   });
 
+  const [response, setResponse] = useState('');
+
   function getParamsValue(paramsValue: string) {
     let params = {};
     try {
@@ -30,23 +33,10 @@ export default function PersonalizeCall({
     return params;
   }
 
-  const getEPPersonalizeRequestCookie = () => {
-    const EPPersonalizeRequestCookie =
-      document?.cookie
-        ?.split('; ')
-        ?.find((cookie) => cookie.split('=')[0] === 'EPPersonalizeRequestCookie')
-        ?.split('EPPersonalizeRequestCookie=')[1] || '';
-
-    const cookie = decodeURIComponent(EPPersonalizeRequestCookie);
-    return cookie;
-  };
-
   const sendRequestToNextApi = async () => {
     const response = await fetch(`/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}`);
     const EPResponse = await response.json();
-
-    const res = document.getElementById('response') as HTMLInputElement;
-    res.value = JSON.stringify(EPResponse.EPResponse);
+    setResponse(JSON.stringify(EPResponse.EPResponse));
   };
 
   const sendUTMParamsManuallyToApi = async () => {
@@ -54,9 +44,7 @@ export default function PersonalizeCall({
       `/api/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true`
     );
     const EPResponse = await response.json();
-
-    const res = document.getElementById('response') as HTMLInputElement;
-    res.value = EPResponse.capturedDebugLogs;
+    setResponse(EPResponse.capturedDebugLogs);
   };
 
   const sendUTMParamsFromUrlToApi = async () => {
@@ -65,9 +53,7 @@ export default function PersonalizeCall({
     );
 
     const EPResponse = await response.json();
-
-    const res = document.getElementById('response') as HTMLInputElement;
-    res.value = EPResponse.capturedDebugLogs;
+    setResponse(EPResponse.capturedDebugLogs);
   };
 
   const sendBothUTMParamsToApi = async () => {
@@ -77,17 +63,14 @@ export default function PersonalizeCall({
     );
 
     const EPResponse = await response.json();
-
-    const res = document.getElementById('response') as HTMLInputElement;
-    res.value = EPResponse.capturedDebugLogs;
+    setResponse(EPResponse.capturedDebugLogs);
   };
 
   const sendUTMParamsManuallyToMiddleware = async () => {
     await fetch(`/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true`);
 
-    const res = document.getElementById('response') as HTMLInputElement;
-    const cookie = getEPPersonalizeRequestCookie();
-    res.value = cookie;
+    const cookie = getCookie(document?.cookie, 'EPPersonalizeRequestCookie');
+    setResponse(decodeURIComponent(cookie?.value || ''));
   };
 
   const sendUTMParamsFromUrlToMiddleware = async () => {
@@ -95,9 +78,8 @@ export default function PersonalizeCall({
       `/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&utm_campaign=campaign4&utm_source=test4`
     );
 
-    const res = document.getElementById('response') as HTMLInputElement;
-    const cookie = getEPPersonalizeRequestCookie();
-    res.value = cookie;
+    const cookie = getCookie(document?.cookie, 'EPPersonalizeRequestCookie');
+    setResponse(decodeURIComponent(cookie?.value || ''));
   };
 
   const sendBothUTMParamsToMiddleware = async () => {
@@ -105,9 +87,8 @@ export default function PersonalizeCall({
       `/personalize?friendlyId=${personalizeData['friendlyId']}&timeout=${timeout}&includeUTMParams=true&utm_campaign=campaign5&utm_source=test5`
     );
 
-    const res = document.getElementById('response') as HTMLInputElement;
-    const cookie = getEPPersonalizeRequestCookie();
-    res.value = cookie;
+    const cookie = getCookie(document?.cookie, 'EPPersonalizeRequestCookie');
+    setResponse(decodeURIComponent(cookie?.value || ''));
   };
 
   return (
@@ -165,9 +146,7 @@ export default function PersonalizeCall({
           data-testid='requestPersonalizeFromClient'
           onClick={async () => {
             const response = await personalize(personalizeData as unknown as PersonalizeData);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize from Client{' '}
         </button>
@@ -176,9 +155,7 @@ export default function PersonalizeCall({
           data-testid='requestPersonalizeFromClientWithUA'
           onClick={async () => {
             const response = await personalize(personalizeData as unknown as PersonalizeData);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize from Client with UA
         </button>
@@ -189,9 +166,7 @@ export default function PersonalizeCall({
           onClick={async () => {
             personalizeData.language = '';
             const response = await personalize(personalizeData as unknown as PersonalizeData);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize from Client With Empty String Language{' '}
         </button>
@@ -202,9 +177,7 @@ export default function PersonalizeCall({
           onClick={async () => {
             personalizeData.language = undefined;
             const response = await personalize(personalizeData as unknown as PersonalizeData);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize from Client With Undefined Language{' '}
         </button>
@@ -214,9 +187,7 @@ export default function PersonalizeCall({
           data-testid='requestPersonalizeFromClientWithTimeout'
           onClick={async () => {
             const response = await personalize(personalizeData as unknown as PersonalizeData, { timeout });
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize with timeout
         </button>
@@ -230,9 +201,7 @@ export default function PersonalizeCall({
               geo: { city: 'T1', country: 'T2', region: 'T3' },
             };
             const response = await personalize(personalizeDataWithGeo);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize with geo
         </button>
@@ -246,9 +215,7 @@ export default function PersonalizeCall({
               geo: { city: 'T1' },
             };
             const response = await personalize(personalizeDataWithPartialGeo);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize with partial geo
         </button>
@@ -262,9 +229,7 @@ export default function PersonalizeCall({
               geo: {},
             };
             const response = await personalize(personalizeDataWithEmptyGeo);
-
-            const res = document.getElementById('response') as HTMLInputElement;
-            res.value = response ? JSON.stringify(response) : '';
+            setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize with empty geo
         </button>
@@ -280,8 +245,7 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromServerSideProps'
           onClick={async () => {
-            const response = document.getElementById('response') as HTMLInputElement;
-            response.value = serverSidePropsRes ? serverSidePropsRes : '';
+            setResponse(serverSidePropsRes ? serverSidePropsRes : '');
           }}>
           Request Personalize from ServerSideProps{' '}
         </button>
@@ -290,15 +254,8 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromMiddleware'
           onClick={async () => {
-            const middlewareRes = document.getElementById('response') as HTMLInputElement;
-            const EPResponse =
-              document?.cookie
-                ?.split('; ')
-                ?.find((cookie) => cookie.split('=')[0] === 'EPResponse')
-                ?.split('EPResponse=')[1] || '';
-
-            const cookie = decodeURIComponent(EPResponse);
-            middlewareRes.value = cookie;
+            const cookie = getCookie(document?.cookie, 'EPResponse');
+            setResponse(decodeURIComponent(cookie?.value || ''));
           }}>
           Request Personalize from Middleware
         </button>
@@ -307,15 +264,8 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromMiddlewareWithUA'
           onClick={async () => {
-            const middlewareRes = document.getElementById('response') as HTMLInputElement;
-            const EPRequestUA =
-              document?.cookie
-                ?.split('; ')
-                ?.find((cookie) => cookie.split('=')[0] === 'EPRequestUA')
-                ?.split('EPRequestUA=')[1] || '';
-
-            const cookie = decodeURIComponent(EPRequestUA);
-            middlewareRes.value = cookie;
+            const cookie = getCookie(document?.cookie, 'EPRequestUA');
+            setResponse(decodeURIComponent(cookie?.value || ''));
           }}>
           Request Personalize from Middleware With UA
         </button>
@@ -362,6 +312,7 @@ export default function PersonalizeCall({
           id='response'
           data-testid='response'
           name='response'
+          value={response}
         />
         <div>
           <label htmlFor='debug'>Debug:</label>
