@@ -2,11 +2,20 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 import { init } from '@sitecore-cloudsdk/events/browser';
+import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 
 const Events = () => {
   const router = useRouter();
 
   useEffect(() => {
+    // Since we don't have e2e tests for those let's have something that we can check if needed
+    console.log(red('test red in useEffect'), 'reset test');
+    console.log(yellow('test yellow in useEffect'), 'reset test');
+    console.log(green('test green in useEffect'), 'reset test');
+    console.log(cyan('test cyan in useEffect'), 'reset test');
+    console.log(blue('test blue in useEffect'), 'reset test');
+    console.log(`${red('red')} reset ${blue('blue')}`);
+
     if (
       router.pathname.startsWith('/edge-proxy-settings-events') ||
       router.pathname.startsWith('/edge-proxy-settings-personalize') ||

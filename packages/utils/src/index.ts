@@ -15,6 +15,7 @@ export { isShortISODateString } from './lib/validators/is-short-iso-date-string'
 export { isValidEmail } from './lib/validators/is-valid-email';
 export { omit } from './lib/objects/omit';
 export { generateV4UUID } from './lib/generators/generate-v4-uuid';
+export * from './lib/console/colors';
 
 export { ErrorMessages } from './lib/consts';
 

@@ -5,6 +5,7 @@ import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsd
 import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
+import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -157,6 +158,14 @@ export async function middleware(request: NextRequest) {
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
     response.cookies.set('EPPersonalizeRequestCookie', capturedRequestBody.pop() as unknown as string);
   }
+
+  // Since we don't have e2e tests for those let's have something that we can check if needed
+  console.log(red('test red middleware'), 'reset test');
+  console.log(yellow('test yellow middleware'), 'reset test');
+  console.log(green('test green middleware'), 'reset test');
+  console.log(cyan('test cyan middleware'), 'reset test');
+  console.log(blue('test blue middleware'), 'reset test');
+  console.log(`${red('red')} reset ${blue('blue')}`);
 
   return response;
 }

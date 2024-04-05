@@ -41,7 +41,8 @@ testem.log
 Thumbs.db
 
 # cypress
-**/src/fixtures/local
+**/src/fixtures/local/*
+!**/src/fixtures/local/.gitkeep
 **/cypress/results/
 **/cypress/downloads/
 

@@ -65,7 +65,8 @@ const links = [
     text: 'Middleware personalize geo omit',
     path: '/middleware-personalize-geo-omit',
     testId: 'middlewarePersonalizeGeoOmit',
-  }
+  },
+  { text: 'CorrelationID', path: '/correlation-id', testId: 'correlationIDPage' },
 ];
 
 function Navbar() {
