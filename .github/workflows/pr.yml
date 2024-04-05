@@ -44,14 +44,21 @@ jobs:
       - run: npm ci
       - name: Run Test
         run: npx nx affected --target=test --base=remotes/origin/master --head=HEAD
+  prepare-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: set-matrix
+        run: |
+          echo "matrix=$(ls packages | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
   mutation-tests:
+    needs: prepare-matrix
     strategy:
+      fail-fast: false
       matrix:
-        mutation-package:
-          - core
-          - utils
-          - events
-          - personalize
+        mutation-package: ${{fromJson(needs.prepare-matrix.outputs.matrix)}}
     runs-on: ubuntu-latest
     name: Run mutation tests for ${{ matrix.mutation-package }} package
     steps:

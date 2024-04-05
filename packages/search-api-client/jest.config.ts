@@ -1,5 +1,4 @@
 /* eslint-disable */
-// Importing @jest/types allows us to have intellisense over InitialOptions of Jest
 import type { Config } from 'jest';
 import { resolve, join } from 'path';
 

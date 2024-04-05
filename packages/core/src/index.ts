@@ -30,4 +30,10 @@ export {
 } from './lib/consts';
 
 export type { EPResponse, Infer } from './lib/interfaces';
-export type { CookieSettings, Settings, BrowserSettings, ServerSettings } from './lib/settings/interfaces';
+export type {
+  CookieSettings,
+  Settings,
+  BrowserSettings,
+  ServerSettings,
+  BasicSettings,
+} from './lib/settings/interfaces';

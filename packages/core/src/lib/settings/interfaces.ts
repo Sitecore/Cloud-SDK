@@ -18,15 +18,15 @@ export interface ServerSettings extends SettingsParams {
 
 export interface SettingsParams extends BasicSettings, CookieSettingsInput {
   timeout?: number;
-  sitecoreEdgeUrl?: string;
 }
 
 /**
  * Properties for the global settings object
  */
-interface BasicSettings {
+export interface BasicSettings {
   sitecoreEdgeContextId: string;
   siteName: string;
+  sitecoreEdgeUrl?: string;
 }
 
 interface CookieSettingsInput {

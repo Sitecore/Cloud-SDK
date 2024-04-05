@@ -1,7 +1,7 @@
 {
   "extends": ["@commitlint/config-conventional"],
   "rules": {
-    "scope-enum": [2, "always", ["core", "utils", "events", "personalize"]],
+    "scope-enum": [2, "always", ["core", "utils", "events", "personalize", "search-api-client"]],
     "scope-case": [2, "always", ["kebab-case"]]
   }
 }
