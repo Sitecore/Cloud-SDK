@@ -2,7 +2,7 @@
   "name": "@sitecore-cloudsdk/personalize",
   "version": "0.2.4",
   "license": "Apache-2.0",
-  "homepage": "https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-cloud-sdk.html",
+  "homepage": "https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html",
   "exports": {
     "./server": {
       "import": "./server.js",

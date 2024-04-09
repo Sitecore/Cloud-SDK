@@ -56,16 +56,7 @@ export default function Home() {
   };
 
   const sendPageViewEvent = async () => {
-    let eventData: any = {
-      channel: 'WEB',
-      currency: 'EUR',
-    };
-
-    let extensionData: any = {
-      customKey: 'customValue',
-    };
-
-    await pageView(eventData, extensionData);
+    await pageView();
 
     console.log('Sent VIEW event.');
   };
@@ -88,28 +79,15 @@ import { init, pageView } from '@sitecore-cloudsdk/events/server';
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
-  await init(
-    {
-      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
-      siteName: process.env.NEXT_PUBLIC_SITENAME || '',
-      enableServerCookie: true,
-    },
-    req,
-    res
-  );
+  await init(req, res, {
+    sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
+    siteName: process.env.NEXT_PUBLIC_SITENAME || '',
+    enableServerCookie: true,
+  });
 
   console.log(`Initialized "@sitecore-cloudsdk/events/server".`);
 
-  let eventData: any = {
-    channel: 'WEB',
-    currency: 'EUR',
-  };
-
-  let extensionData: any = {
-    customKey: 'customValue',
-  };
-
-  const pageViewRes = await pageView(eventData, req, extensionData);
+  const pageViewRes = await pageView(req);
 
   console.log('Sent VIEW event.');
 
@@ -119,4 +97,4 @@ export async function middleware(req: NextRequest) {
 
 ## Documentation
 
-[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/xm-cloud/sitecore-cloud-sdk.html)
+[Official Sitecore Cloud SDK documentation](https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html)
