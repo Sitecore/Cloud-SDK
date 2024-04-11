@@ -51,6 +51,7 @@ describe('PageViewEvent', () => {
       searchParams: searchParams ?? window.location.search,
     }).send();
   }
+
   beforeEach(() => {
     expectedBasicAttributes = {
       browser_id: id,
@@ -60,6 +61,7 @@ describe('PageViewEvent', () => {
       language: 'EN',
       page: 'races',
       pos: '',
+      requested_at: '2024-01-01T00:00:00.000Z',
     };
 
     pageViewData = {
@@ -83,11 +85,13 @@ describe('PageViewEvent', () => {
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
     jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
+    jest.spyOn(Date.prototype, 'toISOString').mockReturnValue('2024-01-01T00:00:00.000Z');
   });
 
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   describe('isFirstPageView', () => {
     it('should exist and should have value of true as default value', () => {
       expect(PageViewEvent.isFirstPageView).not.toBeUndefined();
@@ -554,6 +558,7 @@ describe('PageViewEvent', () => {
       page: 'races',
       pos: '',
       type: 'VIEW',
+      requested_at: '2024-01-01T00:00:00.000Z',
     };
 
     it(`should send an event without 'channel' and currency 'params'`, async () => {

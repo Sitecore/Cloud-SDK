@@ -46,7 +46,7 @@ describe('EventApiClient', () => {
     jest.clearAllMocks();
   });
 
-  it('Sends event with the correct values to Sitecore Cloud and show debug', async() => {
+  it('Sends event with the correct values to Sitecore Cloud and show debug', async () => {
     const eventData = {
       /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: 'cbb8da7f-ef24-48fe-89f4-f5c5186b607d',
@@ -59,6 +59,7 @@ describe('EventApiClient', () => {
       language: 'EN',
       page: 'races',
       pos: '',
+      requested_at: '2024-01-01T00:00:00.000Z',
       type: 'CUSTOM_TYPE',
     };
 
@@ -106,6 +107,7 @@ describe('EventApiClient', () => {
       language: 'EN',
       page: 'races',
       pos: 'spinair.com',
+      requested_at: '2024-01-01T00:00:00.000Z',
       type: 'CUSTOM_TYPE',
     };
 

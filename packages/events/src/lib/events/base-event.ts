@@ -34,6 +34,7 @@ export class BaseEvent {
       language: this.language,
       page: this.page,
       pos: '',
+      requested_at: new Date().toISOString(),
     };
   }
 }
@@ -49,6 +50,7 @@ export interface BasePayload {
   language?: string;
   page?: string;
   pos: string;
+  requested_at: string;
 }
 
 type BaseEventData = EventAttributesInput;

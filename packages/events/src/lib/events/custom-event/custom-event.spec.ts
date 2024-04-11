@@ -27,6 +27,7 @@ describe('CustomEvent', () => {
   const id = 'test_id';
   const languageSpy = jest.spyOn(core, 'language').mockImplementation(() => 'EN');
   const pageNameSpy = jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
+  jest.spyOn(Date.prototype, 'toISOString').mockReturnValue('2024-01-01T00:00:00.000Z');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -223,6 +224,8 @@ describe('CustomEvent', () => {
         language: 'EN',
         page: 'races',
         pos: '',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
@@ -252,6 +255,8 @@ describe('CustomEvent', () => {
         language: 'EN',
         page: 'races',
         pos: '',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 
@@ -277,6 +282,8 @@ describe('CustomEvent', () => {
         language: 'EN',
         page: 'races',
         pos: '',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE',
       };
 

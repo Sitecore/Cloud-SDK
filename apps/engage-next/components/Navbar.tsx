@@ -67,6 +67,7 @@ const links = [
     testId: 'middlewarePersonalizeGeoOmit',
   },
   { text: 'CorrelationID', path: '/correlation-id', testId: 'correlationIDPage' },
+  { text: 'RequestedAt', path: '/requested-at', testId: 'requestedAtPage' },
 ];
 
 function Navbar() {

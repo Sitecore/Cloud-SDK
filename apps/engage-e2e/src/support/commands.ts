@@ -10,6 +10,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
+      assertRequestBody(testID: string, bodyAttributeName: string): void;
       assertRequestHeader(testID: string, headerName: string, headerValue?: string): void;
       assertLogs(testID: string, log: string): void;
       assertRequestHeaders(request: any, expectedReqHeaders: any): void;
@@ -42,6 +43,24 @@ Cypress.Commands.add('assertRequestHeader', (testID: string, headerName: string,
       }),
     {
       errorMsg: 'Error not found',
+      timeout: 15000,
+      interval: 100,
+    }
+  );
+});
+
+// Asserts the provided attribute value from the stored file in fixtures,
+// the data is added by the Next app with the request decorators
+Cypress.Commands.add('assertRequestBody', (testID, bodyAttributeName) => {
+  cy.waitUntil(
+    () =>
+      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
+        const body = JSON.parse(fileContents[testID].body);
+
+        expect(body).to.have.property(bodyAttributeName);
+      }),
+    {
+      errorMsg: 'Request body not found',
       timeout: 15000,
       interval: 100,
     }

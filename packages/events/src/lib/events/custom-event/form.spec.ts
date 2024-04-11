@@ -36,6 +36,8 @@ const settingsParams: BrowserSettings = {
 const id = 'test_id';
 
 describe('form function', () => {
+  jest.spyOn(Date.prototype, 'toISOString').mockReturnValue('2024-01-01T00:00:00.000Z');
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -57,6 +59,7 @@ describe('form function', () => {
       browser_id: 'test_id',
       client_key: '',
       pos: '',
+      requested_at: '2024-01-01T00:00:00.000Z',
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);

@@ -6,6 +6,7 @@ import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
 import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
+import { RequestedAtMiddleware } from './middlewares/requested-at';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -167,6 +168,8 @@ export async function middleware(request: NextRequest) {
   console.log(blue('test blue middleware'), 'reset test');
   console.log(`${red('red')} reset ${blue('blue')}`);
 
+  await RequestedAtMiddleware(request);
+
   return response;
 }
 
@@ -184,5 +187,6 @@ export const config = {
     '/middleware-personalize-geo-no-data',
     '/middleware-personalize-geo-omit',
     '/correlation-id',
+    '/requested-at',
   ],
 };
