@@ -1,0 +1,55 @@
+{
+  "name": "apps/search-api-client-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/search-api-client-next",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/apps/search-api-client-next"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "apps/search-api-client-next"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "apps/search-api-client-next:build",
+        "dev": true,
+        "port": 4300
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "apps/search-api-client-next:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "apps/search-api-client-next:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "apps/search-api-client-next:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/search-api-client-next/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

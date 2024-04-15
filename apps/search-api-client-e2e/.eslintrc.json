@@ -1,0 +1,14 @@
+{
+  "extends": ["plugin:cypress/recommended", "../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "rules": {
+        "header/header": "off",
+        "sort-keys": "off",
+        "import/no-default-export": "off"
+      }
+    }
+  ]
+}

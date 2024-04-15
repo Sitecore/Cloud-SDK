@@ -57,7 +57,7 @@ export interface MiddlewareRequest {
     city?: string;
     country?: string;
     region?: string;
-  }
+  };
 }
 
 /**
