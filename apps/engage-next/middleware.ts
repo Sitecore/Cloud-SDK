@@ -7,6 +7,7 @@ import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
 import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { RequestedAtMiddleware } from './middlewares/requested-at';
+import { eventWithSoftwareIDHeaderMiddleware } from './middlewares/event-software-id-header';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -129,6 +130,8 @@ export async function middleware(request: NextRequest) {
     }
   }
 
+  eventWithSoftwareIDHeaderMiddleware(request);
+
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalize(request, response, {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
@@ -187,6 +190,7 @@ export const config = {
     '/middleware-personalize-geo-no-data',
     '/middleware-personalize-geo-omit',
     '/correlation-id',
+    '/software-id',
     '/requested-at',
   ],
 };

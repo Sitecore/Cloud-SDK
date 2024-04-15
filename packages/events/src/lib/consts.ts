@@ -7,6 +7,10 @@ import { MAX_EXT_ATTRIBUTES } from './events/consts';
  * Returns the version of the library.
  */
 export const LIBRARY_VERSION = packageJson.version;
+/**
+ * Returns the name & version of the library in a String.
+ */
+export const X_CLIENT_SOFTWARE_ID = `${packageJson.name} ${LIBRARY_VERSION}`;
 
 export enum ErrorMessages {
   IE_0001 = `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`,

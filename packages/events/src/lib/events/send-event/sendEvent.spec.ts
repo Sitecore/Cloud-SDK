@@ -1,6 +1,6 @@
 import { EPResponse } from '@sitecore-cloudsdk/core';
 import { sendEvent } from './sendEvent';
-import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
+import { LIBRARY_VERSION, EVENTS_NAMESPACE, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import debug from 'debug';
 
@@ -78,6 +78,7 @@ describe('EventApiClient', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       headers: {
         'Content-Type': 'application/json',
+        'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
         'X-Library-Version': LIBRARY_VERSION,
       },
       method: 'POST',

@@ -152,6 +152,10 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
   cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => expect(request.body.browser_id).to.eq(cookie?.value));
 
   expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
+
+  if (request.url.includes('events')) {
+    expect(request.headers['x-client-software-id']).to.eq(`${eventsPackageJson.name} ${expectedPackageVersion}`);
+  }
 });
 
 Cypress.Commands.add('requestGuestContext', () => {

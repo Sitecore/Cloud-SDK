@@ -67,6 +67,7 @@ const links = [
     testId: 'middlewarePersonalizeGeoOmit',
   },
   { text: 'CorrelationID', path: '/correlation-id', testId: 'correlationIDPage' },
+  { text: 'SoftwareID', path: '/software-id', testId: 'softwareIDPage' },
   { text: 'RequestedAt', path: '/requested-at', testId: 'requestedAtPage' },
 ];
 

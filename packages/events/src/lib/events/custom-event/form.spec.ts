@@ -1,7 +1,7 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { EPResponse, BrowserSettings } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION } from '../../consts';
+import { LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { form } from './form';
@@ -69,7 +69,7 @@ describe('form function', () => {
         body: expectedBody,
         headers: {
           'Content-Type': 'application/json',
-
+          'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
           'X-Library-Version': LIBRARY_VERSION,
         },
         method: 'POST',

@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { API_VERSION, EPResponse, Settings, debug } from '@sitecore-cloudsdk/core';
-import type { BasePayload, PageViewEventPayload, IdentityEventPayload, CustomEventPayload } from '..';
-import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
+import type { BasePayload, CustomEventPayload, IdentityEventPayload, PageViewEventPayload } from '..';
+import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 
 /**
  * This factory function sends an event to Edge Proxy
@@ -16,6 +16,8 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'X-Library-Version': LIBRARY_VERSION,
     },
