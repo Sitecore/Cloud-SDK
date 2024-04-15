@@ -69,6 +69,11 @@ const links = [
   { text: 'CorrelationID', path: '/correlation-id', testId: 'correlationIDPage' },
   { text: 'SoftwareID', path: '/software-id', testId: 'softwareIDPage' },
   { text: 'RequestedAt', path: '/requested-at', testId: 'requestedAtPage' },
+  {
+    text: 'CustomEventWithSearchData',
+    path: '/custom-event-with-search-data',
+    testId: 'customEventWithSearchDataPage',
+  },
 ];
 
 function Navbar() {

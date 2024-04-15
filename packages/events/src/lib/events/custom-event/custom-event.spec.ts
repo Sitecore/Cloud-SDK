@@ -1,5 +1,5 @@
 import { CustomEvent, EventData } from './custom-event';
-import * as sendEvent from '../send-event/sendEvent';
+import * as sendEventModule from '../send-event/sendEvent';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -64,17 +64,17 @@ describe('CustomEvent', () => {
     it('should not call flatten object method when no extension data is passed', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', { value: { search: '' }, writable: true });
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
     it('should send a custom event without ext attribute if extensionData is an empty object', () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
       const extensionData = {};
       new CustomEvent({
         eventData: { ...eventData, extensionData },
         id,
-        sendEvent: sendEvent.sendEvent,
+        sendEvent: sendEventModule.sendEvent,
         settings,
       }).send();
 
@@ -85,12 +85,12 @@ describe('CustomEvent', () => {
     });
 
     it('should send a custom event with flattened ext attributes', () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
       const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22, za: undefined };
       new CustomEvent({
         eventData: { ...eventData, extensionData },
         id,
-        sendEvent: sendEvent.sendEvent,
+        sendEvent: sendEventModule.sendEvent,
         settings,
       }).send();
 
@@ -122,7 +122,7 @@ describe('CustomEvent', () => {
         new CustomEvent({
           eventData: { ...eventData, extensionData },
           id,
-          sendEvent: sendEvent.sendEvent,
+          sendEvent: sendEventModule.sendEvent,
           settings,
         });
       }).toThrow(extErrorMessage);
@@ -140,7 +140,7 @@ describe('CustomEvent', () => {
         new CustomEvent({
           eventData: { ...eventData, extensionData },
           id,
-          sendEvent: sendEvent.sendEvent,
+          sendEvent: sendEventModule.sendEvent,
           settings,
         });
       }).not.toThrow(extErrorMessage);
@@ -161,7 +161,7 @@ describe('CustomEvent', () => {
     };
 
     it('should send the event with top level attributes', async () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
@@ -179,7 +179,7 @@ describe('CustomEvent', () => {
         testAttr3: 22,
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
         expect.objectContaining(expectedExt),
@@ -196,7 +196,7 @@ describe('CustomEvent', () => {
 
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -204,7 +204,7 @@ describe('CustomEvent', () => {
     });
 
     it('should send the event without the ext object', async () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
       const eventData = {
         channel: 'WEB',
@@ -229,7 +229,7 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
       expect(languageSpy).toHaveBeenCalledTimes(0);
@@ -237,7 +237,7 @@ describe('CustomEvent', () => {
     });
 
     it('should send the event without infer', async () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
       const eventData = {
         channel: 'WEB',
@@ -260,7 +260,7 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
       expect(languageSpy).toHaveBeenCalledTimes(1);
@@ -268,7 +268,7 @@ describe('CustomEvent', () => {
     });
 
     it('should send the event without channel and currency info', async () => {
-      const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
       const eventData = {
         type: 'CUSTOM_TYPE',
@@ -287,11 +287,62 @@ describe('CustomEvent', () => {
         type: 'CUSTOM_TYPE',
       };
 
-      new CustomEvent({ eventData, id, sendEvent: sendEvent.sendEvent, settings }).send();
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
       expect(languageSpy).toHaveBeenCalledTimes(1);
       expect(pageNameSpy).toHaveBeenCalledTimes(1);
+    });
+  });
+  describe('search data', () => {
+    it('should include sc_search if searchData is provided', async () => {
+      const settings: core.Settings = {
+        cookieSettings: {
+          cookieDomain: 'cDomain',
+          cookieExpiryDays: 730,
+          cookieName: 'bid_name',
+          cookiePath: '/',
+        },
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: '',
+      };
+      const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
+
+      const eventData = {
+        channel: 'WEB',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        searchData: { test: 1234 },
+        type: 'CUSTOM_TYPE',
+      };
+
+      /* eslint-disable @typescript-eslint/naming-convention */
+      const expectedData = {
+        browser_id: id,
+        channel: 'WEB',
+        client_key: '',
+        currency: 'EUR',
+        language: 'EN',
+        page: 'races',
+        pos: '',
+        requested_at: '2024-01-01T00:00:00.000Z',
+        sc_search: {
+          data: {
+            test: 1234,
+          },
+          metadata: {
+            ut_api_version: '1.0',
+          },
+        },
+        type: 'CUSTOM_TYPE',
+      };
+      /* eslint-enable @typescript-eslint/naming-convention */
+
+      new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
     });
   });
 });

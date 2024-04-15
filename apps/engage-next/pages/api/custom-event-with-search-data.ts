@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { event, identity, init, pageView } from '@sitecore-cloudsdk/events/server';
+import { event, init } from '@sitecore-cloudsdk/events/server';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -22,22 +22,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   decorateAll(testID as string);
   switch (testID) {
-    case 'sendCustomEventFromAPIWithRequestedAt':
+    case 'sendCustomEventFromAPIWithSearchData':
       await event(req, {
         ...baseEventData,
         type: 'CUSTOM_EVENT',
+        searchData: { test: 123 },
       });
 
       break;
-    case 'sendPageViewEventFromAPIWithRequestedAt':
-      await pageView(req, baseEventData);
-
-      break;
-    case 'sendIdentityEventFromAPIWithRequestedAt':
-      await identity(req, {
+    case 'sendCustomEventFromAPIWithoutSearchData':
+      await event(req, {
         ...baseEventData,
-        email: 'test@test.com',
-        identifiers: [{ id: '', provider: 'email' }],
+        type: 'CUSTOM_EVENT',
       });
 
       break;

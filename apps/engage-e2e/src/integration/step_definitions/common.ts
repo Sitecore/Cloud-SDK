@@ -412,9 +412,20 @@ defineStep('the request with id {string} will contain {string} log', (testID: st
   cy.assertLogs(testID, log);
 });
 
+defineStep('the request with id {string} will not contain {string} log', (testID: string, log: string) => {
+  cy.assertLogsNotContaining(testID, log);
+});
+
 defineStep(
   'the request with id {string} will contain the {string} in the body',
   (testID: string, bodyAttribute: string) => {
     cy.assertRequestBody(testID, bodyAttribute);
+  }
+);
+
+defineStep(
+  'the request with id {string} will not contain the {string} in the body',
+  (testID: string, bodyAttribute: string) => {
+    cy.assertRequestBodyNotContaining(testID, bodyAttribute);
   }
 );

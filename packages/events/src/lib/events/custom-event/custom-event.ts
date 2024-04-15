@@ -18,7 +18,7 @@ export class CustomEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: CustomEventArguments) {
-    const { channel, currency, language, page, type, extensionData, ...rest } = args.eventData;
+    const { channel, currency, language, page, type, extensionData, searchData, ...rest } = args.eventData;
     super({ channel, currency, language, page }, args.id);
 
     this.sendEvent = args.sendEvent;
@@ -36,6 +36,15 @@ export class CustomEvent extends BaseEvent {
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
     if (numberOfExtensionDataProperties > 0) this.customEventPayload.ext = this.extensionData;
+
+    if (searchData)
+      this.customEventPayload.sc_search = {
+        data: searchData,
+        metadata: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          ut_api_version: '1.0',
+        },
+      };
   }
 
   /**
@@ -64,6 +73,12 @@ export interface CustomEventArguments {
  * Interface with the required/optional attributes in order to send a custom event to SitecoreCloud API
  */
 export interface CustomEventPayload extends NestedObject {
+  /* eslint-disable @typescript-eslint/naming-convention */
+  sc_search?: {
+    data: NestedObject;
+    metadata: { ut_api_version: string };
+  };
+  /* eslint-enable @typescript-eslint/naming-convention */
   ext?: {
     [key: string]: BasicTypes;
   };
@@ -74,5 +89,6 @@ export interface CustomEventPayload extends NestedObject {
  */
 export interface EventData extends EventAttributesInput, NestedObject {
   type: string;
+  searchData?: NestedObject;
   extensionData?: ExtensionData;
 }

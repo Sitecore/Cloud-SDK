@@ -11,8 +11,10 @@ declare global {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
       assertRequestBody(testID: string, bodyAttributeName: string): void;
+      assertRequestBodyNotContaining(testID: string, bodyAttributeName: string): void;
       assertRequestHeader(testID: string, headerName: string, headerValue?: string): void;
       assertLogs(testID: string, log: string): void;
+      assertLogsNotContaining(testID: string, log: string): void;
       assertRequestHeaders(request: any, expectedReqHeaders: any): void;
       getLogOutput(): any;
       waitForRequest(alias: string): any;
@@ -67,6 +69,24 @@ Cypress.Commands.add('assertRequestBody', (testID, bodyAttributeName) => {
   );
 });
 
+// Asserts the provided attribute is not present in stored file in fixtures,
+// the data is added by the Next app with the request decorators
+Cypress.Commands.add('assertRequestBodyNotContaining', (testID, bodyAttributeName) => {
+  cy.waitUntil(
+    () =>
+      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
+        const body = JSON.parse(fileContents[testID].body);
+
+        expect(body[bodyAttributeName]).to.be.undefined;
+      }),
+    {
+      errorMsg: 'Request body not found',
+      timeout: 15000,
+      interval: 100,
+    }
+  );
+});
+
 // Asserts the provided logs data from the stored file in fixtures,
 // the data is added by the Next app with the debug decorators
 Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
@@ -78,6 +98,23 @@ Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
       }),
     {
       errorMsg: 'Error not found',
+      timeout: 15000,
+      interval: 100,
+    }
+  );
+});
+
+// Asserts the provided logs data not present in stored file in fixtures,
+// the data is added by the Next app with the debug decorators
+Cypress.Commands.add('assertLogsNotContaining', (testID: string, log: string) => {
+  cy.waitUntil(
+    () =>
+      cy.readLocal('logsData.json').then((fileContents: Record<string, any>) => {
+        expect(fileContents).to.have.property(testID);
+        expect(fileContents[testID]).to.not.contain(log);
+      }),
+    {
+      errorMsg: 'Log not found',
       timeout: 15000,
       interval: 100,
     }
