@@ -3,7 +3,7 @@ import { PageViewData } from '@sitecore-cloudsdk/events/server';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import { useState } from 'react';
 
-export function About() {
+export default function About() {
   const [eventData, seteventData] = useState<PageViewData>({
     channel: 'WEB',
     currency: 'EUR',
@@ -31,5 +31,3 @@ export function About() {
     </div>
   );
 }
-
-export default About;

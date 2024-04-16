@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { event } from '@sitecore-cloudsdk/events/browser';
 
-export function CustomEvent() {
+export default function CustomEvent() {
   let eventData = {
     channel: 'WEB',
     currency: 'EUR',
@@ -93,5 +93,3 @@ export function CustomEvent() {
     </div>
   );
 }
-
-export default CustomEvent;

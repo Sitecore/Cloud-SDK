@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { form } from '@sitecore-cloudsdk/events/browser';
 
-export function FormEvent() {
+export default function FormEvent() {
   const getParamsFromUrl = (parameter: string) => {
     return new URLSearchParams(window.location.search).get(parameter);
   };
@@ -24,5 +24,3 @@ export function FormEvent() {
     </div>
   );
 }
-
-export default FormEvent;

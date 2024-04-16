@@ -1,13 +1,12 @@
 import { NextRequest } from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import { event } from '@sitecore-cloudsdk/events/server';
+import { pageView } from '@sitecore-cloudsdk/events/server';
 
-export async function customEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {
-
+export async function pageViewEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (
-    !request.nextUrl.pathname.startsWith('/custom-event-with-search-data') ||
+    !request.nextUrl.pathname.startsWith('/page-view-event-with-search-data') ||
     !testID ||
     !testID.includes('FromMiddleware')
   )
@@ -17,18 +16,16 @@ export async function customEventWithSearchDataMiddleware(request: NextRequest):
 
   decorateAll(testID as string);
   switch (testID) {
-    case 'sendCustomEventFromMiddlewareWithSearchData':
-      await event(request, {
+    case 'sendPageViewEventFromMiddlewareWithSearchData':
+      await pageView(request, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
         searchData: { test: 123 },
       });
 
       break;
-    case 'sendCustomEventFromMiddlewareWithoutSearchData':
-      await event(request, {
+    case 'sendPageViewEventFromMiddlewareWithoutSearchData':
+      await pageView(request, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
       });
 
       break;

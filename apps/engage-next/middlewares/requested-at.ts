@@ -2,7 +2,7 @@ import { NextRequest } from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { event, identity, pageView } from '@sitecore-cloudsdk/events/server';
 
-export async function RequestedAtMiddleware(request: NextRequest): Promise<void> {
+export async function requestedAtMiddleware(request: NextRequest): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (!request.nextUrl.pathname.startsWith('/requested-at') || !testID || !testID.includes('FromMiddleware')) return;

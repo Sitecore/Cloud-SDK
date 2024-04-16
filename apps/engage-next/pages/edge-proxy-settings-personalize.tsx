@@ -4,7 +4,7 @@ import { init } from '@sitecore-cloudsdk/personalize/browser';
 import { init as initServer } from '@sitecore-cloudsdk/personalize/server';
 import { GetServerSidePropsContext } from 'next';
 
-export function EdgeProxySettings({ serverResponse }: { serverResponse: string }) {
+export default function EdgeProxySettings({ serverResponse }: { serverResponse: string }) {
   const handleInvalidContextId = async () => {
     await init({ sitecoreEdgeContextId: ' ', siteName: '456' });
   };
@@ -154,5 +154,3 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 }
-
-export default EdgeProxySettings;

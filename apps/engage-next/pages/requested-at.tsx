@@ -61,7 +61,7 @@ export default function RequestedAt() {
   return (
     <div>
       <div>
-        <h1 data-testid='personalizePageTitle'>Correlation ID page</h1>
+        <h1 data-testid='requestedAtPageTitle'>Requested At page</h1>
         <button
           type='button'
           data-testid='sendCustomEventFromAPIWithRequestedAt'

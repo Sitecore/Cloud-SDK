@@ -2,7 +2,7 @@ import { init, pageView } from '@sitecore-cloudsdk/events/browser';
 import { init as initPersonalize } from '@sitecore-cloudsdk/personalize/browser';
 import React from 'react';
 
-const AsyncInitEvents = () => {
+export default function AsyncInitEvents() {
   const eventData = {
     channel: 'WEB',
     currency: 'EUR',
@@ -59,6 +59,4 @@ const AsyncInitEvents = () => {
       </button>
     </div>
   );
-};
-
-export default AsyncInitEvents;
+}

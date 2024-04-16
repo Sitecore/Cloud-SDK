@@ -2,7 +2,7 @@
 import { getGuestId } from '@sitecore-cloudsdk/events/browser';
 import { useState } from 'react';
 
-export function Index() {
+export default function Index() {
   const [label, setlabel] = useState('');
 
   return (
@@ -19,5 +19,3 @@ export function Index() {
     </div>
   );
 }
-
-export default Index;

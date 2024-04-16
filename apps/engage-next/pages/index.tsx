@@ -1,7 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { useState } from 'react';
-import styles from './HomePage.module.css';
 import {
   PageViewData,
   getBrowserId,
@@ -103,13 +102,11 @@ export function Index() {
         <fieldset>
           <legend>Retrieve Browser ID</legend>
           <button
-            className={styles.button}
             data-testid='getBrowserIdFromWindow'
             onClick={() => setBID(getBrowserId() || '')}>
             Get ID invoking method from window
           </button>
           <button
-            className={styles.button}
             data-testid='getBrowserIdFromEngage'
             onClick={() => {
               if (window.Engage.getBrowserId !== undefined) setBID(window.Engage.getBrowserId());
@@ -126,13 +123,11 @@ export function Index() {
         <fieldset>
           <legend>Retrieve Events Library Version</legend>
           <button
-            className={styles.button}
             data-testid='getVersionLibFromWindowEvents'
             onClick={() => eventVersion && setVersion(eventVersion)}>
             Get Events version from lib function
           </button>
           <button
-            className={styles.button}
             data-testid='getVersionLibFromEvents'
             onClick={() => {
               if (window.Engage.versions?.events !== undefined) setVersion(window.Engage.versions.events);
@@ -141,13 +136,11 @@ export function Index() {
           </button>
           <legend>Retrieve Personalize Library Version</legend>
           <button
-            className={styles.button}
             data-testid='getVersionLibFromWindowPersonalize'
             onClick={() => personalizeVersion && setVersion(personalizeVersion)}>
             Get Personalize version from lib function
           </button>
           <button
-            className={styles.button}
             data-testid='getVersionLibFromPersonalize'
             onClick={() => {
               if (window.Engage.versions?.personalize !== undefined) setVersion(window.Engage.versions.personalize);

@@ -2,15 +2,13 @@
 import { init, pageView } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
-export function serverSidePropsViewEvent() {
+export default function serverSidePropsViewEvent() {
   return (
     <div>
       <h1 data-testid='serverSidePropsViewEventPageTitle'>ServerSideProps Pageview event page</h1>
     </div>
   );
 }
-
-export default serverSidePropsViewEvent;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const eventData = {

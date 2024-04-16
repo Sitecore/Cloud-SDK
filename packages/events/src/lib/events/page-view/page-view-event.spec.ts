@@ -35,7 +35,7 @@ describe('PageViewEvent', () => {
   let pageViewData: PageViewData;
   let settings: Settings;
 
-  function callPageEvent(
+  function callPageViewEvent(
     sendEvent: any,
     pageViewData: any,
     id: any,
@@ -156,13 +156,13 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
 
     it('should return the variantid if exists in the search params that is passed from the server and not present in the event data', async () => {
-      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '?variantid=test_pageVariantId');
+      callPageViewEvent(sendEvent, pageViewData, id, settings, undefined, '?variantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
     it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
@@ -175,7 +175,7 @@ describe('PageViewEvent', () => {
       pageViewData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
 
-      callPageEvent(sendEvent, pageViewData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
+      callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData, '?testVariantid=test_pageVariantId');
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
@@ -191,7 +191,7 @@ describe('PageViewEvent', () => {
       pageViewData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
 
-      callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+      callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
@@ -203,7 +203,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getPageVariantIdSpy).toHaveReturnedWith(null);
     });
@@ -216,7 +216,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
     });
@@ -231,7 +231,7 @@ describe('PageViewEvent', () => {
 
       pageViewData.pageVariantId = 'vid';
 
-      callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+      callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -251,7 +251,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -272,7 +272,7 @@ describe('PageViewEvent', () => {
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
 
-    callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+    callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData);
 
     const expectedAttributes = {
       ...expectedBasicAttributes,
@@ -294,7 +294,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+        callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData);
       }).toThrow(extErrorMessage);
     });
 
@@ -306,7 +306,7 @@ describe('PageViewEvent', () => {
         extensionData[`key${i}`] = `value${i}`;
       }
       expect(() => {
-        callPageEvent(sendEvent, pageViewData, id, settings, extensionData);
+        callPageViewEvent(sendEvent, pageViewData, id, settings, extensionData);
       }).not.toThrow(extErrorMessage);
     });
   });
@@ -325,7 +325,7 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should return null if isFirstPageView is false ', async () => {
       PageViewEvent.isFirstPageView = false;
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(window).toBeDefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -333,7 +333,7 @@ describe('PageViewEvent', () => {
     });
     it('getReferrer should return null if isFirstPageView is true and document referrer is empty string ', async () => {
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(document.referrer).toBe('');
       expect(window).toBeDefined();
@@ -354,7 +354,7 @@ describe('PageViewEvent', () => {
       });
 
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -379,7 +379,7 @@ describe('PageViewEvent', () => {
         writable: true,
       });
       PageViewEvent.isFirstPageView = true;
-      callPageEvent(sendEvent, pageViewData, id, settings, undefined);
+      callPageViewEvent(sendEvent, pageViewData, id, settings, undefined);
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
       expect(getReferrerSpy).toHaveReturnedWith(null);
     });
@@ -392,7 +392,7 @@ describe('PageViewEvent', () => {
 
       PageViewEvent.isFirstPageView = true;
 
-      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '');
+      callPageViewEvent(sendEvent, pageViewData, id, settings, undefined, '');
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
@@ -414,7 +414,7 @@ describe('PageViewEvent', () => {
       PageViewEvent.isFirstPageView = true;
       pageViewData.referrer = 'campaign';
 
-      callPageEvent(sendEvent, pageViewData, id, settings, undefined, '');
+      callPageViewEvent(sendEvent, pageViewData, id, settings, undefined, '');
 
       expect(window).toBeUndefined();
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -457,7 +457,7 @@ describe('PageViewEvent', () => {
 
       pageViewData.includeUTMParameters = false;
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(0);
     });
@@ -471,7 +471,7 @@ describe('PageViewEvent', () => {
 
       pageViewData.includeUTMParameters = true;
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveBeenCalledTimes(1);
     });
@@ -483,7 +483,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveLastReturnedWith({});
     });
@@ -495,7 +495,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveReturnedWith({});
     });
@@ -507,7 +507,7 @@ describe('PageViewEvent', () => {
         },
       }));
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
     });
@@ -519,7 +519,7 @@ describe('PageViewEvent', () => {
 
       jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -532,7 +532,7 @@ describe('PageViewEvent', () => {
 
     it('should send an event with utm_ params if the returned object is not empty', () => {
       getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
@@ -545,7 +545,7 @@ describe('PageViewEvent', () => {
   });
 
   describe('send event with specific params', () => {
-    let pageViewData = {
+    let pageViewData: PageViewData = {
       language: 'EN',
       page: 'races',
       includeUTMParameters: false,
@@ -562,7 +562,7 @@ describe('PageViewEvent', () => {
     };
 
     it(`should send an event without 'channel' and currency 'params'`, async () => {
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
     });
@@ -571,7 +571,44 @@ describe('PageViewEvent', () => {
       pageViewData = { ...pageViewData, ...{ channel: 'WEB', currency: 'EUR' } };
       expectedData = { ...expectedData, ...{ channel: 'WEB', currency: 'EUR' } };
 
-      callPageEvent(sendEvent, pageViewData, id, settings);
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
+
+      expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
+    });
+  });
+
+  describe('send event with search data', () => {
+    it(`should send an event with 'sc_search' payload if searchData is provided`, async () => {
+      const pageViewData: PageViewData = {
+        language: 'EN',
+        page: 'races',
+        includeUTMParameters: false,
+        searchData: {
+          action: 'view',
+          name: 'home',
+        },
+      };
+
+      const expectedData = {
+        browser_id: id,
+        client_key: '',
+        language: 'EN',
+        page: 'races',
+        pos: '',
+        type: 'VIEW',
+        requested_at: '2024-01-01T00:00:00.000Z',
+        sc_search: {
+          data: {
+            action: 'view',
+            name: 'home',
+          },
+          metadata: {
+            ut_api_version: '1.0',
+          },
+        },
+      };
+
+      callPageViewEvent(sendEvent, pageViewData, id, settings);
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
     });

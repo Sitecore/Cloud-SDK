@@ -2,17 +2,13 @@
 import { event, init } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
-export function ServerSidePropsCustomEvent() {
+export default function ServerSidePropsCustomEvent() {
   return (
     <div>
       <h1 data-testid='serverSidePropsCustomEventPageTitle'>ServerSideProps Custom event page</h1>
     </div>
   );
 }
-
-export default ServerSidePropsCustomEvent;
-
-// getServerSideProps params interface
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const eventData = {

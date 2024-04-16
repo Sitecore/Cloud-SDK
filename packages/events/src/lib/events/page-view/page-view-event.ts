@@ -83,7 +83,7 @@ export class PageViewEvent extends BaseEvent {
    * @returns the mapped object to be sent as payload
    */
   private mapAttributes(): PageViewEventPayload {
-    let viewPayload: PageViewEventPayload = {
+    let pageViewPayload: PageViewEventPayload = {
       type: 'VIEW',
     };
 
@@ -92,23 +92,33 @@ export class PageViewEvent extends BaseEvent {
       this.extensionData['pageVariantId'] as string
     );
 
-    if (pageVariantId !== null) viewPayload.ext = { ...viewPayload.ext, pageVariantId };
+    if (pageVariantId !== null) pageViewPayload.ext = { ...pageViewPayload.ext, pageVariantId };
 
     if (Object.keys(this.extensionData).length > 0) {
       delete this.extensionData['pageVariantId'];
-      viewPayload.ext = { ...viewPayload.ext, ...this.extensionData };
+      pageViewPayload.ext = { ...pageViewPayload.ext, ...this.extensionData };
     }
 
     if (this.includeUTMParameters) {
       const utmParameters = this.getUTMParameters();
-      viewPayload = { ...viewPayload, ...utmParameters };
+      pageViewPayload = { ...pageViewPayload, ...utmParameters };
     }
 
     const referrer = this.getReferrer();
 
-    if (referrer !== null) viewPayload = { ...viewPayload, referrer };
+    if (referrer !== null) pageViewPayload = { ...pageViewPayload, referrer };
 
-    return viewPayload;
+    if (this.pageViewData.searchData) {
+      pageViewPayload.sc_search = {
+        data: this.pageViewData.searchData,
+        metadata: {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          ut_api_version: '1.0',
+        },
+      };
+    }
+
+    return pageViewPayload;
   }
 
   /**
@@ -118,11 +128,10 @@ export class PageViewEvent extends BaseEvent {
   async send(): Promise<EPResponse | null> {
     const baseAttr = this.mapBaseEventPayload();
     const eventAttrs = this.mapAttributes();
-    const fetchBody = Object.assign({}, eventAttrs, baseAttr);
 
     PageViewEvent.isFirstPageView = false;
 
-    return await this.sendEvent(fetchBody, this.settings);
+    return await this.sendEvent({ ...baseAttr, ...eventAttrs }, this.settings);
   }
 
   /**
@@ -163,6 +172,7 @@ export interface PageViewData extends EventAttributesInput {
   referrer?: string;
   includeUTMParameters?: boolean;
   extensionData?: ExtensionData;
+  searchData?: NestedObject;
 }
 
 /**
@@ -179,4 +189,10 @@ export interface PageViewEventPayload extends UtmParameters {
   type: 'VIEW';
   referrer?: string;
   ext?: { pageVariantId?: string } & FlattenedObject;
+  /* eslint-disable @typescript-eslint/naming-convention */
+  sc_search?: {
+    data: NestedObject;
+    metadata: { ut_api_version: string };
+  };
+  /* eslint-enable @typescript-eslint/naming-convention */
 }

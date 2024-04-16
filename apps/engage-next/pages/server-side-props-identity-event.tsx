@@ -2,15 +2,13 @@
 import { identity, init } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
-export function ServerSidePropsIdenityEvent() {
+export default function ServerSidePropsIdenityEvent() {
   return (
     <div>
       <h1 data-testid='serverSidePropsIdentityEventPageTitle'>ServerSideProps Identity event page</h1>
     </div>
   );
 }
-
-export default ServerSidePropsIdenityEvent;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const eventData = {

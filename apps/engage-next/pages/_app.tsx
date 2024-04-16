@@ -6,7 +6,7 @@ import './index.css';
 import Events from '../components/Events';
 import Personalize from '../components/Personalize';
 
-function CustomApp({ Component, pageProps }: AppProps) {
+export default function CustomApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
@@ -21,5 +21,3 @@ function CustomApp({ Component, pageProps }: AppProps) {
     </>
   );
 }
-
-export default CustomApp;

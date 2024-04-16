@@ -5,6 +5,7 @@ import { init, event as eventServer } from '@sitecore-cloudsdk/events/server';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 
+
 export default function SearchData() {
   const sendCustomEventFromAPIWithSearchData = async () => {
     await fetch('/api/custom-event-with-search-data?&testID=sendCustomEventFromAPIWithSearchData');
@@ -39,7 +40,7 @@ export default function SearchData() {
   return (
     <div>
       <div>
-        <h1 data-testid='personalizePageTitle'>Correlation ID page</h1>
+        <h1 data-testid='customEventWithSearchDataTitle'>Custom event with search data page</h1>
         <button
           type='button'
           data-testid='sendCustomEventFromAPIWithSearchData'

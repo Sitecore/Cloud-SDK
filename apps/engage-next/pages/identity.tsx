@@ -2,7 +2,7 @@
 import { IdentityData, identity } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 
-export function Identity() {
+export default function Identity() {
   const handleSubmit = (eventTrigger: React.FormEvent<HTMLFormElement>) => {
     eventTrigger.preventDefault();
 
@@ -280,5 +280,3 @@ export function Identity() {
     </div>
   );
 }
-
-export default Identity;

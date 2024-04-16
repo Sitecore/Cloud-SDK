@@ -70,10 +70,15 @@ const links = [
   { text: 'SoftwareID', path: '/software-id', testId: 'softwareIDPage' },
   { text: 'RequestedAt', path: '/requested-at', testId: 'requestedAtPage' },
   {
-    text: 'CustomEventWithSearchData',
+    text: 'Custom Event With Search Data',
     path: '/custom-event-with-search-data',
     testId: 'customEventWithSearchDataPage',
   },
+  {
+    text: 'PageView Event With Search Data',
+    path: '/page-view-event-with-search-data',
+    testId: 'pageViewEventWithSearchDataPage',
+  }
 ];
 
 function Navbar() {

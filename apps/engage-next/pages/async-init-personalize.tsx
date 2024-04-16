@@ -1,8 +1,8 @@
 import { init, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { init as initEvents } from '@sitecore-cloudsdk/events/browser';
-import React, { useState } from 'react';
+import { useState } from 'react';
 
-const AsyncInitPersonalize = () => {
+export default function AsyncInitPersonalize() {
   const [responseBody, setResponseBody] = useState('');
   const personalizeData = {
     channel: 'WEB',
@@ -74,6 +74,4 @@ const AsyncInitPersonalize = () => {
       />
     </div>
   );
-};
-
-export default AsyncInitPersonalize;
+}

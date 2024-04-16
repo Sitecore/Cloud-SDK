@@ -2,7 +2,7 @@
 import { NestedObject } from '@sitecore-cloudsdk/utils';
 import { addToEventQueue, processEventQueue, clearEventQueue } from '@sitecore-cloudsdk/events/browser';
 
-export function EventToQueue() {
+export default function EventToQueue() {
   const addEventToQueue = () => {
     const eventAttributes = new URLSearchParams(window.location.search);
     const extensionDataNested = eventAttributes.get('nested')
@@ -116,5 +116,3 @@ export function EventToQueue() {
     </div>
   );
 }
-
-export default EventToQueue;

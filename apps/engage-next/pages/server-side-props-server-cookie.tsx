@@ -2,15 +2,13 @@
 import { init } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
-export function serverSidePropsServerCookie() {
+export default function serverSidePropsServerCookie() {
   return (
     <div>
       <h1 data-testid='serverSidePropsServerCookiePageTitle'>ServerSideProps Server Cookie page ###1###</h1>
     </div>
   );
 }
-
-export default serverSidePropsServerCookie;
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const timeout =
