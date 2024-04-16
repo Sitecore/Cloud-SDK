@@ -10,7 +10,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -18,7 +18,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -27,11 +27,11 @@ const settingsObj: core.Settings = {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,
     cookieName: 'name',
-    cookiePath: '/',
+    cookiePath: '/'
   },
   siteName: 'site',
   sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: 'http://testurl',
+  sitecoreEdgeUrl: 'http://testurl'
 };
 
 describe('EventApiClient', () => {
@@ -39,7 +39,7 @@ describe('EventApiClient', () => {
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse)
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -54,13 +54,13 @@ describe('EventApiClient', () => {
       client_key: '',
       currency: 'EUR',
       ext: {
-        a: 'test',
+        a: 'test'
       },
       language: 'EN',
       page: 'races',
       pos: '',
       requested_at: '2024-01-01T00:00:00.000Z',
-      type: 'CUSTOM_TYPE',
+      type: 'CUSTOM_TYPE'
     };
 
     const expectedBody = JSON.stringify(eventData);
@@ -68,7 +68,7 @@ describe('EventApiClient', () => {
 
     await sendEvent(eventData, settingsObj).then((data) => {
       expect(data).toEqual({
-        status: 'OK',
+        status: 'OK'
       });
     });
 
@@ -79,9 +79,9 @@ describe('EventApiClient', () => {
       headers: {
         'Content-Type': 'application/json',
         'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-        'X-Library-Version': LIBRARY_VERSION,
+        'X-Library-Version': LIBRARY_VERSION
       },
-      method: 'POST',
+      method: 'POST'
     });
 
     expect(debugMock).toHaveBeenCalled();
@@ -109,7 +109,7 @@ describe('EventApiClient', () => {
       page: 'races',
       pos: 'spinair.com',
       requested_at: '2024-01-01T00:00:00.000Z',
-      type: 'CUSTOM_TYPE',
+      type: 'CUSTOM_TYPE'
     };
 
     const response = await sendEvent(eventData, settingsObj);

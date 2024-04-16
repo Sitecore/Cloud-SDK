@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -26,24 +26,24 @@ describe('personalizeServer', () => {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
-      get: () => '',
+      get: () => ''
     },
-    url: '',
+    url: ''
   };
   const personalizeData: PersonalizeData = {
     channel: 'WEB',
     currency: 'EUR',
     friendlyId: 'personalizeintegrationtest',
-    language: 'EN',
+    language: 'EN'
   };
   const settings = {
     cookieSettings: { cookieDomain: 'cDomain', cookieExpiryDays: 730, cookieName: 'bid_name', cookiePath: '/' },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   let req: MiddlewareRequest;
@@ -70,7 +70,7 @@ describe('personalizeServer', () => {
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
       timeout: undefined,
-      userAgent: null,
+      userAgent: null
     });
   });
 
@@ -78,8 +78,8 @@ describe('personalizeServer', () => {
     const httpReq = {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'user-agent': 'test_ua',
-      },
+        'user-agent': 'test_ua'
+      }
     };
 
     jest.spyOn(core, 'getSettingsServer').mockReturnValue(settings);
@@ -87,7 +87,7 @@ describe('personalizeServer', () => {
     personalizeServer(httpReq, personalizeData);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
-      userAgent: 'test_ua',
+      userAgent: 'test_ua'
     });
   });
 
@@ -100,7 +100,7 @@ describe('personalizeServer', () => {
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
       timeout: 100,
-      userAgent: 'test_ua',
+      userAgent: 'test_ua'
     });
     expect(getMock).toHaveBeenCalledWith('user-agent');
   });
@@ -119,7 +119,7 @@ describe('personalizeServer', () => {
     req.geo = {
       city: 'Tarnów',
       country: 'PL',
-      region: '12',
+      region: '12'
     };
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
@@ -133,8 +133,8 @@ describe('personalizeServer', () => {
         geo: {
           city: 'Tarnów',
           country: 'PL',
-          region: '12',
-        },
+          region: '12'
+        }
       },
       settings,
       '',
@@ -146,12 +146,12 @@ describe('personalizeServer', () => {
     req.geo = {
       city: 'Tarnów',
       country: 'PL',
-      region: '12',
+      region: '12'
     };
     personalizeData.geo = {
       city: 'Athens',
       country: 'GR',
-      region: 'I',
+      region: 'I'
     };
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
@@ -165,8 +165,8 @@ describe('personalizeServer', () => {
         geo: {
           city: 'Athens',
           country: 'GR',
-          region: 'I',
-        },
+          region: 'I'
+        }
       },
       settings,
       '',
@@ -185,7 +185,7 @@ describe('personalizeServer', () => {
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
       timeout: undefined,
-      userAgent: 'test_ua',
+      userAgent: 'test_ua'
     });
   });
 
@@ -200,7 +200,7 @@ describe('personalizeServer', () => {
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {
       timeout: undefined,
-      userAgent: 'test_ua',
+      userAgent: 'test_ua'
     });
   });
 });

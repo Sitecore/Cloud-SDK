@@ -6,7 +6,7 @@ const htmlUnescape: Record<string, string> = {
   '&amp;': '&',
   '&gt;': '>',
   '&lt;': '<',
-  '&quot;': '"',
+  '&quot;': '"'
 } as const;
 
 /** Used to match HTML entities and HTML characters. */

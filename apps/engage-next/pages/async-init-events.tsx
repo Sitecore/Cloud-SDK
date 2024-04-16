@@ -7,7 +7,7 @@ export default function AsyncInitEvents() {
     channel: 'WEB',
     currency: 'EUR',
     language: 'EN',
-    page: 'async-init-events',
+    page: 'async-init-events'
   };
 
   const pageViewWithoutInit = async () => {
@@ -18,7 +18,7 @@ export default function AsyncInitEvents() {
     init({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     await pageView(eventData);
@@ -28,13 +28,13 @@ export default function AsyncInitEvents() {
     initPersonalize({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     init({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     await pageView(eventData);

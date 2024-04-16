@@ -16,7 +16,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
-    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7'
   };
 });
 
@@ -24,7 +24,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -36,7 +36,7 @@ describe('initializer', () => {
     cookieDomain: 'cDomain',
     enableServerCookie: true,
     siteName: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   const req = {
@@ -44,22 +44,22 @@ describe('initializer', () => {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
       get: () => '',
-      host: '',
+      host: ''
     },
     ip: undefined,
-    url: '',
+    url: ''
   };
 
   const res = {
     cookies: {
       set() {
         return 'test';
-      },
-    },
+      }
+    }
   };
 
   afterEach(() => {
@@ -74,10 +74,10 @@ describe('initializer', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_key',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   });
 
   describe('init', () => {

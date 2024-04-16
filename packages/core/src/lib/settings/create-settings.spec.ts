@@ -10,14 +10,14 @@ describe('createSettings', () => {
       cookieSettings: { cookieDomain, cookieExpiryDays, cookiePath, cookieName },
       siteName,
       sitecoreEdgeContextId,
-      sitecoreEdgeUrl,
+      sitecoreEdgeUrl
     } = createSettings({
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
       cookiePath: '/path',
       siteName: '4567',
       sitecoreEdgeContextId: '0123',
-      sitecoreEdgeUrl: undefined as unknown as string,
+      sitecoreEdgeUrl: undefined as unknown as string
     });
     expect(cookieDomain).toEqual('domain');
     expect(cookieExpiryDays).toEqual(40);
@@ -30,12 +30,12 @@ describe('createSettings', () => {
   it('should hold default values for optional settings', () => {
     const {
       cookieSettings: { cookieExpiryDays, cookiePath },
-      sitecoreEdgeUrl,
+      sitecoreEdgeUrl
     } = createSettings({
       cookieDomain: 'domain',
       siteName: '4567',
       sitecoreEdgeContextId: '0123',
-      sitecoreEdgeUrl: 'https://localhost',
+      sitecoreEdgeUrl: 'https://localhost'
     });
 
     expect(cookieExpiryDays).toEqual(730);

@@ -19,7 +19,7 @@ export default function CorrelationID() {
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
+      language: 'EN'
     });
     resetAllDecorators();
   };
@@ -51,7 +51,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (testID === 'sendPersonalizeFromServerSidePropsWithCorrelationID') {
     await init(context.req, context.res, {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     decorateAll(testID as string);
@@ -60,7 +60,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
+      language: 'EN'
     });
     resetAllDecorators();
   }

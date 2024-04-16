@@ -8,7 +8,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -35,11 +35,11 @@ describe('getGuestId', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: 'https://localhost',
+      sitecoreEdgeUrl: 'https://localhost'
     });
 
     getGuestIdSpy.mockResolvedValueOnce('guestID');

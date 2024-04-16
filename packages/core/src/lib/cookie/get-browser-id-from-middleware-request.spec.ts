@@ -4,8 +4,8 @@ const mockCookieName = 'bid_key';
 const mockRequest = {
   cookies: { get: jest.fn(), set: jest.fn() },
   headers: {
-    get: jest.fn(),
-  },
+    get: jest.fn()
+  }
 };
 
 describe('getBrowserIdFromMiddlewareRequest', () => {

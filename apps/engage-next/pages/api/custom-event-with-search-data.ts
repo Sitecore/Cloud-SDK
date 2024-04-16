@@ -7,13 +7,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const baseEventData = {
     channel: 'WEB',
     currency: 'EUR',
-    language: 'EN',
+    language: 'EN'
   };
 
   await init(req, res, {
     cookieExpiryDays: 400,
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   const testID = requestUrl.searchParams?.get('testID');
@@ -26,14 +26,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       await event(req, {
         ...baseEventData,
         type: 'CUSTOM_EVENT',
-        searchData: { test: 123 },
+        searchData: { test: 123 }
       });
 
       break;
     case 'sendCustomEventFromAPIWithoutSearchData':
       await event(req, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
+        type: 'CUSTOM_EVENT'
       });
 
       break;

@@ -46,7 +46,7 @@ Cypress.Commands.add('assertRequestHeader', (testID: string, headerName: string,
     {
       errorMsg: 'Error not found',
       timeout: 15000,
-      interval: 100,
+      interval: 100
     }
   );
 });
@@ -64,7 +64,7 @@ Cypress.Commands.add('assertRequestBody', (testID, bodyAttributeName) => {
     {
       errorMsg: 'Request body not found',
       timeout: 15000,
-      interval: 100,
+      interval: 100
     }
   );
 });
@@ -82,7 +82,7 @@ Cypress.Commands.add('assertRequestBodyNotContaining', (testID, bodyAttributeNam
     {
       errorMsg: 'Request body not found',
       timeout: 15000,
-      interval: 100,
+      interval: 100
     }
   );
 });
@@ -99,7 +99,7 @@ Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
     {
       errorMsg: 'Error not found',
       timeout: 15000,
-      interval: 100,
+      interval: 100
     }
   );
 });
@@ -116,7 +116,7 @@ Cypress.Commands.add('assertLogsNotContaining', (testID: string, log: string) =>
     {
       errorMsg: 'Log not found',
       timeout: 15000,
-      interval: 100,
+      interval: 100
     }
   );
 });
@@ -208,9 +208,9 @@ Cypress.Commands.add('requestGuestContext', () => {
           c?.value
         }`,
         headers: {
-          authorization,
+          authorization
         },
-        timeout: 15000,
+        timeout: 15000
       };
 
       cy.request(options)
@@ -224,7 +224,7 @@ Cypress.Commands.add('requestGuestContext', () => {
             {
               errorMsg: 'Event not returned from EP',
               timeout: 15000,
-              interval: 100,
+              interval: 100
             };
         });
     });

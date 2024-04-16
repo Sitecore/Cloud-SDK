@@ -19,13 +19,13 @@ export async function pageViewEventWithSearchDataMiddleware(request: NextRequest
     case 'sendPageViewEventFromMiddlewareWithSearchData':
       await pageView(request, {
         ...baseEventData,
-        searchData: { test: 123 },
+        searchData: { test: 123 }
       });
 
       break;
     case 'sendPageViewEventFromMiddlewareWithoutSearchData':
       await pageView(request, {
-        ...baseEventData,
+        ...baseEventData
       });
 
       break;

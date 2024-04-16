@@ -12,11 +12,11 @@ describe('handleMiddlewareRequest', () => {
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
     ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
     status: 'OK',
-    version: '1.2',
+    version: '1.2'
   };
 
   const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse),
+    json: () => Promise.resolve(mockFetchResponse)
   });
 
   const options: Settings = {
@@ -24,11 +24,11 @@ describe('handleMiddlewareRequest', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: `${COOKIE_NAME_PREFIX}123`,
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
@@ -44,14 +44,14 @@ describe('handleMiddlewareRequest', () => {
   const request: MiddlewareRequest = {
     cookies: { get: jest.fn(), set: jest.fn() },
     headers: {
-      get: jest.fn(),
-    },
+      get: jest.fn()
+    }
   };
 
   const response: MiddlewareNextResponse = {
     cookies: {
-      set: jest.fn(),
-    },
+      set: jest.fn()
+    }
   };
 
   const setSpy = jest.spyOn(request.cookies, 'set');
@@ -83,8 +83,8 @@ describe('handleMiddlewareRequest', () => {
     const request: MiddlewareRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
-        get: jest.fn(),
-      },
+        get: jest.fn()
+      }
     };
     const setSpy = jest.spyOn(request.cookies, 'set');
 

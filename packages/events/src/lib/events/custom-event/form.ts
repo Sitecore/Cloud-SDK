@@ -24,13 +24,13 @@ export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTE
     eventData: {
       extensionData: {
         formId,
-        interactionType: interactionType.toUpperCase(),
+        interactionType: interactionType.toUpperCase()
       },
-      type: 'FORM',
+      type: 'FORM'
     },
     id,
     sendEvent,
-    settings,
+    settings
   });
 
   formEvent.page = undefined as unknown as string;

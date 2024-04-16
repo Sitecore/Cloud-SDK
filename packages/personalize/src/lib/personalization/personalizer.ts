@@ -55,7 +55,7 @@ export class Personalizer {
       channel: personalizeData.channel,
       currency: personalizeData.currency,
       friendlyId: personalizeData.friendlyId,
-      language: personalizeData.language,
+      language: personalizeData.language
     };
 
     if (personalizeData.identifier && personalizeData.identifier.id && personalizeData.identifier.id.trim().length > 0)
@@ -85,7 +85,7 @@ export class Personalizer {
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,
-      pointOfSale: '',
+      pointOfSale: ''
     };
 
     return mappedData;

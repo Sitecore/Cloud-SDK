@@ -27,7 +27,7 @@ export class PageViewEvent extends BaseEvent {
         channel,
         currency,
         language,
-        page,
+        page
       },
       args.id
     );
@@ -84,7 +84,7 @@ export class PageViewEvent extends BaseEvent {
    */
   private mapAttributes(): PageViewEventPayload {
     let pageViewPayload: PageViewEventPayload = {
-      type: 'VIEW',
+      type: 'VIEW'
     };
 
     const pageVariantId = this.getPageVariantId(
@@ -113,8 +113,8 @@ export class PageViewEvent extends BaseEvent {
         data: this.pageViewData.searchData,
         metadata: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          ut_api_version: '1.0',
-        },
+          ut_api_version: '1.0'
+        }
       };
     }
 

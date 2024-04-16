@@ -20,7 +20,7 @@ Then('the cookie is automatically set with the correct bid value for the user', 
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
 });
 
@@ -30,7 +30,7 @@ Given('a client cookie exists on the {string} page', (page: string) => {
       res.body = {
         ref: '1234',
         status: '200',
-        version: Cypress.env('API_VERSION'),
+        version: Cypress.env('API_VERSION')
       };
     });
   }).as('bIdRequest');
@@ -51,13 +51,13 @@ defineStep('a client cookie is created at {string} page with {string} domain', (
   cy.waitUntil(() => cy.getCookies().then((cookies) => cookies.length === 0), {
     errorMsg: 'Failed to clear cookies',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
   cy.visit(page, {
     /* eslint-disable @typescript-eslint/naming-convention */
     qs: {
-      cookieDomain: domain,
-    },
+      cookieDomain: domain
+    }
     /* eslint-enable @typescript-eslint/naming-convention */
   });
 });
@@ -69,7 +69,7 @@ defineStep('{string} cookie is created with the {string} domain', (result: strin
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => cookie?.domain === domain), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 500,
+    interval: 500
   });
 });
 
@@ -82,7 +82,7 @@ defineStep('the {string} domain cookie is not created', () => {
 
 When('no TTL setting has been specified', () => {
   const engage = {
-    cookieTTL: undefined,
+    cookieTTL: undefined
   };
   expect(engage.cookieTTL).to.equal(undefined);
 });
@@ -98,7 +98,7 @@ Then('the cookie is set with the default expiry', () => {
     {
       errorMsg: 'Cookie not found',
       timeout: 10000,
-      interval: 500,
+      interval: 500
     }
   );
 });
@@ -112,7 +112,7 @@ Given(
     });
 
     cy.visit(`${page}?enableBrowserCookie=true&badSitecoreEdgeContextIdBrowser=test`, {
-      failOnStatusCode: false,
+      failOnStatusCode: false
     }).then(() => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000).then(() => {

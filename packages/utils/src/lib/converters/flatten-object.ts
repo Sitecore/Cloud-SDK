@@ -27,7 +27,7 @@ export function flattenObject(data: FlattenObjectDataParameters) {
       flattenObject({
         currentKey: `${currentKey ? `${currentKey}_${key}` : key}`,
         newObject,
-        object: value,
+        object: value
       });
     else newObject[currentKey ? `${currentKey}_${key}` : key] = value;
   }

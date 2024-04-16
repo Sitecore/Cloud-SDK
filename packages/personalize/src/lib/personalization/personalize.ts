@@ -21,6 +21,6 @@ export async function personalize(
   const id = getBrowserId();
 
   return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, window.location.search, {
-    timeout: opts?.timeout,
+    timeout: opts?.timeout
   });
 }

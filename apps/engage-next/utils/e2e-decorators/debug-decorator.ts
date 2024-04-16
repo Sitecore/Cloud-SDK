@@ -8,7 +8,7 @@ export function decorateDebug(testID: string | null) {
     await fetch(`http://localhost:4200/api/save-e2e-data?type=logs`, {
       body: JSON.stringify({ args: [...args], testID: testID ?? 'not_defined' }),
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' }
     });
 
     return originalDebug(...args);

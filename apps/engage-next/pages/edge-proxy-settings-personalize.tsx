@@ -32,7 +32,7 @@ export default function EdgeProxySettings({ serverResponse }: { serverResponse: 
       sitecoreEdgeContextId: '72d5674b-1da5-47d8-5829-08db5ace6087',
       siteName: '456',
       sitecoreEdgeUrl: 'https://edge-platform-staging.sitecore-staging.cloud',
-      enableBrowserCookie: true,
+      enableBrowserCookie: true
     });
   };
 
@@ -112,7 +112,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (isServerMode !== 'true')
     return {
-      props: {},
+      props: {}
     };
 
   const attributeToTest = context.query.attribute;
@@ -138,19 +138,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       sitecoreEdgeContextId,
       siteName,
       sitecoreEdgeUrl,
-      enableServerCookie,
+      enableServerCookie
     } as ServerSettings);
 
     return {
       props: {
-        serverResponse: 'no errors',
-      },
+        serverResponse: 'no errors'
+      }
     };
   } catch (error) {
     return {
       props: {
-        serverResponse: (error as Error).message,
-      },
+        serverResponse: (error as Error).message
+      }
     };
   }
 }

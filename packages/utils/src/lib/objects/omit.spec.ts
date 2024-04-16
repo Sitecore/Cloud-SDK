@@ -11,18 +11,18 @@ describe('omit', () => {
     id: 1,
     name: 'Rodney Mullen',
     password: 'verysecure',
-    [symbol]: 'someValue',
+    [symbol]: 'someValue'
   };
 
   Object.defineProperty(originalObject, 'nonEnumerableProperty', {
     enumerable: false,
-    value: 10,
+    value: 10
   });
 
   it(`should omit properties 'id' and 'name' from 'originalObject'`, () => {
     const expectedResult = {
       password: 'verysecure',
-      [symbol]: 'someValue',
+      [symbol]: 'someValue'
     };
     const actualResult = omit(originalObject, ['id', 'name']);
     expect(actualResult).toEqual(expectedResult);
@@ -32,7 +32,7 @@ describe('omit', () => {
     const expectedResult = {
       id: 1,
       name: 'Rodney Mullen',
-      password: 'verysecure',
+      password: 'verysecure'
     };
     const actualResult = omit(originalObject, [symbol]);
     expect(actualResult).toEqual(expectedResult);

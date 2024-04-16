@@ -21,7 +21,7 @@ describe('isValidEmail', () => {
     'email@example.name',
     'email@example.museum',
     'email@example.co.jp',
-    'firstname-lastname@example.com',
+    'firstname-lastname@example.com'
   ];
   const invalidEmails = [
     '',
@@ -31,7 +31,7 @@ describe('isValidEmail', () => {
     ' email@example.com',
     'email@example.com ',
     'mysite.ourearth.com',
-    '@you.me.net',
+    '@you.me.net'
   ];
   test.each(validEmails)('should return true when valid email strings are passed as parameters', (email) => {
     expect(isValidEmail(email)).toEqual(true);

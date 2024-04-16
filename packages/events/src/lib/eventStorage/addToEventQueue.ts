@@ -19,7 +19,7 @@ export async function addToEventQueue(eventData: EventData): Promise<void> {
   const queueEventPayload: QueueEventPayload = {
     eventData,
     id,
-    settings,
+    settings
   };
 
   eventQueue.enqueueEvent(queueEventPayload);

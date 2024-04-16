@@ -3,7 +3,7 @@ import {
   getBrowserId,
   getGuestId as getGuestIdFromCore,
   getSettings,
-  handleGetSettingsError,
+  handleGetSettingsError
 } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
 import { awaitInit } from '../initializer/browser/initializer';

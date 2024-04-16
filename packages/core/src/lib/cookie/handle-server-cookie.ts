@@ -7,7 +7,7 @@ import {
   isHttpRequest,
   isHttpResponse,
   isNextJsMiddlewareRequest,
-  isNextJsMiddlewareResponse,
+  isNextJsMiddlewareResponse
 } from '@sitecore-cloudsdk/utils';
 import { getSettingsServer } from '../init/init-core-server';
 import { handleHttpCookie } from './handle-http-cookie';

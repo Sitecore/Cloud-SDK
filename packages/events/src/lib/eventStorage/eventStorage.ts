@@ -37,7 +37,7 @@ class EventQueue {
 
     new CustomEvent({
       sendEvent,
-      ...queueEventPayload,
+      ...queueEventPayload
     });
 
     const eventQueue = this.getEventQueue();
@@ -56,7 +56,7 @@ class EventQueue {
         eventData: queueEventPayload.eventData,
         id: queueEventPayload.id,
         sendEvent,
-        settings: queueEventPayload.settings,
+        settings: queueEventPayload.settings
       }).send();
     }
 

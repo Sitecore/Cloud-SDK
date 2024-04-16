@@ -12,7 +12,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
-    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7'
   };
 });
 
@@ -22,7 +22,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -30,7 +30,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -40,11 +40,11 @@ describe('sendCallFlowsRequest', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: 'site',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: 'http://testurl',
+    sitecoreEdgeUrl: 'http://testurl'
   };
   const personalizeDataOriginal = {
     channel: 'WEB',
@@ -52,13 +52,13 @@ describe('sendCallFlowsRequest', () => {
     currencyCode: 'EUR',
     friendlyId: 'personalizeintegrationtest',
     language: 'EN',
-    pointOfSale: '',
+    pointOfSale: ''
   };
   let personalizeData: EPCallFlowsBody = { ...personalizeDataOriginal };
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse)
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -74,11 +74,11 @@ describe('sendCallFlowsRequest', () => {
     personalizeData.email = 'test';
     personalizeData.identifiers = {
       id: '1',
-      provider: 'email',
+      provider: 'email'
     };
     personalizeData.params = {
       customNumber: 123,
-      customString: 'example value',
+      customString: 'example value'
     };
 
     it('sends personalize with the correct values', async () => {
@@ -88,7 +88,7 @@ describe('sendCallFlowsRequest', () => {
         currencyCode: 'EUR',
         friendlyId: 'personalizeintegrationtest',
         language: 'EN',
-        pointOfSale: '',
+        pointOfSale: ''
       };
 
       const payload = await sendCallFlowsRequest(personalizeData, settingsObj);
@@ -165,7 +165,7 @@ describe('sendCallFlowsRequest', () => {
       expect(debugMock.mock.results[1].value.mock.calls[0][1]).toEqual(
         expect.objectContaining({
           json: expect.any(Function),
-          status: 200,
+          status: 200
         })
       );
     });
@@ -221,16 +221,16 @@ describe('sendCallFlowsRequest', () => {
         language: 'EN',
         pointOfSale: '',
         // eslint-disable-next-line sort-keys
-        email: 'test',
+        email: 'test'
       }),
       headers: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/json',
         'X-Library-Version': LIBRARY_VERSION,
-        'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7',
+        'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7'
         /* eslint-enable @typescript-eslint/naming-convention */
       },
-      method: 'POST',
+      method: 'POST'
     };
 
     it('should call fetchWithTimeout with user agent if provided', async () => {
@@ -244,7 +244,7 @@ describe('sendCallFlowsRequest', () => {
       const expectedOptsWithUA = {
         ...expectedOpts,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' },
+        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' }
       };
 
       expect(fetchWithTimeoutSpy).toHaveBeenLastCalledWith(expectedUrl, 100, expectedOptsWithUA);
@@ -275,7 +275,7 @@ describe('sendCallFlowsRequest', () => {
       const expectedOptsWithUA = {
         ...expectedOpts,
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' },
+        headers: { ...expectedOpts.headers, 'User-Agent': 'test_ua' }
       };
 
       expect(global.fetch).toHaveBeenLastCalledWith(expectedUrl, expectedOptsWithUA);

@@ -13,7 +13,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -33,11 +33,11 @@ describe('eventServer', () => {
       channel: 'WEB',
       currency: 'EUR',
       extensionData: {
-        extKey: 'extValue',
+        extKey: 'extValue'
       },
       language: 'EN',
       page: 'races',
-      type: 'CUSTOM_TYPE',
+      type: 'CUSTOM_TYPE'
     };
   });
 
@@ -49,11 +49,11 @@ describe('eventServer', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     });
 
     await event(eventData);
@@ -67,12 +67,12 @@ describe('eventServer', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
-          cookiePath: '/',
+          cookiePath: '/'
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
-      },
+        sitecoreEdgeUrl: ''
+      }
     });
 
     expect(CustomEvent).toHaveBeenCalledTimes(1);

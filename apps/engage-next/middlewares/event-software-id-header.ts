@@ -8,7 +8,7 @@ export async function eventWithSoftwareIDHeaderMiddleware(request: NextRequest):
     const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN', page: 'middleware-view' };
 
     const extensionData = {
-      extParam: 'middlewareTest',
+      extParam: 'middlewareTest'
     };
 
     decorateAll(testID);

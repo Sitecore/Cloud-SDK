@@ -13,7 +13,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn()))),
+    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn())))
   };
 });
 
@@ -24,18 +24,18 @@ describe('core-server', () => {
     enableServerCookie: undefined,
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
   const createSettingsSpy = jest.spyOn(createSettings, 'createSettings').mockReturnValue({
     cookieSettings: {
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
       cookieName: '',
-      cookiePath: '/path',
+      cookiePath: '/path'
     },
     siteName: '4567',
     sitecoreEdgeContextId: '0123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   });
 
   beforeEach(() => {
@@ -79,7 +79,7 @@ describe('core-server', () => {
       settingsInput = {
         ...settingsInput,
         enableServerCookie: true,
-        timeout: 500,
+        timeout: 500
       };
       const request = {} as any;
       const response = {} as any;
@@ -101,11 +101,11 @@ describe('core-server', () => {
           cookieDomain: 'domain',
           cookieExpiryDays: 40,
           cookieName: '',
-          cookiePath: '/path',
+          cookiePath: '/path'
         },
         siteName: '4567',
         sitecoreEdgeContextId: '0123',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       };
 
       await initCoreServer(settingsInput, request, response);

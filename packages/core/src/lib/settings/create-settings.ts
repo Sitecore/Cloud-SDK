@@ -16,10 +16,10 @@ export function createSettings(settingsInput: SettingsParams): Settings {
       cookieDomain,
       cookieExpiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
       cookieName: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
-      cookiePath: cookiePath || '/',
+      cookiePath: cookiePath || '/'
     },
     siteName,
     sitecoreEdgeContextId,
-    sitecoreEdgeUrl: sitecoreEdgeUrl ?? SITECORE_EDGE_URL,
+    sitecoreEdgeUrl: sitecoreEdgeUrl ?? SITECORE_EDGE_URL
   };
 }

@@ -6,8 +6,8 @@ describe('isNextJsMiddlewareRequest', () => {
     const validMiddlewareRequest = {
       cookies: {
         get: jest.fn(),
-        set: jest.fn(),
-      },
+        set: jest.fn()
+      }
     };
 
     const result = isNextJsMiddlewareRequest(validMiddlewareRequest as unknown as Request);
@@ -17,7 +17,7 @@ describe('isNextJsMiddlewareRequest', () => {
 
   it('should return false for an object without cookies', () => {
     const objectWithoutCookies = {
-      query: {},
+      query: {}
     };
 
     const result = isNextJsMiddlewareRequest(objectWithoutCookies as unknown as Request);

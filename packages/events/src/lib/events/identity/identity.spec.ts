@@ -10,7 +10,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -19,9 +19,9 @@ jest.mock('./identity-event', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     IdentityEvent: jest.fn().mockImplementation(() => {
       return {
-        send: jest.fn(() => Promise.resolve('mockedResponse')),
+        send: jest.fn(() => Promise.resolve('mockedResponse'))
       };
-    }),
+    })
   };
 });
 
@@ -31,7 +31,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -40,7 +40,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -53,11 +53,11 @@ const identityData = {
     {
       expiryDate: undefined,
       id,
-      provider: 'email',
-    },
+      provider: 'email'
+    }
   ],
   language: 'EN',
-  page: 'identity',
+  page: 'identity'
 };
 
 const extensionData = { extKey: 'extValue' };
@@ -76,11 +76,11 @@ describe('identity', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     });
 
     const response = await identity({ ...identityData, extensionData });
@@ -89,7 +89,7 @@ describe('identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent,
-      settings: expect.objectContaining({}),
+      settings: expect.objectContaining({})
     });
     expect(response).toBe('mockedResponse');
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);

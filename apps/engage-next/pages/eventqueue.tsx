@@ -20,7 +20,7 @@ export default function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
+      language: 'EN'
     };
 
     eventAttributes.delete('nested');
@@ -54,7 +54,7 @@ export default function EventToQueue() {
         channel: 'WEB',
         currency: 'EUR',
         language: 'EN',
-        page: `testEvent${index}`,
+        page: `testEvent${index}`
       };
       addToEventQueue({ ...eventTwo, type, extensionData });
     }
@@ -64,7 +64,7 @@ export default function EventToQueue() {
     const event = {
       channel: 'WEB',
       currency: 'EUR',
-      language: 'EN',
+      language: 'EN'
     };
 
     addToEventQueue({ ...event, type });

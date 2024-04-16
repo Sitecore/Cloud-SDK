@@ -16,6 +16,6 @@ export function getDefaultCookieAttributes(
     maxAge: maxAge * DAILY_SECONDS,
     path: '/',
     sameSite: 'None',
-    secure: true,
+    secure: true
   };
 }

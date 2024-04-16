@@ -9,11 +9,11 @@ describe('getBrowserId', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'cookieName',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   });
 
   afterEach(() => {

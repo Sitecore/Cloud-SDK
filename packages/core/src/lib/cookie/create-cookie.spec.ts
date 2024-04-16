@@ -7,7 +7,7 @@ import { createCookie } from './create-cookie';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   cookieExists: jest.fn(),
-  createCookieString: jest.fn(),
+  createCookieString: jest.fn()
 }));
 
 describe('createCookie', () => {
@@ -17,7 +17,7 @@ describe('createCookie', () => {
     maxAge: 720,
     path: '/',
     sameSite: 'None',
-    secure: true,
+    secure: true
   };
 
   afterEach(() => {
@@ -33,11 +33,11 @@ describe('createCookie', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: `${COOKIE_NAME_PREFIX}123`,
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: SITECORE_EDGE_URL,
+      sitecoreEdgeUrl: SITECORE_EDGE_URL
     };
   });
 

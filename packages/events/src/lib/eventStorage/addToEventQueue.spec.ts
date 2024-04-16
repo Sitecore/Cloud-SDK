@@ -10,7 +10,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -20,7 +20,7 @@ const eventData: EventData = {
   currency: 'EUR',
   language: 'EN',
   page: 'races',
-  type: 'TEST_TYPE',
+  type: 'TEST_TYPE'
 };
 
 describe('addToEventQueue', () => {

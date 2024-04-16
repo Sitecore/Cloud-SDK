@@ -5,7 +5,7 @@ import {
   EPResponse,
   getBrowserIdFromRequest,
   getSettingsServer,
-  handleGetSettingsError,
+  handleGetSettingsError
 } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
 import { Request } from '@sitecore-cloudsdk/utils';
@@ -26,6 +26,6 @@ export function eventServer<T extends Request>(request: T, eventData: EventData)
     eventData,
     id,
     sendEvent,
-    settings,
+    settings
   }).send();
 }

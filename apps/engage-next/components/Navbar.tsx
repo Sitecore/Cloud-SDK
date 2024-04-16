@@ -19,52 +19,52 @@ const links = [
   {
     text: 'Edge Proxy Settings Personalize',
     path: '/edge-proxy-settings-personalize',
-    testId: 'edgeProxySettingsPersonalizePage',
+    testId: 'edgeProxySettingsPersonalizePage'
   },
   {
     text: 'ServerSideProps View Event',
     path: '/server-side-props-view-event',
-    testId: 'serverSidePropsViewEventPage',
+    testId: 'serverSidePropsViewEventPage'
   },
   {
     text: 'ServerSideProps Custom Event',
     path: '/server-side-props-custom-event',
-    testId: 'serverSidePropsCustomEventPage',
+    testId: 'serverSidePropsCustomEventPage'
   },
   {
     text: 'ServerSideProps Identity Event',
     path: '/server-side-props-identity-event',
-    testId: 'serverSidePropsIdentityEventPage',
+    testId: 'serverSidePropsIdentityEventPage'
   },
   {
     text: 'Personalize',
     path: '/personalize',
-    testId: 'personalizePage',
+    testId: 'personalizePage'
   },
   {
     text: 'Async events',
     path: '/async-init-events',
-    testId: 'asyncInitEvents',
+    testId: 'asyncInitEvents'
   },
   {
     text: 'Async personalize',
     path: '/async-init-personalize',
-    testId: 'asyncInitPersonalize',
+    testId: 'asyncInitPersonalize'
   },
   {
     text: 'Middleware personalize geo',
     path: '/middleware-personalize-geo',
-    testId: 'middlewarePersonalizeGeo',
+    testId: 'middlewarePersonalizeGeo'
   },
   {
     text: 'Middleware personalize geo partial',
     path: '/middleware-personalize-geo-partial',
-    testId: 'middlewarePersonalizeGeoPartial',
+    testId: 'middlewarePersonalizeGeoPartial'
   },
   {
     text: 'Middleware personalize geo omit',
     path: '/middleware-personalize-geo-omit',
-    testId: 'middlewarePersonalizeGeoOmit',
+    testId: 'middlewarePersonalizeGeoOmit'
   },
   { text: 'CorrelationID', path: '/correlation-id', testId: 'correlationIDPage' },
   { text: 'SoftwareID', path: '/software-id', testId: 'softwareIDPage' },
@@ -72,12 +72,12 @@ const links = [
   {
     text: 'Custom Event With Search Data',
     path: '/custom-event-with-search-data',
-    testId: 'customEventWithSearchDataPage',
+    testId: 'customEventWithSearchDataPage'
   },
   {
     text: 'PageView Event With Search Data',
     path: '/page-view-event-with-search-data',
-    testId: 'pageViewEventWithSearchDataPage',
+    testId: 'pageViewEventWithSearchDataPage'
   }
 ];
 

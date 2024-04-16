@@ -5,8 +5,8 @@ describe('isHttpRequest', () => {
   it('should return true for a valid HTTP Request', () => {
     const httpRequest = {
       headers: {
-        cookie: 'test',
-      },
+        cookie: 'test'
+      }
     };
 
     const result = isHttpRequest(httpRequest);
@@ -17,8 +17,8 @@ describe('isHttpRequest', () => {
   it('should return false for an object without headers', () => {
     const nonHttpRequest = {
       cookies: {
-        get: jest.fn(),
-      },
+        get: jest.fn()
+      }
     };
 
     const result = isHttpRequest(nonHttpRequest as unknown as Request);

@@ -11,7 +11,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '',
         sitecoreEdgeContextId: '',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       });
     }).toThrow(ErrorMessages.MV_0001);
 
@@ -20,7 +20,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '',
         sitecoreEdgeContextId: ' ',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       });
     }).toThrow(ErrorMessages.MV_0001);
 
@@ -29,7 +29,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       });
     }).toThrow(ErrorMessages.MV_0002);
   });
@@ -40,7 +40,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: ' ',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: 'test',
+        sitecoreEdgeUrl: 'test'
       });
     }).toThrow(ErrorMessages.MV_0002);
   });
@@ -51,7 +51,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '456',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: 'test',
+        sitecoreEdgeUrl: 'test'
       });
     }).toThrow(ErrorMessages.IV_0001);
   });
@@ -62,7 +62,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '456',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: ' ',
+        sitecoreEdgeUrl: ' '
       });
     }).toThrow(ErrorMessages.IV_0001);
   });
@@ -73,7 +73,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '456',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: 'test',
+        sitecoreEdgeUrl: 'test'
       });
     }).toThrow(ErrorMessages.IV_0001);
   });
@@ -84,7 +84,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '456',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: ' ',
+        sitecoreEdgeUrl: ' '
       });
     }).toThrow(ErrorMessages.IV_0001);
   });
@@ -95,7 +95,7 @@ describe('validateSettings', () => {
         cookieDomain: '',
         siteName: '456',
         sitecoreEdgeContextId: '1234',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       });
     }).toThrow(ErrorMessages.IV_0001);
   });

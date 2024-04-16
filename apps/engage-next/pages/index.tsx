@@ -3,7 +3,7 @@ import {
   PageViewData,
   LIBRARY_VERSION as eventVersion,
   getBrowserId,
-  pageView,
+  pageView
 } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
 import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
@@ -12,7 +12,7 @@ import { useState } from 'react';
 export function Index() {
   const [eventData, seteventData] = useState<PageViewData>({
     channel: 'WEB',
-    currency: 'EUR',
+    currency: 'EUR'
   });
   const [bid, setBID] = useState('Click a button above to retrieve browser ID');
   const [version, setVersion] = useState('Click a button above to retrieve version');

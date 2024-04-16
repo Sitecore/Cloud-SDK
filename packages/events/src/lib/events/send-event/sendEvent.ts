@@ -19,9 +19,9 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      'X-Library-Version': LIBRARY_VERSION,
+      'X-Library-Version': LIBRARY_VERSION
     },
-    method: 'POST',
+    method: 'POST'
   };
 
   debug(EVENTS_NAMESPACE)('Events request: %s with options: %O', eventUrl, fetchOptions);

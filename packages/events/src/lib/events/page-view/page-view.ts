@@ -23,6 +23,6 @@ export async function pageView(pageViewData: PageViewData): Promise<EPResponse |
     pageViewData,
     searchParams: window.location.search,
     sendEvent,
-    settings,
+    settings
   }).send();
 }

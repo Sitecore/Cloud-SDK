@@ -15,8 +15,8 @@ describe('fetchWithTimeout', () => {
     const mockFetch = Promise.resolve({
       json: () =>
         Promise.resolve({
-          ref: 'ref',
-        } as unknown),
+          ref: 'ref'
+        } as unknown)
     });
 
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);

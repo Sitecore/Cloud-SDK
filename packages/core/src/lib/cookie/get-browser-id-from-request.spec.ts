@@ -7,7 +7,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -25,12 +25,12 @@ describe('getBrowserIdFromRequest', () => {
     const request = {
       cookies: {
         get: () => expectedResult,
-        set: () => undefined,
+        set: () => undefined
       },
       headers: {
-        get: () => 'test',
+        get: () => 'test'
       },
-      url: '',
+      url: ''
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -43,11 +43,11 @@ describe('getBrowserIdFromRequest', () => {
     const request = {
       cookies: {
         get: () => ({ name: cookieName, value: expectedResult }),
-        set: () => undefined,
+        set: () => undefined
       },
       headers: {
-        get: () => '',
-      },
+        get: () => ''
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -60,11 +60,11 @@ describe('getBrowserIdFromRequest', () => {
     const request = {
       body: '',
       cookies: {
-        [cookieName]: expectedResult,
+        [cookieName]: expectedResult
       },
       headers: {
-        cookie: `${cookieName}=${expectedResult}`,
-      },
+        cookie: `${cookieName}=${expectedResult}`
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -76,8 +76,8 @@ describe('getBrowserIdFromRequest', () => {
 
     const request = {
       headers: {
-        cookie: `${cookieName}=${expectedResult}`,
-      },
+        cookie: `${cookieName}=${expectedResult}`
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -90,11 +90,11 @@ describe('getBrowserIdFromRequest', () => {
     const request = {
       cookies: {
         get: () => undefined,
-        set: () => undefined,
+        set: () => undefined
       },
       headers: {
-        get: () => '',
-      },
+        get: () => ''
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -108,8 +108,8 @@ describe('getBrowserIdFromRequest', () => {
       body: '',
       cookies: {},
       headers: {
-        cookie: undefined,
-      },
+        cookie: undefined
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -119,7 +119,7 @@ describe('getBrowserIdFromRequest', () => {
     const expectedResult = '';
 
     const request = {
-      headers: {},
+      headers: {}
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -130,7 +130,7 @@ describe('getBrowserIdFromRequest', () => {
     const expectedResult = 'test_id';
 
     const request = {
-      headers: {},
+      headers: {}
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);
@@ -140,8 +140,8 @@ describe('getBrowserIdFromRequest', () => {
     const expectedResult = '';
     const request = {
       headers: {
-        cookie: 'banana=banana',
-      },
+        cookie: 'banana=banana'
+      }
     };
 
     const result = getBrowserIdFromRequest(request, cookieName);

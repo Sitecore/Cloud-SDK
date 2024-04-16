@@ -14,7 +14,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -23,7 +23,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -31,7 +31,7 @@ const settingsParams: BrowserSettings = {
   sitecoreEdgeContextId: '123',
   cookieDomain: 'cDomain',
   siteName: '456',
-  sitecoreEdgeUrl: core.SITECORE_EDGE_URL,
+  sitecoreEdgeUrl: core.SITECORE_EDGE_URL
 };
 const id = 'test_id';
 
@@ -59,7 +59,7 @@ describe('form function', () => {
       browser_id: 'test_id',
       client_key: '',
       pos: '',
-      requested_at: '2024-01-01T00:00:00.000Z',
+      requested_at: '2024-01-01T00:00:00.000Z'
     });
 
     expect(fetch).toHaveBeenCalledTimes(1);
@@ -70,9 +70,9 @@ describe('form function', () => {
         headers: {
           'Content-Type': 'application/json',
           'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-          'X-Library-Version': LIBRARY_VERSION,
+          'X-Library-Version': LIBRARY_VERSION
         },
-        method: 'POST',
+        method: 'POST'
       }
     );
   });

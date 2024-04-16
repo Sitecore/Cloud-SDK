@@ -9,7 +9,7 @@ describe('generateV4UUID', () => {
       configurable: true,
       enumerable: false,
       value: { randomUUID: randomUUIDSpy },
-      writable: true,
+      writable: true
     });
 
     const result = generateV4UUID();

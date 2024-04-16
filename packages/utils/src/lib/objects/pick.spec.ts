@@ -11,13 +11,13 @@ describe('pick', () => {
     id: 1,
     name: 'Rodney Mullen',
     password: 'verysecure',
-    [symbol]: 'someValue',
+    [symbol]: 'someValue'
   };
 
   it(`should pick properties 'id' and 'name' from 'originalObject'`, () => {
     const expectedResult = {
       id: 1,
-      name: 'Rodney Mullen',
+      name: 'Rodney Mullen'
     };
     const actualResult = pick(originalObject, ['id', 'name']);
     expect(actualResult).toEqual(expectedResult);
@@ -25,7 +25,7 @@ describe('pick', () => {
 
   it(`should pick property 'symbol' from 'originalObject'`, () => {
     const expectedResult = {
-      [symbol]: 'someValue',
+      [symbol]: 'someValue'
     };
     const actualResult = pick(originalObject, [symbol]);
     expect(actualResult).toEqual(expectedResult);

@@ -6,7 +6,7 @@ describe('getCookie', () => {
   const cookieString = `${cookieName}=${cookieValue}; cookieName2=cookieValue2`;
   const cookieObject = {
     name: cookieName,
-    value: cookieValue,
+    value: cookieValue
   };
 
   it('should accept a cookie string and a cookie name as parameters and return a cookie object if the cookie name is found in the cookie string', () => {

@@ -6,7 +6,7 @@ import { useState } from 'react';
 export default function About() {
   const [eventData, seteventData] = useState<PageViewData>({
     channel: 'WEB',
-    currency: 'EUR',
+    currency: 'EUR'
   });
   return (
     <div>

@@ -3,7 +3,7 @@
   "parser": "@typescript-eslint/parser",
   "root": true,
   "ignorePatterns": ["**/*config*", "**/*.config.js", "**/*config*", "**/*.config.ts"],
-  "plugins": ["@nx", "header", "@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
+  "plugins": ["@stylistic/js", "@nx", "header", "@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -73,6 +73,7 @@
             ]
           }
         ],
+        "@stylistic/js/comma-dangle": ["error", "never"],
         "sort-imports": "error"
       }
     },

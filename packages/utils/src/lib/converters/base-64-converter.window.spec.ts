@@ -2,7 +2,7 @@ import { convertToBase64 } from './base-64-converter';
 jest.mock('buffer');
 describe('convertToBase64', () => {
   Object.defineProperty(global, 'Buffer', {
-    get: jest.fn().mockReturnValueOnce(undefined),
+    get: jest.fn().mockReturnValueOnce(undefined)
     // writable: true,
   });
 
@@ -29,11 +29,11 @@ describe('convertToBase64', () => {
 
   it('Returns the object as stringify if Buffer and Window are not present ', () => {
     Object.defineProperty(global, 'Buffer', {
-      get: jest.fn().mockReturnValueOnce(undefined),
+      get: jest.fn().mockReturnValueOnce(undefined)
     });
 
     Object.defineProperty(global, 'window', {
-      get: jest.fn().mockReturnValueOnce(undefined),
+      get: jest.fn().mockReturnValueOnce(undefined)
     });
 
     expect(global.window).toBeUndefined();

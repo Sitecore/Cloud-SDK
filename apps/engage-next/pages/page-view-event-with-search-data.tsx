@@ -19,7 +19,7 @@ export default function PageViewEventWithSearchData() {
     decorateAll(testID);
     await pageView({
       ...baseEventData,
-      searchData: { test: 123 },
+      searchData: { test: 123 }
     });
     resetAllDecorators();
   };
@@ -29,7 +29,7 @@ export default function PageViewEventWithSearchData() {
 
     decorateAll(testID);
     await pageView({
-      ...baseEventData,
+      ...baseEventData
     });
     resetAllDecorators();
   };
@@ -74,7 +74,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   await init(context.req, context.res, {
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   decorateAll(testID as string);
@@ -82,13 +82,13 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     case 'sendPageViewEventFromServerSidePropsWithSearchData':
       await pageViewServer(context.req, {
         ...baseEventData,
-        searchData: { test: 123 },
+        searchData: { test: 123 }
       });
 
       break;
     case 'sendPageViewEventFromServerSidePropsWithoutSearchData':
       await pageViewServer(context.req, {
-        ...baseEventData,
+        ...baseEventData
       });
 
       break;

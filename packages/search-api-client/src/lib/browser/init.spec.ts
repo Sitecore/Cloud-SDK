@@ -4,7 +4,7 @@ import { BrowserSettings } from '../types';
 import { ErrorMessages } from '../const';
 
 jest.mock('../utils/validateSettings', () => ({
-  validateSettings: jest.fn().mockImplementation(() => true),
+  validateSettings: jest.fn().mockImplementation(() => true)
 }));
 
 describe('Browser Initialization and Settings Retrieval', () => {
@@ -20,7 +20,7 @@ describe('Browser Initialization and Settings Retrieval', () => {
     const mockSettings = {
       siteName: 'TestSite',
       sitecoreEdgeContextId: 'abc123',
-      userId: 'user123',
+      userId: 'user123'
     };
 
     init(mockSettings);
@@ -34,12 +34,12 @@ describe('Browser Initialization and Settings Retrieval', () => {
     const initialSettings = {
       siteName: 'InitialSite',
       sitecoreEdgeContextId: 'initialID',
-      userId: 'initialUser',
+      userId: 'initialUser'
     };
     const newSettings = {
       siteName: 'NewSite',
       sitecoreEdgeContextId: 'newID',
-      userId: 'newUser',
+      userId: 'newUser'
     };
 
     init(initialSettings);
@@ -59,7 +59,7 @@ describe('Browser Initialization and Settings Retrieval', () => {
 
     const incompleteSettings = {
       siteName: 'TestSite',
-      userId: 'user123',
+      userId: 'user123'
     };
 
     expect(() => init(incompleteSettings as BrowserSettings)).toThrow(`Validation failed`);

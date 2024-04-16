@@ -7,7 +7,7 @@ import { handleServerCookie } from './handle-server-cookie';
 
 // Mock the 'initializer' module
 jest.mock('../init/init-core-server', () => ({
-  getSettingsServer: jest.fn(),
+  getSettingsServer: jest.fn()
 }));
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -16,7 +16,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -26,10 +26,10 @@ describe('handleServerCookie', () => {
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
     ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
     status: 'OK',
-    version: '1.2',
+    version: '1.2'
   };
   const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse),
+    json: () => Promise.resolve(mockFetchResponse)
   });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
@@ -38,11 +38,11 @@ describe('handleServerCookie', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: '',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '',
     sitecoreEdgeContextId: '',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   const isNextJsMiddlewareRequestSpy = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
@@ -69,13 +69,13 @@ describe('handleServerCookie', () => {
     const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
-        get: jest.fn(),
-      },
+        get: jest.fn()
+      }
     };
     const response: utils.MiddlewareNextResponse = {
       cookies: {
-        set: jest.fn(),
-      },
+        set: jest.fn()
+      }
     };
 
     isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
@@ -97,13 +97,13 @@ describe('handleServerCookie', () => {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'content-language': 'EN',
         'cookie': 'test=test',
-        'referer': 'test',
+        'referer': 'test'
       },
-      url: 'test',
+      url: 'test'
     };
 
     const response: utils.HttpResponse = {
-      setHeader: jest.fn(),
+      setHeader: jest.fn()
     };
 
     getCookieServerSide.mockReturnValueOnce({ name: 'test', value: 'test' });
@@ -123,8 +123,8 @@ describe('handleServerCookie', () => {
     const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
-        get: jest.fn(),
-      },
+        get: jest.fn()
+      }
     };
     const response = {} as unknown as utils.MiddlewareNextResponse | utils.HttpResponse;
 

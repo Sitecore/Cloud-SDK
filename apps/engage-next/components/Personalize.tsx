@@ -23,7 +23,7 @@ const Personalize = () => {
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
-      sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined,
+      sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined
     });
   }, [router.pathname]);
 

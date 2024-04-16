@@ -9,11 +9,11 @@ describe('handleGetSettingsError', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   afterEach(() => {

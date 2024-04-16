@@ -8,7 +8,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     channel: 'WEB',
     currency: 'EUR',
     page: 'api-view',
-    referrer: 'https://www.google.com/',
+    referrer: 'https://www.google.com/'
   };
 
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     cookieExpiryDays: 400,
     enableServerCookie: true,
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   if (testID === 'sendEventFromAPIWithSoftwareID') decorateAll(testID);

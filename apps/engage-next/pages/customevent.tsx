@@ -6,7 +6,7 @@ export default function CustomEvent() {
   let eventData = {
     channel: 'WEB',
     currency: 'EUR',
-    page: 'customevent',
+    page: 'customevent'
   };
 
   const [type, setType] = useState('');

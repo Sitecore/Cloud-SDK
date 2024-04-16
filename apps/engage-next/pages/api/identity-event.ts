@@ -12,18 +12,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     identifiers: [
       {
         id: requestUrl.searchParams?.get('email') || '',
-        provider: 'email',
-      },
+        provider: 'email'
+      }
     ],
     language: 'EN',
-    lastName: 'Doe',
+    lastName: 'Doe'
   };
 
   await init(req, res, {
     cookieExpiryDays: 400,
     enableServerCookie: true,
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   const EPResponse = await identity(req, event);

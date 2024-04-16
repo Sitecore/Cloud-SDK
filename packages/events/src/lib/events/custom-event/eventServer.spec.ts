@@ -12,7 +12,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -21,7 +21,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 describe('eventServer', () => {
@@ -31,14 +31,14 @@ describe('eventServer', () => {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
       get: () => '',
-      host: '',
+      host: ''
     },
     ip: undefined,
-    url: '',
+    url: ''
   };
 
   afterEach(() => {
@@ -50,11 +50,11 @@ describe('eventServer', () => {
       channel: 'WEB',
       currency: 'EUR',
       extensionData: {
-        extKey: 'extValue',
+        extKey: 'extValue'
       },
       language: 'EN',
       page: 'races',
-      type: 'CUSTOM_TYPE',
+      type: 'CUSTOM_TYPE'
     };
   });
 
@@ -67,11 +67,11 @@ describe('eventServer', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     });
 
     await eventServer(req, eventData);
@@ -87,12 +87,12 @@ describe('eventServer', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
-          cookiePath: '/',
+          cookiePath: '/'
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
-      },
+        sitecoreEdgeUrl: ''
+      }
     });
   });
 

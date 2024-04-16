@@ -71,7 +71,7 @@ export class IdentityEvent extends BaseEvent {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: value.expiryDate,
           id: value.id,
-          provider: value.provider,
+          provider: value.provider
         };
       }),
       lastname: this.identityData.lastName,
@@ -82,7 +82,7 @@ export class IdentityEvent extends BaseEvent {
       state: this.identityData.state,
       street: this.identityData.street,
       title: this.identityData.title,
-      type: 'IDENTITY',
+      type: 'IDENTITY'
     };
 
     if (this.numberOfExtensionDataProperties > 0) identityPayload.ext = this.extensionData;

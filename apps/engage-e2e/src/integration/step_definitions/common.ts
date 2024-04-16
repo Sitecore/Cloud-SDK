@@ -101,7 +101,7 @@ defineStep('the {string} string is printed in {string} element', (message: strin
   cy.waitUntil(() => cy.get(selector).contains(message), {
     errorMsg: 'Server error not found',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
 });
 
@@ -135,7 +135,7 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
   cy.visit(searchString, {
     onBeforeLoad(win) {
       cy.stub(win.console, 'warn').as('consoleWarn');
-    },
+    }
   });
   cy.wait('@initialCall');
   // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -166,7 +166,7 @@ defineStep(
     cy.visit(path, {
       onBeforeLoad(win) {
         cy.stub(win.console, 'warn').as('consoleWarn');
-      },
+      }
     });
     cy.wait('@initialCall');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -217,7 +217,7 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
   cy.visit(searchString, {
     onBeforeLoad(win) {
       cy.stub(win.console, 'warn').as('consoleWarn');
-    },
+    }
   });
 
   cy.wait('@initialCall', { timeout: 30000 });
@@ -235,7 +235,7 @@ defineStep('no cookie exists on the {string} page', (page: string) => {
       res.body = {
         ref: '1234',
         status: '200',
-        version: Cypress.env('API_VERSION'),
+        version: Cypress.env('API_VERSION')
       };
     });
   }).as('bIdRequest');
@@ -248,7 +248,7 @@ Then('an error is thrown: {string}', (expectedError: string) => {
   cy.waitUntil(() => cy.readLocal('error.txt').then((actualError: string) => actualError !== ''), {
     errorMsg: 'Error not found',
     timeout: 15000,
-    interval: 100,
+    interval: 100
   });
   cy.readLocal('error.txt').should('include', expectedError);
 });

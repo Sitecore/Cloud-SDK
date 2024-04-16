@@ -10,7 +10,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -19,7 +19,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -31,7 +31,7 @@ describe('CustomEvent', () => {
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' }),
+      json: () => Promise.resolve({ status: 'OK' })
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -45,11 +45,11 @@ describe('CustomEvent', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
 
     beforeEach(() => {
@@ -58,7 +58,7 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
     });
     it('should not call flatten object method when no extension data is passed', () => {
@@ -75,7 +75,7 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        settings
       }).send();
 
       expect(sendEventSpy).toHaveBeenCalledWith(
@@ -91,7 +91,7 @@ describe('CustomEvent', () => {
         eventData: { ...eventData, extensionData },
         id,
         sendEvent: sendEventModule.sendEvent,
-        settings,
+        settings
       }).send();
 
       const expectedExt = {
@@ -100,8 +100,8 @@ describe('CustomEvent', () => {
           test_a_b: 'b',
           test_c: 11,
           /* eslint-enable @typescript-eslint/naming-convention */
-          testz: 22,
-        },
+          testz: 22
+        }
       };
 
       expect(sendEventSpy).toHaveBeenCalledWith(
@@ -123,7 +123,7 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          settings
         });
       }).toThrow(extErrorMessage);
     });
@@ -141,7 +141,7 @@ describe('CustomEvent', () => {
           eventData: { ...eventData, extensionData },
           id,
           sendEvent: sendEventModule.sendEvent,
-          settings,
+          settings
         });
       }).not.toThrow(extErrorMessage);
     });
@@ -153,11 +153,11 @@ describe('CustomEvent', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
 
     it('should send the event with top level attributes', async () => {
@@ -170,13 +170,13 @@ describe('CustomEvent', () => {
         testAttr1: 'test',
         testAttr2: true,
         testAttr3: 22,
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       const expectedExt = {
         testAttr1: 'test',
         testAttr2: true,
-        testAttr3: 22,
+        testAttr3: 22
       };
 
       new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
@@ -191,7 +191,7 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
@@ -211,7 +211,7 @@ describe('CustomEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       const expectedData = {
@@ -226,7 +226,7 @@ describe('CustomEvent', () => {
         pos: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
@@ -242,7 +242,7 @@ describe('CustomEvent', () => {
       const eventData = {
         channel: 'WEB',
         currency: 'EUR',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       const expectedData = {
@@ -257,7 +257,7 @@ describe('CustomEvent', () => {
         pos: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
@@ -271,7 +271,7 @@ describe('CustomEvent', () => {
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
       const eventData = {
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       const expectedData = {
@@ -284,7 +284,7 @@ describe('CustomEvent', () => {
         pos: '',
         // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();
@@ -301,11 +301,11 @@ describe('CustomEvent', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
-          cookiePath: '/',
+          cookiePath: '/'
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
+        sitecoreEdgeUrl: ''
       };
       const sendEventSpy = jest.spyOn(sendEventModule, 'sendEvent');
 
@@ -315,7 +315,7 @@ describe('CustomEvent', () => {
         language: 'EN',
         page: 'races',
         searchData: { test: 1234 },
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
 
       /* eslint-disable @typescript-eslint/naming-convention */
@@ -330,13 +330,13 @@ describe('CustomEvent', () => {
         requested_at: '2024-01-01T00:00:00.000Z',
         sc_search: {
           data: {
-            test: 1234,
+            test: 1234
           },
           metadata: {
-            ut_api_version: '1.0',
-          },
+            ut_api_version: '1.0'
+          }
         },
-        type: 'CUSTOM_TYPE',
+        type: 'CUSTOM_TYPE'
       };
       /* eslint-enable @typescript-eslint/naming-convention */
 

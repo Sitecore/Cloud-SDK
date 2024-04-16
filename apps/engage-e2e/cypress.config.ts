@@ -21,10 +21,10 @@ const cypressJsonConfig = {
     reportDir: 'cypress/results',
     overwrite: false,
     html: false,
-    json: true,
+    json: true
   },
   retries: {
-    runMode: 2,
+    runMode: 2
   },
   specPattern: '**/*.{feature,features}',
   supportFile: 'src/support/e2e.ts',
@@ -38,7 +38,7 @@ const cypressJsonConfig = {
     on(
       'file:preprocessor',
       createBundler({
-        plugins: [createEsbuildPlugin(config)],
+        plugins: [createEsbuildPlugin(config)]
       })
     );
 
@@ -51,11 +51,11 @@ const cypressJsonConfig = {
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;
-  },
+  }
 };
 export default defineConfig({
   e2e: {
     ...nxE2EPreset(__dirname),
-    ...cypressJsonConfig,
-  },
+    ...cypressJsonConfig
+  }
 });

@@ -10,18 +10,18 @@ import debug from 'debug';
 
 // Mock the dependencies
 jest.mock('../cookie/create-cookie', () => ({
-  createCookie: jest.fn(),
+  createCookie: jest.fn()
 }));
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
-  cookieExists: jest.fn(),
+  cookieExists: jest.fn()
 }));
 
 jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn()))),
+    default: jest.fn(() => jest.fn(() => jest.fn(() => jest.fn())))
   };
 });
 
@@ -30,11 +30,11 @@ const mockSettings = {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,
     cookieName: '',
-    cookiePath: '/',
+    cookiePath: '/'
   },
   siteName: '456',
   sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: '',
+  sitecoreEdgeUrl: ''
 };
 describe('initCore', () => {
   let mockSettingsInput: BrowserSettings;
@@ -43,7 +43,7 @@ describe('initCore', () => {
     mockSettingsInput = {
       cookieDomain: 'cDomain',
       siteName: '456',
-      sitecoreEdgeContextId: '123',
+      sitecoreEdgeContextId: '123'
     };
     setCoreSettings(null as any);
     setCookiePromise(null as any);
@@ -120,7 +120,7 @@ describe('getSettings', () => {
       cookiePath: '/',
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
 
     await initCore(settingsInput);

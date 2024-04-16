@@ -20,7 +20,7 @@ export default function EventSoftwareIDHeaderPage() {
     decorateAll(testID);
     const eventData: PageViewData = {
       channel: 'WEB',
-      currency: 'EUR',
+      currency: 'EUR'
     };
 
     await pageView(eventData);
@@ -56,12 +56,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       channel: 'WEB',
       currency: 'EUR',
       email: 'testServerSideProps@test.com',
-      identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }],
+      identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }]
     };
     await initServer(context.req, context.res, {
       cookieExpiryDays: 400,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     decorateAll(testID as string);

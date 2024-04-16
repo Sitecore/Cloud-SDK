@@ -12,12 +12,12 @@ describe('flattenObject', () => {
         h: 22,
         i: ['a', 2, true, { a: 'a' }, [[1], [2]]],
         j: {
-          k: 'k',
+          k: 'k'
         },
-        z: undefined,
+        z: undefined
       },
       m: undefined,
-      n: '',
+      n: ''
     };
 
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -30,7 +30,7 @@ describe('flattenObject', () => {
       e_h: 22,
       e_i: ['a', 2, true, { a: 'a' }, [[1], [2]]],
       e_j_k: 'k',
-      n: '',
+      n: ''
     };
     /* eslint-enable @typescript-eslint/naming-convention */
     const result = flattenObject({ object });
@@ -66,9 +66,9 @@ describe('flattenObject', () => {
         h: 22,
         i: ['a', 2, true, { a: 'a' }, [[1], [2]]],
         j: {
-          k: 'k',
-        },
-      },
+          k: 'k'
+        }
+      }
     };
 
     /* eslint-disable @typescript-eslint/naming-convention */
@@ -77,7 +77,7 @@ describe('flattenObject', () => {
       g: false,
       h: 22,
       i: ['a', 2, true, { a: 'a' }, [[1], [2]]],
-      j_k: 'k',
+      j_k: 'k'
     };
 
     const result = flattenObject({ object: object.params });

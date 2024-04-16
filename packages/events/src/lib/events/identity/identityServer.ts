@@ -4,7 +4,7 @@ import {
   EPResponse,
   getBrowserIdFromRequest,
   getSettingsServer,
-  handleGetSettingsError,
+  handleGetSettingsError
 } from '@sitecore-cloudsdk/core';
 import { IdentityData, IdentityEvent } from './identity-event';
 import { ErrorMessages } from '../../consts';
@@ -26,6 +26,6 @@ export function identityServer(request: Request, identityData: IdentityData): Pr
     id,
     identityData,
     sendEvent,
-    settings: settings,
+    settings: settings
   }).send();
 }

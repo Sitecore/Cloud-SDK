@@ -30,7 +30,7 @@ defineStep('a server cookie is created on the {string} page', (page) => {
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 500,
+    interval: 500
   });
 
   cy.getCookies().then((cookies) => {
@@ -52,7 +52,7 @@ Given(
     });
 
     cy.visit(`${page}?enableServerCookie=true&badSitecoreEdgeContextId=test`, {
-      failOnStatusCode: false,
+      failOnStatusCode: false
     }).then(() => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(1000).then(() => {
@@ -111,7 +111,7 @@ defineStep('a server cookie is created with {string} domain', (domain: string) =
     {
       errorMsg: 'Cookie not found',
       timeout: 10000,
-      interval: 100,
+      interval: 100
     }
   );
 });

@@ -9,7 +9,7 @@ export default function AsyncInitPersonalize() {
     currency: 'EUR',
     friendlyId: 'personalizeintegrationtest',
     language: 'EN',
-    page: 'async-init-personalize',
+    page: 'async-init-personalize'
   };
 
   const personalizeWithoutInit = async () => {
@@ -20,7 +20,7 @@ export default function AsyncInitPersonalize() {
     init({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     const response = await personalize(personalizeData);
@@ -31,13 +31,13 @@ export default function AsyncInitPersonalize() {
     initEvents({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     init({
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || '',
+      siteName: process.env.SITE_ID || ''
     });
 
     const response = await personalize(personalizeData);

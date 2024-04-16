@@ -22,6 +22,6 @@ export async function event(eventData: EventData): Promise<EPResponse | null> {
     eventData,
     id,
     sendEvent,
-    settings,
+    settings
   }).send();
 }

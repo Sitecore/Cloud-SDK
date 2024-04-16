@@ -4,7 +4,7 @@ import { isNextJsMiddlewareResponse } from './is-next-js-middleware-response';
 describe('isNextJsMiddlewareResponse', () => {
   it('should return false if response does not have Next Js Middleware Response properties', () => {
     const res: HttpResponse = {
-      setHeader: jest.fn(),
+      setHeader: jest.fn()
     };
     const result = isNextJsMiddlewareResponse(res);
 
@@ -14,8 +14,8 @@ describe('isNextJsMiddlewareResponse', () => {
   it('should return true if response has Next Js Middleware Response properties', () => {
     const response: MiddlewareNextResponse = {
       cookies: {
-        set: jest.fn(),
-      },
+        set: jest.fn()
+      }
     };
     const result = isNextJsMiddlewareResponse(response);
 

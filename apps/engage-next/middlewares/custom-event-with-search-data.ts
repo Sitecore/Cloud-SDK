@@ -21,14 +21,14 @@ export async function customEventWithSearchDataMiddleware(request: NextRequest):
       await event(request, {
         ...baseEventData,
         type: 'CUSTOM_EVENT',
-        searchData: { test: 123 },
+        searchData: { test: 123 }
       });
 
       break;
     case 'sendCustomEventFromMiddlewareWithoutSearchData':
       await event(request, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
+        type: 'CUSTOM_EVENT'
       });
 
       break;

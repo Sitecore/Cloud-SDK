@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 export default function PersonalizeCall({
   serverSidePropsRes,
-  debugLogs,
+  debugLogs
 }: {
   serverSidePropsRes: string;
   debugLogs: string;
@@ -18,7 +18,7 @@ export default function PersonalizeCall({
     channel: 'WEB',
     currency: 'EUR',
     language: 'EN',
-    page: 'personalize',
+    page: 'personalize'
   });
 
   const [response, setResponse] = useState('');
@@ -198,7 +198,7 @@ export default function PersonalizeCall({
           onClick={async () => {
             const personalizeDataWithGeo: PersonalizeData = {
               ...personalizeData,
-              geo: { city: 'T1', country: 'T2', region: 'T3' },
+              geo: { city: 'T1', country: 'T2', region: 'T3' }
             };
             const response = await personalize(personalizeDataWithGeo);
             setResponse(response ? JSON.stringify(response) : '');
@@ -212,7 +212,7 @@ export default function PersonalizeCall({
           onClick={async () => {
             const personalizeDataWithPartialGeo: PersonalizeData = {
               ...personalizeData,
-              geo: { city: 'T1' },
+              geo: { city: 'T1' }
             };
             const response = await personalize(personalizeDataWithPartialGeo);
             setResponse(response ? JSON.stringify(response) : '');
@@ -226,7 +226,7 @@ export default function PersonalizeCall({
           onClick={async () => {
             const personalizeDataWithEmptyGeo: PersonalizeData = {
               ...personalizeData,
-              geo: {},
+              geo: {}
             };
             const response = await personalize(personalizeDataWithEmptyGeo);
             setResponse(response ? JSON.stringify(response) : '');
@@ -337,7 +337,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
     friendlyId: 'personalizeintegrationtest',
-    language: 'EN',
+    language: 'EN'
   };
 
   await initServer(context.req, context.res, {
@@ -347,7 +347,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     enableServerCookie:
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   const EPResponse = await personalizeServer(context.req, event);
@@ -355,7 +355,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       debugLogs: JSON.stringify(capturedDebugLogs),
-      serverSidePropsRes: JSON.stringify(EPResponse),
-    },
+      serverSidePropsRes: JSON.stringify(EPResponse)
+    }
   };
 }

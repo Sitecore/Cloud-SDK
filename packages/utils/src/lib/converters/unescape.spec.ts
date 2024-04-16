@@ -11,7 +11,7 @@ describe('unescape', () => {
     ['abc', 'abc'],
     ['&#96;', '&#96;'],
     ['&#x2F;', '&#x2F;'],
-    ['No HTML entities  here', 'No HTML entities  here'],
+    ['No HTML entities  here', 'No HTML entities  here']
   ])('should call unescape with %s ', (param, expected) => {
     it(`and return ${expected}`, () => {
       expect(unescape(param)).toBe(expected);

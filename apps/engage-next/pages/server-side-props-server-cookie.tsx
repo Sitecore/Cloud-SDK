@@ -21,10 +21,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
     enableServerCookie: true,
     siteName: process.env.SITE_ID || '',
-    timeout: timeout,
+    timeout: timeout
   });
 
   return {
-    props: {},
+    props: {}
   };
 }

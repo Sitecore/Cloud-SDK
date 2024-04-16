@@ -26,7 +26,7 @@ export {
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
   SITECORE_EDGE_URL,
-  CORRELATION_ID_HEADER,
+  CORRELATION_ID_HEADER
 } from './lib/consts';
 
 export type { EPResponse, Infer } from './lib/interfaces';
@@ -35,5 +35,5 @@ export type {
   Settings,
   BrowserSettings,
   ServerSettings,
-  BasicSettings,
+  BasicSettings
 } from './lib/settings/interfaces';

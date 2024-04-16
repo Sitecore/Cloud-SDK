@@ -7,7 +7,7 @@ export default function Init() {
   const settings = {
     siteName: 'TestSite',
     sitecoreEdgeContextId: 'abc123',
-    userId: 'user123',
+    userId: 'user123'
   };
 
   useEffect(() => {

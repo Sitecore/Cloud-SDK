@@ -34,7 +34,7 @@ export class BaseEvent {
       language: this.language,
       page: this.page,
       pos: '',
-      requested_at: new Date().toISOString(),
+      requested_at: new Date().toISOString()
     };
   }
 }

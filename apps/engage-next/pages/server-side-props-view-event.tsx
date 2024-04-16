@@ -14,7 +14,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const eventData = {
     channel: 'WEB',
     currency: 'EUR',
-    page: 'serverSideProps-view',
+    page: 'serverSideProps-view'
   };
 
   const timeout =
@@ -27,7 +27,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
     enableServerCookie: true,
     siteName: process.env.SITE_ID || '',
-    timeout: timeout,
+    timeout: timeout
   });
 
   let EPResponse;
@@ -40,7 +40,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      res: JSON.stringify(EPResponse),
-    },
+      res: JSON.stringify(EPResponse)
+    }
   };
 }

@@ -36,9 +36,9 @@ describe('Test infer class', () => {
     it('should return "Home Page" if page not passed in the eventData and pathname is /', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          pathname: '/',
+          pathname: '/'
         },
-        writable: true,
+        writable: true
       });
       const pageName = infer.pageName();
 
@@ -48,9 +48,9 @@ describe('Test infer class', () => {
     it('should return "about" if not passed in the eventData and pathname is /about', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          pathname: '/about',
+          pathname: '/about'
         },
-        writable: true,
+        writable: true
       });
       const pageName = infer.pageName();
 

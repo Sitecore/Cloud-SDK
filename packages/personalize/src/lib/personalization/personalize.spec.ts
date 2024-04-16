@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -24,7 +24,7 @@ describe('personalize', () => {
     friendlyId: 'personalizeintegrationtest',
     language: 'EN',
     page: 'races',
-    pointOfSale: 'spinair.com',
+    pointOfSale: 'spinair.com'
   };
 
   const settings = {
@@ -32,11 +32,11 @@ describe('personalize', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   let windowSpy: jest.SpyInstance;
@@ -136,8 +136,8 @@ describe('personalize', () => {
 
     windowSpy.mockImplementation(() => ({
       location: {
-        search: '?utm_campaign=campaign&utm_medium=email',
-      },
+        search: '?utm_campaign=campaign&utm_medium=email'
+      }
     }));
 
     await personalize(personalizeData);

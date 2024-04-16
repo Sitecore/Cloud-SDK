@@ -14,7 +14,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
-    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7',
+    generateCorrelationId: () => 'b10bb699bfb3419bb63f638c62ed1aa7'
   };
 });
 
@@ -22,7 +22,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -30,7 +30,7 @@ const settingsParams: core.BrowserSettings = {
   cookieDomain: 'cDomain',
   enableBrowserCookie: true,
   siteName: '456',
-  sitecoreEdgeContextId: '123',
+  sitecoreEdgeContextId: '123'
 };
 
 describe('initializer', () => {
@@ -51,11 +51,11 @@ describe('initializer', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'name',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   });
 
   afterEach(() => {
@@ -120,7 +120,7 @@ describe('initializer', () => {
       expect(global.window.Engage.versions).toBeDefined();
       expect(global.window.Engage.versions).toEqual({
         personalize: LIBRARY_VERSION,
-        testV: '1.0.0',
+        testV: '1.0.0'
       });
     });
 
@@ -177,7 +177,7 @@ describe('awaitInit', () => {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: 'https://localhost',
+      sitecoreEdgeUrl: 'https://localhost'
     };
 
     await init(settingsParams);

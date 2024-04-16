@@ -10,7 +10,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'None',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -19,7 +19,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'None',
-      secure: true,
+      secure: true
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -29,7 +29,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Lax',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -39,7 +39,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: true,
+      secure: true
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -49,7 +49,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -59,7 +59,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: true,
+      secure: true
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -69,7 +69,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Lax',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -79,7 +79,7 @@ describe('createCookieString', () => {
     const options: CookieProperties = {
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -91,7 +91,7 @@ describe('createCookieString', () => {
       domain: 'localhost',
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -102,7 +102,7 @@ describe('createCookieString', () => {
       domain: '',
       maxAge: cookieMaxAge,
       sameSite: 'Strict',
-      secure: false,
+      secure: false
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -113,7 +113,7 @@ describe('createCookieString', () => {
       domain: 'localhost',
       maxAge: cookieMaxAge,
       sameSite: 'None',
-      secure: true,
+      secure: true
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
@@ -125,7 +125,7 @@ describe('createCookieString', () => {
       maxAge: 365 * DAILY_SECONDS,
       path: '/',
       sameSite: 'None',
-      secure: true,
+      secure: true
     };
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });

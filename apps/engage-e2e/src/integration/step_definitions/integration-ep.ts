@@ -5,7 +5,7 @@ import { Utils } from '../../support/utils';
 
 const expectedEventData = {
   clientKey: Cypress.env('CLIENT_KEY'),
-  type: '',
+  type: ''
 };
 
 Then('EP returns the event with {string} type', (eventType: string, datatable) => {

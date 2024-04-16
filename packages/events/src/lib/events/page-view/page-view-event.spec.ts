@@ -15,7 +15,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -24,7 +24,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 describe('PageViewEvent', () => {
@@ -48,7 +48,7 @@ describe('PageViewEvent', () => {
       pageViewData: { ...pageViewData, extensionData },
       id,
       settings,
-      searchParams: searchParams ?? window.location.search,
+      searchParams: searchParams ?? window.location.search
     }).send();
   }
 
@@ -61,7 +61,7 @@ describe('PageViewEvent', () => {
       language: 'EN',
       page: 'races',
       pos: '',
-      requested_at: '2024-01-01T00:00:00.000Z',
+      requested_at: '2024-01-01T00:00:00.000Z'
     };
 
     pageViewData = {
@@ -69,7 +69,7 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      includeUTMParameters: true,
+      includeUTMParameters: true
     };
 
     settings = {
@@ -78,10 +78,10 @@ describe('PageViewEvent', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
     jest.spyOn(core, 'pageName').mockImplementation(() => 'races');
@@ -101,7 +101,7 @@ describe('PageViewEvent', () => {
     it('should change state to false when the event is sent', async () => {
       global.window ??= Object.create(window);
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse)
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -110,7 +110,7 @@ describe('PageViewEvent', () => {
         pageViewData,
         id,
         searchParams: '',
-        settings,
+        settings
       });
 
       expect(PageViewEvent.isFirstPageView).toBe(true);
@@ -126,12 +126,12 @@ describe('PageViewEvent', () => {
       currency: 'EUR',
       language: 'EN',
       page: 'races',
-      includeUTMParameters: true,
+      includeUTMParameters: true
     };
 
     beforeEach(() => {
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse)
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -140,7 +140,7 @@ describe('PageViewEvent', () => {
         currency: 'EUR',
         language: 'EN',
         page: 'races',
-        includeUTMParameters: true,
+        includeUTMParameters: true
       };
     });
 
@@ -151,9 +151,9 @@ describe('PageViewEvent', () => {
     it('should return the variantid if exists in the url of the window and not present in the event data', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '?variantid=test_pageVariantId',
+          search: '?variantid=test_pageVariantId'
         },
-        writable: true,
+        writable: true
       });
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -168,9 +168,9 @@ describe('PageViewEvent', () => {
     it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
       pageViewData.pageVariantId = undefined;
       const extensionData = { pageVariantId: 'extVid' };
@@ -183,9 +183,9 @@ describe('PageViewEvent', () => {
     it('should return the variantid if passed as extension data and not present in neither the url nor in the event data', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
 
       pageViewData.pageVariantId = undefined;
@@ -198,9 +198,9 @@ describe('PageViewEvent', () => {
     it('should return null if the variantid does not exist in the search params property and event data', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -211,9 +211,9 @@ describe('PageViewEvent', () => {
       const flattenObjectSpy = jest.spyOn(utils, 'flattenObject');
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -223,9 +223,9 @@ describe('PageViewEvent', () => {
     it('should prioritize pageVariantId value from event data over extension data when provided in both', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
       const extensionData = { pageVariantId: 'extension_data_vid' };
 
@@ -237,8 +237,8 @@ describe('PageViewEvent', () => {
         ...expectedBasicAttributes,
         ...{
           type: 'VIEW',
-          ext: { pageVariantId: 'vid' },
-        },
+          ext: { pageVariantId: 'vid' }
+        }
       };
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
@@ -246,9 +246,9 @@ describe('PageViewEvent', () => {
     it('should send an event with fetch without the pageVariantId', async () => {
       Object.defineProperty(window, 'location', {
         value: {
-          search: '',
+          search: ''
         },
-        writable: true,
+        writable: true
       });
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -256,8 +256,8 @@ describe('PageViewEvent', () => {
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
-          type: 'VIEW',
-        },
+          type: 'VIEW'
+        }
       };
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
@@ -266,7 +266,7 @@ describe('PageViewEvent', () => {
 
   it('should send a view event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as EPResponse)
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -278,8 +278,8 @@ describe('PageViewEvent', () => {
       ...expectedBasicAttributes,
       ...{
         type: 'VIEW',
-        ext: { test_a_b: 'b', test_c: 11, testz: 22 },
-      },
+        ext: { test_a_b: 'b', test_c: 11, testz: 22 }
+      }
     };
 
     expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
@@ -344,13 +344,13 @@ describe('PageViewEvent', () => {
     it('getReferrer should return url if hostName is different from referrer', async () => {
       Object.defineProperty(document, 'referrer', {
         value: 'http://test.com/extra_path?search=test',
-        writable: true,
+        writable: true
       });
       Object.defineProperty(window, 'location', {
         value: {
-          hostname: 'dddtest.com',
+          hostname: 'dddtest.com'
         },
-        writable: true,
+        writable: true
       });
 
       expect(PageViewEvent.isFirstPageView).toBeTruthy();
@@ -359,7 +359,7 @@ describe('PageViewEvent', () => {
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{ type: 'VIEW' },
-        referrer: 'http://test.com/extra_path?search=test',
+        referrer: 'http://test.com/extra_path?search=test'
       };
 
       expect(getReferrerSpy).toHaveBeenCalledTimes(1);
@@ -370,13 +370,13 @@ describe('PageViewEvent', () => {
     it('should return null if host name is the same', async () => {
       Object.defineProperty(document, 'referrer', {
         value: 'http://test.com/extra_path?search=test',
-        writable: true,
+        writable: true
       });
       Object.defineProperty(window, 'location', {
         value: {
-          hostname: 'test.com',
+          hostname: 'test.com'
         },
-        writable: true,
+        writable: true
       });
       PageViewEvent.isFirstPageView = true;
       callPageViewEvent(sendEvent, pageViewData, id, settings, undefined);
@@ -386,7 +386,7 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should be null if windows does not exists and referrer is not provided by the developer (Server Side Test)', async () => {
       Object.defineProperty(global, 'window', {
-        get: jest.fn().mockReturnValueOnce(undefined),
+        get: jest.fn().mockReturnValueOnce(undefined)
         // writable: true,
       });
 
@@ -396,7 +396,7 @@ describe('PageViewEvent', () => {
 
       const expectedAttributes = {
         ...expectedBasicAttributes,
-        ...{ type: 'VIEW' },
+        ...{ type: 'VIEW' }
       };
 
       expect(global.window).toBeUndefined();
@@ -408,7 +408,7 @@ describe('PageViewEvent', () => {
 
     it('getReferrer should be retrieved if provided pageViewData and window is undefined', async () => {
       Object.defineProperty(global, 'window', {
-        get: jest.fn().mockReturnValueOnce(undefined),
+        get: jest.fn().mockReturnValueOnce(undefined)
         // writable: true,
       });
       PageViewEvent.isFirstPageView = true;
@@ -438,7 +438,7 @@ describe('PageViewEvent', () => {
       pageViewData.includeUTMParameters = undefined;
 
       const mockFetch = Promise.resolve({
-        json: () => Promise.resolve({ status: 'OK' } as EPResponse),
+        json: () => Promise.resolve({ status: 'OK' } as EPResponse)
       });
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
     });
@@ -451,8 +451,8 @@ describe('PageViewEvent', () => {
     it('should not call getUTMParameters if includeUTMParameters is false', async () => {
       windowSpy.mockImplementation(() => ({
         location: {
-          search: '',
-        },
+          search: ''
+        }
       }));
 
       pageViewData.includeUTMParameters = false;
@@ -465,8 +465,8 @@ describe('PageViewEvent', () => {
     it('should call getUTMParameters if includeUTMParameters is true', async () => {
       windowSpy.mockImplementation(() => ({
         location: {
-          search: '',
-        },
+          search: ''
+        }
       }));
 
       pageViewData.includeUTMParameters = true;
@@ -479,8 +479,8 @@ describe('PageViewEvent', () => {
     it('should return {} if urlSearchParams is empty', () => {
       windowSpy.mockImplementation(() => ({
         location: {
-          search: '',
-        },
+          search: ''
+        }
       }));
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -491,8 +491,8 @@ describe('PageViewEvent', () => {
     it("should return an empty object if urlSearchParams doesn't contain utm_ params", () => {
       windowSpy.mockImplementation(() => ({
         location: {
-          search: '?banana=banana',
-        },
+          search: '?banana=banana'
+        }
       }));
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -503,8 +503,8 @@ describe('PageViewEvent', () => {
     it('should return an object with utm_ params when urlSearchParams contains utm_params', () => {
       windowSpy.mockImplementation(() => ({
         location: {
-          search: '?utm_campaign=campaign&utm_medium=email',
-        },
+          search: '?utm_campaign=campaign&utm_medium=email'
+        }
       }));
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);
@@ -514,7 +514,7 @@ describe('PageViewEvent', () => {
 
     it('should send event without utm_ params if the returned object is empty {}', () => {
       documentSpy.mockImplementation(() => ({
-        referrer: undefined,
+        referrer: undefined
       }));
 
       jest.spyOn(PageViewEvent.prototype as any, 'getUTMParameters').mockReturnValueOnce({});
@@ -523,8 +523,8 @@ describe('PageViewEvent', () => {
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
-          type: 'VIEW',
-        },
+          type: 'VIEW'
+        }
       };
 
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
@@ -537,8 +537,8 @@ describe('PageViewEvent', () => {
         ...expectedBasicAttributes,
         ...{
           type: 'VIEW',
-          utm_test: 'test',
-        },
+          utm_test: 'test'
+        }
       };
       expect(sendEventSpy).toHaveBeenCalledWith(expectedAttributes, settings);
     });
@@ -548,7 +548,7 @@ describe('PageViewEvent', () => {
     let pageViewData: PageViewData = {
       language: 'EN',
       page: 'races',
-      includeUTMParameters: false,
+      includeUTMParameters: false
     };
 
     let expectedData = {
@@ -558,7 +558,7 @@ describe('PageViewEvent', () => {
       page: 'races',
       pos: '',
       type: 'VIEW',
-      requested_at: '2024-01-01T00:00:00.000Z',
+      requested_at: '2024-01-01T00:00:00.000Z'
     };
 
     it(`should send an event without 'channel' and currency 'params'`, async () => {
@@ -585,8 +585,8 @@ describe('PageViewEvent', () => {
         includeUTMParameters: false,
         searchData: {
           action: 'view',
-          name: 'home',
-        },
+          name: 'home'
+        }
       };
 
       const expectedData = {
@@ -600,12 +600,12 @@ describe('PageViewEvent', () => {
         sc_search: {
           data: {
             action: 'view',
-            name: 'home',
+            name: 'home'
           },
           metadata: {
-            ut_api_version: '1.0',
-          },
-        },
+            ut_api_version: '1.0'
+          }
+        }
       };
 
       callPageViewEvent(sendEvent, pageViewData, id, settings);

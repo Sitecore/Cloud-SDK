@@ -23,10 +23,10 @@ export async function sendCallFlowsRequest(
       /* eslint-disable @typescript-eslint/naming-convention */
       'Content-Type': 'application/json',
       'X-Library-Version': LIBRARY_VERSION,
-      'x-sc-correlation-id': generateCorrelationId(),
+      'x-sc-correlation-id': generateCorrelationId()
       /* eslint-enable @typescript-eslint/naming-convention */
     },
-    method: 'POST',
+    method: 'POST'
   };
 
   if (opts?.userAgent) fetchOptions.headers['User-Agent'] = opts.userAgent;

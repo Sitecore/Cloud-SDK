@@ -4,7 +4,7 @@ import { ErrorMessages } from '../const';
 import { ServerSettings } from '../types';
 
 jest.mock('../utils/validateSettings', () => ({
-  validateSettings: jest.fn().mockImplementation(() => true),
+  validateSettings: jest.fn().mockImplementation(() => true)
 }));
 
 describe('Initialization and Settings Retrieval on server search-api-client', () => {
@@ -20,7 +20,7 @@ describe('Initialization and Settings Retrieval on server search-api-client', ()
     const mockSettings = {
       siteName: 'TestSite',
       sitecoreEdgeContextId: 'abc123',
-      userId: 'user123',
+      userId: 'user123'
     };
 
     init(mockSettings);
@@ -40,7 +40,7 @@ describe('Initialization and Settings Retrieval on server search-api-client', ()
 
     const incompleteSettings = {
       siteName: 'TestSite',
-      sitecoreEdgeContextId: 'abc123',
+      sitecoreEdgeContextId: 'abc123'
     };
 
     expect(() => init(incompleteSettings as ServerSettings)).toThrow(`Validation failed: ${ErrorMessages.MV_0005}`);

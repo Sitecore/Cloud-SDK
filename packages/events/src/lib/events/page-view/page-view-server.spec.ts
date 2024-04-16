@@ -10,7 +10,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -19,7 +19,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -28,9 +28,9 @@ jest.mock('./page-view-event', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     PageViewEvent: jest.fn().mockImplementation(() => {
       return {
-        send: jest.fn(() => Promise.resolve('mockedResponse')),
+        send: jest.fn(() => Promise.resolve('mockedResponse'))
       };
-    }),
+    })
   };
 });
 
@@ -46,14 +46,14 @@ describe('pageViewServer', () => {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
       get: () => '',
-      host: '',
+      host: ''
     },
     ip: undefined,
-    url: '',
+    url: ''
   };
 
   afterEach(() => {
@@ -61,7 +61,7 @@ describe('pageViewServer', () => {
       channel: 'WEB',
       currency: 'EUR',
       language: 'EN',
-      page: 'races',
+      page: 'races'
     };
     jest.clearAllMocks();
   });
@@ -72,11 +72,11 @@ describe('pageViewServer', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
     getSettingsServerSpy.mockReturnValue(mockSettings);
 
@@ -87,7 +87,7 @@ describe('pageViewServer', () => {
       pageViewData: { ...pageViewData, extensionData },
       searchParams: '',
       sendEvent,
-      settings: mockSettings,
+      settings: mockSettings
     });
     expect(response).toBe('mockedResponse');
   });

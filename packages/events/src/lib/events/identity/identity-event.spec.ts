@@ -14,7 +14,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -23,7 +23,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 describe('Test Identity', () => {
@@ -35,7 +35,7 @@ describe('Test Identity', () => {
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse)
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -46,11 +46,11 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
-      page: 'identity',
+      page: 'identity'
     };
 
     settingsMock = {
@@ -58,11 +58,11 @@ describe('Test Identity', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
   });
 
@@ -78,7 +78,7 @@ describe('Test Identity', () => {
           id,
           identityData: data,
           sendEvent: sendEvent.sendEvent,
-          settings: settingsMock,
+          settings: settingsMock
         })
     ).not.toThrow(`[MV-0003] "identifiers" is required.`);
 
@@ -101,7 +101,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
     expect(data.street).toEqual([]);
   });
@@ -112,7 +112,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
     expect(data.street).toEqual(['']);
   });
@@ -124,7 +124,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
     expect(data.street).toEqual(['gennimata']);
   });
@@ -136,7 +136,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
     expect(data.street).toEqual(['gennimata', 'ntourma']);
   });
@@ -147,7 +147,7 @@ describe('Test Identity', () => {
       currency: 'EUR',
       identifiers: [],
       language: 'EN',
-      page: 'identity',
+      page: 'identity'
     };
 
     expect(() => {
@@ -155,7 +155,7 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        settings: settingsMock
       });
     }).toThrow(`[MV-0003] "identifiers" is required.`);
   });
@@ -169,11 +169,11 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
-      page: 'identity',
+      page: 'identity'
     };
 
     expect(() => {
@@ -181,7 +181,7 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        settings: settingsMock
       });
     }).toThrow('[IV-0003] Incorrect value for "email". Set the value to a valid email address.');
   });
@@ -192,7 +192,7 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        settings: settingsMock
       });
     }).not.toThrow(`[MV-0003] "identifiers" is required.`);
   });
@@ -211,8 +211,8 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
       lastName: 'stavrou',
@@ -222,7 +222,7 @@ describe('Test Identity', () => {
       postalCode: '',
       state: 'macedonia',
       street: ['gennimata'],
-      title: 'mr',
+      title: 'mr'
     };
 
     const expectedData = {
@@ -238,8 +238,8 @@ describe('Test Identity', () => {
         {
           expiry_date: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
       lastname: 'Stavrou',
@@ -250,14 +250,14 @@ describe('Test Identity', () => {
       state: 'Macedonia',
       street: ['Gennimata'],
       title: 'Mr',
-      type: 'IDENTITY',
+      type: 'IDENTITY'
     };
 
     new IdentityEvent({
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
 
     expect(data.email).not.toEqual(expectedData.email);
@@ -288,8 +288,8 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
       lastName: 'lastName',
@@ -299,7 +299,7 @@ describe('Test Identity', () => {
       postalCode: '12345',
       state: 'macedonia',
       street: ['street'],
-      title: 'mr',
+      title: 'mr'
     };
 
     const expectedData = {
@@ -314,8 +314,8 @@ describe('Test Identity', () => {
           // eslint-disable-next-line @typescript-eslint/naming-convention
           expiry_date: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       lastname: 'lastName',
       mobile: '6911111111',
@@ -325,7 +325,7 @@ describe('Test Identity', () => {
       state: 'macedonia',
       street: ['street'],
       title: 'mr',
-      type: 'IDENTITY',
+      type: 'IDENTITY'
     };
 
     const sendEventSpy = jest.spyOn(sendEvent, 'sendEvent');
@@ -333,7 +333,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
     identity.send();
 
@@ -350,7 +350,7 @@ describe('Test Identity', () => {
       id,
       identityData: data,
       sendEvent: sendEvent.sendEvent,
-      settings: settingsMock,
+      settings: settingsMock
     });
 
     expect(attributeCheckAndValidationSpy).toHaveBeenCalledTimes(1);
@@ -365,7 +365,7 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        settings: settingsMock
       }).send();
     }).toThrow(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
   });
@@ -379,14 +379,14 @@ describe('Test Identity', () => {
         id,
         identityData: data,
         sendEvent: sendEvent.sendEvent,
-        settings: settingsMock,
+        settings: settingsMock
       }).send();
     }).toThrow(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse)
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
@@ -402,9 +402,9 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
-      ],
+          provider: 'email'
+        }
+      ]
     };
 
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
@@ -413,17 +413,17 @@ describe('Test Identity', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
     new IdentityEvent({
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEvent.sendEvent,
-      settings,
+      settings
     }).send();
 
     const expectedAttributes = { ext: { test_a_b: 'b', test_c: 11, testz: 22 } };
@@ -447,20 +447,20 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
-      ],
+          provider: 'email'
+        }
+      ]
     };
     const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
     const extensionData: { [key: string]: string } = {};
 
@@ -473,7 +473,7 @@ describe('Test Identity', () => {
         id,
         identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
-        settings,
+        settings
       }).send();
     }).toThrow(extErrorMessage);
   });
@@ -491,20 +491,20 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
-      ],
+          provider: 'email'
+        }
+      ]
     };
     const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
     const extensionData: { [key: string]: string } = {};
     for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
@@ -516,7 +516,7 @@ describe('Test Identity', () => {
         id,
         identityData: { ...identityData, extensionData },
         sendEvent: sendEvent.sendEvent,
-        settings,
+        settings
       }).send();
     }).not.toThrow(extErrorMessage);
   });
@@ -533,27 +533,27 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
-      ],
+          provider: 'email'
+        }
+      ]
     };
     const settings: core.Settings = {
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
 
     new IdentityEvent({
       id,
       identityData,
       sendEvent: sendEvent.sendEvent,
-      settings,
+      settings
     }).send();
 
     expect(flattenObjectSpy).toHaveBeenCalledTimes(0);
@@ -571,9 +571,9 @@ describe('Test Identity', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
-      ],
+          provider: 'email'
+        }
+      ]
     };
 
     const settings: core.Settings = {
@@ -581,11 +581,11 @@ describe('Test Identity', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     };
 
     const extensionData = {};
@@ -594,7 +594,7 @@ describe('Test Identity', () => {
       id,
       identityData: { ...identityData, extensionData },
       sendEvent: sendEvent.sendEvent,
-      settings,
+      settings
     }).send();
 
     expect(BaseEvent).toHaveBeenCalled();
@@ -603,7 +603,7 @@ describe('Test Identity', () => {
         channel: 'WEB',
         currency: 'EUR',
         language: undefined,
-        page: undefined,
+        page: undefined
       },
       'test_id'
     );

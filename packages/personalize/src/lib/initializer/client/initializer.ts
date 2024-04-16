@@ -31,8 +31,8 @@ export async function init(settings: BrowserSettings): Promise<void> {
     getBrowserId: () => getBrowserId(),
     versions: {
       ...window.Engage.versions,
-      personalize: LIBRARY_VERSION,
-    },
+      personalize: LIBRARY_VERSION
+    }
   };
 }
 

@@ -10,15 +10,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     currency: 'EUR',
     email: 'test_personalize_callflows@test.com',
     friendlyId: requestUrl.searchParams?.get('friendlyId') || '',
-    language: 'EN',
+    language: 'EN'
   };
 
   if (requestUrl.searchParams?.get('includeUTMParams') === 'true') {
     event.params = {
       utm: {
         campaign: 'campaign',
-        source: 'test',
-      },
+        source: 'test'
+      }
     };
   }
 
@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     cookieExpiryDays: 400,
     enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   const timeoutParam = requestUrl.searchParams.get('timeout');
@@ -44,6 +44,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     EPResponse,
     capturedDebugLogs: capturedDebugLogs
       .filter((item) => (item as unknown as string).includes('Personalize request'))
-      .pop(),
+      .pop()
   });
 }

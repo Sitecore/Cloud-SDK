@@ -18,7 +18,7 @@ describe('colors', () => {
       { fn: colors.blue, reg: new RegExp(`\\u001B\\[34mtest\\u001B\\[0m`) },
       { fn: colors.cyan, reg: new RegExp(`\\u001B\\[36mtest\\u001B\\[0m`) },
       { fn: colors.green, reg: new RegExp(`\\u001B\\[32mtest\\u001B\\[0m`) },
-      { fn: colors.yellow, reg: new RegExp(`\\u001B\\[33mtest\\u001B\\[0m`) },
+      { fn: colors.yellow, reg: new RegExp(`\\u001B\\[33mtest\\u001B\\[0m`) }
     ];
 
     it.each(colorVariants)('should return the string containing the ANSI code and reset at the end', (variant) => {

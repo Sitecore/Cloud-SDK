@@ -16,7 +16,7 @@ Then('the expected {string} version is returned', (libName: string) => {
   cy.waitUntil(() => cy.get('[data-testid="versionLabel"]').contains(expected), {
     errorMsg: `${libName} version not found`,
     timeout: 20000,
-    interval: 100,
+    interval: 100
   });
 });
 

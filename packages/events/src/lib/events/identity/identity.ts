@@ -21,6 +21,6 @@ export async function identity(identityData: IdentityData): Promise<EPResponse |
     id,
     identityData,
     sendEvent,
-    settings,
+    settings
   }).send();
 }

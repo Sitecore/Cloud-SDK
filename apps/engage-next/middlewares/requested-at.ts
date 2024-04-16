@@ -14,7 +14,7 @@ export async function requestedAtMiddleware(request: NextRequest): Promise<void>
     case 'sendCustomEventFromMiddlewareWithRequestedAt':
       await event(request, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
+        type: 'CUSTOM_EVENT'
       });
 
       break;
@@ -26,7 +26,7 @@ export async function requestedAtMiddleware(request: NextRequest): Promise<void>
       await identity(request, {
         ...baseEventData,
         email: 'test@test.com',
-        identifiers: [{ id: '', provider: 'email' }],
+        identifiers: [{ id: '', provider: 'email' }]
       });
 
       break;

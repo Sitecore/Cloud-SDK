@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -21,7 +21,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 describe('Event Storage', () => {
@@ -30,7 +30,7 @@ describe('Event Storage', () => {
     currency: 'EUR',
     language: 'EN',
     page: 'races',
-    type: 'CUSTOM_TYPE',
+    type: 'CUSTOM_TYPE'
   };
 
   const inferLanguageSpy = jest.spyOn(core, 'language');
@@ -40,7 +40,7 @@ describe('Event Storage', () => {
   const storageMock = {
     getItem: jest.fn(),
     removeItem: jest.fn(),
-    setItem: jest.fn(),
+    setItem: jest.fn()
   };
 
   const id = 'test_id';
@@ -50,16 +50,16 @@ describe('Event Storage', () => {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'bid_name',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse),
+      json: () => Promise.resolve({ status: 'OK' } as core.EPResponse)
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
@@ -75,7 +75,7 @@ describe('Event Storage', () => {
     const queueEventPayload: eventQueue.QueueEventPayload = {
       eventData,
       id,
-      settings,
+      settings
     };
 
     eventQueue.eventQueue.enqueueEvent(queueEventPayload);
@@ -94,7 +94,7 @@ describe('Event Storage', () => {
     const queueEventPayload: eventQueue.QueueEventPayload = {
       eventData,
       id,
-      settings,
+      settings
     };
     queueEventPayload.eventData.language = undefined;
     queueEventPayload.eventData.page = undefined;
@@ -120,7 +120,7 @@ describe('Event Storage', () => {
     const queueEventPayload: eventQueue.QueueEventPayload = {
       eventData,
       id,
-      settings,
+      settings
     };
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
@@ -141,7 +141,7 @@ describe('Event Storage', () => {
     const queueEventPayload: eventQueue.QueueEventPayload = {
       eventData,
       id,
-      settings,
+      settings
     };
 
     const getSessionStorageSpy = jest.spyOn(eventQueue.eventQueue as any, 'getSessionStorage');
@@ -156,7 +156,7 @@ describe('Event Storage', () => {
       eventData,
       id,
       sendEvent,
-      settings,
+      settings
     });
     expect(getEventQueueSpy).toHaveBeenCalledTimes(1);
     expect(getEventQueueSpy).toHaveReturnedWith(mockArray);
@@ -232,20 +232,20 @@ describe('Event Storage', () => {
 
     expect(CustomEvent).toHaveBeenNthCalledWith(1, {
       eventData: {
-        ...queueEventPayloadTwo.eventData,
+        ...queueEventPayloadTwo.eventData
       },
       id: queueEventPayloadTwo.id,
       sendEvent,
-      settings: queueEventPayloadTwo.settings,
+      settings: queueEventPayloadTwo.settings
     });
 
     expect(CustomEvent).toHaveBeenNthCalledWith(2, {
       eventData: {
-        ...queueEventPayloadThree.eventData,
+        ...queueEventPayloadThree.eventData
       },
       id: queueEventPayloadThree.id,
       sendEvent,
-      settings: queueEventPayloadThree.settings,
+      settings: queueEventPayloadThree.settings
     });
 
     expect(storageMock.removeItem).toHaveBeenCalledTimes(1);

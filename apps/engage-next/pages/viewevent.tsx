@@ -56,7 +56,7 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
         cookieExpiryDays: 400,
         enableBrowserCookie: true,
         sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-        siteName: process.env.SITE_ID || '',
+        siteName: process.env.SITE_ID || ''
       });
 
       if (!noExt) eventData.extensionData = extensionData;
@@ -81,7 +81,7 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
   const sendEventWithChannelAndCurreny = () => {
     const eventData: PageViewData = {
       channel: 'WEB',
-      currency: 'EUR',
+      currency: 'EUR'
     };
 
     pageView(eventData);
@@ -140,7 +140,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const eventData: Record<string, unknown> = {
     channel: 'WEB',
-    currency: 'EUR',
+    currency: 'EUR'
   };
 
   if (eventAttributes.get('variantid')) {
@@ -165,7 +165,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     enableServerCookie:
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   if (!noExt) eventData.extensionData = extensionData;
@@ -180,7 +180,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       debugLogs: JSON.stringify(capturedDebugLogs),
-      res: JSON.stringify(EPResponse),
-    },
+      res: JSON.stringify(EPResponse)
+    }
   };
 }

@@ -13,7 +13,7 @@ Then('the getBrowserId function returns the browser id', () => {
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
   cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => {
     const expectedCookieValue = cookie?.value ?? '';

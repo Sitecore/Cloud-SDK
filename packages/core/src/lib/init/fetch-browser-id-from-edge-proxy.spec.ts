@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -23,7 +23,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
     ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
     status: 'OK',
-    version: '1.2',
+    version: '1.2'
   };
 
   afterEach(() => {
@@ -32,7 +32,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should resolve with an appropriate response object when calling fetch with timeout', async () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as EPResponse),
+      json: () => Promise.resolve(mockResponse as EPResponse)
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout');
@@ -45,8 +45,8 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          'X-Library-Version': LIBRARY_VERSION,
-        },
+          'X-Library-Version': LIBRARY_VERSION
+        }
       }
     );
 
@@ -55,9 +55,9 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
       {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          'X-Library-Version': LIBRARY_VERSION,
+          'X-Library-Version': LIBRARY_VERSION
         },
-        signal: new AbortController().signal,
+        signal: new AbortController().signal
       }
     );
     expect(res).toMatchObject({ browserId: mockResponse.ref });
@@ -67,7 +67,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should resolve with an appropriate response object', () => {
     const mockFetch = Promise.resolve({
-      json: () => Promise.resolve(mockResponse as EPResponse),
+      json: () => Promise.resolve(mockResponse as EPResponse)
     });
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
     fetchBrowserIdFromEdgeProxy(SITECORE_EDGE_URL, sitecoreEdgeContextId).then((res) => {
@@ -78,8 +78,8 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
         {
           headers: {
             // eslint-disable-next-line @typescript-eslint/naming-convention
-            'X-Library-Version': LIBRARY_VERSION,
-          },
+            'X-Library-Version': LIBRARY_VERSION
+          }
         }
       );
       expect(constructBrowserIdUrlSpy).toHaveBeenCalledWith(SITECORE_EDGE_URL, sitecoreEdgeContextId);
@@ -122,7 +122,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should throw [IV-0006] when we pass negative timeout value', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ErrorMessages.IV_0006,
+      message: utils.ErrorMessages.IV_0006
     });
 
     expect(async () => {
@@ -133,7 +133,7 @@ describe('fetchBrowserIdFromEdgeProxy', () => {
 
   it('should throw [IE-0002] when we get an AbortError', async () => {
     const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockRejectedValueOnce({
-      message: utils.ErrorMessages.IE_0002,
+      message: utils.ErrorMessages.IE_0002
     });
 
     await expect(async () => {

@@ -26,7 +26,7 @@ export class CustomEvent extends BaseEvent {
 
     this.customEventPayload = {
       type,
-      ...rest,
+      ...rest
     };
 
     if (extensionData) this.extensionData = flattenObject({ object: extensionData });
@@ -42,8 +42,8 @@ export class CustomEvent extends BaseEvent {
         data: searchData,
         metadata: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
-          ut_api_version: '1.0',
-        },
+          ut_api_version: '1.0'
+        }
       };
   }
 

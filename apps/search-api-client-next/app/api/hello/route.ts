@@ -4,7 +4,7 @@ export async function GET() {
   const settings = {
     siteName: 'TestSite',
     sitecoreEdgeContextId: 'abc123',
-    userId: 'user123',
+    userId: 'user123'
   };
 
   init(settings);

@@ -13,7 +13,7 @@ describe('getGuestId', () => {
     const expectedResponse = 'ref';
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ customer: { ref: expectedResponse } } as GetGuestRefResponse),
-      ok: true,
+      ok: true
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
@@ -24,7 +24,7 @@ describe('getGuestId', () => {
   it('should call fetch with the correct url', async () => {
     const mockFetch = Promise.resolve({
       json: () => Promise.resolve({ customer: { ref: 'ref' } } as GetGuestRefResponse),
-      ok: true,
+      ok: true
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';
@@ -36,8 +36,8 @@ describe('getGuestId', () => {
     expect(fetch).toHaveBeenCalledWith(expectedUrl, {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
-        'X-Library-Version': LIBRARY_VERSION,
-      },
+        'X-Library-Version': LIBRARY_VERSION
+      }
     });
   });
 
@@ -47,7 +47,7 @@ describe('getGuestId', () => {
     const mockFetch = Promise.resolve({
       // eslint-disable-next-line @typescript-eslint/naming-convention
       json: () => Promise.resolve({ error_msg: expectedMsg, moreInfo: expectedMoreInfo } as GetGuestRefResponseError),
-      ok: false,
+      ok: false
     });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
     const bid = 'bid';

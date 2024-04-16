@@ -37,10 +37,10 @@ When('the {string} page is loaded with a different document.referrer hostname', 
       Object.defineProperty(contentWindow.document, 'referrer', {
         get() {
           return 'https://referrer.com/test?q=test';
-        },
+        }
       });
       expect(contentWindow.document.referrer).to.equal('https://referrer.com/test?q=test');
-    },
+    }
   });
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(200);
@@ -62,10 +62,10 @@ When('the {string} page is loaded with the same document.referrer hostname', (pa
       Object.defineProperty(contentWindow.document, 'referrer', {
         get() {
           return `${Cypress.config('baseUrl')}/test?q=test`;
-        },
+        }
       });
       expect(contentWindow.document.referrer).to.equal(`${Cypress.config('baseUrl')}/test?q=test`);
-    },
+    }
   });
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(200);
@@ -106,7 +106,7 @@ When('the cookies are removed from the browser', () => {
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
   cy.getCookie(Cypress.env('COOKIE_NAME'))
     .should('exist')
@@ -134,7 +134,7 @@ When('a cookie exists on the page with the respective {string} environment conte
   cy.waitUntil(() => cy.getCookie(cookieName), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
-    interval: 100,
+    interval: 100
   });
 });
 

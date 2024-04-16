@@ -31,26 +31,26 @@ export async function middleware(request: NextRequest) {
     cookieExpiryDays: 400,
     enableServerCookie,
     sitecoreEdgeUrl,
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
-    updateMiddleware,
+    updateMiddleware
   };
 
   const identityEventData = {
     channel: 'WEB',
     currency: 'EUR',
     email: 'testMiddleware@test.com',
-    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }],
+    identifiers: [{ id: 'testMiddleware@test.com', provider: 'email' }]
   };
 
   if (request.nextUrl.pathname.startsWith('/middleware-view-event')) {
     basicEventData = { ...basicEventData, page: 'middleware-view' };
 
     const extensionData = {
-      extParam: 'middlewareTest',
+      extParam: 'middlewareTest'
     };
     await pageView(request, { ...basicEventData, extensionData });
 
@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
     basicEventData = { ...basicEventData, page: 'middleware-custom' };
 
     const extensionData = {
-      extParam: 'middlewareTest',
+      extParam: 'middlewareTest'
     };
 
     await event(request, { type: 'MIDDLEWARE-CUSTOM', ...basicEventData, extensionData });
@@ -77,7 +77,7 @@ export async function middleware(request: NextRequest) {
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
+      language: 'EN'
     };
 
     const { geo } = request;
@@ -96,7 +96,7 @@ export async function middleware(request: NextRequest) {
         personalizeData.geo = {
           city: 'Tarnów',
           country: 'PL',
-          region: '12',
+          region: '12'
         };
         geo.city = 'Athens';
         geo.region = 'I';
@@ -106,7 +106,7 @@ export async function middleware(request: NextRequest) {
     await initPersonalize(request, response, {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
-      sitecoreEdgeUrl,
+      sitecoreEdgeUrl
     });
 
     const personalizeRes = await personalize(request, personalizeData);
@@ -123,7 +123,7 @@ export async function middleware(request: NextRequest) {
         currency: 'EUR',
         friendlyId: 'personalizeintegrationtest',
         language: 'EN',
-        email: 'test_personalize_callflows@test.com',
+        email: 'test_personalize_callflows@test.com'
       };
 
       decorateAll(testID);
@@ -138,7 +138,7 @@ export async function middleware(request: NextRequest) {
     await initPersonalize(request, response, {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
-      sitecoreEdgeUrl,
+      sitecoreEdgeUrl
     });
 
     const personalizeData: PersonalizeData = {
@@ -146,15 +146,15 @@ export async function middleware(request: NextRequest) {
       currency: 'EUR',
       email: 'test_personalize_callflows@test.com',
       friendlyId: 'personalizeintegrationtest',
-      language: 'EN',
+      language: 'EN'
     };
 
     if (request.nextUrl.searchParams?.get('includeUTMParams') === 'true') {
       personalizeData.params = {
         utm: {
           campaign: 'campaign',
-          source: 'test',
-        },
+          source: 'test'
+        }
       };
     }
 
@@ -197,6 +197,6 @@ export const config = {
     '/software-id',
     '/requested-at',
     '/custom-event-with-search-data',
-    '/page-view-event-with-search-data',
-  ],
+    '/page-view-event-with-search-data'
+  ]
 };

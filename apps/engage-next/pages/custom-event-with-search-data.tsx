@@ -21,7 +21,7 @@ export default function SearchData() {
     await event({
       ...baseEventData,
       type: 'CUSTOM_EVENT',
-      searchData: { test: 123 },
+      searchData: { test: 123 }
     });
     resetAllDecorators();
   };
@@ -32,7 +32,7 @@ export default function SearchData() {
     decorateAll(testID);
     await event({
       ...baseEventData,
-      type: 'CUSTOM_EVENT',
+      type: 'CUSTOM_EVENT'
     });
     resetAllDecorators();
   };
@@ -77,7 +77,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   await init(context.req, context.res, {
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   decorateAll(testID as string);
@@ -86,14 +86,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       await eventServer(context.req, {
         ...baseEventData,
         type: 'CUSTOM_EVENT',
-        searchData: { test: 123 },
+        searchData: { test: 123 }
       });
 
       break;
     case 'sendCustomEventFromServerSidePropsWithoutSearchData':
       await eventServer(context.req, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
+        type: 'CUSTOM_EVENT'
       });
 
       break;

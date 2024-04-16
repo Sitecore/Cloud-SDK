@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 jest.mock('@sitecore-cloudsdk/core', () => {
@@ -20,7 +20,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 describe('eventServer', () => {
@@ -32,14 +32,14 @@ describe('eventServer', () => {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
       get: () => '',
-      host: '',
+      host: ''
     },
     ip: undefined,
-    url: '',
+    url: ''
   };
   afterEach(() => {
     jest.clearAllMocks();
@@ -53,11 +53,11 @@ describe('eventServer', () => {
         {
           expiryDate: undefined,
           id: '',
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
-      page: 'identity',
+      page: 'identity'
     };
   });
 
@@ -70,11 +70,11 @@ describe('eventServer', () => {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
         cookieName: 'bid_name',
-        cookiePath: '/',
+        cookiePath: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: '',
+      sitecoreEdgeUrl: ''
     });
 
     await identityServer(req, { ...identityData, extensionData });
@@ -90,12 +90,12 @@ describe('eventServer', () => {
           cookieDomain: 'cDomain',
           cookieExpiryDays: 730,
           cookieName: 'bid_name',
-          cookiePath: '/',
+          cookiePath: '/'
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: '',
-      },
+        sitecoreEdgeUrl: ''
+      }
     });
   });
 

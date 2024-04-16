@@ -8,7 +8,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule,
-    generateV4UUID: () => 'b10bb699-bfb3-419b-b63f-638c62ed1aa7',
+    generateV4UUID: () => 'b10bb699-bfb3-419b-b63f-638c62ed1aa7'
   };
 });
 

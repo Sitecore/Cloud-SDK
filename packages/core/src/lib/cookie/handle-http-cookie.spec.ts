@@ -12,7 +12,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -22,32 +22,32 @@ describe('httpCookieHandler', () => {
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
     ref: 'browser_id_from_proxy',
     status: 'OK',
-    version: '1.2',
+    version: '1.2'
   };
   const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse),
+    json: () => Promise.resolve(mockFetchResponse)
   });
   global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
   let request: Utils.HttpRequest = {
     headers: {
-      cookie: 'sc_123=123456789',
-    },
+      cookie: 'sc_123=123456789'
+    }
   };
 
   let response: Utils.HttpResponse = {
-    setHeader: jest.fn(),
+    setHeader: jest.fn()
   };
   const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
       cookieName: 'sc_123',
-      cookiePath: '/',
+      cookiePath: '/'
     },
     siteName: '',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: '',
+    sitecoreEdgeUrl: ''
   };
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
@@ -78,11 +78,11 @@ describe('httpCookieHandler', () => {
 
   it('should handle the browser ID cookie in the request and response when the cookie is not present', async () => {
     request = {
-      headers: {},
+      headers: {}
     };
 
     response = {
-      setHeader: jest.fn(),
+      setHeader: jest.fn()
     };
 
     createCookieStringSpy.mockReturnValue('sc_123=browser_id_from_proxy');
@@ -100,12 +100,12 @@ describe('httpCookieHandler', () => {
 
     request = {
       headers: {
-        cookie: 'sc_123=123456789',
-      },
+        cookie: 'sc_123=123456789'
+      }
     };
 
     response = {
-      setHeader: jest.fn(),
+      setHeader: jest.fn()
     };
     createCookieStringSpy.mockReturnValue('sc_123=browser_id_from_proxy');
 

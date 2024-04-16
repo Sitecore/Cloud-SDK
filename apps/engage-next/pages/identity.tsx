@@ -39,8 +39,8 @@ export default function Identity() {
       identifiers: [
         {
           id: formData.email.value,
-          provider: 'email',
-        },
+          provider: 'email'
+        }
       ],
       language: 'EN',
       lastName: formData.lastname.value,
@@ -49,7 +49,7 @@ export default function Identity() {
       postalCode: formData.postal_code.value,
       state: formData.state.value,
       street: formData.street.value ? [formData.street.value] : [],
-      title: formData.title.value,
+      title: formData.title.value
     };
 
     if (formData.dob.value !== '') {
@@ -70,7 +70,7 @@ export default function Identity() {
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
       language: 'EN',
-      extensionData: {},
+      extensionData: {}
     };
 
     identity(identityData);
@@ -82,7 +82,7 @@ export default function Identity() {
       currency: 'EUR',
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
-      language: 'EN',
+      language: 'EN'
     };
 
     identity(identityData);
@@ -109,7 +109,7 @@ export default function Identity() {
       email: 'test@test.com',
       identifiers: [{ id: 'test', provider: 'email' }],
       language: 'EN',
-      extensionData: extensionDataExt,
+      extensionData: extensionDataExt
     };
 
     identity(identityData);
@@ -129,7 +129,7 @@ export default function Identity() {
           border: '1px solid black',
           marginLeft: '15px',
           padding: 20,
-          width: 400,
+          width: 400
         }}>
         {/* We pass the event to the handleSubmit() function on submit. */}
         <form

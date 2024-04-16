@@ -4,7 +4,7 @@ import {
   event as eventServer,
   identity as identityServer,
   init,
-  pageView as pageViewServer,
+  pageView as pageViewServer
 } from '@sitecore-cloudsdk/events/server';
 import { GetServerSidePropsContext } from 'next';
 
@@ -27,7 +27,7 @@ export default function RequestedAt() {
     decorateAll(testID);
     await event({
       ...baseEventData,
-      type: 'CUSTOM_EVENT',
+      type: 'CUSTOM_EVENT'
     });
     resetAllDecorators();
   };
@@ -46,7 +46,7 @@ export default function RequestedAt() {
     await identity({
       ...baseEventData,
       email: 'test@test.com',
-      identifiers: [{ id: '', provider: 'email' }],
+      identifiers: [{ id: '', provider: 'email' }]
     });
     resetAllDecorators();
   };
@@ -116,7 +116,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   await init(context.req, context.res, {
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   decorateAll(testID as string);
@@ -124,7 +124,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     case 'sendCustomEventFromServerSidePropsWithRequestedAt':
       await eventServer(context.req, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
+        type: 'CUSTOM_EVENT'
       });
 
       break;
@@ -136,7 +136,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       await identityServer(context.req, {
         ...baseEventData,
         email: 'test@test.com',
-        identifiers: [{ id: '', provider: 'email' }],
+        identifiers: [{ id: '', provider: 'email' }]
       });
 
       break;

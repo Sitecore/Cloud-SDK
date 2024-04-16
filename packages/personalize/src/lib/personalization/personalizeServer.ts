@@ -32,6 +32,6 @@ export function personalizeServer<T extends Request>(
 
   return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
     timeout: opts?.timeout,
-    userAgent,
+    userAgent
   });
 }

@@ -14,7 +14,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -24,7 +24,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -32,7 +32,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -40,7 +40,7 @@ const settingsParams: core.BrowserSettings = {
   cookieDomain: 'cDomain',
   siteName: '456',
   sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: 'https://localhost',
+  sitecoreEdgeUrl: 'https://localhost'
 };
 
 describe('initializer', () => {
@@ -129,7 +129,7 @@ describe('initializer', () => {
     expect(global.window.Engage.versions).toBeDefined();
     expect(global.window.Engage.versions).toEqual({
       events: LIBRARY_VERSION,
-      testV: '1.0.0',
+      testV: '1.0.0'
     });
   });
   it('should reset the initPromise if initCore fails', async () => {
@@ -156,7 +156,7 @@ describe('awaitInit', () => {
       cookieDomain: 'cDomain',
       siteName: '456',
       sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: 'https://localhost',
+      sitecoreEdgeUrl: 'https://localhost'
     };
 
     await init(settingsParams);

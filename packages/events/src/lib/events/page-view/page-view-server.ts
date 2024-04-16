@@ -3,7 +3,7 @@ import {
   EPResponse,
   getBrowserIdFromRequest,
   getSettingsServer,
-  handleGetSettingsError,
+  handleGetSettingsError
 } from '@sitecore-cloudsdk/core';
 import { PageViewData, PageViewEvent } from './page-view-event';
 import { ErrorMessages } from '../../consts';
@@ -28,6 +28,6 @@ export function pageViewServer<T extends Request>(request: T, pageViewData: Page
     pageViewData,
     searchParams: requestUrl.search,
     sendEvent,
-    settings,
+    settings
   }).send();
 }

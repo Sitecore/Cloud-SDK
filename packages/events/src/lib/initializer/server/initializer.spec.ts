@@ -12,7 +12,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -22,7 +22,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule,
+    ...originalModule
   };
 });
 
@@ -30,7 +30,7 @@ jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    default: jest.fn(() => jest.fn()),
+    default: jest.fn(() => jest.fn())
   };
 });
 
@@ -41,28 +41,28 @@ describe('initializer', () => {
     cookieDomain: 'cDomain',
     siteName: '456',
     sitecoreEdgeContextId: '123',
-    sitecoreEdgeUrl: undefined,
+    sitecoreEdgeUrl: undefined
   };
   const req = {
     cookies: {
       get() {
         return 'test';
       },
-      set: () => undefined,
+      set: () => undefined
     },
     headers: {
       get: () => '',
-      host: '',
+      host: ''
     },
     ip: undefined,
-    url: '',
+    url: ''
   };
   const res: MiddlewareNextResponse = {
     cookies: {
       set() {
         return 'test';
-      },
-    },
+      }
+    }
   };
 
   global.fetch = jest.fn().mockImplementation(() => mockFetch);

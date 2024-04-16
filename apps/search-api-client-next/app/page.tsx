@@ -5,7 +5,7 @@ export default async function Index() {
   const settings = {
     siteName: 'TestSite',
     sitecoreEdgeContextId: 'abc123',
-    userId: 'user123',
+    userId: 'user123'
   };
 
   init(settings);

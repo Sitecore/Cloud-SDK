@@ -17,7 +17,7 @@ const COLORS = {
   GREEN: '\u001B[32m',
   RED: '\u001B[31m',
   RESET: '\u001B[0m',
-  YELLOW: '\u001B[33m',
+  YELLOW: '\u001B[33m'
 } as const;
 /* eslint-enable @typescript-eslint/naming-convention */
 

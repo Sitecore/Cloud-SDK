@@ -7,14 +7,14 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     channel: 'WEB',
     currency: 'EUR',
     page: 'api-custom',
-    type: 'CUSTOM',
+    type: 'CUSTOM'
   };
 
   await init(req, res, {
     cookieExpiryDays: 400,
     enableServerCookie: true,
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || '',
+    siteName: process.env.SITE_ID || ''
   });
 
   const EPResponse = await event(req, eventData);
