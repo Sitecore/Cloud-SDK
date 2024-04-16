@@ -1,10 +1,10 @@
-import { init, awaitInit } from './initializer';
-import packageJson from '../../../../package.json';
-import { ErrorMessages, LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
+import '../../../global.d.ts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import '../../../global.d.ts';
+import { EVENTS_NAMESPACE, ErrorMessages, LIBRARY_VERSION } from '../../consts';
+import { awaitInit, init } from './initializer';
 import debug from 'debug';
+import packageJson from '../../../../package.json';
 
 jest.mock('../../eventStorage/eventStorage');
 

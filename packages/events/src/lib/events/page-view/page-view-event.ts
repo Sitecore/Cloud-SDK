@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
-import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
-import { BaseEvent } from '../base-event';
-import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
 import { EventAttributesInput, ExtensionData } from '../common-interfaces';
-import { SendEvent } from '../send-event/sendEvent';
+import { FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
+import { MAX_EXT_ATTRIBUTES, UTM_PREFIX } from '../consts';
+import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';
+import { SendEvent } from '../send-event/sendEvent';
 
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;

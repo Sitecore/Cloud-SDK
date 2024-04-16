@@ -1,8 +1,8 @@
-import { EPResponse } from '@sitecore-cloudsdk/core';
-import { sendEvent } from './sendEvent';
-import { LIBRARY_VERSION, EVENTS_NAMESPACE, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
+import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import { EPResponse } from '@sitecore-cloudsdk/core';
 import debug from 'debug';
+import { sendEvent } from './sendEvent';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

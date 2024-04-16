@@ -1,8 +1,8 @@
-import { CustomEvent, EventData } from './custom-event';
-import * as sendEventModule from '../send-event/sendEvent';
-import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
+import * as sendEventModule from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { CustomEvent, EventData } from './custom-event';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

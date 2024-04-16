@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { getBrowserId, EPResponse, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { EPResponse, getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { CustomEvent } from './custom-event';
-import { sendEvent } from '../send-event/sendEvent';
-import { awaitInit } from '../../initializer/browser/initializer';
 import { ErrorMessages } from '../../consts';
+import { awaitInit } from '../../initializer/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends a form event to SitecoreCloud API

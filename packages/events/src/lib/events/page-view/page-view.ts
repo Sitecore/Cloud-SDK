@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getBrowserId, EPResponse, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { EPResponse, getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { PageViewData, PageViewEvent } from './page-view-event';
+import { ErrorMessages } from '../../consts';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
-import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API

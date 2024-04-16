@@ -1,9 +1,9 @@
+import * as HandleHttpCookie from './handle-http-cookie';
+import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
+import * as initCore from '../init/init-core-server';
+import * as utils from '@sitecore-cloudsdk/utils';
 import { Settings } from '../settings/interfaces';
 import { handleServerCookie } from './handle-server-cookie';
-import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
-import * as HandleHttpCookie from './handle-http-cookie';
-import * as utils from '@sitecore-cloudsdk/utils';
-import * as initCore from '../init/init-core-server';
 
 // Mock the 'initializer' module
 jest.mock('../init/init-core-server', () => ({

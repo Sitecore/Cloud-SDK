@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import './index.css';
 import { AppProps } from 'next/app';
+import Events from '../components/Events';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
-import './index.css';
-import Events from '../components/Events';
 import Personalize from '../components/Personalize';
 
 export default function CustomApp({ Component, pageProps }: AppProps) {

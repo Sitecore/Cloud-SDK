@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { event, init } from '@sitecore-cloudsdk/events/server';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
+import { event, init } from '@sitecore-cloudsdk/events/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);

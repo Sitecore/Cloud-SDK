@@ -1,15 +1,15 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
+import { CustomEvent, EventData } from './custom-event';
 import {
   EPResponse,
   getBrowserIdFromRequest,
   getSettingsServer,
   handleGetSettingsError,
 } from '@sitecore-cloudsdk/core';
-import { EventData, CustomEvent } from './custom-event';
+import { ErrorMessages } from '../../consts';
 import { Request } from '@sitecore-cloudsdk/utils';
 import { sendEvent } from '../send-event/sendEvent';
-import { ErrorMessages } from '../../consts';
 
 /**
  * A function that sends an event to SitecoreCloud API with the specified type

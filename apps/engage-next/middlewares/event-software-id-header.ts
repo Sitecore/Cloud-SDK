@@ -1,5 +1,5 @@
-import { NextRequest } from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
+import { NextRequest } from 'next/server';
 import { pageView } from '@sitecore-cloudsdk/events/server';
 
 export async function eventWithSoftwareIDHeaderMiddleware(request: NextRequest): Promise<void> {

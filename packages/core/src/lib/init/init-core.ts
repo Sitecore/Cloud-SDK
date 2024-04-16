@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { createCookie } from '../cookie/create-cookie';
-import { createSettings } from '../settings/create-settings';
-import { Settings, BrowserSettings } from '../settings/interfaces';
-import { debug } from '../debug/debug';
+import { BrowserSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
+import { createCookie } from '../cookie/create-cookie';
+import { createSettings } from '../settings/create-settings';
+import { debug } from '../debug/debug';
 
 /**
  * Internal settings object to be used by all functions in module caching.

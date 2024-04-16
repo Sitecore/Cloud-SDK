@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { getSettings, initCore, setCoreSettings, setCookiePromise } from './init-core';
-import { Settings, BrowserSettings } from '../settings/interfaces';
 import * as createCookieInit from '../cookie/create-cookie';
-import * as utils from '@sitecore-cloudsdk/utils';
 import * as createSetting from '../settings/create-settings';
-import debug from 'debug';
+import * as utils from '@sitecore-cloudsdk/utils';
+import { BrowserSettings, Settings } from '../settings/interfaces';
+import { getSettings, initCore, setCookiePromise, setCoreSettings } from './init-core';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
+import debug from 'debug';
 
 // Mock the dependencies
 jest.mock('../cookie/create-cookie', () => ({

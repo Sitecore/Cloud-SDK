@@ -1,6 +1,6 @@
-import { createCookieString } from './create-cookie-string';
-import { DAILY_SECONDS } from './consts';
 import { CookieProperties } from './interfaces';
+import { DAILY_SECONDS } from './consts';
+import { createCookieString } from './create-cookie-string';
 
 describe('createCookieString', () => {
   const cookieMaxAge = 365 * DAILY_SECONDS;

@@ -1,7 +1,7 @@
-import { GetServerSidePropsContext } from 'next';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { PageViewData, pageView } from '@sitecore-cloudsdk/events/browser';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
+import { GetServerSidePropsContext } from 'next';
 
 export default function EventSoftwareIDHeaderPage() {
   const sendEventFromAPIWithSoftwareID = async () => {

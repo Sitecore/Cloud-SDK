@@ -1,9 +1,9 @@
-import { EPResponse } from '@sitecore-cloudsdk/core';
-import { sendCallFlowsRequest, EPCallFlowsBody } from './send-call-flows-request';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import debug from 'debug';
+import { EPCallFlowsBody, sendCallFlowsRequest } from './send-call-flows-request';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { EPResponse } from '@sitecore-cloudsdk/core';
+import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

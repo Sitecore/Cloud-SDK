@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { useState } from 'react';
 import { event } from '@sitecore-cloudsdk/events/browser';
+import { useState } from 'react';
 
 export default function CustomEvent() {
   let eventData = {

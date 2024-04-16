@@ -1,10 +1,10 @@
+import * as core from '@sitecore-cloudsdk/core';
+import { EVENTS_NAMESPACE, LIBRARY_VERSION } from '../../consts';
+import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
+import { ServerSettings } from '@sitecore-cloudsdk/core';
+import debug from 'debug';
 import { initServer } from './initializer';
 import packageJson from '../../../../package.json';
-import { ServerSettings } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION, EVENTS_NAMESPACE } from '../../consts';
-import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
-import * as core from '@sitecore-cloudsdk/core';
-import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

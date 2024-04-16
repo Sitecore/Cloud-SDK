@@ -72,7 +72,8 @@
               }
             ]
           }
-        ]
+        ],
+        "sort-imports": "error"
       }
     },
     {

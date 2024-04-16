@@ -1,17 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import {
-  type Request,
-  type MiddlewareNextResponse,
   type HttpResponse,
-  isNextJsMiddlewareRequest,
-  isNextJsMiddlewareResponse,
+  type MiddlewareNextResponse,
+  type Request,
   isHttpRequest,
   isHttpResponse,
+  isNextJsMiddlewareRequest,
+  isNextJsMiddlewareResponse,
 } from '@sitecore-cloudsdk/utils';
 import { getSettingsServer } from '../init/init-core-server';
-import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 import { handleHttpCookie } from './handle-http-cookie';
+import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 
 /**
  * Handles server-side cookie operations based on the provided 'request' and 'response' objects.

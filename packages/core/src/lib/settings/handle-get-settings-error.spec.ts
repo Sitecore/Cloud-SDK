@@ -1,5 +1,5 @@
-import { ErrorMessages } from '../consts';
 import * as getSettingsServer from '../init/init-core-server';
+import { ErrorMessages } from '../consts';
 import { handleGetSettingsError } from './handle-get-settings-error';
 
 describe('handleGetSettingsError', () => {

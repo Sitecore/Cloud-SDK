@@ -1,14 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import { useState } from 'react';
 import {
   PageViewData,
+  LIBRARY_VERSION as eventVersion,
   getBrowserId,
   pageView,
-  LIBRARY_VERSION as eventVersion,
 } from '@sitecore-cloudsdk/events/browser';
-import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
+import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
+import { useState } from 'react';
 
 export function Index() {
   const [eventData, seteventData] = useState<PageViewData>({

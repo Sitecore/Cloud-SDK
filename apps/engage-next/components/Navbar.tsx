@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { useRouter } from 'next/router';
-import React from 'react';
 import NavLink from './NavLink';
+import React from 'react';
+import { useRouter } from 'next/router';
 
 const links = [
   { text: 'Home', path: '/', testId: 'homePage' },

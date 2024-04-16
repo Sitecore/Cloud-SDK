@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, PersonalizeData, personalize } from '@sitecore-cloudsdk/personalize/server';
-import { capturedDebugLogs } from '../../utils/debugLogs';
+import { PersonalizeData, init, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
+import { capturedDebugLogs } from '../../utils/debugLogs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -37,7 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   if (testID === 'sendPersonalizeFromAPIWithCorrelationID') decorateAll(testID);
 
   const EPResponse = await personalize(req, event, { timeout });
-  resetAllDecorators();
+
+  if (testID === 'sendPersonalizeFromAPIWithCorrelationID') resetAllDecorators();
 
   res.status(200).json({
     EPResponse,

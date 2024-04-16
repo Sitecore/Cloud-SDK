@@ -2,8 +2,8 @@
 
 import { cookieExists, createCookieString } from '@sitecore-cloudsdk/utils';
 import { Settings } from '../settings/interfaces';
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 /**
  * Creates and adds the cookie to the document

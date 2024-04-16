@@ -1,7 +1,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 /// <reference types="cypress" />
 // Above line needed as indicator for Cypress
-import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 Then('the multiple events are sent in the respective order: {string}', (eventOrder: string) => {
   const eventList = eventOrder.split(',');

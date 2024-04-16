@@ -2,9 +2,9 @@
 
 import { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { Settings } from '../settings/interfaces';
+import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 
 /**
  * Handles the Middleware Request and sets a cookie with the provided 'cookieName' and 'cookieValue'.

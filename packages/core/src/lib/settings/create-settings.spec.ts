@@ -1,4 +1,4 @@
-import { SITECORE_EDGE_URL, COOKIE_NAME_PREFIX } from '../consts';
+import { COOKIE_NAME_PREFIX, SITECORE_EDGE_URL } from '../consts';
 import { createSettings } from './create-settings';
 
 describe('createSettings', () => {

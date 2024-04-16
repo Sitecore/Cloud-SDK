@@ -1,12 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ErrorMessages } from '../consts';
-import { awaitInit } from '../initializer/browser/initializer';
 import {
   getBrowserId,
   getGuestId as getGuestIdFromCore,
   getSettings,
   handleGetSettingsError,
 } from '@sitecore-cloudsdk/core';
+import { ErrorMessages } from '../consts';
+import { awaitInit } from '../initializer/browser/initializer';
 
 /**
  * A function that returns the guest id.

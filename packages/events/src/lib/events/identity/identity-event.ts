@@ -1,11 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BaseEvent } from '../base-event';
-import { ExtensionData, EventAttributesInput } from '../common-interfaces';
-import { MAX_EXT_ATTRIBUTES } from '../consts';
-import { isShortISODateString, isValidEmail, FlattenedObject, flattenObject } from '@sitecore-cloudsdk/utils';
 import { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
-import { SendEvent } from '../send-event/sendEvent';
+import { EventAttributesInput, ExtensionData } from '../common-interfaces';
+import { FlattenedObject, flattenObject, isShortISODateString, isValidEmail } from '@sitecore-cloudsdk/utils';
+import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
+import { SendEvent } from '../send-event/sendEvent';
 
 export class IdentityEvent extends BaseEvent {
   private identityData: IdentityData;

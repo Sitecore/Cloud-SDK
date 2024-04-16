@@ -3,7 +3,7 @@
 // Above line needed as indicator for Cypress
 
 let errorMessage: string;
-import { Then, defineStep, Given, Before, After } from '@badeball/cypress-cucumber-preprocessor';
+import { After, Before, Given, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 const middlewarePath = '../engage-next/middleware.ts';
 const serverSidePropsPath = '../engage-next/pages/server-side-props-server-cookie.tsx';
 

@@ -1,7 +1,7 @@
+import '../../global.d.ts';
 import * as core from '@sitecore-cloudsdk/core';
 import { ErrorMessages, LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
-import '../../global.d.ts';
-import { init, awaitInit } from './initializer';
+import { awaitInit, init } from './initializer';
 import debug from 'debug';
 
 jest.mock('../../personalization/personalizer');

@@ -1,5 +1,5 @@
-import { fetchWithTimeout } from './fetch-with-timeout'; // Update with your actual module path
 import { ErrorMessages } from './consts';
+import { fetchWithTimeout } from './fetch-with-timeout'; // Update with your actual module path
 
 describe('fetchWithTimeout', () => {
   const url = 'https://example.com/api/data';

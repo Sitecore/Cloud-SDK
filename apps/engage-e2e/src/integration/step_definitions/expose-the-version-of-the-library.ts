@@ -1,11 +1,10 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /// <reference types='cypress' />
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 // Above line needed as indicator for Cypress
 import eventsPackageJson from '../../../../../packages/events/package.json';
 import personalizePackageJson from '../../../../../packages/personalize/package.json';
-
-import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 // Scenario: user retrieves version of the library from the window object
 When('user calls window.{string}.version', (libName: string) => {

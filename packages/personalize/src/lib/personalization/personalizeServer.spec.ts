@@ -1,7 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { Personalizer, PersonalizeData } from './personalizer';
-import { personalizeServer } from './personalizeServer';
+import { PersonalizeData, Personalizer } from './personalizer';
 import { MiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { personalizeServer } from './personalizeServer';
 
 jest.mock('./personalizer');
 

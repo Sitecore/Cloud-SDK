@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
-import { Given, When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then, When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 declare global {
   /* eslint-disable @typescript-eslint/naming-convention */

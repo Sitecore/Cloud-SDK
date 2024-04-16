@@ -5,10 +5,10 @@ import {
   getSettingsServer,
   handleGetSettingsError,
 } from '@sitecore-cloudsdk/core';
-import { Request } from '@sitecore-cloudsdk/utils';
 import { PageViewData, PageViewEvent } from './page-view-event';
-import { sendEvent } from '../send-event/sendEvent';
 import { ErrorMessages } from '../../consts';
+import { Request } from '@sitecore-cloudsdk/utils';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API

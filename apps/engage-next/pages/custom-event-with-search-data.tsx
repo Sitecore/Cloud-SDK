@@ -1,7 +1,7 @@
-import { GetServerSidePropsContext } from 'next';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
+import { event as eventServer, init } from '@sitecore-cloudsdk/events/server';
+import { GetServerSidePropsContext } from 'next';
 import { event } from '@sitecore-cloudsdk/events/browser';
-import { init, event as eventServer } from '@sitecore-cloudsdk/events/server';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 

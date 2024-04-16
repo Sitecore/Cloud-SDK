@@ -1,6 +1,6 @@
 import { init, pageView } from '@sitecore-cloudsdk/events/browser';
-import { init as initPersonalize } from '@sitecore-cloudsdk/personalize/browser';
 import React from 'react';
+import { init as initPersonalize } from '@sitecore-cloudsdk/personalize/browser';
 
 export default function AsyncInitEvents() {
   const eventData = {

@@ -1,7 +1,7 @@
-import { clearEventQueue } from './clearEventQueue';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import * as initializerModule from '../initializer/browser/initializer';
+import { clearEventQueue } from './clearEventQueue';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

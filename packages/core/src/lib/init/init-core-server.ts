@@ -1,12 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
-import { handleServerCookie } from '../cookie/handle-server-cookie';
-import { Settings, ServerSettings } from '../settings/interfaces';
-import { createSettings } from '../settings/create-settings';
-import { debug } from '../debug/debug';
+import { ServerSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
+import { createSettings } from '../settings/create-settings';
+import { debug } from '../debug/debug';
+import { handleServerCookie } from '../cookie/handle-server-cookie';
 
 /**
  * Internal settings object to be used by all functions in module caching.

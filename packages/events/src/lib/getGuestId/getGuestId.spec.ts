@@ -1,6 +1,6 @@
-import { getGuestId } from './getGuestId';
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../initializer/browser/initializer';
+import { getGuestId } from './getGuestId';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

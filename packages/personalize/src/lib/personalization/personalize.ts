@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { FailedCalledFlowsResponse } from './send-call-flows-request';
+import { PersonalizeData, Personalizer } from './personalizer';
 import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
-import { Personalizer, PersonalizeData } from './personalizer';
-import { awaitInit } from '../initializer/client/initializer';
 import { ErrorMessages } from '../consts';
+import { FailedCalledFlowsResponse } from './send-call-flows-request';
+import { awaitInit } from '../initializer/client/initializer';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.

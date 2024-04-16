@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BrowserSettings, getBrowserId, initCore, debug } from '@sitecore-cloudsdk/core';
+import { BrowserSettings, debug, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
 import { ErrorMessages, LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 
 export let initPromise: Promise<void> | null = null;

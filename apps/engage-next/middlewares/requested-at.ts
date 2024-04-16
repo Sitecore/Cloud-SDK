@@ -1,6 +1,6 @@
-import { NextRequest } from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { event, identity, pageView } from '@sitecore-cloudsdk/events/server';
+import { NextRequest } from 'next/server';
 
 export async function requestedAtMiddleware(request: NextRequest): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');

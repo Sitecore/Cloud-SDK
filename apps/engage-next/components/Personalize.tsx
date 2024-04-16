@@ -1,7 +1,7 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 import { init } from '@sitecore-cloudsdk/personalize/browser';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Personalize = () => {
   const router = useRouter();

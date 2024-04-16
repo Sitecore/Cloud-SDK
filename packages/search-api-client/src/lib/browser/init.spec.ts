@@ -1,5 +1,5 @@
-import { init, getSettings } from './init';
 import * as validateSettingsModule from '../utils/validateSettings';
+import { getSettings, init } from './init';
 import { BrowserSettings } from '../types';
 import { ErrorMessages } from '../const';
 

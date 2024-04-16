@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { IdentityData, identity, init } from '@sitecore-cloudsdk/events/server';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { init, IdentityData, identity } from '@sitecore-cloudsdk/events/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);

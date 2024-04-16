@@ -1,10 +1,10 @@
-import { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
-import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { Settings } from '../settings/interfaces';
-import { COOKIE_NAME_PREFIX } from '../consts';
 import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { COOKIE_NAME_PREFIX } from '../consts';
+import { Settings } from '../settings/interfaces';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 
 describe('handleMiddlewareRequest', () => {
   const mockFetchResponse = {

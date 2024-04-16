@@ -1,8 +1,8 @@
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 import { init } from '@sitecore-cloudsdk/events/browser';
-import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 
 const Events = () => {
   const router = useRouter();

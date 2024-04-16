@@ -1,7 +1,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 /// <reference types="cypress" />
 // Above line needed as indicator for Cypress
-import { Given, When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { Given, Then, When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 import { Utils } from '../../support/utils';
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let statusCode: number;

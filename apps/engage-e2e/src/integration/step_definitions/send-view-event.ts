@@ -1,7 +1,7 @@
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
 
-import { When, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { Then, When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 beforeEach(() => {
   cy.intercept(

@@ -1,8 +1,8 @@
-import { addToEventQueue } from './addToEventQueue';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import * as initializerModule from '../initializer/browser/initializer';
 import { EventData } from '../events/custom-event/custom-event';
+import { addToEventQueue } from './addToEventQueue';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

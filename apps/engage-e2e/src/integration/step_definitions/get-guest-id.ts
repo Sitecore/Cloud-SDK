@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
-import { When, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 When('the engage.getGuestId called', () => {
   cy.get('[data-testid="getGuestId"]').click();

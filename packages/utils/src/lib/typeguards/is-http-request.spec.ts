@@ -1,5 +1,5 @@
-import { isHttpRequest } from './is-http-request';
 import { Request } from '../interfaces';
+import { isHttpRequest } from './is-http-request';
 
 describe('isHttpRequest', () => {
   it('should return true for a valid HTTP Request', () => {

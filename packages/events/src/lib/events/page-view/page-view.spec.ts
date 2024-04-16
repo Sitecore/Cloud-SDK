@@ -1,8 +1,8 @@
-import { pageView } from './page-view';
-import { PageViewData, PageViewEvent } from './page-view-event';
-import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
+import { PageViewData, PageViewEvent } from './page-view-event';
+import { pageView } from './page-view';
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

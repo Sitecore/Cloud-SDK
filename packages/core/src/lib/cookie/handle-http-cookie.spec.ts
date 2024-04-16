@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
-import { Settings } from '../settings/interfaces';
-import { handleHttpCookie } from './handle-http-cookie';
-import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import * as Utils from '@sitecore-cloudsdk/utils';
+import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import { Settings } from '../settings/interfaces';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { handleHttpCookie } from './handle-http-cookie';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

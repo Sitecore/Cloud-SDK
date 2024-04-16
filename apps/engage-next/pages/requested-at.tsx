@@ -1,12 +1,12 @@
-import { GetServerSidePropsContext } from 'next';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { event, form, identity, pageView } from '@sitecore-cloudsdk/events/browser';
 import {
-  init,
   event as eventServer,
   identity as identityServer,
+  init,
   pageView as pageViewServer,
 } from '@sitecore-cloudsdk/events/server';
+import { GetServerSidePropsContext } from 'next';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 

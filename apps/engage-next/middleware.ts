@@ -1,15 +1,15 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
 import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
-import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
-import { requestedAtMiddleware } from './middlewares/requested-at';
+import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { customEventWithSearchDataMiddleware } from './middlewares/custom-event-with-search-data';
-import { pageViewEventWithSearchDataMiddleware } from './middlewares/page-view-event-with-search-data';
 import { eventWithSoftwareIDHeaderMiddleware } from './middlewares/event-software-id-header';
+import { pageViewEventWithSearchDataMiddleware } from './middlewares/page-view-event-with-search-data';
+import { requestedAtMiddleware } from './middlewares/requested-at';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {

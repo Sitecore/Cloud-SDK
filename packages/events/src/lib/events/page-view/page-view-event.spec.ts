@@ -2,12 +2,12 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
 
-import { PageViewData, PageViewEvent } from './page-view-event';
-import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
-import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as core from '@sitecore-cloudsdk/core';
-import * as utils from '@sitecore-cloudsdk/utils';
 import * as sendEvent from '../send-event/sendEvent';
+import * as utils from '@sitecore-cloudsdk/utils';
+import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import { PageViewData, PageViewEvent } from './page-view-event';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

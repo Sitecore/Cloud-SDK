@@ -1,5 +1,5 @@
-import { generateCorrelationId } from './generate-correlation-id';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { generateCorrelationId } from './generate-correlation-id';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

@@ -1,5 +1,5 @@
-import { isNextJsMiddlewareRequest } from './is-next-js-middleware-request';
 import { Request } from '../interfaces';
+import { isNextJsMiddlewareRequest } from './is-next-js-middleware-request';
 
 describe('isNextJsMiddlewareRequest', () => {
   it('should return true for a valid Next.js Middleware Request', () => {

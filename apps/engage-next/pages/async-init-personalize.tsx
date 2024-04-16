@@ -1,6 +1,6 @@
+import React, { useState } from 'react';
 import { init, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { init as initEvents } from '@sitecore-cloudsdk/events/browser';
-import { useState } from 'react';
 
 export default function AsyncInitPersonalize() {
   const [responseBody, setResponseBody] = useState('');

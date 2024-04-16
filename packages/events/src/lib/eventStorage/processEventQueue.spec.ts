@@ -1,7 +1,7 @@
-import { processEventQueue } from './processEventQueue';
 import * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import * as initializerModule from '../initializer/browser/initializer';
+import { processEventQueue } from './processEventQueue';
 
 jest.mock('../events/custom-event/custom-event');
 jest.mock('@sitecore-cloudsdk/core', () => {

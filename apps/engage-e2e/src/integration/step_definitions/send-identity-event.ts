@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
-import { defineStep, When } from '@badeball/cypress-cucumber-preprocessor';
+import { When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 When('the user fills the identity form', (datatable: any) => {
   const requestAttr = datatable.hashes()[0];

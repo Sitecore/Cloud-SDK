@@ -1,8 +1,8 @@
-import { event } from './event';
-import { CustomEvent, EventData } from './custom-event';
-import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
+import { CustomEvent, EventData } from './custom-event';
+import { event } from './event';
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/browser/initializer');
 jest.mock('./custom-event');

@@ -1,7 +1,7 @@
-import { personalize } from '@sitecore-cloudsdk/personalize/browser';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { init, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
 import { GetServerSidePropsContext } from 'next';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
+import { personalize } from '@sitecore-cloudsdk/personalize/browser';
 
 export default function CorrelationID() {
   const sendPersonalizeFromAPIWithCorrelationID = async () => {

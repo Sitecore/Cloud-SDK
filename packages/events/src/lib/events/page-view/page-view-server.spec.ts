@@ -1,7 +1,7 @@
-import { pageViewServer } from './page-view-server';
-import { PageViewData, PageViewEvent } from './page-view-event';
-import { sendEvent } from '../send-event/sendEvent';
 import * as core from '@sitecore-cloudsdk/core';
+import { PageViewData, PageViewEvent } from './page-view-event';
+import { pageViewServer } from './page-view-server';
+import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/server/initializer');
 jest.mock('@sitecore-cloudsdk/utils', () => {

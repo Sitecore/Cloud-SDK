@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ErrorMessages } from '../const';
 import { BrowserSettings } from '../types';
+import { ErrorMessages } from '../const';
 import { validateSettings } from '../utils/validateSettings';
 
 let searchSettings: BrowserSettings | null = null;

@@ -1,7 +1,7 @@
-import { init, getSettings } from './init';
 import * as validateSettingsModule from '../utils/validateSettings';
-import { ServerSettings } from '../types';
+import { getSettings, init } from './init';
 import { ErrorMessages } from '../const';
+import { ServerSettings } from '../types';
 
 jest.mock('../utils/validateSettings', () => ({
   validateSettings: jest.fn().mockImplementation(() => true),

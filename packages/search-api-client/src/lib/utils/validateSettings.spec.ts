@@ -1,7 +1,7 @@
-import { ErrorMessages } from '../const';
-import { ServerSettings, BrowserSettings } from '../types';
-import { validateSettings } from './validateSettings';
 import * as core from '@sitecore-cloudsdk/core';
+import { BrowserSettings, ServerSettings } from '../types';
+import { ErrorMessages } from '../const';
+import { validateSettings } from './validateSettings';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');

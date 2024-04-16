@@ -1,9 +1,9 @@
+import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
+import * as utils from '@sitecore-cloudsdk/utils';
+import { COOKIE_NAME_PREFIX, SITECORE_EDGE_URL } from '../consts';
 import { Settings } from '../settings/interfaces';
 import { createCookie } from './create-cookie';
-import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
-import * as utils from '@sitecore-cloudsdk/utils';
-import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
-import { COOKIE_NAME_PREFIX, SITECORE_EDGE_URL } from '../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   cookieExists: jest.fn(),

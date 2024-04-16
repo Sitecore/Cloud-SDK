@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import type { HttpRequest, HttpResponse } from '@sitecore-cloudsdk/utils';
-import { Settings } from '../settings/interfaces';
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/utils';
+import { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 /**
  * Handles HTTP Cookie operations for setting the browser ID cookie in the request and response.

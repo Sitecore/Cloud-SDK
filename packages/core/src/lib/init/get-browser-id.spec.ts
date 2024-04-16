@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 
-import { getBrowserId } from './get-browser-id';
 import * as init from './init-core';
+import { getBrowserId } from './get-browser-id';
 
 describe('getBrowserId', () => {
   jest.spyOn(init, 'getSettings').mockReturnValue({

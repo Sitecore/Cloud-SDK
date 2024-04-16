@@ -2,9 +2,9 @@
 /* eslint-disable sort-keys */
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
-import packageJson from '../../../../package.json';
-import { initServer } from './initializer';
 import debug from 'debug';
+import { initServer } from './initializer';
+import packageJson from '../../../../package.json';
 
 jest.mock('../../personalization/personalizer');
 jest.mock('../../personalization/send-call-flows-request');

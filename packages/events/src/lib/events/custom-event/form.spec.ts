@@ -1,12 +1,12 @@
 /* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { EPResponse, BrowserSettings } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../../initializer/browser/initializer';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { BrowserSettings, EPResponse } from '@sitecore-cloudsdk/core';
+import { LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import { form } from './form';
 import { init } from '../../initializer/browser/initializer';
-import * as initializerModule from '../../initializer/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

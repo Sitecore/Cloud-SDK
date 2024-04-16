@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { Request } from '@sitecore-cloudsdk/utils';
 import {
   EPResponse,
   getBrowserIdFromRequest,
@@ -8,8 +7,9 @@ import {
   handleGetSettingsError,
 } from '@sitecore-cloudsdk/core';
 import { IdentityData, IdentityEvent } from './identity-event';
-import { sendEvent } from '../send-event/sendEvent';
 import { ErrorMessages } from '../../consts';
+import { Request } from '@sitecore-cloudsdk/utils';
+import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API

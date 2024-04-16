@@ -1,4 +1,4 @@
-import { DEFAULT_COOKIE_EXPIRY_DAYS, DAILY_SECONDS } from '../consts';
+import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 describe('getDefaultCookieAttributes', () => {

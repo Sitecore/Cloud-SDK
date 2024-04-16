@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { init, PageViewData, pageView } from '@sitecore-cloudsdk/events/server';
-import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { PageViewData, init, pageView } from '@sitecore-cloudsdk/events/server';
+import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const event: PageViewData = {

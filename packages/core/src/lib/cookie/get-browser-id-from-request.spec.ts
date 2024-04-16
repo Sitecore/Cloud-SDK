@@ -1,5 +1,5 @@
-import { getBrowserIdFromRequest } from './get-browser-id-from-request';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { getBrowserIdFromRequest } from './get-browser-id-from-request';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

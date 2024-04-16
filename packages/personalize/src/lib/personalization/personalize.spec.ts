@@ -1,7 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
+import * as initializerModule from '../initializer/client/initializer';
 import { Personalizer } from './personalizer';
 import { personalize } from './personalize';
-import * as initializerModule from '../initializer/client/initializer';
 
 jest.mock('./personalizer');
 

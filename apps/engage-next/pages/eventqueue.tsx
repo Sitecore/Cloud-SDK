@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { addToEventQueue, clearEventQueue, processEventQueue } from '@sitecore-cloudsdk/events/browser';
 import { NestedObject } from '@sitecore-cloudsdk/utils';
-import { addToEventQueue, processEventQueue, clearEventQueue } from '@sitecore-cloudsdk/events/browser';
 
 export default function EventToQueue() {
   const addEventToQueue = () => {
