@@ -27,9 +27,8 @@ export async function handleServerCookie<T extends Request, X extends Middleware
   timeout?: number
 ): Promise<void> {
   const settings = getSettingsServer();
-  if (isNextJsMiddlewareRequest(request) && isNextJsMiddlewareResponse(response)) {
+  if (isNextJsMiddlewareRequest(request) && isNextJsMiddlewareResponse(response))
     await handleNextJsMiddlewareCookie(request, response, settings, timeout);
-  } else if (isHttpRequest(request) && isHttpResponse(response)) {
+  else if (isHttpRequest(request) && isHttpResponse(response))
     await handleHttpCookie(request, response, settings, timeout);
-  }
 }

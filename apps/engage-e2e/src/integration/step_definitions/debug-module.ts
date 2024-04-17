@@ -9,9 +9,9 @@ defineStep('debug log is printed out in the console with message including {stri
 defineStep('debug log response status should be {string}', (logMessage: string) => {
   cy.getLogOutput().then((logs: string[]) => {
     logs.filter((item) => {
-      if (typeof item === 'object' && item !== null && 'status' in item && 'body' in item) {
+      if (typeof item === 'object' && item !== null && 'status' in item && 'body' in item)
         expect(item['status']).to.equal(parseInt(logMessage));
-      }
+
       return item;
     });
   });

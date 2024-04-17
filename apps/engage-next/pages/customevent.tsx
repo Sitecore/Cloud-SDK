@@ -17,9 +17,8 @@ export default function CustomEvent() {
   let extensionData: Record<`key${string}`, string> = {};
 
   const getExtObject = (ext: string, numberofAttr: string) => {
-    for (let i = 0; i <= +numberofAttr - 1; i++) {
-      extensionData[`key${i}`] = `value${i}`;
-    }
+    for (let i = 0; i <= +numberofAttr - 1; i++) extensionData[`key${i}`] = `value${i}`;
+
     if (ext) extensionData = { ...extensionData, ...JSON.parse(ext) };
 
     return extensionData;

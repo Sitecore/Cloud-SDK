@@ -78,15 +78,17 @@
       }
     },
     {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {}
-    },
-    {
       "files": ["*.ts"],
       "extends": ["plugin:@nx/typescript"],
       "rules": {
         "tsdoc/syntax": "error"
+      }
+    },
+    {
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {
+        "curly": ["error", "multi"]
       }
     },
     {

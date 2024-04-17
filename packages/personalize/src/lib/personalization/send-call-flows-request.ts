@@ -51,9 +51,8 @@ export async function sendCallFlowsRequest(
     })
     .catch((error) => {
       debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
-      if (error.message.includes('IV-0006') || error.message.includes('IE-0002')) {
-        throw new Error(error.message);
-      }
+      if (error.message.includes('IV-0006') || error.message.includes('IE-0002')) throw new Error(error.message);
+
       return null;
     });
 }

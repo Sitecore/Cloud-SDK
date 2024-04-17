@@ -20,8 +20,7 @@ export function init(settings: ServerSettings) {
  * @returns Settings - The current settings or throws error.
  */
 export function getSettings(): ServerSettings {
-  if (!searchSettings) {
-    throw Error(ErrorMessages.IE_0010);
-  }
+  if (!searchSettings) throw Error(ErrorMessages.IE_0010);
+
   return searchSettings;
 }

@@ -114,9 +114,7 @@ describe('CustomEvent', () => {
       const extErrorMessage =
         '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
-      for (let i = 0; i < 51; i++) {
-        extensionData[`key${i}`] = `value${i}`;
-      }
+      for (let i = 0; i < 51; i++) extensionData[`key${i}`] = `value${i}`;
 
       expect(() => {
         new CustomEvent({
@@ -132,9 +130,7 @@ describe('CustomEvent', () => {
       const extErrorMessage =
         '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
-      for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
-        extensionData[`key${i}`] = `value${i}`;
-      }
+      for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
 
       expect(() => {
         new CustomEvent({

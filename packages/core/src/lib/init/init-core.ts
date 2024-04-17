@@ -22,9 +22,8 @@ let coreSettings: Settings | null = null;
  * @throws Error if the core settings haven't been initialized with the required properties.
  */
 export function getSettings() {
-  if (!coreSettings) {
-    throw Error(ErrorMessages.IE_0008);
-  }
+  if (!coreSettings) throw Error(ErrorMessages.IE_0008);
+
   return coreSettings;
 }
 

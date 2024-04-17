@@ -51,14 +51,13 @@ class EventQueue {
   async sendAllEvents() {
     const eventQueue = this.getEventQueue();
 
-    for (const queueEventPayload of eventQueue) {
+    for (const queueEventPayload of eventQueue)
       await new CustomEvent({
         eventData: queueEventPayload.eventData,
         id: queueEventPayload.id,
         sendEvent,
         settings: queueEventPayload.settings
       }).send();
-    }
 
     this.clearQueue();
   }

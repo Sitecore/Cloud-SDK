@@ -11,9 +11,8 @@ import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middlew
  */
 export function getBrowserIdFromRequest<T extends Request>(request: T, cookieName: string) {
   let browserId: string | undefined = undefined;
-  if (isNextJsMiddlewareRequest(request)) {
-    browserId = getBrowserIdFromMiddlewareRequest(request, cookieName);
-  } else if (isHttpRequest(request)) {
+  if (isNextJsMiddlewareRequest(request)) browserId = getBrowserIdFromMiddlewareRequest(request, cookieName);
+  else if (isHttpRequest(request)) {
     const cookieHeader = request.headers.cookie;
     browserId = getCookieServerSide(cookieHeader, cookieName)?.value;
   }

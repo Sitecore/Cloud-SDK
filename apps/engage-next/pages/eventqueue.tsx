@@ -41,9 +41,8 @@ export default function EventToQueue() {
       extensionData.nested = { ...extensionDataNested };
     if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-    if (multipleEvents && multipleEvents.length > 0) {
+    if (multipleEvents && multipleEvents.length > 0)
       addMultipleEventsToQueue(type, extensionData, parseInt(multipleEvents));
-    }
 
     addToEventQueue({ ...event, type, extensionData });
   };

@@ -464,9 +464,7 @@ describe('Test Identity', () => {
     };
     const extensionData: { [key: string]: string } = {};
 
-    for (let i = 0; i < 51; i++) {
-      extensionData[`key${i}`] = `value${i}`;
-    }
+    for (let i = 0; i < 51; i++) extensionData[`key${i}`] = `value${i}`;
 
     expect(() => {
       new IdentityEvent({
@@ -507,9 +505,7 @@ describe('Test Identity', () => {
       sitecoreEdgeUrl: ''
     };
     const extensionData: { [key: string]: string } = {};
-    for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) {
-      extensionData[`key${i}`] = `value${i}`;
-    }
+    for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
 
     expect(() => {
       new IdentityEvent({

@@ -67,9 +67,7 @@ export async function middleware(request: NextRequest) {
     await event(request, { type: 'MIDDLEWARE-CUSTOM', ...basicEventData, extensionData });
   }
 
-  if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) {
-    await identity(request, identityEventData);
-  }
+  if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) await identity(request, identityEventData);
 
   if (request.nextUrl.pathname.startsWith('/middleware-personalize-geo')) {
     const personalizeData: PersonalizeData = {
@@ -149,14 +147,13 @@ export async function middleware(request: NextRequest) {
       language: 'EN'
     };
 
-    if (request.nextUrl.searchParams?.get('includeUTMParams') === 'true') {
+    if (request.nextUrl.searchParams?.get('includeUTMParams') === 'true')
       personalizeData.params = {
         utm: {
           campaign: 'campaign',
           source: 'test'
         }
       };
-    }
 
     const personalizeRes = await personalize(request, personalizeData);
 

@@ -7,17 +7,14 @@ Then('the multiple events are sent in the respective order: {string}', (eventOrd
   const eventList = eventOrder.split(',');
   //Reported Cypress issue with alias so we ought to add an empty string at the beginning of the list
   eventList.unshift('');
-  for (let i = 1; i < eventList.length; i++) {
+  for (let i = 1; i < eventList.length; i++)
     cy.get(`@eventRequest.${i}`)
       .its('request')
       .then((request) => {
-        if (eventList[i] === 'null') {
-          eventList[i] = '';
-        }
+        if (eventList[i] === 'null') eventList[i] = '';
 
         expect(request.body.type).to.equal(eventList[i].trim());
       });
-  }
 });
 
 When('multiple events are queued with {string} types', (eventOrder: string) => {

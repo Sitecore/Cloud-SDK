@@ -23,11 +23,8 @@ export function debounce<T extends any[]>(
   const pendingArgs: any[] = [];
 
   const debounced = (...args: T): Promise<any> | void => {
-    if (deferred && timer) {
-      clearTimeout(timer);
-    } else {
-      deferred = defer<any>();
-    }
+    if (deferred && timer) clearTimeout(timer);
+    else deferred = defer<any>();
 
     pendingArgs.push(args);
     timer = setTimeout(() => {

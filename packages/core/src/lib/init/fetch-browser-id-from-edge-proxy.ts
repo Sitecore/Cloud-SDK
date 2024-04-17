@@ -25,22 +25,21 @@ export async function fetchBrowserIdFromEdgeProxy(
   const url = constructGetBrowserIdUrl(sitecoreEdgeUrl, sitecoreEdgeContextId);
   let payload;
 
-  if (timeout !== undefined) {
+  if (timeout !== undefined)
     payload = await fetchWithTimeout(url, timeout, fetchOptions)
       .then((response) => {
         return (response && response.json()) || null;
       })
       .catch((err) => {
-        if (err.message === UtilsErrorMessages.IV_0006 || err.message === UtilsErrorMessages.IE_0002) {
+        if (err.message === UtilsErrorMessages.IV_0006 || err.message === UtilsErrorMessages.IE_0002)
           throw new Error(err.message);
-        }
+
         return null;
       });
-  } else {
+  else
     payload = await fetch(url, fetchOptions)
       .then((res) => res.json())
       .catch(() => undefined);
-  }
 
   if (!payload?.ref) throw new Error(ErrorMessages.IE_0003);
 

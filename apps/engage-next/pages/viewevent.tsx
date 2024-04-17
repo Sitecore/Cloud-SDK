@@ -25,14 +25,11 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
 
     const eventData: PageViewData = {};
 
-    if (eventAttributes.get('variantid')) {
-      eventData.pageVariantId = eventAttributes.get('variantid') || '';
-    }
+    if (eventAttributes.get('variantid')) eventData.pageVariantId = eventAttributes.get('variantid') || '';
 
-    if (typeof includeUTMSearchParameter === 'string') {
+    if (typeof includeUTMSearchParameter === 'string')
       if (includeUTMSearchParameter === 'true') eventData.includeUTMParameters = true;
       else if (includeUTMSearchParameter === 'false') eventData.includeUTMParameters = false;
-    }
 
     eventAttributes.delete('nested');
     eventAttributes.delete('variantid');
@@ -74,9 +71,8 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     setResponse(decodeURIComponent(cookie?.value || ''));
   };
 
-  if (res === 'Error') {
+  if (res === 'Error')
     throw new Error(`[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.`);
-  }
 
   const sendEventWithChannelAndCurreny = () => {
     const eventData: PageViewData = {
@@ -143,9 +139,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     currency: 'EUR'
   };
 
-  if (eventAttributes.get('variantid')) {
-    eventData['variantid'] = eventAttributes.get('variantid');
-  }
+  if (eventAttributes.get('variantid')) eventData['variantid'] = eventAttributes.get('variantid');
 
   const extensionDataExt: Record<string, unknown> = {};
   eventAttributes.forEach((value, key) => {

@@ -197,9 +197,9 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
 
   //In order to test the amount of ext attributes that can be sent to EP
   if (Object.getOwnPropertyDescriptor(attributes, 'extAttributesNumber')) {
-    for (let i = 0; i < attributes.extAttributesNumber; i++) {
+    for (let i = 0; i < attributes.extAttributesNumber; i++)
       attributesArray.push({ key: `attr${i}`, value: `value${i}` });
-    }
+
     delete attributes.extAttributesNumber;
 
     extSearchString = `${
@@ -281,9 +281,7 @@ defineStep('the {string} ext property is undefined', (property: string) => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cy.readLocal('request.json').then((request: any) => {
     expect(request.body[property]).to.eq(undefined);
-    if (request.body.ext) {
-      expect(request.body.ext[property]).to.eq(undefined);
-    }
+    if (request.body.ext) expect(request.body.ext[property]).to.eq(undefined);
   });
 });
 

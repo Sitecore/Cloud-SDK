@@ -13,14 +13,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     language: 'EN'
   };
 
-  if (requestUrl.searchParams?.get('includeUTMParams') === 'true') {
+  if (requestUrl.searchParams?.get('includeUTMParams') === 'true')
     event.params = {
       utm: {
         campaign: 'campaign',
         source: 'test'
       }
     };
-  }
 
   await init(req, res, {
     cookieExpiryDays: 400,

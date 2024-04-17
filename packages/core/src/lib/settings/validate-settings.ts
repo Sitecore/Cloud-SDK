@@ -15,11 +15,10 @@ export function validateSettings(settings: SettingsParams) {
 
   if (!siteName || siteName.trim().length === 0) throw new Error(ErrorMessages.MV_0002);
 
-  if (sitecoreEdgeUrl !== undefined) {
+  if (sitecoreEdgeUrl !== undefined)
     try {
       new URL(sitecoreEdgeUrl);
     } catch (e) {
       throw new Error(ErrorMessages.IV_0001);
     }
-  }
 }

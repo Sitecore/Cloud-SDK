@@ -7,8 +7,7 @@ if (
   debug.formatters &&
   debug.formatters.o &&
   debug.formatters.O
-) {
+)
   debug.formatters.o = debug.formatters.O;
-}
 
 export { debug };

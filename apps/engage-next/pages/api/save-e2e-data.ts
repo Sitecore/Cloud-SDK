@@ -42,9 +42,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     fileData[testID] = data;
 
     writeFileSync(dataFilePath, JSON.stringify(fileData, null, 2));
-  } else {
-    res.status(404).json('no type provided');
-  }
+  } else res.status(404).json('no type provided');
 
   res.status(200).json('file updated');
 }

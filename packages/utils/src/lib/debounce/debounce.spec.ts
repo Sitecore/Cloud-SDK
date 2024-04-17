@@ -140,9 +140,7 @@ describe('debounce', () => {
   it('debounce with rapid successive calls', () => {
     const debouncedFn = debounce(mockFn, wait);
 
-    for (let i = 0; i < 10; i++) {
-      debouncedFn();
-    }
+    for (let i = 0; i < 10; i++) debouncedFn();
 
     jest.advanceTimersByTime(1000);
 

@@ -28,9 +28,7 @@ export function setCoreSettings(settings: Settings) {
  * @returns A Promise that resolves when initialization is complete.
  */
 export function getSettingsServer() {
-  if (!coreSettings) {
-    throw Error(ErrorMessages.IE_0008);
-  }
+  if (!coreSettings) throw Error(ErrorMessages.IE_0008);
 
   return coreSettings;
 }
@@ -54,7 +52,5 @@ export async function initCoreServer<Response extends MiddlewareNextResponse | H
 
   if (!coreSettings) coreSettings = createSettings(settingsInput);
 
-  if (settingsInput.enableServerCookie) {
-    await handleServerCookie(request, response, settingsInput.timeout);
-  }
+  if (settingsInput.enableServerCookie) await handleServerCookie(request, response, settingsInput.timeout);
 }

@@ -9,35 +9,24 @@ export class Utils {
 
   static createExpectedEventReq(eventType: string, testData: any) {
     let eventAttr: any;
-    if (!testData) {
-      eventAttr = {};
-    } else {
-      eventAttr = testData.hashes()[0];
-    }
+    if (!testData) eventAttr = {};
+    else eventAttr = testData.hashes()[0];
 
-    if (!eventAttr.type) {
-      eventAttr.type = eventType.toUpperCase();
-    }
+    if (!eventAttr.type) eventAttr.type = eventType.toUpperCase();
 
-    if (!Object.getOwnPropertyDescriptor(eventAttr, 'language') && eventType != 'VIEW') {
-      eventAttr.language = 'EN';
-    }
+    if (!Object.getOwnPropertyDescriptor(eventAttr, 'language') && eventType != 'VIEW') eventAttr.language = 'EN';
 
     // End of default attributes
 
-    if (eventAttr.dob == '') {
-      delete eventAttr.dob;
-    }
+    if (eventAttr.dob == '') delete eventAttr.dob;
 
-    if (Object.getOwnPropertyDescriptor(eventAttr, 'street')) {
+    if (Object.getOwnPropertyDescriptor(eventAttr, 'street'))
       eventAttr.street = eventAttr.street === '' ? [] : [eventAttr.street];
-    }
 
     if (eventAttr.extAttributesNumber) {
       eventAttr.ext = {};
-      for (let i = 0; i < eventAttr.extAttributesNumber; i++) {
-        eventAttr.ext[`attr${i}`] = `value${i}`;
-      }
+      for (let i = 0; i < eventAttr.extAttributesNumber; i++) eventAttr.ext[`attr${i}`] = `value${i}`;
+
       delete eventAttr.extAttributesNumber;
     }
 
@@ -86,11 +75,8 @@ export class Utils {
     let expectedEventData: any;
     // eslint-disable-next-line prefer-const
     expectedEventData = {};
-    if (testData) {
-      testData = testData.hashes()[0];
-    } else {
-      testData = {};
-    }
+    if (testData) testData = testData.hashes()[0];
+    else testData = {};
 
     // eslint-disable-next-line prefer-const
     let baseEventData: any = {};
@@ -100,32 +86,23 @@ export class Utils {
     expectedEventData.type = eventType.toUpperCase();
 
     //Default attributes if not specified from test level (feature files)
-    if (!testData.channel) {
-      baseEventData.channel = 'WEB';
-    }
-    if (!testData.currency) {
-      baseEventData.currency = 'EUR';
-    }
-    if (!testData.language) {
-      baseEventData.language = 'EN';
-    }
+    if (!testData.channel) baseEventData.channel = 'WEB';
 
-    if (testData.baseDataEventAttr) {
+    if (!testData.currency) baseEventData.currency = 'EUR';
+
+    if (!testData.language) baseEventData.language = 'EN';
+
+    if (testData.baseDataEventAttr)
       Object.entries(testData.baseDataEventAttr).forEach(([key, value]) => {
         baseEventData[key] = value;
       });
-    }
 
-    if (testData.page) {
-      baseEventData.page = testData.page;
-    }
+    if (testData.page) baseEventData.page = testData.page;
 
     if (testData.extAttributesNumber) {
       expectedEventData.ext = {};
 
-      for (let i = 0; i < testData.extAttributesNumber; i++) {
-        ext[`attr${i}`] = `value${i}`;
-      }
+      for (let i = 0; i < testData.extAttributesNumber; i++) ext[`attr${i}`] = `value${i}`;
     }
 
     if (testData.nested) {

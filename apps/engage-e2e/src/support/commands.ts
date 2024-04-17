@@ -160,9 +160,7 @@ Cypress.Commands.add('readLocal', (fileName) => {
 });
 
 Cypress.Commands.add('assertRequestHeaders', (request, expectedReqHeaders) => {
-  for (const entry of expectedReqHeaders) {
-    expect(request.headers[entry.name]).to.contain(entry.value);
-  }
+  for (const entry of expectedReqHeaders) expect(request.headers[entry.name]).to.contain(entry.value);
 });
 
 Cypress.Commands.add('assertRequest', (request, expectedReq) => {
@@ -175,11 +173,8 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
       ];
     const expectedAttr = expectedReq[key];
     //As we cannot pass null from test level, we pass it as a string
-    if (expectedAttr !== 'null') {
-      return expect(actualAttr).to.eql(expectedAttr);
-    } else {
-      expect(actualAttr).to.eql(null);
-    }
+    if (expectedAttr !== 'null') return expect(actualAttr).to.eql(expectedAttr);
+    else expect(actualAttr).to.eql(null);
   });
 
   const expectedPackageVersion = request.url.includes('events')
@@ -190,9 +185,8 @@ Cypress.Commands.add('assertRequest', (request, expectedReq) => {
 
   expect(request.headers['x-library-version']).to.eq(expectedPackageVersion);
 
-  if (request.url.includes('events')) {
+  if (request.url.includes('events'))
     expect(request.headers['x-client-software-id']).to.eq(`${eventsPackageJson.name} ${expectedPackageVersion}`);
-  }
 });
 
 Cypress.Commands.add('requestGuestContext', () => {

@@ -108,7 +108,7 @@ export class PageViewEvent extends BaseEvent {
 
     if (referrer !== null) pageViewPayload = { ...pageViewPayload, referrer };
 
-    if (this.pageViewData.searchData) {
+    if (this.pageViewData.searchData)
       pageViewPayload.sc_search = {
         data: this.pageViewData.searchData,
         metadata: {
@@ -116,7 +116,6 @@ export class PageViewEvent extends BaseEvent {
           ut_api_version: '1.0'
         }
       };
-    }
 
     return pageViewPayload;
   }

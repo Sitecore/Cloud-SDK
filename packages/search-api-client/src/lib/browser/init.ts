@@ -18,8 +18,7 @@ export function init(settings: BrowserSettings) {
  * @returns The current settings or throws error.
  */
 export function getSettings(): BrowserSettings {
-  if (!searchSettings) {
-    throw Error(ErrorMessages.IE_0009);
-  }
+  if (!searchSettings) throw Error(ErrorMessages.IE_0009);
+
   return searchSettings;
 }

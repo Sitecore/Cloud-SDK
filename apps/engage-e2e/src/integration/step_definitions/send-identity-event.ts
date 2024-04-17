@@ -5,13 +5,8 @@ import { When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 When('the user fills the identity form', (datatable: any) => {
   const requestAttr = datatable.hashes()[0];
   Object.keys(requestAttr).forEach(function (key) {
-    if (key == 'country' || key == 'gender') {
-      cy.get(`[data-testid=${key}]`).select(requestAttr[key]);
-    } else {
-      if (requestAttr[key] !== '') {
-        cy.get(`[data-testid=${key}]`).type(requestAttr[key]);
-      }
-    }
+    if (key == 'country' || key == 'gender') cy.get(`[data-testid=${key}]`).select(requestAttr[key]);
+    else if (requestAttr[key] !== '') cy.get(`[data-testid=${key}]`).type(requestAttr[key]);
   });
 });
 

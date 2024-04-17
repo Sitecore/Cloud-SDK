@@ -52,13 +52,10 @@ export default function Identity() {
       title: formData.title.value
     };
 
-    if (formData.dob.value !== '') {
-      data.dob = formData.dob.value;
-    }
+    if (formData.dob.value !== '') data.dob = formData.dob.value;
 
-    if (formData.expiry_date.value !== '') {
-      data.identifiers[0].expiryDate = formData.expiry_date.value;
-    }
+    if (formData.expiry_date.value !== '') data.identifiers[0].expiryDate = formData.expiry_date.value;
+
     const identityData = { ...data, banana: null };
     identity(identityData);
   };
