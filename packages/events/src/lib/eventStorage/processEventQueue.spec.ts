@@ -1,4 +1,4 @@
-import * as core from '@sitecore-cloudsdk/core';
+import type * as core from '@sitecore-cloudsdk/core';
 import * as eventQueue from './eventStorage';
 import * as initializerModule from '../initializer/browser/initializer';
 import { processEventQueue } from './processEventQueue';

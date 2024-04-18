@@ -1,5 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { BrowserSettings, ServerSettings } from '../types';
+import type { BrowserSettings, ServerSettings } from '../types';
 import { ErrorMessages } from '../const';
 import { validateSettings } from './validateSettings';
 

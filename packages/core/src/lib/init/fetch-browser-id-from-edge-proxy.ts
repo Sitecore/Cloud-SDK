@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EPResponse, ProxySettings } from '../interfaces';
+import type { EPResponse, ProxySettings } from '../interfaces';
 import { ErrorMessages, LIBRARY_VERSION } from '../consts';
 import { ErrorMessages as UtilsErrorMessages, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 import { constructGetBrowserIdUrl } from './construct-get-browser-id-url';

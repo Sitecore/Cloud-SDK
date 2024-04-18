@@ -1,6 +1,7 @@
 /* eslint-disable max-len */
 import { API_VERSION, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
-import { GetGuestRefResponse, GetGuestRefResponseError, getGuestId } from './get-guest-id';
+import type { GetGuestRefResponse, GetGuestRefResponseError} from './get-guest-id';
+import { getGuestId } from './get-guest-id';
 
 describe('getGuestId', () => {
   const sitecoreEdgeContextId = 'contextId';

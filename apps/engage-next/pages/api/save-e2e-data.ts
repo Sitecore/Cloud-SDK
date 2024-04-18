@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
 

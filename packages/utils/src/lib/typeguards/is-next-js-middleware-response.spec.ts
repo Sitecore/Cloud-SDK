@@ -1,4 +1,4 @@
-import { HttpResponse, MiddlewareNextResponse } from '../interfaces';
+import type { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 import { isNextJsMiddlewareResponse } from './is-next-js-middleware-response';
 
 describe('isNextJsMiddlewareResponse', () => {

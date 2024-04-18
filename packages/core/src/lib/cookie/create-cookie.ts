@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 import { cookieExists, createCookieString } from '@sitecore-cloudsdk/utils';
-import { Settings } from '../settings/interfaces';
+import type { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { HttpRequest, Request } from '../interfaces';
+import type { HttpRequest, Request } from '../interfaces';
 
 /**
  * Checks if the given 'request' object is a valid HTTP Request

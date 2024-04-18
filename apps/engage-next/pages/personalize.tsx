@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PersonalizeData, personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { init as initServer, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
+import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
 import { getCookie } from '@sitecore-cloudsdk/utils';
+import { personalize } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
 
 export default function PersonalizeCall({

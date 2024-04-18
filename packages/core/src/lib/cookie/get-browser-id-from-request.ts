@@ -1,5 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { Request, getCookieServerSide, isHttpRequest, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+
+import { getCookieServerSide, isHttpRequest, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
 
 /**

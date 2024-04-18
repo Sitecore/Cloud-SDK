@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { Cookie } from './cookies/interfaces';
+import type { Cookie } from './cookies/interfaces';
 
 /**
  * A reusable type that accepts only basic types and arrays of those

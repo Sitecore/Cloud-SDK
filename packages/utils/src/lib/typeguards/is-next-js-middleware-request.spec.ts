@@ -1,4 +1,4 @@
-import { Request } from '../interfaces';
+import type { Request } from '../interfaces';
 import { isNextJsMiddlewareRequest } from './is-next-js-middleware-request';
 
 describe('isNextJsMiddlewareRequest', () => {

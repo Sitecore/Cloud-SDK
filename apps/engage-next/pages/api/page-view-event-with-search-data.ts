@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 import { init, pageView } from '@sitecore-cloudsdk/events/server';
 

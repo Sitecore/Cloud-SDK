@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { language, pageName } from '@sitecore-cloudsdk/core';
-import { EventAttributesInput } from './common-interfaces';
+import type { EventAttributesInput } from './common-interfaces';
 
 export class BaseEvent {
   private readonly browserId: string;

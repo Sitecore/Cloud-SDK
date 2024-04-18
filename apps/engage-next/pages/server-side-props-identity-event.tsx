@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { identity, init } from '@sitecore-cloudsdk/events/server';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 
 export default function ServerSidePropsIdenityEvent() {
   return (

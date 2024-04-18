@@ -1,8 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { PersonalizeData, Personalizer } from './personalizer';
 import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
-import { FailedCalledFlowsResponse } from './send-call-flows-request';
+import type { FailedCalledFlowsResponse } from './send-call-flows-request';
+import type { PersonalizeData } from './personalizer';
+import { Personalizer } from './personalizer';
 import { awaitInit } from '../initializer/client/initializer';
 
 /**

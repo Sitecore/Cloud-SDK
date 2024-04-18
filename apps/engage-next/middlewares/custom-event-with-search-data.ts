@@ -1,5 +1,5 @@
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 
 export async function customEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {

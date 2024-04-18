@@ -1,14 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import {
-  EPResponse,
-  getBrowserIdFromRequest,
-  getSettingsServer,
-  handleGetSettingsError
-} from '@sitecore-cloudsdk/core';
-import { IdentityData, IdentityEvent } from './identity-event';
+import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import type { EPResponse } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
-import { Request } from '@sitecore-cloudsdk/utils';
+import type { IdentityData } from './identity-event';
+import { IdentityEvent } from './identity-event';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import { sendEvent } from '../send-event/sendEvent';
 
 /**

@@ -1,7 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
 import { EVENTS_NAMESPACE, LIBRARY_VERSION } from '../../consts';
-import { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
-import { ServerSettings } from '@sitecore-cloudsdk/core';
+import type { MiddlewareNextResponse } from '@sitecore-cloudsdk/utils';
+import type { ServerSettings } from '@sitecore-cloudsdk/core';
 import debug from 'debug';
 import { initServer } from './initializer';
 import packageJson from '../../../../package.json';

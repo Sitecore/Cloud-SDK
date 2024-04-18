@@ -2,7 +2,7 @@ import * as HandleHttpCookie from './handle-http-cookie';
 import * as HandleNextJsMiddlewareCookie from './handle-next-js-middleware-cookie';
 import * as initCore from '../init/init-core-server';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { Settings } from '../settings/interfaces';
+import type { Settings } from '../settings/interfaces';
 import { handleServerCookie } from './handle-server-cookie';
 
 // Mock the 'initializer' module

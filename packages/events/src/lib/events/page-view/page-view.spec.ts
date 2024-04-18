@@ -1,6 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
-import { PageViewData, PageViewEvent } from './page-view-event';
+import type { PageViewData} from './page-view-event';
+import { PageViewEvent } from './page-view-event';
 import { pageView } from './page-view';
 import { sendEvent } from '../send-event/sendEvent';
 

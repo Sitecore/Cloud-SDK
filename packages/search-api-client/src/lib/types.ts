@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BasicSettings } from '@sitecore-cloudsdk/core';
+import type { BasicSettings } from '@sitecore-cloudsdk/core';
 /**
  * Defines the configuration settings for the search-api-client.
  */

@@ -5,9 +5,10 @@
 import * as core from '@sitecore-cloudsdk/core';
 import * as sendEvent from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
-import { PageViewData, PageViewEvent } from './page-view-event';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
+import type { PageViewData } from './page-view-event';
+import { PageViewEvent } from './page-view-event';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

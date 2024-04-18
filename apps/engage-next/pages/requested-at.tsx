@@ -6,7 +6,7 @@ import {
   init,
   pageView as pageViewServer
 } from '@sitecore-cloudsdk/events/server';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 

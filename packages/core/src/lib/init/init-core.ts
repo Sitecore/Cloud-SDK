@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BrowserSettings, Settings } from '../settings/interfaces';
+import type { BrowserSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
 import { createCookie } from '../cookie/create-cookie';

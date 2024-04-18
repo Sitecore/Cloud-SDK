@@ -1,7 +1,8 @@
 import * as CallFlowsRequest from './send-call-flows-request';
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import { PersonalizeData, PersonalizeIdentifierInput, Personalizer } from './personalizer';
+import type { PersonalizeData, PersonalizeIdentifierInput} from './personalizer';
+import { Personalizer } from './personalizer';
 import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {

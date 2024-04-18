@@ -1,11 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { NestedObject, getCookie } from '@sitecore-cloudsdk/utils';
-import { PageViewData, init, pageView } from '@sitecore-cloudsdk/events/browser';
+import { init, pageView } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { useEffect, useState } from 'react';
-import { GetServerSidePropsContext } from 'next';
+import type { GetServerSidePropsContext } from 'next';
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
+import { getCookie } from '@sitecore-cloudsdk/utils';
 
 interface ViewEventProps {
   res: string | number | readonly string[];

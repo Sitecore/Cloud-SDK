@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BrowserSettings, ServerSettings } from '@sitecore-cloudsdk/core';
-import { GetServerSidePropsContext } from 'next';
+import type { BrowserSettings, ServerSettings } from '@sitecore-cloudsdk/core';
+import type { GetServerSidePropsContext } from 'next';
 import { init } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer } from '@sitecore-cloudsdk/events/server';
 

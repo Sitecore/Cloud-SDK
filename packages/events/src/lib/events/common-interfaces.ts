@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { NestedObject } from '@sitecore-cloudsdk/utils';
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 /**
  * Event data that is sent to Sitecore EP

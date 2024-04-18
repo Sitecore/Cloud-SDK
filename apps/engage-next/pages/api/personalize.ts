@@ -1,6 +1,7 @@
-import { NextApiRequest, NextApiResponse } from 'next';
-import { PersonalizeData, init, personalize } from '@sitecore-cloudsdk/personalize/server';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
+import { init, personalize } from '@sitecore-cloudsdk/personalize/server';
+import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { capturedDebugLogs } from '../../utils/debugLogs';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {

@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
-import { ServerSettings, Settings } from '../settings/interfaces';
+import type { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import type { ServerSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
 import { createSettings } from '../settings/create-settings';

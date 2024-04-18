@@ -1,9 +1,11 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { PersonalizeData, PersonalizeGeolocation, Personalizer } from './personalizer';
-import { Request, isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
 import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
-import { FailedCalledFlowsResponse } from './send-call-flows-request';
+import type { FailedCalledFlowsResponse } from './send-call-flows-request';
+import { Personalizer } from './personalizer';
+import type { Request } from '@sitecore-cloudsdk/utils';
+import { isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, SITECORE_EDGE_URL } from '../consts';
-import { Settings, SettingsParams } from './interfaces';
+import type { Settings, SettingsParams } from './interfaces';
 import { validateSettings } from './validate-settings';
 /**
  * Creates the global settings object, to be used by the library

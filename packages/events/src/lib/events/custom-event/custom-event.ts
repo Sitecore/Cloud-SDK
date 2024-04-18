@@ -1,11 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BasicTypes, FlattenedObject, NestedObject, flattenObject } from '@sitecore-cloudsdk/utils';
-import { EPResponse, Settings } from '@sitecore-cloudsdk/core';
-import { EventAttributesInput, ExtensionData } from '../common-interfaces';
+import type { BasicTypes, FlattenedObject, NestedObject } from '@sitecore-cloudsdk/utils';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
-import { SendEvent } from '../send-event/sendEvent';
+import type { SendEvent } from '../send-event/sendEvent';
+import { flattenObject } from '@sitecore-cloudsdk/utils';
 
 export class CustomEvent extends BaseEvent {
   customEventPayload: CustomEventPayload;

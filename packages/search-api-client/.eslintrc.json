@@ -4,6 +4,10 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "parserOptions": {
+        "project": ["tsconfig.json", "tsconfig.spec.json"],
+        "tsconfigRootDir": "./packages/search-api-client"
+      },
       "rules": {}
     },
     {

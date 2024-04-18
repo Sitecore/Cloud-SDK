@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { IdentityData, identity } from '@sitecore-cloudsdk/events/browser';
+import type { IdentityData } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
+import { identity } from '@sitecore-cloudsdk/events/browser';
 
 export default function Identity() {
   const handleSubmit = (eventTrigger: React.FormEvent<HTMLFormElement>) => {

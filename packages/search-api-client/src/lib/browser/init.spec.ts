@@ -1,6 +1,6 @@
 import * as validateSettingsModule from '../utils/validateSettings';
 import { getSettings, init } from './init';
-import { BrowserSettings } from '../types';
+import type { BrowserSettings } from '../types';
 import { ErrorMessages } from '../const';
 
 jest.mock('../utils/validateSettings', () => ({

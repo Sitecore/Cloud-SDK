@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { API_VERSION, EPResponse, Settings, debug } from '@sitecore-cloudsdk/core';
+import { API_VERSION, debug } from '@sitecore-cloudsdk/core';
 import type { BasePayload, CustomEventPayload, IdentityEventPayload, PageViewEventPayload } from '..';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 
 /**

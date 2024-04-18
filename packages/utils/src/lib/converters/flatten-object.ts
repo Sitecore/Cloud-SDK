@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { BasicTypes } from '../interfaces';
+import type { BasicTypes } from '../interfaces';
 
 /**
  * A function that flattens an object, by combining the keys with an "_".

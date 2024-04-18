@@ -2,7 +2,7 @@ import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge
 import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { COOKIE_NAME_PREFIX, SITECORE_EDGE_URL } from '../consts';
-import { Settings } from '../settings/interfaces';
+import type { Settings } from '../settings/interfaces';
 import { createCookie } from './create-cookie';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({

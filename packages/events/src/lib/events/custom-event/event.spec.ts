@@ -1,6 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
-import { CustomEvent, EventData } from './custom-event';
+import { CustomEvent } from './custom-event';
+import type { EventData } from './custom-event';
 import { event } from './event';
 import { sendEvent } from '../send-event/sendEvent';
 

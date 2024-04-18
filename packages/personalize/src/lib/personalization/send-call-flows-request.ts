@@ -1,7 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import { NestedObject, fetchWithTimeout } from '@sitecore-cloudsdk/utils';
-import { Settings, debug, generateCorrelationId } from '@sitecore-cloudsdk/core';
+import { debug, generateCorrelationId } from '@sitecore-cloudsdk/core';
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import type { Settings } from '@sitecore-cloudsdk/core';
+import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 
 /**
  * A function that sends a CallFlow request to Sitecore EP

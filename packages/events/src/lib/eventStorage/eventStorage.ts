@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { CustomEvent, CustomEventArguments } from '../events';
 import { language, pageName } from '@sitecore-cloudsdk/core';
+import { CustomEvent } from '../events';
+import type { CustomEventArguments } from '../events';
 import { sendEvent } from '../events/send-event/sendEvent';
 
 class EventQueue {

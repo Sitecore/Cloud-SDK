@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
-import { ServerSettings, debug, initCoreServer } from '@sitecore-cloudsdk/core';
+import type { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import { debug, initCoreServer } from '@sitecore-cloudsdk/core';
 import { EVENTS_NAMESPACE } from '../../consts';
+import type { ServerSettings } from '@sitecore-cloudsdk/core';
 
 /**
  * Initiates the server Events library using the global settings added by the developer

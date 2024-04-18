@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable multiline-comment-style */
-import * as core from '@sitecore-cloudsdk/core';
+import type * as core from '@sitecore-cloudsdk/core';
 import * as sendEvent from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { IdentityData, IdentityEvent } from './identity-event';
 import { BaseEvent } from '../base-event';
+import type { IdentityData } from './identity-event';
+import { IdentityEvent } from './identity-event';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 jest.mock('../base-event');

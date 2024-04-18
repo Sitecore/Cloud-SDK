@@ -1,9 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { QueueEventPayload, eventQueue } from './eventStorage';
 import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
-import { EventData } from '../events';
+import type { EventData } from '../events';
+import type { QueueEventPayload } from './eventStorage';
 import { awaitInit } from '../initializer/browser/initializer';
+import { eventQueue } from './eventStorage';
 
 /**
  * A function that adds event to the queue

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { Cookie, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import type { Cookie, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 
 /**
  * Retrieves the browser ID from the provided Middleware Request by extracting the cookie value

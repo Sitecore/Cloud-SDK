@@ -1,7 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { EPResponse, getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
-import { PageViewData, PageViewEvent } from './page-view-event';
+import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import type { EPResponse } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
+import type { PageViewData } from './page-view-event';
+import { PageViewEvent } from './page-view-event';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 

@@ -1,6 +1,5 @@
-import * as core from '@sitecore-cloudsdk/core';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import { EPResponse } from '@sitecore-cloudsdk/core';
 import debug from 'debug';
 import { sendEvent } from './sendEvent';
 
@@ -22,7 +21,7 @@ jest.mock('debug', () => {
   };
 });
 
-const settingsObj: core.Settings = {
+const settingsObj: Settings = {
   cookieSettings: {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { DAILY_SECONDS, DEFAULT_COOKIE_EXPIRY_DAYS } from '../consts';
-import { CookieProperties } from '@sitecore-cloudsdk/utils';
+import type { CookieProperties } from '@sitecore-cloudsdk/utils';
 
 /**
  * Gets the default Cookie Attributes

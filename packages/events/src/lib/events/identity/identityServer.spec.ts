@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { IdentityData, IdentityEvent } from './identity-event';
+import type { IdentityData} from './identity-event';
+import { IdentityEvent } from './identity-event';
 import { identityServer } from './identityServer'; // Import the function to be tested
 import { sendEvent } from '../send-event/sendEvent';
 

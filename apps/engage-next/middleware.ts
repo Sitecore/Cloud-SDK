@@ -1,11 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { PersonalizeData, init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
+import { init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { customEventWithSearchDataMiddleware } from './middlewares/custom-event-with-search-data';
 import { eventWithSoftwareIDHeaderMiddleware } from './middlewares/event-software-id-header';
 import { pageViewEventWithSearchDataMiddleware } from './middlewares/page-view-event-with-search-data';

@@ -1,4 +1,4 @@
-import { Request } from '../interfaces';
+import type { Request } from '../interfaces';
 import { isHttpRequest } from './is-http-request';
 
 describe('isHttpRequest', () => {

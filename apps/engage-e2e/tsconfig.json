@@ -12,5 +12,5 @@
       ]
     }
   },
-  "include": ["src/**/*.ts", "src/**/*.js", "cypress.config.ts"]
+  "include": ["src/**/*.ts", "src/**/*.js", "cypress.config.ts", "cypress/plugins/index.js"]
 }

@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { CookieProperties } from './interfaces';
+import type { CookieProperties } from './interfaces';
 
 /**
  * Creates the cookie string with the respectively cookie attributes

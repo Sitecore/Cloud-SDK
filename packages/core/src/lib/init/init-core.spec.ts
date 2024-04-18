@@ -2,7 +2,7 @@
 import * as createCookieInit from '../cookie/create-cookie';
 import * as createSetting from '../settings/create-settings';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { BrowserSettings, Settings } from '../settings/interfaces';
+import type { BrowserSettings, Settings } from '../settings/interfaces';
 import { getSettings, initCore, setCookiePromise, setCoreSettings } from './init-core';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';

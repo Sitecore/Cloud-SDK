@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { CustomEvent, EventData } from './custom-event';
+import { CustomEvent } from './custom-event';
+import type { EventData } from './custom-event';
 import { eventServer } from './eventServer';
 import { sendEvent } from '../send-event/sendEvent';
 

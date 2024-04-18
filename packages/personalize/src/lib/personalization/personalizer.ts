@@ -1,8 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { EPCallFlowsBody, FailedCalledFlowsResponse, sendCallFlowsRequest } from './send-call-flows-request';
+import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { ErrorMessages, PERSONALIZE_NAMESPACE, UTM_PREFIX } from '../consts';
-import { Settings, debug, language } from '@sitecore-cloudsdk/core';
-import { NestedObject } from '@sitecore-cloudsdk/utils';
+import { debug, language } from '@sitecore-cloudsdk/core';
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import type { Settings } from '@sitecore-cloudsdk/core';
+import { sendCallFlowsRequest } from './send-call-flows-request';
 
 export class Personalizer {
   /**

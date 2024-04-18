@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { EPResponse, getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { CustomEvent } from './custom-event';
+import type { EPResponse } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
 import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';

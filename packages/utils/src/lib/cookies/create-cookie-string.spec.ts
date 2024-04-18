@@ -1,4 +1,4 @@
-import { CookieProperties } from './interfaces';
+import type { CookieProperties } from './interfaces';
 import { DAILY_SECONDS } from './consts';
 import { createCookieString } from './create-cookie-string';
 

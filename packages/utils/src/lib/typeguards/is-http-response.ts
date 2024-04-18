@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { HttpResponse, MiddlewareNextResponse } from '../interfaces';
+import type { HttpResponse, MiddlewareNextResponse } from '../interfaces';
 
 /**
  * Checks if the given 'response' object is a valid HTTP Response

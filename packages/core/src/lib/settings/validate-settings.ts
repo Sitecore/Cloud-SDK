@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../consts';
-import { SettingsParams } from './interfaces';
+import type { SettingsParams } from './interfaces';
 /**
  * Validates the core settings to ensure they meet required criteria.
  *

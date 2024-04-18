@@ -4,7 +4,7 @@ import * as handleServer from '../cookie/handle-server-cookie';
 import { getSettingsServer, initCoreServer, setCoreSettings } from './init-core-server';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
-import { ServerSettings } from '../settings/interfaces';
+import type { ServerSettings } from '../settings/interfaces';
 import debug from 'debug';
 
 jest.mock('../cookie/handle-server-cookie');

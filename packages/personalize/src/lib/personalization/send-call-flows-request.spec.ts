@@ -1,9 +1,9 @@
-import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EPCallFlowsBody, sendCallFlowsRequest } from './send-call-flows-request';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import { EPResponse } from '@sitecore-cloudsdk/core';
+import type { EPCallFlowsBody } from './send-call-flows-request';
 import debug from 'debug';
+import { sendCallFlowsRequest } from './send-call-flows-request';
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -35,7 +35,7 @@ jest.mock('debug', () => {
 });
 
 describe('sendCallFlowsRequest', () => {
-  const settingsObj: core.Settings = {
+  const settingsObj: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
