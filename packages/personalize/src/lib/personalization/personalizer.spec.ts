@@ -1,19 +1,9 @@
 import * as CallFlowsRequest from './send-call-flows-request';
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import type { PersonalizeData, PersonalizeIdentifierInput} from './personalizer';
+import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import debug from 'debug';
-
-jest.mock('@sitecore-cloudsdk/utils', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule
-  };
-});
 
 jest.mock('@sitecore-cloudsdk/core', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
@@ -658,6 +648,14 @@ describe('Test Personalizer Class', () => {
     });
 
     it('should return the response', async () => {
+      jest.spyOn(core, 'processDebugResponse').mockReturnValue({});
+      let currentTime = 1609459200000;
+      jest.spyOn(Date, 'now').mockImplementation(() => {
+        const returnTime = currentTime;
+        currentTime += 1000;
+        return returnTime;
+      });
+
       const expectedResponse = { test: '420' };
 
       global.fetch = jest
@@ -694,8 +692,12 @@ describe('Test Personalizer Class', () => {
       expect(debugMock.mock.results[0].value.mock.calls[0][1]).toBe(
         'https://edge-platform.sitecorecloud.io/v1/personalize?sitecoreContextId=123&siteId=456'
       );
-      expect(debugMock.mock.results[2].value.mock.calls[0][0]).toBe('Personalize payload: %O');
-      expect(debugMock.mock.results[2].value.mock.calls[0][1]).toEqual({ test: '420' });
+      expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Personalize response in %dms : %O');
+
+      expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBe(1000);
+      expect(debugMock.mock.results[1].value.mock.calls[0][2]).toStrictEqual({
+        body: expectedResponse
+      });
 
       expect(response).toBe(expectedResponse);
     });

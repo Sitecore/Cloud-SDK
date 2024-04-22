@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { API_VERSION, debug } from '@sitecore-cloudsdk/core';
+
+import { API_VERSION, debug, processDebugResponse } from '@sitecore-cloudsdk/core';
 import type { BasePayload, CustomEventPayload, IdentityEventPayload, PageViewEventPayload } from '..';
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import type { DebugResponse, EPResponse, Settings } from '@sitecore-cloudsdk/core';
 import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 
 /**
@@ -11,6 +12,8 @@ import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../c
  */
 export async function sendEvent(body: EPFetchBody & BasePayload, settings: Settings): Promise<EPResponse | null> {
   const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
+  const startTimestamp = Date.now();
+  let debugResponse: DebugResponse = {};
 
   const fetchOptions = {
     body: JSON.stringify(body),
@@ -29,11 +32,15 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
 
   return await fetch(eventUrl, fetchOptions)
     .then((response) => {
-      debug(EVENTS_NAMESPACE)('Events response: %O', response);
+      debugResponse = processDebugResponse(EVENTS_NAMESPACE, response);
+
       return response.json();
     })
     .then((data) => {
-      debug(EVENTS_NAMESPACE)('Events payload: %O', data);
+      debugResponse.body = data;
+
+      debug(EVENTS_NAMESPACE)('Events response in %dms : %O', Date.now() - startTimestamp, debugResponse);
+
       return data;
     })
     .catch((error) => {

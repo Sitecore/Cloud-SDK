@@ -9,8 +9,7 @@ Scenario: Developer loads next app and events lib is initialized so server and c
     Given the '/viewevent' page is loaded 
     Then debug log is printed out in the console with message including 'sitecore-cloudsdk:events'
     Then we display the debug server to UI including: 'eventsServer library initialized'
-    Then we display the debug server to UI including: 'Events request'
-    Then we display the debug server to UI including: 'Events payload'    
+    Then we display the debug server to UI including: 'Events request'    
     
 Scenario: Developer loads next app and events lib and sends a custom event  
     Given the '/customevent' page is loaded
@@ -28,8 +27,7 @@ Scenario: Developer loads next app and events lib and sends a custom event
         }
     """
     Then debug log is printed out in the console with message including 'Events request'
-    And debug log is printed out in the console with message including 'Events response'
-    And debug log is printed out in the console with message including 'Events payload'
+    And debug log is printed out in the console with message including 'Events response'    
     And debug log response status should be '201'
 
 
@@ -49,6 +47,5 @@ Scenario: Developer loads next app and events lib and sends a custom event with 
         }
     """
     Then debug log is printed out in the console with message including 'Events request'
-    And debug log is printed out in the console with message including 'Events response'
-    And debug log is printed out in the console with message including 'Events payload'
+    And debug log is printed out in the console with message including 'Events response'    
     And debug log response status should be '400'

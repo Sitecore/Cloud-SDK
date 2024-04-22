@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { DebugResponse, Settings } from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import { debug, generateCorrelationId } from '@sitecore-cloudsdk/core';
+import { debug, generateCorrelationId, processDebugResponse } from '@sitecore-cloudsdk/core';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import type { Settings } from '@sitecore-cloudsdk/core';
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 
 /**
@@ -17,6 +17,9 @@ export async function sendCallFlowsRequest(
   settings: Settings,
   opts?: { timeout?: number; userAgent?: string | null }
 ) {
+  const startTimestamp = Date.now();
+  let debugResponse: DebugResponse = {};
+
   const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
 
   const fetchOptions: FetchOptions = {
@@ -38,8 +41,16 @@ export async function sendCallFlowsRequest(
   if (opts?.timeout === undefined)
     return fetch(requestUrl, fetchOptions)
       .then((response) => {
-        debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
+        debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
+
         return response.json();
+      })
+      .then((data) => {
+        debugResponse.body = data;
+
+        debug(PERSONALIZE_NAMESPACE)('Personalize response in %dms : %O', Date.now() - startTimestamp, debugResponse);
+
+        return data;
       })
       .catch((error) => {
         debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);
@@ -48,8 +59,18 @@ export async function sendCallFlowsRequest(
 
   return fetchWithTimeout(requestUrl, opts.timeout, fetchOptions)
     .then((response) => {
-      debug(PERSONALIZE_NAMESPACE)('Personalize response: %O' as const, response);
-      return (response && response.json()) || null;
+      if (!response) return null;
+
+      debugResponse = processDebugResponse(PERSONALIZE_NAMESPACE, response);
+
+      return response.json();
+    })
+    .then((data) => {
+      debugResponse.body = data;
+
+      debug(PERSONALIZE_NAMESPACE)('Personalize response in %dms : %O', Date.now() - startTimestamp, debugResponse);
+
+      return data;
     })
     .catch((error) => {
       debug(PERSONALIZE_NAMESPACE)('Error personalize response: %O' as const, error);

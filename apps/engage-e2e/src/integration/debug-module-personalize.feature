@@ -10,7 +10,7 @@ Scenario: Developer loads next app and personalize lib is initialized so sevrver
     Then debug log is printed out in the console with message including 'sitecore-cloudsdk:personalize'
     Then we display the debug server to UI including: 'personalizeServer library initialized'
     Then we display the debug server to UI including: 'Personalize request'
-    Then we display the debug server to UI including: 'Personalize payload'    
+    
     
 Scenario: Developer loads next app and personalize lib and sends personalize event 
     Given the '/personalize' page is loaded
@@ -32,8 +32,7 @@ Scenario: Developer loads next app and personalize lib and sends personalize eve
         }
     """    
     Then debug log is printed out in the console with message including 'Personalize request'
-    And debug log is printed out in the console with message including 'Personalize response'
-    And debug log is printed out in the console with message including 'Personalize payload'       
+    And debug log is printed out in the console with message including 'Personalize response'    
     And debug log response status should be '200'
     Then we display the debug server to UI including: 'Personalize response'
     

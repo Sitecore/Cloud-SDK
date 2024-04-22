@@ -4,13 +4,12 @@ import { init } from '@sitecore-cloudsdk/search-api-client/browser';
 import { useEffect } from 'react';
 
 export default function Init() {
-  const settings = {
-    siteName: 'TestSite',
-    sitecoreEdgeContextId: 'abc123',
-    userId: 'user123'
-  };
-
   useEffect(() => {
+    const settings = {
+      siteName: 'TestSite',
+      sitecoreEdgeContextId: 'abc123',
+      userId: 'user123'
+    };
     init(settings);
   }, []);
 

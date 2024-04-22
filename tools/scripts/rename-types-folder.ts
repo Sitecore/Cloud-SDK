@@ -13,7 +13,7 @@ const oldDirName = path.resolve(__dirname, '..', '..', 'dist', 'packages', libNa
 const newDirName = path.resolve(__dirname, '..', '..', 'dist', 'packages', libName, 'types');
 
 fs.rename(oldDirName, newDirName, (err) => {
-  if (err) {
+  if (err) 
     throw err;
-  }
+  
 });

@@ -43,7 +43,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   res.status(200).json({
     EPResponse,
     capturedDebugLogs: capturedDebugLogs
-      .filter((item) => (item as unknown as string).includes('Personalize request'))
+      .filter((item) => typeof item === 'string' && item.includes('Personalize request'))
       .pop()
   });
 }

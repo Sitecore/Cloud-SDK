@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 export { createCookie } from './lib/cookie/create-cookie';
 export { getBrowserIdFromMiddlewareRequest } from './lib/cookie/get-browser-id-from-middleware-request';
 export { getDefaultCookieAttributes } from './lib/cookie/get-default-cookie-attributes';
@@ -17,7 +16,7 @@ export { language, pageName } from './lib/infer/infer';
 export { getBrowserIdFromRequest } from './lib/cookie/get-browser-id-from-request';
 export { handleGetSettingsError } from './lib/settings/handle-get-settings-error';
 export { generateCorrelationId } from './lib/correlation-id/generate-correlation-id';
-export { debug } from './lib/debug/debug';
+export { debug, processDebugResponse } from './lib/debug/debug';
 
 export {
   API_VERSION,
@@ -29,7 +28,7 @@ export {
   CORRELATION_ID_HEADER
 } from './lib/consts';
 
-export type { EPResponse, Infer } from './lib/interfaces';
+export type { EPResponse, Infer, DebugResponse } from './lib/interfaces';
 export type {
   CookieSettings,
   Settings,
