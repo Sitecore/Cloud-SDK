@@ -48,14 +48,21 @@ export async function middleware(request: NextRequest) {
   };
 
   if (request.nextUrl.pathname.startsWith('/middleware-view-event')) {
-    basicEventData = { ...basicEventData, page: 'middleware-view' };
+    if (request.nextUrl.pathname === '/middleware-view-event') {
+      basicEventData = { ...basicEventData, page: 'middleware-view' };
 
-    const extensionData = {
-      extParam: 'middlewareTest'
-    };
-    await pageView(request, { ...basicEventData, extensionData });
+      const extensionData = {
+        extParam: 'middlewareTest'
+      };
+      await pageView(request, { ...basicEventData, extensionData });
 
-    response.cookies.set('ViewEventRequestCookie', capturedRequestBody.pop() as unknown as string);
+      response.cookies.set('ViewEventRequestCookie', capturedRequestBody.pop() as unknown as string);
+    }
+    if (request.nextUrl.pathname === '/middleware-view-event-without-params') {
+      await pageView(request);
+
+      response.cookies.set('ViewEventRequestCookie', capturedRequestBody.pop() as unknown as string);
+    }
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {
@@ -183,6 +190,7 @@ export const config = {
   matcher: [
     '/',
     '/middleware-view-event',
+    '/middleware-view-event-without-params',
     '/middleware-custom-event',
     '/middleware-identity-event',
     '/personalize',

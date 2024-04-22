@@ -10,11 +10,11 @@ import { sendEvent } from '../send-event/sendEvent';
 /**
  * A function that sends a VIEW event to SitecoreCloud API
  *
- * @param pageViewData - The required/optional attributes in order to be send to SitecoreCloud API
+ * @param pageViewData - The optional attributes in order to be send to SitecoreCloud API
  * This object will be flattened and sent in the ext object of the payload
  * @returns The response object that Sitecore EP returns
  */
-export async function pageView(pageViewData: PageViewData): Promise<EPResponse | null> {
+export async function pageView(pageViewData?: PageViewData): Promise<EPResponse | null> {
   await awaitInit();
 
   const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0004);

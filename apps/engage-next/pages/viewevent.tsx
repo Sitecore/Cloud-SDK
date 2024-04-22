@@ -66,7 +66,7 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     initEventsSetting();
   }, []);
 
-  const sendEventWithoutChannelAndCurencyFromMiddleware = async () => {
+  const sendPageViewEventWithoutChannelAndCurencyFromMiddleware = async () => {
     await fetch('/middleware-view-event');
 
     const cookie = getCookie(document?.cookie, 'ViewEventRequestCookie');
@@ -76,13 +76,24 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
   if (res === 'Error')
     throw new Error(`[IV-0005] This event supports maximum 50 attributes. Reduce the number of attributes.`);
 
-  const sendEventWithChannelAndCurreny = () => {
+  const sendPageViewEventWithChannelAndCurreny = () => {
     const eventData: PageViewData = {
       channel: 'WEB',
       currency: 'EUR'
     };
 
     pageView(eventData);
+  };
+
+  const sendPageViewEventWithoutParams = () => {
+    pageView();
+  };
+
+  const sendPageViewEventWithoutParamsFromMiddleware = async () => {
+    await fetch('/middleware-view-event-without-params');
+
+    const cookie = getCookie(document?.cookie, 'ViewEventRequestCookie');
+    setResponse(decodeURIComponent(cookie?.value || ''));
   };
 
   return (
@@ -92,16 +103,29 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
       </div>
       <button
         type='button'
-        data-testid='sendEventWithChannelAndCurreny'
-        onClick={sendEventWithChannelAndCurreny}>
+        data-testid='sendPageViewEventWithChannelAndCurreny'
+        onClick={sendPageViewEventWithChannelAndCurreny}>
         Send Event With Channel And Currency Params
       </button>
       <button
         type='button'
-        data-testid='requestEventWithoutChannelAndCurencyFromMiddleware'
-        onClick={sendEventWithoutChannelAndCurencyFromMiddleware}>
+        data-testid='sendPageViewEventWithoutChannelAndCurencyFromMiddleware'
+        onClick={sendPageViewEventWithoutChannelAndCurencyFromMiddleware}>
         Send Event From Middleware Without Channel And Currency Params
       </button>
+      <button
+        type='button'
+        data-testid='sendPageViewEventWithoutParams'
+        onClick={sendPageViewEventWithoutParams}>
+        Send PageView Event Without Params
+      </button>
+      <button
+        type='button'
+        data-testid='sendPageViewEventWithoutParamsFromMiddleware'
+        onClick={sendPageViewEventWithoutParamsFromMiddleware}>
+        Send PageView Event Without Params from Middleware
+      </button>
+
       <div>
         <label htmlFor='response'>response</label>
         <input

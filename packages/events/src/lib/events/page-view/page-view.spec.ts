@@ -1,6 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../../initializer/browser/initializer';
-import type { PageViewData} from './page-view-event';
+import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { pageView } from './page-view';
 import { sendEvent } from '../send-event/sendEvent';
@@ -61,7 +61,7 @@ describe('pageView', () => {
     jest.clearAllMocks();
   });
 
-  it('should send a PageViewEvent to the server', async () => {
+  it('should send a PageViewEvent with data', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     const getSettingsSpy = jest.spyOn(core, 'getSettings');
     getSettingsSpy.mockReturnValue({
@@ -81,6 +81,33 @@ describe('pageView', () => {
     expect(PageViewEvent).toHaveBeenCalledWith({
       id,
       pageViewData: { ...pageViewData, extensionData },
+      searchParams: window.location.search,
+      sendEvent,
+      settings: expect.objectContaining({})
+    });
+    expect(response).toBe('mockedResponse');
+    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
+  });
+
+  it('should send a PageViewEvent without data', async () => {
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getSettingsSpy = jest.spyOn(core, 'getSettings');
+    getSettingsSpy.mockReturnValue({
+      cookieSettings: {
+        cookieDomain: 'cDomain',
+        cookieExpiryDays: 730,
+        cookieName: 'bid_name',
+        cookiePath: '/'
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: ''
+    });
+
+    const response = await pageView();
+
+    expect(PageViewEvent).toHaveBeenCalledWith({
+      id,
       searchParams: window.location.search,
       sendEvent,
       settings: expect.objectContaining({})

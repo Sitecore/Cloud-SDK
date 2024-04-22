@@ -178,12 +178,24 @@ Scenario: Developer sends VIEW event without channel and currency params and EP 
 
 Scenario: Developer sends VIEW event with channel and currency params and EP responds successfully with these params existing in payload
     Given the '/viewevent' page is loaded
-    And the 'sendEventWithChannelAndCurreny' button is clicked
+    And the 'sendPageViewEventWithChannelAndCurreny' button is clicked
     Then EP API responds with '201' status code
     And the event is sent with 'WEB' channel and 'EUR' currency
 
 Scenario: Developer sends VIEW event from Middleware without channel and currency params
     Given the '/viewevent' page is loaded
-    And the 'requestEventWithoutChannelAndCurencyFromMiddleware' button is clicked
+    And the 'sendPageViewEventWithoutChannelAndCurencyFromMiddleware' button is clicked
+    Then we display the event's request params to UI not containing 'channel' parameter
+    And we display the event's request params to UI not containing 'currency' parameter
+
+Scenario: Developer sends VIEW event without params
+    Given the '/viewevent' page is loaded
+    And the 'sendPageViewEventWithoutParams' button is clicked
+    Then EP API responds with '201' status code
+    And the event is sent without channel and currency
+
+Scenario: Developer sends VIEW event from Middleware without params
+    Given the '/viewevent' page is loaded
+    And the 'sendPageViewEventWithoutParamsFromMiddleware' button is clicked
     Then we display the event's request params to UI not containing 'channel' parameter
     And we display the event's request params to UI not containing 'currency' parameter

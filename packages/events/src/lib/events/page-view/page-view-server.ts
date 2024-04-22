@@ -14,7 +14,7 @@ import { sendEvent } from '../send-event/sendEvent';
  * @param pageViewData - The required/optional attributes in order to be send to SitecoreCloud API
  * @returns The response object that Sitecore EP returns
  */
-export function pageViewServer<T extends Request>(request: T, pageViewData: PageViewData): Promise<EPResponse | null> {
+export function pageViewServer<T extends Request>(request: T, pageViewData?: PageViewData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
   const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
   // Host is irrelevant but necessary to support relative URL

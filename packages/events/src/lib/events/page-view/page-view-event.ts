@@ -11,7 +11,7 @@ import { flattenObject } from '@sitecore-cloudsdk/utils';
 export class PageViewEvent extends BaseEvent {
   static isFirstPageView = true;
   private sendEvent: SendEvent;
-  private pageViewData: PageViewData;
+  private pageViewData?: PageViewData;
   private extensionData: FlattenedObject = {};
   private urlSearchParams: URLSearchParams;
   private includeUTMParameters: boolean;
@@ -22,7 +22,7 @@ export class PageViewEvent extends BaseEvent {
    * @param args - Unified object containing the required properties
    */
   constructor(args: PageViewEventArguments) {
-    const { channel, currency, language, page, extensionData } = args.pageViewData;
+    const { channel, currency, language, page, extensionData } = { ...args.pageViewData };
     super(
       {
         channel,
@@ -43,8 +43,7 @@ export class PageViewEvent extends BaseEvent {
 
     if (numberOfExtensionDataProperties > MAX_EXT_ATTRIBUTES) throw new Error(ErrorMessages.IV_0005);
 
-    this.includeUTMParameters =
-      args.pageViewData.includeUTMParameters === undefined ? true : args.pageViewData.includeUTMParameters;
+    this.includeUTMParameters = (args.pageViewData && args.pageViewData.includeUTMParameters) ?? true;
   }
 
   /**
@@ -69,7 +68,7 @@ export class PageViewEvent extends BaseEvent {
    * @returns - the referrer
    */
   private getReferrer() {
-    if (this.pageViewData.referrer) return this.pageViewData.referrer;
+    if (this.pageViewData?.referrer) return this.pageViewData.referrer;
     if (typeof window === 'undefined') return null;
 
     if (!PageViewEvent.isFirstPageView || !document.referrer) return null;
@@ -88,10 +87,9 @@ export class PageViewEvent extends BaseEvent {
       type: 'VIEW'
     };
 
-    const pageVariantId = this.getPageVariantId(
-      this.pageViewData.pageVariantId,
-      this.extensionData['pageVariantId'] as string
-    );
+    const pageVariantId =
+      this.pageViewData &&
+      this.getPageVariantId(this.pageViewData.pageVariantId, this.extensionData['pageVariantId'] as string);
 
     if (pageVariantId !== null) pageViewPayload.ext = { ...pageViewPayload.ext, pageVariantId };
 
@@ -109,7 +107,7 @@ export class PageViewEvent extends BaseEvent {
 
     if (referrer !== null) pageViewPayload = { ...pageViewPayload, referrer };
 
-    if (this.pageViewData.searchData)
+    if (this.pageViewData?.searchData)
       pageViewPayload.sc_search = {
         data: this.pageViewData.searchData,
         metadata: {
@@ -156,7 +154,7 @@ export class PageViewEvent extends BaseEvent {
  */
 export interface PageViewEventArguments {
   sendEvent: SendEvent;
-  pageViewData: PageViewData;
+  pageViewData?: PageViewData;
   id: string;
   settings: Settings;
   infer?: Infer;
