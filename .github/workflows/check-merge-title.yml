@@ -12,11 +12,5 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-          cache: 'npm'
-      - run: npm ci
       - name: Log head_commit
         run: echo ${{github.event.push.head_commit}}
