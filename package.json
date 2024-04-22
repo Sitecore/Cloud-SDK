@@ -11,6 +11,7 @@
     "build-all": "tsc --build",
     "clean-past-e2e-reports": "rm -r apps/engage-e2e/cypress/results/",
     "generate-e2e-report": "mochawesome-merge apps/engage-e2e/cypress/results/*.json --o apps/engage-e2e/cypress/results/reports/test-results.json && marge apps/engage-e2e/cypress/results/reports/test-results.json --reportDir apps/engage-e2e/cypress/results/reports/ --inline && rm apps/engage-e2e/cypress/results/*.json",
+    "generate-e2e-search-api-client-report": "mochawesome-merge apps/search-api-client-e2e/cypress/results/*.json --o apps/search-api-client-e2e/cypress/results/reports/test-results.json && marge apps/search-api-client-e2e/cypress/results/reports/test-results.json --reportDir apps/search-api-client-e2e/cypress/results/reports/ --inline && rm apps/search-api-client-e2e/cypress/results/*.json",
     "prepare": "husky install"
   },
   "private": true,

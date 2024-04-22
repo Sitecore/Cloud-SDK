@@ -4,7 +4,7 @@
   "sourceRoot": "apps/search-api-client-e2e/src",
   "projectType": "application",
   "targets": {
-    "search-api-client": {
+    "search-api-client-e2e": {
       "executor": "@nx/cypress:cypress",
       "options": {
         "cypressConfig": "apps/search-api-client-e2e/cypress.config.ts",

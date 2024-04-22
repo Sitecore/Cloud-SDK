@@ -4,13 +4,6 @@
   "sourceRoot": "apps/engage-e2e/src",
   "projectType": "application",
   "targets": {
-    "e2e": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": ["nx run engage-e2e:engage-next"],
-        "parallel": false
-      }
-    },
     "engage-next-events": {
       "executor": "@nrwl/cypress:cypress",
       "options": {

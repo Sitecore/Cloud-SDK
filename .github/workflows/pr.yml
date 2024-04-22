@@ -50,11 +50,19 @@ jobs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - uses: actions/checkout@v4
-      - id: set-matrix
-        run: |
-          echo "matrix=$(ls packages | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Create affected packages matrix
+        id: set-matrix
+        run: echo "matrix=$(npx nx show projects --affected --with-target stryker --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
   mutation-tests:
     needs: prepare-matrix
+    if: needs.prepare-matrix.outputs.matrix != '[]'
     strategy:
       fail-fast: false
       matrix:
@@ -76,13 +84,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
       - name: Run E2E Tests
-        run: npx nx run engage-e2e:engage-next-events
+        run: npx nx affected --target=engage-next-events --base=remotes/origin/master --head=HEAD
       - name: Generate Events E2E Test Report
         if: always()
         run: npm run generate-e2e-report
@@ -97,13 +107,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           cache: 'npm'
       - run: npm ci
       - name: Run E2E Tests
-        run: npx nx run engage-e2e:engage-next-personalize
+        run: npx nx affected --target=engage-next-personalize --base=remotes/origin/master --head=HEAD
       - name: Generate Personalize E2E Test Report
         if: always()
         run: npm run generate-e2e-report
@@ -113,6 +125,29 @@ jobs:
         with:
           name: personalize-e2e-report
           path: apps/engage-e2e/cypress/results/
+  search-api-client-e2e-tests:
+    name: Run Search API Client E2E
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Run E2E Tests
+        run: npx nx affected --target=search-api-client-e2e --base=remotes/origin/master --head=HEAD
+      - name: Generate Search API Client Test Report
+        if: always()
+        run: npm run generate-e2e-search-api-client-report
+      - name: Upload Search API Client Test Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: search-api-client-e2e-report
+          path: apps/search-api-client-e2e/cypress/results/
   add-label:
     name: Create labels based on commits
     runs-on: ubuntu-latest
@@ -154,3 +189,17 @@ jobs:
               gh pr edit ${{ github.event.pull_request.number }} --add-label "$commit_info"
             fi
           done
+  check-all-jobs:
+    name: Check if all jobs run successfully
+    runs-on: ubuntu-latest
+    needs:
+      [lint-and-build, unit-test, mutation-tests, events-e2e-tests, personalize-e2e-tests, search-api-client-e2e-tests]
+    steps:
+      - run: |
+          if [[ "${{contains(needs.*.result, 'failure')}}" == 'true' ]]; then
+            echo "Some step(s) failed to pass"
+            exit 1
+          else
+            echo "All steps are successfully passed"
+            exit 0
+          fi
