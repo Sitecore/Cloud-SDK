@@ -3,6 +3,7 @@ name: Pull Request
 on:
   pull_request:
     branches: ['master']
+    types: [edited, opened, reopened, synchronize]
   workflow_dispatch:
 
 jobs:
@@ -204,12 +205,37 @@ jobs:
               gh pr edit ${{ github.event.pull_request.number }} --add-label "$commit_info"
             fi
           done
+  check-pr-title:
+    name: Check if the PR title meets the conventional commit format
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Check the title format
+        run: |
+          pr_title_regex="^(build|chore|ci|docs|style|refactor|perf|test|revert|feat|fix)(\((core|utils|events|personalize|search-api-client)\))?!?: CDK-[0-9]+"
+          if [[ "${{ github.event.pull_request.title }}" =~ $pr_title_regex ]]; then
+            echo "The title is properly formated."
+            exit 0
+          else
+            echo "The title is not properly formated."
+            exit 1
+          fi
   check-all-jobs:
     name: Check if all jobs run successfully
     runs-on: ubuntu-latest
     if: always()
     needs:
-      [lint-and-build, unit-test, mutation-tests, events-e2e-tests, personalize-e2e-tests, search-api-client-e2e-tests]
+      [
+        lint-and-build,
+        unit-test,
+        mutation-tests,
+        events-e2e-tests,
+        personalize-e2e-tests,
+        search-api-client-e2e-tests,
+        check-pr-title
+      ]
     steps:
       - run: |
           if [[ "${{contains(needs.*.result, 'failure')}}" == 'true' ]]; then
