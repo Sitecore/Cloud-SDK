@@ -5,3 +5,5 @@ export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/get-widget-data-server';
 
 export type { ServerSettings } from './lib/types';
+
+export { Context } from './lib/request-entities/context/context';

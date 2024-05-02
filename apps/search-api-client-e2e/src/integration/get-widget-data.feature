@@ -26,7 +26,7 @@ Scenario: Developer requests widget data from browser without widget items
         }
     """
     And the 'getWidgetData' button is clicked
-    Then an error is thrown: '[MV-OO11] "widgetItems" array should not be empty'
+    Then an error is thrown: '[MV-0011] "widgetItems" array should not be empty'
 
 Scenario: Developer creates a WidgetItem with invalid rfkId
     Given the '/get-widget-data' page is loaded
@@ -37,7 +37,7 @@ Scenario: Developer creates a WidgetItem with invalid rfkId
         }
     """
     And the 'getWidgetData' button is clicked
-    Then an error is thrown: '[MV-OO10] "rfkId" is required'
+    Then an error is thrown: '[MV-0010] "rfkId" is required'
 
 Scenario: Developer creates a WidgetItem with invalid entity
     Given the '/get-widget-data' page is loaded
@@ -48,22 +48,22 @@ Scenario: Developer creates a WidgetItem with invalid entity
         }
     """
     And the 'getWidgetData' button is clicked
-    Then an error is thrown: '[MV-OO09] "entity" is required'
+    Then an error is thrown: '[MV-0009] "entity" is required'
 
 Scenario: Developer requests widget data from Middleware with a valid payload
-    Given the '/get-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
-    Then the request with id '<testID>' will contain '<name>' with '<value>' value in the body
-    Examples:
-        | testID                                            | name   | value                                               |
-        | getWidgetDataFromMiddlewareWithValidPayload       | widget | {"items":[{"entity":"content","rfk_id":"rfkid_7"}]} |
+    Given the '/get-widget-data' page is loaded with 'testID' name and 'getWidgetDataFromMiddlewareWithValidPayload' value query parameter
+    Then the request with id 'getWidgetDataFromMiddlewareWithValidPayload' will contain:
+    """
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
+    """
 
 
 Scenario: Developer requests widget data from API with a valid payload
     Given the '/get-widget-data' page is loaded
-    And the '<testID>' button is clicked
-    Then the request with id '<testID>' will contain '<name>' with '<value>' value in the body
-    Examples:
-        | testID                               | name   | value                                               |
-        | getWidgetDataFromAPIWithValidPayload | widget | {"items":[{"entity":"content","rfk_id":"rfkid_7"}]} |
+    And the 'getWidgetDataFromAPIWithValidPayload' button is clicked
+    Then the request with id 'getWidgetDataFromAPIWithValidPayload' will contain:
+    """
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
+    """
 
         

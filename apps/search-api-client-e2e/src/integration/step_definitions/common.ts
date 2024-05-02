@@ -43,12 +43,9 @@ Then('an error is thrown: {string}', (expectedError: string) => {
   cy.readLocal('error.txt').should('include', expectedError);
 });
 
-defineStep(
-  'the request with id {string} will contain {string} with {string} value in the body',
-  (testID: string, bodyAttribute: string, bodyAttributevalue: string) => {
-    cy.assertRequestBodyValue(testID, bodyAttribute, bodyAttributevalue);
-  }
-);
+defineStep('the request with id {string} will contain:', (testID: string, bodyAttribute: string) => {
+  cy.assertRequestBodyValue(testID, bodyAttribute.trim());
+});
 
 defineStep(
   'the {string} page is loaded with {string} name and {string} value query parameter',

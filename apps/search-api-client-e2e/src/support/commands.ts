@@ -7,7 +7,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace Cypress {
     interface Chainable {
-      assertRequestBodyValue(testID: string, bodyAttributeName: string, bodyAttributeValue: string): void;
+      assertRequestBodyValue(testID: string, bodyAttribute: string): void;
       writeLocal(fileName: string, content: any): void;
       readLocal(fileName: string): any;
       visit(url: string, options: string): void;
@@ -23,14 +23,11 @@ declare global {
 // Asserts if the provided attribute exists in the body
 // Asserts if the provided attribute value exists in the body,
 // the data is added by the Next app with the request decorators
-Cypress.Commands.add('assertRequestBodyValue', (testID, bodyAttributeName, bodyAttributeValue) => {
+Cypress.Commands.add('assertRequestBodyValue', (testID, bodyAttribute) => {
   cy.waitUntil(
     () =>
       cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
-        const bodyJson = JSON.parse(fileContents[testID].body);
-
-        expect(bodyJson).to.have.property(bodyAttributeName);
-        expect(fileContents[testID].body).to.contain(bodyAttributeValue);
+        expect(fileContents[testID].body).to.contain(bodyAttribute);
       }),
     {
       errorMsg: 'Request body not found',

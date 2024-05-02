@@ -18,6 +18,7 @@ export { generateV4UUID } from './lib/generators/generate-v4-uuid';
 export * from './lib/console/colors';
 export { normalizeHeaders } from './lib/converters/normalizeHeaders';
 export { ErrorMessages } from './lib/consts';
+export { isValidHttpURL } from './lib/validators/is-valid-http-url';
 
 export type {
   Request,
