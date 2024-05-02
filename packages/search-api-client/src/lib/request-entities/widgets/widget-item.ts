@@ -25,6 +25,9 @@ export class WidgetItem {
     if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
   }
 
+  /**
+   * Maps the widget item to its DTO format.
+   */
   toDTO(): WidgetItemDTO {
     return {
       entity: this.entity,

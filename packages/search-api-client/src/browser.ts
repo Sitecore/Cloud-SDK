@@ -2,5 +2,6 @@
 export * from './lib/browser/init';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
+export { getWidgetData } from './lib/requests/get-widget-data';
 
 export type { BrowserSettings } from './lib/types';

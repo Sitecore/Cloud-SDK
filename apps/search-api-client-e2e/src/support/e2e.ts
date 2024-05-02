@@ -1,5 +1,6 @@
 // Import commands.js using ES2015 syntax:
 import './commands';
+import 'cypress-wait-until';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const addContext = require('../../../../node_modules/mochawesome/addContext');

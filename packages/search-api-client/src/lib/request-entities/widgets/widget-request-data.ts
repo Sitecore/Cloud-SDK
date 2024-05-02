@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../const';
+import type { WidgetDTO } from './interfaces';
 import type { WidgetItem } from './widget-item';
 
 export class WidgetRequestData {
@@ -22,7 +23,11 @@ export class WidgetRequestData {
   /**
    * Maps the widget items to their DTO format.
    */
-  toDTO() {
-    return this.widgetItems.map((widgetItem) => widgetItem.toDTO());
+  toDTO(): WidgetDTO {
+    return {
+      widget: {
+        items: this.widgetItems.map((widgetItem) => widgetItem.toDTO())
+      }
+    };
   }
 }

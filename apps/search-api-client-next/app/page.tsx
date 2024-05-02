@@ -1,4 +1,4 @@
-import Init from './components/init';
+import Init from '../src/components/init';
 import { init } from '@sitecore-cloudsdk/search-api-client/server';
 
 export default async function Index() {

@@ -13,5 +13,7 @@ export interface WidgetItemDTO {
  * Represents a widget object in its DTO format.
  */
 export interface WidgetDTO {
-  items: WidgetItemDTO[];
+  widget: {
+    items: WidgetItemDTO[];
+  };
 }
