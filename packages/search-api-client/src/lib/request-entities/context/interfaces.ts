@@ -41,4 +41,21 @@ export interface ContextDTO {
   locale?: LocaleDTO;
   page?: PageDTO;
   store?: StoreDTO;
+  campaign?: CampaignDTO;
+}
+
+export interface Campaign {
+  source?: string;
+  medium?: string;
+  campaign?: string;
+  term?: string;
+  content?: string;
+}
+
+export interface CampaignDTO {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
 }

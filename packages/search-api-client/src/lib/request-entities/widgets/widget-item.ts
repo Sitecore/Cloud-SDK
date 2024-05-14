@@ -13,13 +13,13 @@ export class WidgetItem {
    *
    */
   constructor(entity: string, rfkId: string) {
-    this.validate(entity, rfkId);
+    this._validate(entity, rfkId);
 
     this.entity = entity;
     this.rfkId = rfkId;
   }
 
-  private validate(entity: string, rfkId: string) {
+  private _validate(entity: string, rfkId: string) {
     if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0009);
 
     if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0010);

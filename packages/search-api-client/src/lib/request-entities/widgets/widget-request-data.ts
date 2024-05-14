@@ -4,19 +4,19 @@ import type { WidgetDTO } from './interfaces';
 import type { WidgetItem } from './widget-item';
 
 export class WidgetRequestData {
-  private widgetItems: WidgetItem[];
+  private _widgetItems: WidgetItem[];
 
   /**
    * Creates and holds the functionality of the widget request data.
    * @param widgetItems - Array of {@link WidgetItem} instances.
    */
   constructor(widgetItems: WidgetItem[]) {
-    this.validateWidgetItems(widgetItems);
+    this._validateWidgetItems(widgetItems);
 
-    this.widgetItems = widgetItems;
+    this._widgetItems = widgetItems;
   }
 
-  private validateWidgetItems(widgetItems: WidgetItem[]) {
+  private _validateWidgetItems(widgetItems: WidgetItem[]) {
     if (widgetItems.length === 0) throw new Error(ErrorMessages.MV_0011);
   }
 
@@ -26,7 +26,7 @@ export class WidgetRequestData {
   toDTO(): WidgetDTO {
     return {
       widget: {
-        items: this.widgetItems.map((widgetItem) => widgetItem.toDTO())
+        items: this._widgetItems.map((widgetItem) => widgetItem.toDTO())
       }
     };
   }

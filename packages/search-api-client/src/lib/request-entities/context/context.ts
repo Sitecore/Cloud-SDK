@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { ContextDTO, ContextData, LocaleData, PageData, StoreData } from './interfaces';
+import type { Campaign, ContextDTO, ContextData, LocaleData, PageData, StoreData } from './interfaces';
 import { ErrorMessages } from '../../const';
 import { isValidHttpURL } from '@sitecore-cloudsdk/utils';
 
@@ -12,19 +12,36 @@ export class Context {
   locale?: LocaleData;
   page?: PageData;
   store?: StoreData;
+  private _campaign?: Campaign;
 
   constructor(context: ContextData) {
     this.locale = context.locale;
     this.page = context.page;
     this.store = context.store;
 
-    this.validateContext();
+    this._validateContext();
+  }
+
+  /**
+   * Sets the campaign data.
+   * @param campaign - The new value to set.
+   *
+   */
+  set campaign(campaign: Campaign) {
+    this._campaign = campaign;
+  }
+
+  /**
+   * Sets the campaign data to undefined
+   */
+  removeCampaign() {
+    this._campaign = undefined;
   }
 
   /**
    * Validate context object.
    */
-  private validateContext(): void {
+  private _validateContext(): void {
     if (
       this.locale &&
       ((this.locale.country && !this.locale.language) || (!this.locale.country && this.locale.language))
@@ -47,14 +64,26 @@ export class Context {
    * Map context object to DTO.
    */
   toDTO(): ContextDTO {
-    return {
+    /* eslint-disable @typescript-eslint/naming-convention */
+    const dto: ContextDTO = {
       locale: this.locale,
       page: this.page,
       store: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         group_id: this.store && this.store.groupId,
         id: this.store && this.store.id
       }
     };
+
+    if (this._campaign)
+      dto.campaign = {
+        utm_campaign: this._campaign.campaign,
+        utm_content: this._campaign.content,
+        utm_medium: this._campaign.medium,
+        utm_source: this._campaign.source,
+        utm_term: this._campaign.term
+      };
+    /* eslint-enable @typescript-eslint/naming-convention */
+
+    return dto;
   }
 }

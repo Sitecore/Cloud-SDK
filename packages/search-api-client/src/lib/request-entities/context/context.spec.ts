@@ -19,6 +19,49 @@ describe('context request data creation', () => {
     }
   };
 
+  describe('campaign', () => {
+    it(`should be undefined if not set`, () => {
+      const context = new Context({});
+
+      expect(context.campaign).toBeUndefined();
+    });
+
+    it(`should be present in dto if at least one attribute is set`, () => {
+      const context = new Context({});
+      context.campaign = { campaign: 'campaign' };
+
+      expect(context.toDTO().campaign).toBeDefined();
+    });
+
+    it(`should include all set attributes in the dto`, () => {
+      const expectedDTO = {
+        utm_campaign: 'campaign',
+        utm_content: 'content',
+        utm_medium: 'medium',
+        utm_source: 'source',
+        utm_term: 'term'
+      };
+
+      const context = new Context({});
+      context.campaign = { campaign: 'campaign', content: 'content', medium: 'medium', source: 'source', term: 'term' };
+
+      const result = context.toDTO().campaign;
+
+      expect(result).toStrictEqual(expectedDTO);
+    });
+
+    it(`should set the campaign to undefined when removeCampaign is called`, () => {
+      const context = new Context({});
+      context.campaign = { campaign: 'campaign', content: 'content', medium: 'medium', source: 'source', term: 'term' };
+
+      context.removeCampaign();
+
+      const result = context.toDTO().campaign;
+
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('validator', () => {
     it(`should not throw an error if all properties are correct`, () => {
       expect(() => new Context(context)).not.toThrow();
