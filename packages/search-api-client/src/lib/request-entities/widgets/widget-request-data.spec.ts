@@ -28,7 +28,8 @@ describe('widget request data class', () => {
             {
               entity: 'test2',
               // eslint-disable-next-line @typescript-eslint/naming-convention
-              rfk_id: 'test2'
+              rfk_id: 'test2',
+              search: undefined
             }
           ]
         }

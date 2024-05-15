@@ -3,7 +3,9 @@ import { WidgetItem, WidgetRequestData, getWidgetData, init } from '@sitecore-cl
 import { useState } from 'react';
 
 export default function GetWidgetData() {
-  const [inputData, setinputData] = useState('{"items":[{"entity":"content","rfkId":"rfkid_7"}]}');
+  const [inputData, setinputData] = useState(
+    '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0}}]}'
+  );
 
   const getWidgetDataFromAPIWithValidPayload = async () => {
     await fetch('/api/get-widget-data?testID=getWidgetDataFromAPIWithValidPayload');
@@ -23,7 +25,12 @@ export default function GetWidgetData() {
     const widgets = !parsedInputData.items
       ? []
       : parsedInputData.items.map((item: any) => {
-          return new WidgetItem(item.entity, item.rfkId);
+          const widget = new WidgetItem(item.entity, item.rfkId);
+
+          if (item.search?.limit) widget.limit = item.search.limit;
+          if (item.search?.offset) widget.offset = item.search.offset;
+          if (item.search?.content) widget.content = item.search.content.fields;
+          return widget;
         });
 
     const widgetRequestData = new WidgetRequestData(widgets);

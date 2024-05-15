@@ -11,7 +11,6 @@ before(() => {
 
 defineStep('the widget item parameters are:', (params: string) => {
   const parameters = JSON.parse(params);
-
   if (parameters?.items) {
     cy.get('[data-testid="widgetItemsInput"]').clear();
     cy.get('[data-testid="widgetItemsInput"]').type(params, {
@@ -23,17 +22,19 @@ defineStep('the widget item parameters are:', (params: string) => {
 defineStep('the widget data request is sent with parameters:', (params: string) => {
   const parameters = JSON.parse(params);
   const length = parameters.items.length;
+
   cy.wait('@searchRequest').then(({ request, response }) => {
     expect(request).to.not.equal(undefined);
 
     if (response) statusCode = response.statusCode;
 
     for (let index = 0; index < length; index++) {
-      const { rfkId, entity } = parameters.items[index];
-      const { rfk_id: reqRfkId, entity: reqEntity } = request.body.widget.items[index];
+      const { rfkId, entity, search: searchParam } = parameters.items[index];
+      const { rfk_id: reqRfkId, entity: reqEntity, search } = request.body.widget.items[index];
 
       expect(reqRfkId).to.equal(rfkId);
       expect(reqEntity).to.equal(entity);
+      expect(search).to.deep.equal(searchParam);
     }
   });
 });

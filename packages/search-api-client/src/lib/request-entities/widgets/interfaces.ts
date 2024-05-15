@@ -5,6 +5,7 @@
  */
 export interface WidgetItemDTO {
   entity: string;
+  search?: WidgetItemSearch;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
 }
@@ -16,4 +17,13 @@ export interface WidgetDTO {
   widget: {
     items: WidgetItemDTO[];
   };
+}
+
+/**
+ * Represents a widget item search object.
+ */
+export interface WidgetItemSearch {
+  content?: { fields?: string[] | unknown };
+  limit?: number;
+  offset?: number;
 }
