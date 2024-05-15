@@ -3,6 +3,8 @@ export * from './lib/server/init';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/get-widget-data-server';
+export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
+export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 
 export type { ServerSettings } from './lib/types';
 
