@@ -35,12 +35,17 @@ defineStep('the {string} button is clicked', (button: string) => {
 
 Then('an error is thrown: {string}', (expectedError: string) => {
   //Allowing for the error to be printed on console and retrieved from cypress fixtures
-  cy.waitUntil(() => cy.readLocal('error.txt').then((actualError: string) => actualError !== ''), {
-    errorMsg: 'Error not found',
-    timeout: 15000,
-    interval: 100
-  });
-  cy.readLocal('error.txt').should('include', expectedError);
+  cy.waitUntil(
+    () =>
+      cy.readLocal('error.txt').then((actualError: string) => {
+        expect(actualError).to.include(expectedError);
+      }),
+    {
+      errorMsg: 'Error not found',
+      timeout: 15000,
+      interval: 100
+    }
+  );
 });
 
 defineStep('the request with id {string} will contain:', (testID: string, bodyAttribute: string) => {

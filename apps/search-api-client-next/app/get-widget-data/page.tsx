@@ -30,6 +30,11 @@ export default function GetWidgetData() {
           if (item.search?.limit) widget.limit = item.search.limit;
           if (item.search?.offset) widget.offset = item.search.offset;
           if (item.search?.content) widget.content = item.search.content.fields;
+          if (item.search?.query) {
+            if (item.search.query?.keyphrase !== undefined) widget.keyphrase = item.search.query.keyphrase;
+            if (item.search.query?.operator !== undefined) widget.operator = item.search.query.operator;
+          }
+
           return widget;
         });
 

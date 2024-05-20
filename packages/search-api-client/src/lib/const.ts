@@ -4,6 +4,7 @@ export enum ErrorMessages {
   IE_0010 = '[IE-0010] You must first initialize the "search-api-client/server" package. Run the "init" function.',
   IV_0007 = '[IV-0007] Incorrect value for "limit". Set the value to an integer between 1 and 100 inclusive.',
   IV_0008 = '[IV-0008] Incorrect value for "offset". Set the value to an integer greater than or equal to 0.',
+  IV_0009 = '[IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] if one of the "country" and "language" is set then the other one should not be empty.',
   MV_0007 = '[MV-0007] if one of the "custom" and "uri" is set and valid then the other one should not be empty.',

@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { WidgetItemDTO, WidgetItemSearch } from './interfaces';
+import type { LogicalOperators, WidgetItemDTO, WidgetItemSearch } from './interfaces';
 import { ErrorMessages } from '../../const';
 
 export class WidgetItem {
@@ -22,7 +22,6 @@ export class WidgetItem {
 
   private _validate(entity: string, rfkId: string) {
     if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0009);
-
     if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
   }
 
@@ -67,6 +66,49 @@ export class WidgetItem {
     this._search = {
       ...this._search,
       content: Array.isArray(value) ? { fields: value } : {}
+    };
+  }
+  /**
+   * Sets the search keyphrase for the WidgetItem.
+   * This method updates the `keyphrase` property of the search configuration within the WidgetItem instance.
+   * The keyphrase is used to define specific search criteria.
+   * @param keyphrase - A string that specifies the search criteria.
+   * @throws Error If the keyphrase is not between 1 and 100 characters
+   */
+  set keyphrase(keyphrase: string) {
+    if (keyphrase.length < 1 || keyphrase.length > 100) throw new Error(ErrorMessages.IV_0009);
+    this._search = {
+      ...this._search,
+      query: {
+        ...this._search?.query,
+        keyphrase
+      }
+    };
+  }
+  /**
+   * Sets the search operator for the WidgetItem.
+   * This method updates the `operator` property of the search configuration within the WidgetItem instance.
+   * The operator is used to define specific search criteria.
+   * @param operator - The operator that specifies the search criteria.
+   */
+  set operator(operator: LogicalOperators) {
+    this._search = {
+      ...this._search,
+      query: {
+        keyphrase: this._search?.query?.keyphrase ?? (undefined as unknown as string),
+        operator
+      }
+    };
+  }
+
+  /**
+   * Reset the search query object for the WidgetItem.
+   * This method resets the `query` property of the search configuration within the WidgetItem instance.
+   */
+  resetSearchQuery() {
+    this._search = {
+      ...this._search,
+      query: undefined
     };
   }
 

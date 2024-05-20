@@ -19,6 +19,8 @@ export interface WidgetDTO {
   };
 }
 
+export type LogicalOperators = 'and' | 'or';
+
 /**
  * Represents a widget item search object.
  */
@@ -26,4 +28,8 @@ export interface WidgetItemSearch {
   content?: { fields?: string[] | unknown };
   limit?: number;
   offset?: number;
+  query?: {
+    keyphrase: string;
+    operator?: LogicalOperators;
+  };
 }
