@@ -23,7 +23,7 @@ describe('widget item class', () => {
         rfkId: 'test'
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0009);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
     });
 
     it(`should throw an error if the 'rfkId' property is empty string`, () => {
@@ -32,7 +32,7 @@ describe('widget item class', () => {
         rfkId: ''
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0011);
     });
 
     it(`should throw an error if the 'entity' property is a string with empty spaces`, () => {
@@ -41,7 +41,7 @@ describe('widget item class', () => {
         rfkId: 'test'
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0009);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
     });
 
     it(`should throw an error if the 'rfkId' property is a string with empty spaces`, () => {
@@ -50,7 +50,7 @@ describe('widget item class', () => {
         rfkId: '   '
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0011);
     });
   });
   describe('mapper', () => {

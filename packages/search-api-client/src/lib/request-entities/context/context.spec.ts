@@ -2,6 +2,8 @@ import { Context } from './context';
 import { ErrorMessages } from '../../const';
 
 describe('context request data creation', () => {
+  let contextInstance: Context;
+
   const context = {
     locale: {
       country: 'us',
@@ -19,18 +21,19 @@ describe('context request data creation', () => {
     }
   };
 
+  beforeEach(() => {
+    contextInstance = new Context({});
+  });
+
   describe('campaign', () => {
     it(`should be undefined if not set`, () => {
-      const context = new Context({});
-
-      expect(context.campaign).toBeUndefined();
+      expect(contextInstance.campaign).toBeUndefined();
     });
 
     it(`should be present in dto if at least one attribute is set`, () => {
-      const context = new Context({});
-      context.campaign = { campaign: 'campaign' };
+      contextInstance.campaign = { campaign: 'campaign' };
 
-      expect(context.toDTO().campaign).toBeDefined();
+      expect(contextInstance.toDTO().campaign).toBeDefined();
     });
 
     it(`should include all set attributes in the dto`, () => {
@@ -42,21 +45,80 @@ describe('context request data creation', () => {
         utm_term: 'term'
       };
 
-      const context = new Context({});
-      context.campaign = { campaign: 'campaign', content: 'content', medium: 'medium', source: 'source', term: 'term' };
+      contextInstance.campaign = {
+        campaign: 'campaign',
+        content: 'content',
+        medium: 'medium',
+        source: 'source',
+        term: 'term'
+      };
 
-      const result = context.toDTO().campaign;
+      const result = contextInstance.toDTO().campaign;
 
       expect(result).toStrictEqual(expectedDTO);
     });
 
     it(`should set the campaign to undefined when removeCampaign is called`, () => {
-      const context = new Context({});
-      context.campaign = { campaign: 'campaign', content: 'content', medium: 'medium', source: 'source', term: 'term' };
+      contextInstance.campaign = {
+        campaign: 'campaign',
+        content: 'content',
+        medium: 'medium',
+        source: 'source',
+        term: 'term'
+      };
 
-      context.removeCampaign();
+      contextInstance.removeCampaign();
 
-      const result = context.toDTO().campaign;
+      const result = contextInstance.toDTO().campaign;
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('locale set and reset', () => {
+    it(`should be undefined if not set`, () => {
+      expect(contextInstance.locale).toBeUndefined();
+    });
+
+    it(`should locale object be present in dto if both attributes are set`, () => {
+      contextInstance.locale = { country: 'US', language: 'us' };
+
+      expect(contextInstance.toDTO().locale).toBeDefined();
+    });
+
+    it('should update locale object when country property is valid', () => {
+      const newContext = new Context(context);
+      newContext.locale = { country: 'EN', language: 'us' };
+
+      expect(newContext.toDTO().locale?.country).toBe('EN');
+      expect(newContext.toDTO().locale?.language).toBe('us');
+    });
+
+    it('should update locale object when language property is valid', () => {
+      const newContext = new Context(context);
+      newContext.locale = { country: 'EN', language: 'gr' };
+
+      expect(newContext.toDTO().locale?.country).toBe('EN');
+      expect(newContext.toDTO().locale?.language).toBe('gr');
+    });
+
+    it('should throw an error when locale object is updated with invalid country information', () => {
+      const newContext = new Context(context);
+
+      expect(() => (newContext.locale = { ...context.locale, country: 'ussss' })).toThrow(ErrorMessages.MV_0006);
+    });
+
+    it('should throw an error when locale object is updated with invalid language information', () => {
+      const newContext = new Context(context);
+
+      expect(() => (newContext.locale = { ...context.locale, language: 'ussss' })).toThrow(ErrorMessages.MV_0007);
+    });
+
+    it(`should set the locale to undefined when removeLocale is called`, () => {
+      contextInstance.locale = { country: 'en', language: 'en' };
+      contextInstance.removeLocale();
+
+      const result = contextInstance.toDTO().locale;
 
       expect(result).toBeUndefined();
     });
@@ -67,7 +129,7 @@ describe('context request data creation', () => {
       expect(() => new Context(context)).not.toThrow();
     });
 
-    it(`should throw an error if one of the 'locale' properties (country, language) is set and the other is empty`, () => {
+    it(`should throw an error if one of the 'locale' properties (country, language) is invalid`, () => {
       const invalidContext1 = {
         ...context,
         locale: {
@@ -84,17 +146,26 @@ describe('context request data creation', () => {
         }
       };
 
-      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0006);
-      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0006);
-    });
-
-    it(`should not throw an error if the 'locale' object is empty`, () => {
-      const validContext = {
+      const invalidContext3 = {
         ...context,
-        locale: {}
+        locale: {
+          country: 'usss',
+          language: 'us'
+        }
       };
 
-      expect(() => new Context(validContext)).not.toThrow();
+      const invalidContext4 = {
+        ...context,
+        locale: {
+          country: 'us',
+          language: 'us123'
+        }
+      };
+
+      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0007);
+      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0006);
+      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0006);
+      expect(() => new Context(invalidContext4)).toThrow(ErrorMessages.MV_0007);
     });
 
     it(`should throw an error if one of the 'page' properties (custom, uri) is set (with valid value) and the other is empty`, () => {
@@ -128,9 +199,9 @@ describe('context request data creation', () => {
         }
       };
 
-      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0007);
-      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0007);
-      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0007);
+      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0008);
+      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0008);
+      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0008);
     });
 
     it(`should not throw an error if the 'page' object is empty`, () => {
@@ -163,8 +234,8 @@ describe('context request data creation', () => {
         }
       };
 
-      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0008);
-      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0008);
+      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0009);
+      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0009);
     });
 
     it(`should not throw an error if the 'store' object is empty`, () => {

@@ -21,8 +21,9 @@ export class WidgetItem {
   }
 
   private _validate(entity: string, rfkId: string) {
-    if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0009);
-    if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
+    if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
+
+    if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0011);
   }
 
   /**

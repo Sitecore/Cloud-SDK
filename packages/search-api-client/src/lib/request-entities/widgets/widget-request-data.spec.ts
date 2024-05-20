@@ -10,7 +10,7 @@ describe('widget request data class', () => {
       expect(() => new WidgetRequestData([widgetItem])).not.toThrow();
     });
     it(`should throw an error if array is empty`, () => {
-      expect(() => new WidgetRequestData([])).toThrow(ErrorMessages.MV_0011);
+      expect(() => new WidgetRequestData([])).toThrow(ErrorMessages.MV_0012);
     });
   });
   describe('mapper', () => {

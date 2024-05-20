@@ -6,10 +6,11 @@ export enum ErrorMessages {
   IV_0008 = '[IV-0008] Incorrect value for "offset". Set the value to an integer greater than or equal to 0.',
   IV_0009 = '[IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.',
   MV_0005 = '[MV-0005] "userId" is required.',
-  MV_0006 = '[MV-0006] if one of the "country" and "language" is set then the other one should not be empty.',
-  MV_0007 = '[MV-0007] if one of the "custom" and "uri" is set and valid then the other one should not be empty.',
-  MV_0008 = '[MV-0008] if one of the "groupId" and "id" is set then the other one should not be empty.',
-  MV_0009 = '[MV-0009] "entity" is required',
-  MV_0010 = '[MV-0010] "rfkId" is required',
-  MV_0011 = '[MV-0011] "widgetItems" array should not be empty'
+  MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
+  MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',
+  MV_0008 = '[MV-0008] if one of the "custom" and "uri" is set and valid then the other one should not be empty.',
+  MV_0009 = '[MV-0009] if one of the "groupId" and "id" is set then the other one should not be empty.',
+  MV_0010 = '[MV-0010] "entity" is required',
+  MV_0011 = '[MV-0011] "rfkId" is required',
+  MV_0012 = '[MV-0012] "widgetItems" array should not be empty'
 }

@@ -17,7 +17,7 @@ export class WidgetRequestData {
   }
 
   private _validateWidgetItems(widgetItems: WidgetItem[]) {
-    if (widgetItems.length === 0) throw new Error(ErrorMessages.MV_0011);
+    if (widgetItems.length === 0) throw new Error(ErrorMessages.MV_0012);
   }
 
   /**

@@ -50,9 +50,9 @@ Scenario Outline: Developer requests widget data from browser without widget ite
   Then an error is thrown: '<error_code>'
   Examples:
     | items   | error_code |
-    | []      | [MV-0011] "widgetItems" array should not be empty        |
-    | [{"rfkId":" ","entity":"content"}]         | [MV-0010] "rfkId" is required         |
-    | [{"rfkId":"rfkid_7","entity":" "}]         | [MV-0009] "entity" is required         |
+    | []      | [MV-0012] "widgetItems" array should not be empty        |
+    | [{"rfkId":" ","entity":"content"}]         | [MV-0011] "rfkId" is required         |
+    | [{"rfkId":"rfkid_7","entity":" "}]         | [MV-0010] "entity" is required         |
     | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":101,"offset":0}}]         | [IV-0007] Incorrect value for "limit". Set the value to an integer between 1 and 100 inclusive.         |
     | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":-1}}]         | [IV-0008] Incorrect value for "offset". Set the value to an integer greater than or equal to 0.         |
     | [{"rfkId":"rfkid_7","entity":"content", "search": {"query": {"keyphrase": "aaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa"}}}]         | [IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.         |

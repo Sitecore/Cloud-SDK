@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Campaign, ContextDTO, ContextData, LocaleData, PageData, StoreData } from './interfaces';
+import type { CampaignData, ContextDTO, ContextData, LocaleData, PageData, StoreData } from './interfaces';
 import { ErrorMessages } from '../../const';
 import { isValidHttpURL } from '@sitecore-cloudsdk/utils';
 
@@ -9,17 +9,40 @@ import { isValidHttpURL } from '@sitecore-cloudsdk/utils';
  * @returns the validated and mapped context object
  */
 export class Context {
-  locale?: LocaleData;
-  page?: PageData;
-  store?: StoreData;
-  private _campaign?: Campaign;
+  private _campaign?: CampaignData;
+  private _locale?: LocaleData;
+  private _page?: PageData;
+  private _store?: StoreData;
 
+  /**
+   * @param context - The context object.
+   * @returns the validated and mapped context object
+   */
   constructor(context: ContextData) {
-    this.locale = context.locale;
-    this.page = context.page;
-    this.store = context.store;
+    this._validateContext(context);
 
-    this._validateContext();
+    this._campaign = context.campaign;
+    this._locale = context.locale;
+    this._page = context.page;
+    this._store = context.store;
+  }
+
+  /**
+   * Sets the locale data.
+   * @param locale - The new value to set.
+   *
+   */
+  set locale(locale: LocaleData) {
+    this._validateContextLocale(locale);
+
+    this._locale = locale;
+  }
+
+  /**
+   * Sets the campaign data to undefined
+   */
+  removeLocale() {
+    this._locale = undefined;
   }
 
   /**
@@ -27,7 +50,7 @@ export class Context {
    * @param campaign - The new value to set.
    *
    */
-  set campaign(campaign: Campaign) {
+  set campaign(campaign: CampaignData) {
     this._campaign = campaign;
   }
 
@@ -39,38 +62,45 @@ export class Context {
   }
 
   /**
+   * Validate context locale object.
+   */
+  private _validateContextLocale(locale?: LocaleData): void {
+    if (!locale) return;
+
+    if (locale.country.length !== 2) throw new Error(ErrorMessages.MV_0006);
+    if (locale.language.length !== 2) throw new Error(ErrorMessages.MV_0007);
+  }
+
+  /**
    * Validate context object.
    */
-  private _validateContext(): void {
-    if (
-      this.locale &&
-      ((this.locale.country && !this.locale.language) || (!this.locale.country && this.locale.language))
-    )
-      throw new Error(ErrorMessages.MV_0006);
+  private _validateContext(context: ContextData): void {
+    this._validateContextLocale(context.locale);
 
     if (
-      this.page &&
-      this.page.custom &&
-      ((Object.keys(this.page.custom).length && (!this.page.uri || !isValidHttpURL(this.page.uri))) ||
-        (!Object.keys(this.page.custom).length && this.page.uri && isValidHttpURL(this.page.uri)))
+      context.page &&
+      context.page.custom &&
+      ((Object.keys(context.page.custom).length && (!context.page.uri || !isValidHttpURL(context.page.uri))) ||
+        (!Object.keys(context.page.custom).length && context.page.uri && isValidHttpURL(context.page.uri)))
     )
-      throw new Error(ErrorMessages.MV_0007);
-
-    if (this.store && ((this.store.groupId && !this.store.id) || (!this.store.groupId && this.store.id)))
       throw new Error(ErrorMessages.MV_0008);
+
+    if (context.store && ((context.store.groupId && !context.store.id) || (!context.store.groupId && context.store.id)))
+      throw new Error(ErrorMessages.MV_0009);
   }
 
   /**
    * Map context object to DTO.
+   * @returns The DTO representation of the filter.
    */
   toDTO(): ContextDTO {
     /* eslint-disable @typescript-eslint/naming-convention */
     const dto: ContextDTO = {
-      locale: this.locale,
-      page: this.page,
+      locale: this._locale,
+      page: this._page,
       store: {
-        group_id: this.store && this.store.groupId,
-        id: this.store && this.store.id
+        group_id: this._store && this._store.groupId,
+        id: this._store && this._store.id
       }
     };
 

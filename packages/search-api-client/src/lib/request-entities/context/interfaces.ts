@@ -1,8 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
 export interface LocaleData {
-  country?: string;
-  language?: string;
+  country: string;
+  language: string;
 }
 
 export interface PageData {
@@ -19,6 +19,7 @@ export interface ContextData {
   locale?: LocaleData;
   page?: PageData;
   store?: StoreData;
+  campaign?: CampaignData;
 }
 
 export interface LocaleDTO {
@@ -44,7 +45,7 @@ export interface ContextDTO {
   campaign?: CampaignDTO;
 }
 
-export interface Campaign {
+export interface CampaignData {
   source?: string;
   medium?: string;
   campaign?: string;
