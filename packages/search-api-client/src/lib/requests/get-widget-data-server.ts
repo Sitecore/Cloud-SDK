@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { SearchEndpointResponse } from './post-request';
 import type { WidgetRequestData } from '../request-entities/widgets/widget-request-data';
-import { getSettings } from '../server/init';
+import { getSettings } from '../initializer/server/initializer';
 import { sendPostRequest } from './post-request';
 
 /**

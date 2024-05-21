@@ -4,7 +4,7 @@ import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-dec
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest, res: NextResponse) {
   const searchParams = req.nextUrl.searchParams;
 
   const testID = searchParams.get('testID');
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
   decorateFetch(testID as string);
   switch (testID) {
     case 'getWidgetDataFromAPIWithValidPayload':
-      init({
+      await init(req, res, {
         siteName: 'TestSite',
         sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
         sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',

@@ -1,5 +1,20 @@
 Feature: Request widget data from Search REST API
 
+Scenario: Developer requests widget data from Middleware with a valid payload
+    Given the '/get-widget-data' page is loaded with 'testID' name and 'getWidgetDataFromMiddlewareWithValidPayload' value query parameter
+    Then the request with id 'getWidgetDataFromMiddlewareWithValidPayload' will contain:
+    """
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
+    """
+
+Scenario: Developer requests widget data from API with a valid payload
+    Given the '/get-widget-data' page is loaded
+    And the 'getWidgetDataFromAPIWithValidPayload' button is clicked
+    Then the request with id 'getWidgetDataFromAPIWithValidPayload' will contain:
+    """
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
+    """
+    
 Scenario Outline: Developer requests widget data from browser with a valid payload
   Given the '/get-widget-data' page is loaded
   When the widget item parameters are:
@@ -38,6 +53,7 @@ Scenario Outline: Developer requests widget data from browser with a valid paylo
     | [{"rfkId":"rfkid_7","entity":"content", "search": {"offset": 5,"content": {"fields": ["name"]}, "query": {"keyphrase": "Sitecore Ireland", "operator": "and"}}}]        | [{"rfkId":"rfkid_7","entity":"content","search": {"offset": 5,"content": {"fields": ["name"]}, "query": {"keyphrase": "Sitecore Ireland", "operator": "and"}}}]   | 200         | [{"rfkId":"rfkid_7","entity":"content","search": {"limit":10, "offset": 5,"content": 10, "query": {"keyphrase": "Sitecore Ireland", "operator": "and"}}}]|
     
     
+
 Scenario Outline: Developer requests widget data from browser without widget items
   Given the '/get-widget-data' page is loaded
   When the widget item parameters are:
@@ -60,19 +76,7 @@ Scenario Outline: Developer requests widget data from browser without widget ite
     
   
 
-Scenario: Developer requests widget data from Middleware with a valid payload
-    Given the '/get-widget-data' page is loaded with 'testID' name and 'getWidgetDataFromMiddlewareWithValidPayload' value query parameter
-    Then the request with id 'getWidgetDataFromMiddlewareWithValidPayload' will contain:
-    """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
-    """
 
-Scenario: Developer requests widget data from API with a valid payload
-    Given the '/get-widget-data' page is loaded
-    And the 'getWidgetDataFromAPIWithValidPayload' button is clicked
-    Then the request with id 'getWidgetDataFromAPIWithValidPayload' will contain:
-    """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
-    """
+
 
         

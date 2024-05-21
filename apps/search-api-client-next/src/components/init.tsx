@@ -1,22 +1,35 @@
 'use client';
 
+import type { BrowserSettings } from '@sitecore-cloudsdk/search-api-client/browser';
 import { init } from '@sitecore-cloudsdk/search-api-client/browser';
 import { useEffect } from 'react';
 
-export default function Init() {
+interface InitProps {
+  enableBrowserCookie: boolean;
+}
+
+export default function Init({ enableBrowserCookie }: InitProps) {
   useEffect(() => {
-    const settings = {
+    const settings: BrowserSettings = {
+      enableBrowserCookie,
       siteName: 'TestSite',
-      sitecoreEdgeContextId: 'abc123',
-      userId: 'user123'
+      userId: 'user123',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string
     };
-    init(settings);
+    async function initSearch() {
+      await init(settings);
+    }
+    initSearch();
   }, []);
 
   return (
-    <div>
+    <div style={{ border: '2px solid black', padding: 16, margin: 16, display: 'inline-block' }}>
       <h1>
-        <span> This is a client-side component that initiliazes the search-api-client </span>
+        <span>
+          {' '}
+          search-api-client <code>init()</code> with{' '}
+          <code>enableBrowserCookie={JSON.stringify(enableBrowserCookie)}</code>
+        </span>
       </h1>
     </div>
   );

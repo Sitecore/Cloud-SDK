@@ -5,11 +5,13 @@ import type { BasicSettings } from '@sitecore-cloudsdk/core';
  */
 export interface BrowserSettings extends BasicSettings {
   userId?: string;
+  enableBrowserCookie?: boolean;
 }
 
 /**
  * Represents the server-specific configuration settings for the search-api-client.
  */
-export interface ServerSettings extends BrowserSettings {
+export interface ServerSettings extends BasicSettings {
   userId: string;
+  enableServerCookie?: boolean;
 }

@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 export enum ErrorMessages {
+  IE_0001 = '[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.',
   IE_0009 = '[IE-0009] You must first initialize the "search-api-client/browser" package. Run the "init" function.',
   IE_0010 = '[IE-0010] You must first initialize the "search-api-client/server" package. Run the "init" function.',
   IV_0007 = '[IV-0007] Incorrect value for "limit". Set the value to an integer between 1 and 100 inclusive.',

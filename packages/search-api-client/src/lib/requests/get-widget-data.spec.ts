@@ -1,10 +1,10 @@
-import * as getSettingsModule from '../browser/init';
+import * as getSettingsModule from '../initializer/browser/initializer';
 import * as sendPostRequestModule from './post-request';
 
 import { WidgetItem } from '../request-entities/widgets/widget-item';
 import { WidgetRequestData } from '../request-entities/widgets/widget-request-data';
 import { getWidgetData } from './get-widget-data';
-import { init } from '../browser/init';
+import { init } from '../initializer/browser/initializer';
 
 describe('getWidgetData function', () => {
   const settings = {

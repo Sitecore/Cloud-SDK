@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-export * from './lib/browser/init';
+export { getSettings, init } from './lib/initializer/browser/initializer';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { getWidgetData } from './lib/requests/get-widget-data';

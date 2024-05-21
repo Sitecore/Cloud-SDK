@@ -9,6 +9,5 @@ import { validateSettings as validateCoreSettings } from '@sitecore-cloudsdk/cor
  */
 export function validateSettings(settings: BrowserSettings) {
   validateCoreSettings(settings);
-
   if (typeof window === 'undefined' && !settings.userId) throw new Error(ErrorMessages.MV_0005);
 }

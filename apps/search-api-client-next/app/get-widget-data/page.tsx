@@ -1,8 +1,28 @@
 'use client';
-import { WidgetItem, WidgetRequestData, getWidgetData, init } from '@sitecore-cloudsdk/search-api-client/browser';
-import { useState } from 'react';
+import {
+  type BrowserSettings,
+  WidgetItem,
+  WidgetRequestData,
+  getWidgetData,
+  init
+} from '@sitecore-cloudsdk/search-api-client/browser';
+import { useEffect, useState } from 'react';
 
 export default function GetWidgetData() {
+  useEffect(() => {
+    const settings: BrowserSettings = {
+      enableBrowserCookie: true,
+      siteName: 'TestSite',
+      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+      userId: 'test'
+    };
+    async function initSearch() {
+      await init(settings);
+    }
+    initSearch();
+  }, []);
+
   const [inputData, setinputData] = useState(
     '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0}}]}'
   );
@@ -15,12 +35,6 @@ export default function GetWidgetData() {
     const parsedInputData = JSON.parse(inputData);
 
     if (!parsedInputData) return;
-
-    init({
-      siteName: 'TestSite',
-      sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io'
-    });
 
     const widgets = !parsedInputData.items
       ? []
