@@ -1,5 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { CampaignData, ContextDTO, ContextData, LocaleData, PageData, StoreData } from './interfaces';
+import type {
+  CampaignData,
+  ContextDTO,
+  ContextData,
+  GeoData,
+  LocaleData,
+  LocationData,
+  PageData,
+  StoreData
+} from './interfaces';
 import { ErrorMessages } from '../../const';
 import { isValidHttpURL } from '@sitecore-cloudsdk/utils';
 
@@ -13,6 +22,7 @@ export class Context {
   private _locale?: LocaleData;
   private _page?: PageData;
   private _store?: StoreData;
+  private _geo?: GeoData;
 
   /**
    * @param context - The context object.
@@ -25,6 +35,7 @@ export class Context {
     this._locale = context.locale;
     this._page = context.page;
     this._store = context.store;
+    this._geo = context.geo;
   }
 
   /**
@@ -46,12 +57,30 @@ export class Context {
   }
 
   /**
+   * Sets the geo data.
+   * @param geo - The new value to set.
+   *
+   */
+  set geo(geo: GeoData) {
+    if (geo.location) this._validateLocation(geo.location);
+
+    this._geo = geo;
+  }
+
+  /**
    * Sets the campaign data.
    * @param campaign - The new value to set.
    *
    */
   set campaign(campaign: CampaignData) {
     this._campaign = campaign;
+  }
+
+  /**
+   * Sets the geo data to undefined
+   */
+  removeGeo() {
+    this._geo = undefined;
   }
 
   /**
@@ -87,6 +116,14 @@ export class Context {
 
     if (context.store && ((context.store.groupId && !context.store.id) || (!context.store.groupId && context.store.id)))
       throw new Error(ErrorMessages.MV_0009);
+
+    if (context.geo && context.geo.location) this._validateLocation(context.geo.location);
+  }
+
+  private _validateLocation(location: LocationData) {
+    if (location.latitude > 90 || location.latitude < -90) throw new Error(ErrorMessages.IV_0012);
+
+    if (location.longitude > 180 || location.longitude < -180) throw new Error(ErrorMessages.IV_0013);
   }
 
   /**
@@ -103,6 +140,17 @@ export class Context {
         id: this._store && this._store.id
       }
     };
+
+    if (this._geo?.ip)
+      dto.geo = {
+        ip: this._geo.ip
+      };
+
+    if (this._geo?.location)
+      dto.geo = {
+        ...dto.geo,
+        location: { lat: this._geo.location.latitude, lon: this._geo.location.longitude }
+      };
 
     if (this._campaign)
       dto.campaign = {

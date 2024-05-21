@@ -5,6 +5,8 @@ export enum ErrorMessages {
   IV_0007 = '[IV-0007] Incorrect value for "limit". Set the value to an integer between 1 and 100 inclusive.',
   IV_0008 = '[IV-0008] Incorrect value for "offset". Set the value to an integer greater than or equal to 0.',
   IV_0009 = '[IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.',
+  IV_0012 = '[IV-0012] Incorrect value for latitude. Set the value to an integer or decimal between -180.000000 and 180.000000 inclusive.',
+  IV_0013 = '[IV-0013] Incorrect value for longitude. Set the value to an integer or decimal between -90.000000 and 90.000000 inclusive.',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
   MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',

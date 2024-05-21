@@ -7,5 +7,6 @@ export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 
 export type { ServerSettings } from './lib/types';
+export type { GeoData } from './lib/request-entities/context/interfaces';
 
 export { Context } from './lib/request-entities/context/context';

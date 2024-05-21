@@ -20,9 +20,126 @@ describe('context request data creation', () => {
       id: '123'
     }
   };
-
   beforeEach(() => {
     contextInstance = new Context({});
+  });
+
+  describe('geo', () => {
+    it(`should throw an error if invalid longitude`, () => {
+      expect(() => {
+        new Context({ geo: { location: { latitude: 0, longitude: -999 } } });
+      }).toThrow(ErrorMessages.IV_0013);
+    });
+
+    it(`should throw an error if invalid latitude`, () => {
+      expect(() => {
+        new Context({ geo: { location: { latitude: -999, longitude: 0 } } });
+      }).toThrow(ErrorMessages.IV_0012);
+    });
+
+    it(`should be set when used in during creation`, () => {
+      const expected = { ip: '1.1.1.1', location: { lat: -40, lon: 40 } };
+
+      const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
+      const result = context.toDTO().geo;
+
+      expect(result).toEqual(expected);
+    });
+    it(`should set geo to undefined when removeGeo is called`, () => {
+      const context = new Context({});
+      context.geo = { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } };
+
+      context.removeGeo();
+
+      const result = context.toDTO().geo;
+
+      expect(result).toBeUndefined();
+    });
+
+    it(`should update geo`, () => {
+      const geo = { ip: '2.2.2.2', location: { lat: 20, lon: 20 } };
+
+      const context = new Context({});
+      context.geo = { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } };
+      context.geo = { ip: '2.2.2.2', location: { latitude: 20, longitude: 20 } };
+
+      const result = context.toDTO().geo;
+
+      expect(result).toEqual(geo);
+    });
+
+    describe('location', () => {
+      let context: Context;
+      const invalidLons = [-190, 190];
+      const validLons = [-60, 60, -60.15, 60.15, -180, 180];
+      const invalidLats = [-100, 100];
+      const validLats = [-60, 60, -60.15, 60.15, 90, -90];
+
+      beforeEach(() => {
+        context = new Context({});
+      });
+
+      afterEach(() => {
+        jest.resetAllMocks();
+      });
+
+      it(`should be undefined if not set`, () => {
+        const result = context.toDTO().geo?.location;
+
+        expect(result).toBeUndefined();
+      });
+
+      it.each(validLons)(`should be present in the dto`, (lon) => {
+        const expected = { lat: 89.1234567, lon };
+
+        context.geo = { location: { latitude: 89.1234567, longitude: lon } };
+        const result = context.toDTO().geo?.location;
+
+        expect(result).toEqual(expected);
+      });
+      it.each(invalidLons)(`should throw error if lon is invalid`, (lon) => {
+        expect(() => {
+          context.geo = { location: { latitude: 60.11, longitude: lon } };
+        }).toThrow(ErrorMessages.IV_0013);
+      });
+
+      it.each(validLats)(`should be present in the dto`, (lat) => {
+        const expected = { lat, lon: 100 };
+
+        context.geo = { location: { latitude: lat, longitude: 100 } };
+        const result = context.toDTO().geo?.location;
+
+        expect(result).toEqual(expected);
+      });
+      it.each(invalidLats)(`should throw error if lat is invalid`, (lat) => {
+        expect(() => {
+          context.geo = { location: { latitude: lat, longitude: 100 } };
+        }).toThrow(ErrorMessages.IV_0012);
+      });
+    });
+
+    describe('ip', () => {
+      let context: Context;
+
+      beforeEach(() => {
+        context = new Context({});
+      });
+
+      it(`should be undefined if not set`, () => {
+        const result = context.toDTO().geo?.ip;
+
+        expect(result).toBeUndefined();
+      });
+
+      it(`should be present in the dto`, () => {
+        const ip = '192.168.1.1';
+        context.geo = { ip };
+
+        const result = context.toDTO().geo?.ip;
+
+        expect(result).toEqual(ip);
+      });
+    });
   });
 
   describe('campaign', () => {

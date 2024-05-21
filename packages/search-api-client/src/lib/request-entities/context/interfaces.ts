@@ -20,6 +20,7 @@ export interface ContextData {
   page?: PageData;
   store?: StoreData;
   campaign?: CampaignData;
+  geo?: GeoData;
 }
 
 export interface LocaleDTO {
@@ -43,6 +44,7 @@ export interface ContextDTO {
   page?: PageDTO;
   store?: StoreDTO;
   campaign?: CampaignDTO;
+  geo?: GeoDTO;
 }
 
 export interface CampaignData {
@@ -59,4 +61,22 @@ export interface CampaignDTO {
   utm_campaign?: string;
   utm_term?: string;
   utm_content?: string;
+}
+
+export interface LocationData {
+  latitude: number;
+  longitude: number;
+}
+
+interface GeoDTO {
+  ip?: string;
+  location?: {
+    lat: number;
+    lon: number;
+  };
+}
+
+export interface GeoData {
+  ip?: string;
+  location?: LocationData;
 }
