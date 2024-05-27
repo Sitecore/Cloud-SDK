@@ -19,6 +19,10 @@
     "build:cjs": "tsc -b tsconfig.cjs.json",
     "build:es": "tsc -b ."
   },
+  "dependencies": {
+    "@sitecore-cloudsdk/core": "^0.3.0",
+    "@sitecore-cloudsdk/utils": "^0.3.0"
+  },
   "files": [
     "dist",
     "README.md",

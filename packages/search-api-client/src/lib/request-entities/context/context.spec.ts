@@ -1,5 +1,16 @@
+import * as utils from '@sitecore-cloudsdk/utils';
 import { Context } from './context';
 import { ErrorMessages } from '../../const';
+
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
+
+  return {
+    __esModule: true,
+    ...originalModule,
+    isValidLocation: jest.fn()
+  };
+});
 
 describe('context request data creation', () => {
   let contextInstance: Context;
@@ -25,19 +36,29 @@ describe('context request data creation', () => {
   });
 
   describe('geo', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it(`should throw an error if invalid longitude`, () => {
+      jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: false });
+
       expect(() => {
         new Context({ geo: { location: { latitude: 0, longitude: -999 } } });
       }).toThrow(ErrorMessages.IV_0013);
     });
 
     it(`should throw an error if invalid latitude`, () => {
+      jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: false, longitude: true });
+
       expect(() => {
         new Context({ geo: { location: { latitude: -999, longitude: 0 } } });
       }).toThrow(ErrorMessages.IV_0012);
     });
 
     it(`should be set when used in during creation`, () => {
+      jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: true });
+
       const expected = { ip: '1.1.1.1', location: { lat: -40, lon: 40 } };
 
       const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
@@ -46,6 +67,8 @@ describe('context request data creation', () => {
       expect(result).toEqual(expected);
     });
     it(`should set geo to undefined when removeGeo is called`, () => {
+      jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: true });
+
       const context = new Context({});
       context.geo = { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } };
 
@@ -57,6 +80,8 @@ describe('context request data creation', () => {
     });
 
     it(`should update geo`, () => {
+      jest.spyOn(utils, 'isValidLocation').mockReturnValue({ latitude: true, longitude: true });
+
       const geo = { ip: '2.2.2.2', location: { lat: 20, lon: 20 } };
 
       const context = new Context({});
@@ -66,6 +91,20 @@ describe('context request data creation', () => {
       const result = context.toDTO().geo;
 
       expect(result).toEqual(geo);
+    });
+
+    it(`should update geo without location`, () => {
+      const isValidLocationSpy = jest
+        .spyOn(utils, 'isValidLocation')
+        .mockReturnValue({ latitude: true, longitude: true });
+
+      const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
+      context.geo = { ip: '2.2.2.2' };
+
+      const result = context.toDTO().geo?.location;
+
+      expect(result).toBeUndefined();
+      expect(isValidLocationSpy).toHaveBeenCalledTimes(1);
     });
 
     describe('location', () => {
@@ -80,7 +119,7 @@ describe('context request data creation', () => {
       });
 
       afterEach(() => {
-        jest.resetAllMocks();
+        jest.clearAllMocks();
       });
 
       it(`should be undefined if not set`, () => {
@@ -90,6 +129,8 @@ describe('context request data creation', () => {
       });
 
       it.each(validLons)(`should be present in the dto`, (lon) => {
+        jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: true });
+
         const expected = { lat: 89.1234567, lon };
 
         context.geo = { location: { latitude: 89.1234567, longitude: lon } };
@@ -97,13 +138,18 @@ describe('context request data creation', () => {
 
         expect(result).toEqual(expected);
       });
+
       it.each(invalidLons)(`should throw error if lon is invalid`, (lon) => {
+        jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: false });
+
         expect(() => {
           context.geo = { location: { latitude: 60.11, longitude: lon } };
         }).toThrow(ErrorMessages.IV_0013);
       });
 
       it.each(validLats)(`should be present in the dto`, (lat) => {
+        jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: true, longitude: true });
+
         const expected = { lat, lon: 100 };
 
         context.geo = { location: { latitude: lat, longitude: 100 } };
@@ -112,6 +158,8 @@ describe('context request data creation', () => {
         expect(result).toEqual(expected);
       });
       it.each(invalidLats)(`should throw error if lat is invalid`, (lat) => {
+        jest.spyOn(utils, 'isValidLocation').mockReturnValueOnce({ latitude: false, longitude: true });
+
         expect(() => {
           context.geo = { location: { latitude: lat, longitude: 100 } };
         }).toThrow(ErrorMessages.IV_0012);

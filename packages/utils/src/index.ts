@@ -19,6 +19,7 @@ export * from './lib/console/colors';
 export { normalizeHeaders } from './lib/converters/normalizeHeaders';
 export { ErrorMessages } from './lib/consts';
 export { isValidHttpURL } from './lib/validators/is-valid-http-url';
+export { isValidLocation } from './lib/validators/is-valid-location';
 
 export type {
   Request,

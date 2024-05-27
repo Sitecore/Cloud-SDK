@@ -9,8 +9,8 @@ import type {
   PageData,
   StoreData
 } from './interfaces';
+import { isValidHttpURL, isValidLocation } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../../const';
-import { isValidHttpURL } from '@sitecore-cloudsdk/utils';
 
 /**
  * Create context object.
@@ -121,9 +121,11 @@ export class Context {
   }
 
   private _validateLocation(location: LocationData) {
-    if (location.latitude > 90 || location.latitude < -90) throw new Error(ErrorMessages.IV_0012);
+    const result = isValidLocation(location);
 
-    if (location.longitude > 180 || location.longitude < -180) throw new Error(ErrorMessages.IV_0013);
+    if (!result.latitude) throw new Error(ErrorMessages.IV_0012);
+
+    if (!result.longitude) throw new Error(ErrorMessages.IV_0013);
   }
 
   /**

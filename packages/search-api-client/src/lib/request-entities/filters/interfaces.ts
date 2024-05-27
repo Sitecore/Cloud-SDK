@@ -1,8 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { ComparisonFilter } from './comparison-filter';
-import type { LogicalFilter } from './logical-filter';
-
-export type Filter = LogicalFilters | ComparisonFilter;
+import type { BaseFilter } from './base-filter';
+import type { LocationData } from '../context/interfaces';
 
 export interface ComparisonFilterDTO {
   name: string;
@@ -15,6 +13,22 @@ export interface LogicalFilterDTO {
   type: string;
 }
 
+export interface GeoFilterData {
+  distance?: DistanceString;
+  location?: LocationData;
+}
+
+export interface GeoFilterDTO {
+  distance?: DistanceString;
+  name: string;
+  type: GeoOperator;
+  lat?: number;
+  lon?: number;
+}
+
+export type DistanceString = `${number}${DistanceUnits}`;
+type DistanceUnits = 'in' | 'ft' | 'yd' | 'nmi' | 'km' | 'm' | 'cm' | 'mm';
+
 export interface NotFilterDTO {
   type: string;
   filter: ComparisonFilterDTO | LogicalFilterDTO;
@@ -22,15 +36,14 @@ export interface NotFilterDTO {
 
 export type ComparisonOperators = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 type LogicalOperators = 'and' | 'or' | 'not';
+export type GeoOperator = 'geoDistance';
 
-export type Operators = ComparisonOperators | LogicalOperators;
-
-type LogicalFilters = LogicalFilter<'and' | 'not' | 'or'>;
+export type Operators = ComparisonOperators | LogicalOperators | GeoOperator;
 
 export interface LogicalFilterValues {
-  not: LogicalFilters | ComparisonFilter;
-  or: ArrayOfAtleastTwo<LogicalFilters | ComparisonFilter>;
-  and: ArrayOfAtleastTwo<LogicalFilters | ComparisonFilter>;
+  not: BaseFilter;
+  or: ArrayOfAtleastTwo<BaseFilter>;
+  and: ArrayOfAtleastTwo<BaseFilter>;
 }
 
 export type ArrayOfAtleastTwo<T> = [T, T, ...T[]];

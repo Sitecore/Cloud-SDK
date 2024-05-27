@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Filter, LogicalFilterValues, PickLogicalDTO } from './interfaces';
+import type { LogicalFilterValues, PickLogicalDTO } from './interfaces';
 import { BaseFilter } from './base-filter';
 
 /**
@@ -20,12 +20,12 @@ export class LogicalFilter<T extends keyof LogicalFilterValues> extends BaseFilt
   toDTO(): PickLogicalDTO<T> {
     if (this.operator === 'not')
       return {
-        filter: (this.value as Filter).toDTO(),
+        filter: (this.value as BaseFilter).toDTO(),
         type: this.operator
       } as PickLogicalDTO<T>;
 
     return {
-      filters: (this.value as Array<Filter>).map((filter) => filter.toDTO()),
+      filters: (this.value as Array<BaseFilter>).map((filter) => filter.toDTO()),
       type: this.operator
     } as PickLogicalDTO<T>;
   }
