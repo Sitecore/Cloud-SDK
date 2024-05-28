@@ -74,8 +74,33 @@ Scenario Outline: Developer requests widget data from browser without widget ite
     | [{"rfkId":"rfkid_7","entity":"content", "search": {"query": {"keyphrase": "aaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaaaaaaaa aaaaaaaaaaaaaaaaaaaa"}}}]         | [IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.         |
     | [{"rfkId":"rfkid_7","entity":"content", "search": {"query": {"keyphrase": ""}}}]         | [IV-0009] Incorrect value for "​keyphrase"​​. Set the value to a string between 1 and 100 characters inclusive.         |
     
-  
 
+Scenario Outline: Developer requests widget data with context object from browser with a valid payload
+  Given the '/get-widget-data' page is loaded
+  When the widget item parameters are:
+  """
+      { 
+          "items": <items>
+      }
+  """
+  And the context parameters are:
+    """
+      { 
+          "context": <context>
+      }
+  """
+  And the 'getWidgetData' button is clicked
+  Then the widget data request is sent with parameters:
+  """
+      {
+          "items": <items>,
+          "context": <context>
+      }
+  """
+  And Search REST API responds with status code '<status_code>'
+  Examples:
+    | items                                                                           | context                                          | status_code |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"}}      | 200         |
 
 
 

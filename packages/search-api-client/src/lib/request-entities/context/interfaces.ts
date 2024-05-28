@@ -11,8 +11,8 @@ export interface PageData {
 }
 
 export interface StoreData {
-  groupId?: string;
-  id?: string;
+  groupId: string;
+  id: string;
 }
 
 export interface ContextData {
@@ -40,11 +40,13 @@ export interface StoreDTO {
 }
 
 export interface ContextDTO {
-  locale?: LocaleDTO;
-  page?: PageDTO;
-  store?: StoreDTO;
-  campaign?: CampaignDTO;
-  geo?: GeoDTO;
+  context: {
+    locale?: LocaleDTO;
+    page?: PageDTO;
+    store?: StoreDTO;
+    campaign?: CampaignDTO;
+    geo?: GeoDTO;
+  };
 }
 
 export interface CampaignData {

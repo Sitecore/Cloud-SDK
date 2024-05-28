@@ -1,6 +1,7 @@
 'use client';
 import {
   type BrowserSettings,
+  Context,
   WidgetItem,
   WidgetRequestData,
   getWidgetData,
@@ -23,22 +24,27 @@ export default function GetWidgetData() {
     initSearch();
   }, []);
 
-  const [inputData, setinputData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0}}]}'
+  const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
+    '{"items":[{"entity":"content","rfkId":"rfkid_7","search":{"limit":10,"offset":0}}]}'
   );
+
+  const [inputContextData, setInputContextData] = useState('{"context":{"locale":{"country":"us","language":"en"}}}');
 
   const getWidgetDataFromAPIWithValidPayload = async () => {
     await fetch('/api/get-widget-data?testID=getWidgetDataFromAPIWithValidPayload');
   };
 
   const requestWidgetData = async () => {
-    const parsedInputData = JSON.parse(inputData);
+    let contextRequestData;
 
-    if (!parsedInputData) return;
+    const parsedInputWidgetItemsData = JSON.parse(inputWidgetItemsData);
+    const parsedInputContextData = JSON.parse(inputContextData);
 
-    const widgets = !parsedInputData.items
+    if (!parsedInputWidgetItemsData) return;
+
+    const widgets = !parsedInputWidgetItemsData.items
       ? []
-      : parsedInputData.items.map((item: any) => {
+      : parsedInputWidgetItemsData.items.map((item: any) => {
           const widget = new WidgetItem(item.entity, item.rfkId);
 
           if (item.search?.limit) widget.limit = item.search.limit;
@@ -54,7 +60,9 @@ export default function GetWidgetData() {
 
     const widgetRequestData = new WidgetRequestData(widgets);
 
-    await getWidgetData(widgetRequestData);
+    if (parsedInputContextData?.context) contextRequestData = new Context(parsedInputContextData.context);
+
+    await getWidgetData(widgetRequestData, contextRequestData);
   };
 
   return (
@@ -66,11 +74,23 @@ export default function GetWidgetData() {
         onClick={requestWidgetData}>
         Get Widget Data
       </button>
+      <br />
+      Widget items data:
       <input
+        style={{ width: '800px' }}
         type='text'
-        value={inputData}
-        onChange={(e) => setinputData(e.target.value)}
+        value={inputWidgetItemsData}
+        onChange={(e) => setInputWidgetItemsData(e.target.value)}
         data-testid='widgetItemsInput'
+      />
+      <br />
+      Context data:
+      <input
+        style={{ width: '800px' }}
+        type='text'
+        value={inputContextData}
+        onChange={(e) => setInputContextData(e.target.value)}
+        data-testid='contextInput'
       />
       <br />
       <button

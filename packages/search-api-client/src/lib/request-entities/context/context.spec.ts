@@ -62,7 +62,7 @@ describe('context request data creation', () => {
       const expected = { ip: '1.1.1.1', location: { lat: -40, lon: 40 } };
 
       const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
-      const result = context.toDTO().geo;
+      const result = context.toDTO().context.geo;
 
       expect(result).toEqual(expected);
     });
@@ -74,7 +74,7 @@ describe('context request data creation', () => {
 
       context.removeGeo();
 
-      const result = context.toDTO().geo;
+      const result = context.toDTO().context.geo;
 
       expect(result).toBeUndefined();
     });
@@ -88,7 +88,7 @@ describe('context request data creation', () => {
       context.geo = { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } };
       context.geo = { ip: '2.2.2.2', location: { latitude: 20, longitude: 20 } };
 
-      const result = context.toDTO().geo;
+      const result = context.toDTO().context.geo;
 
       expect(result).toEqual(geo);
     });
@@ -101,7 +101,7 @@ describe('context request data creation', () => {
       const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
       context.geo = { ip: '2.2.2.2' };
 
-      const result = context.toDTO().geo?.location;
+      const result = context.toDTO().context.geo?.location;
 
       expect(result).toBeUndefined();
       expect(isValidLocationSpy).toHaveBeenCalledTimes(1);
@@ -123,7 +123,7 @@ describe('context request data creation', () => {
       });
 
       it(`should be undefined if not set`, () => {
-        const result = context.toDTO().geo?.location;
+        const result = context.toDTO().context.geo?.location;
 
         expect(result).toBeUndefined();
       });
@@ -134,7 +134,7 @@ describe('context request data creation', () => {
         const expected = { lat: 89.1234567, lon };
 
         context.geo = { location: { latitude: 89.1234567, longitude: lon } };
-        const result = context.toDTO().geo?.location;
+        const result = context.toDTO().context.geo?.location;
 
         expect(result).toEqual(expected);
       });
@@ -153,7 +153,7 @@ describe('context request data creation', () => {
         const expected = { lat, lon: 100 };
 
         context.geo = { location: { latitude: lat, longitude: 100 } };
-        const result = context.toDTO().geo?.location;
+        const result = context.toDTO().context.geo?.location;
 
         expect(result).toEqual(expected);
       });
@@ -174,7 +174,7 @@ describe('context request data creation', () => {
       });
 
       it(`should be undefined if not set`, () => {
-        const result = context.toDTO().geo?.ip;
+        const result = context.toDTO().context.geo?.ip;
 
         expect(result).toBeUndefined();
       });
@@ -183,7 +183,7 @@ describe('context request data creation', () => {
         const ip = '192.168.1.1';
         context.geo = { ip };
 
-        const result = context.toDTO().geo?.ip;
+        const result = context.toDTO().context.geo?.ip;
 
         expect(result).toEqual(ip);
       });
@@ -198,7 +198,7 @@ describe('context request data creation', () => {
     it(`should be present in dto if at least one attribute is set`, () => {
       contextInstance.campaign = { campaign: 'campaign' };
 
-      expect(contextInstance.toDTO().campaign).toBeDefined();
+      expect(contextInstance.toDTO().context.campaign).toBeDefined();
     });
 
     it(`should include all set attributes in the dto`, () => {
@@ -218,7 +218,7 @@ describe('context request data creation', () => {
         term: 'term'
       };
 
-      const result = contextInstance.toDTO().campaign;
+      const result = contextInstance.toDTO().context.campaign;
 
       expect(result).toStrictEqual(expectedDTO);
     });
@@ -234,7 +234,29 @@ describe('context request data creation', () => {
 
       contextInstance.removeCampaign();
 
-      const result = contextInstance.toDTO().campaign;
+      const result = contextInstance.toDTO().context.campaign;
+
+      expect(result).toBeUndefined();
+    });
+  });
+
+  describe('store', () => {
+    it(`should be undefined if not set`, () => {
+      expect(contextInstance.store).toBeUndefined();
+    });
+
+    it(`should be present in dto if at least one attribute is set`, () => {
+      contextInstance.store = { groupId: '123', id: '2' };
+
+      expect(contextInstance.toDTO().context.store).toBeDefined();
+    });
+
+    it(`should set the store to undefined when removeStore is called`, () => {
+      contextInstance.store = { groupId: '123', id: '2' };
+
+      contextInstance.removeStore();
+
+      const result = contextInstance.toDTO().context.store;
 
       expect(result).toBeUndefined();
     });
@@ -248,23 +270,23 @@ describe('context request data creation', () => {
     it(`should locale object be present in dto if both attributes are set`, () => {
       contextInstance.locale = { country: 'US', language: 'us' };
 
-      expect(contextInstance.toDTO().locale).toBeDefined();
+      expect(contextInstance.toDTO().context.locale).toBeDefined();
     });
 
     it('should update locale object when country property is valid', () => {
       const newContext = new Context(context);
       newContext.locale = { country: 'EN', language: 'us' };
 
-      expect(newContext.toDTO().locale?.country).toBe('EN');
-      expect(newContext.toDTO().locale?.language).toBe('us');
+      expect(newContext.toDTO().context.locale?.country).toBe('EN');
+      expect(newContext.toDTO().context.locale?.language).toBe('us');
     });
 
     it('should update locale object when language property is valid', () => {
       const newContext = new Context(context);
       newContext.locale = { country: 'EN', language: 'gr' };
 
-      expect(newContext.toDTO().locale?.country).toBe('EN');
-      expect(newContext.toDTO().locale?.language).toBe('gr');
+      expect(newContext.toDTO().context.locale?.country).toBe('EN');
+      expect(newContext.toDTO().context.locale?.language).toBe('gr');
     });
 
     it('should throw an error when locale object is updated with invalid country information', () => {
@@ -283,7 +305,7 @@ describe('context request data creation', () => {
       contextInstance.locale = { country: 'en', language: 'en' };
       contextInstance.removeLocale();
 
-      const result = contextInstance.toDTO().locale;
+      const result = contextInstance.toDTO().context.locale;
 
       expect(result).toBeUndefined();
     });
@@ -402,25 +424,18 @@ describe('context request data creation', () => {
       expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0009);
       expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0009);
     });
-
-    it(`should not throw an error if the 'store' object is empty`, () => {
-      const validContext = {
-        ...context,
-        store: {}
-      };
-
-      expect(() => new Context(validContext)).not.toThrow();
-    });
   });
 
   describe('mapper', () => {
     it('should return the context object mapped', () => {
       const expected = {
-        ...context,
-        store: {
-          // eslint-disable-next-line @typescript-eslint/naming-convention
-          group_id: '1234',
-          id: '123'
+        context: {
+          ...context,
+          store: {
+            // eslint-disable-next-line @typescript-eslint/naming-convention
+            group_id: '1234',
+            id: '123'
+          }
         }
       };
       const result = new Context(context).toDTO();

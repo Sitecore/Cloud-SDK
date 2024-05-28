@@ -41,6 +41,16 @@ defineStep('the widget item parameters are:', (params: string) => {
   }
 });
 
+defineStep('the context parameters are:', (params: string) => {
+  const parameters = JSON.parse(params);
+  if (parameters?.context) {
+    cy.get('[data-testid="contextInput"]').clear();
+    cy.get('[data-testid="contextInput"]').type(params, {
+      parseSpecialCharSequences: false
+    });
+  }
+});
+
 defineStep('the widget data request is sent with parameters:', (params: string) => {
   const parameters = JSON.parse(params);
   const length = parameters.items.length;
@@ -61,6 +71,8 @@ defineStep('the widget data request is sent with parameters:', (params: string) 
       expect(reqEntity).to.equal(entity);
       expect(search).to.deep.equal(searchParam);
     }
+
+    if (parameters?.context?.locale) expect(request.body.context.locale).to.deep.equal(parameters.context.locale);
   });
 });
 

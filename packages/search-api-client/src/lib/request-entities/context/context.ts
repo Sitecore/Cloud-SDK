@@ -91,6 +91,22 @@ export class Context {
   }
 
   /**
+   * Sets the store data.
+   * @param store - The new value to set.
+   *
+   */
+  set store(store: StoreData) {
+    this._store = store;
+  }
+
+  /**
+   * Sets the store data to undefined
+   */
+  removeStore() {
+    this._store = undefined;
+  }
+
+  /**
    * Validate context locale object.
    */
   private _validateContextLocale(locale?: LocaleData): void {
@@ -135,27 +151,31 @@ export class Context {
   toDTO(): ContextDTO {
     /* eslint-disable @typescript-eslint/naming-convention */
     const dto: ContextDTO = {
-      locale: this._locale,
-      page: this._page,
-      store: {
-        group_id: this._store && this._store.groupId,
-        id: this._store && this._store.id
+      context: {
+        locale: this._locale,
+        page: this._page
       }
     };
 
+    if (this._store)
+      dto.context.store = {
+        group_id: this._store && this._store.groupId,
+        id: this._store && this._store.id
+      };
+
     if (this._geo?.ip)
-      dto.geo = {
+      dto.context.geo = {
         ip: this._geo.ip
       };
 
     if (this._geo?.location)
-      dto.geo = {
-        ...dto.geo,
+      dto.context.geo = {
+        ...dto.context.geo,
         location: { lat: this._geo.location.latitude, lon: this._geo.location.longitude }
       };
 
     if (this._campaign)
-      dto.campaign = {
+      dto.context.campaign = {
         utm_campaign: this._campaign.campaign,
         utm_content: this._campaign.content,
         utm_medium: this._campaign.medium,
