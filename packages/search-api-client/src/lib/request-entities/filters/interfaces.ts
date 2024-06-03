@@ -15,7 +15,7 @@ export interface ListFilterDTO {
 }
 
 export interface LogicalFilterDTO {
-  filters: ArrayOfAtleastTwo<ComparisonFilterDTO | LogicalFilterDTO | NotFilterDTO>;
+  filters: ArrayOfAtLeastTwo<ComparisonFilterDTO | LogicalFilterDTO | NotFilterDTO>;
   type: string;
 }
 
@@ -24,12 +24,25 @@ export interface GeoFilterData {
   location?: LocationData;
 }
 
+export type GeoWithinFilterData = ArrayOfAtLeastThree<LocationData>;
+
 export interface GeoFilterDTO {
   distance?: DistanceString;
   name: string;
   type: GeoOperator;
   lat?: number;
   lon?: number;
+}
+
+export interface LocationDTO {
+  lat: number;
+  lon: number;
+}
+
+export interface GeoWithinFilterDTO {
+  name: string;
+  type: GeoWithinOperator;
+  coordinates: ArrayOfAtLeastThree<LocationDTO>;
 }
 
 export type DistanceString = `${number}${DistanceUnits}`;
@@ -45,14 +58,16 @@ type LogicalOperators = 'and' | 'or' | 'not';
 export type ListOperators = 'allOf' | 'anyOf';
 
 export type GeoOperator = 'geoDistance';
+export type GeoWithinOperator = 'geoWithin';
 
-export type Operators = ComparisonOperators | LogicalOperators | GeoOperator | ListOperators;
+export type Operators = ComparisonOperators | LogicalOperators | GeoOperator | GeoWithinOperator | ListOperators;
 
 export interface LogicalFilterValues {
   not: BaseFilter;
-  or: ArrayOfAtleastTwo<BaseFilter>;
-  and: ArrayOfAtleastTwo<BaseFilter>;
+  or: ArrayOfAtLeastTwo<BaseFilter>;
+  and: ArrayOfAtLeastTwo<BaseFilter>;
 }
 
-export type ArrayOfAtleastTwo<T> = [T, T, ...T[]];
+export type ArrayOfAtLeastTwo<T> = [T, T, ...T[]];
+export type ArrayOfAtLeastThree<T> = [T, T, T, ...T[]];
 export type PickLogicalDTO<T extends keyof LogicalFilterValues> = T extends 'not' ? NotFilterDTO : LogicalFilterDTO;
