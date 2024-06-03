@@ -8,6 +8,12 @@ export interface ComparisonFilterDTO {
   value: unknown;
 }
 
+export interface ListFilterDTO {
+  name: string;
+  type: string;
+  values: unknown[];
+}
+
 export interface LogicalFilterDTO {
   filters: ArrayOfAtleastTwo<ComparisonFilterDTO | LogicalFilterDTO | NotFilterDTO>;
   type: string;
@@ -36,9 +42,11 @@ export interface NotFilterDTO {
 
 export type ComparisonOperators = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
 type LogicalOperators = 'and' | 'or' | 'not';
+export type ListOperators = 'allOf' | 'anyOf';
+
 export type GeoOperator = 'geoDistance';
 
-export type Operators = ComparisonOperators | LogicalOperators | GeoOperator;
+export type Operators = ComparisonOperators | LogicalOperators | GeoOperator | ListOperators;
 
 export interface LogicalFilterValues {
   not: BaseFilter;
