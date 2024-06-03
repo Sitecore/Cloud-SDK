@@ -103,6 +103,18 @@ export class WidgetItem {
   }
 
   /**
+   * Sets the group_by operator for search object of the WidgetItem.
+   * This method updates the `attribute` property of the search configuration within the WidgetItem instance.
+   * @param attribute - The attribute that specifies what search results are grouped by.
+   */
+  set groupBy(attribute: string) {
+    this._search = {
+      ...this._search,
+      groupBy: attribute
+    };
+  }
+
+  /**
    * Reset the search query object for the WidgetItem.
    * This method resets the `query` property of the search configuration within the WidgetItem instance.
    */
@@ -117,11 +129,23 @@ export class WidgetItem {
    * Maps the widget item to its DTO format.
    */
   toDTO(): WidgetItemDTO {
-    return {
+    const dto: WidgetItemDTO = {
       entity: this.entity,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      rfk_id: this.rfkId,
-      search: this._search
+      rfk_id: this.rfkId
     };
+
+    if (this._search?.offset === 0 || this._search?.offset) dto.search = { ...dto.search, offset: this._search.offset };
+    if (this._search?.limit) dto.search = { ...dto.search, limit: this._search.limit };
+    if (this._search?.content) dto.search = { ...dto.search, content: this._search.content };
+    if (this._search?.query?.keyphrase)
+      dto.search = { ...dto.search, query: { ...dto.search?.query, keyphrase: this._search.query.keyphrase } };
+    if (this._search?.query?.operator)
+      dto.search = {
+        ...dto.search,
+        query: { keyphrase: this._search.query.keyphrase, operator: this._search.query.operator }
+      };
+    if (this._search?.groupBy) dto.search = { ...dto.search, group_by: this._search.groupBy };
+
+    return dto;
   }
 }

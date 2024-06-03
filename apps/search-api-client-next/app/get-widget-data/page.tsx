@@ -34,6 +34,10 @@ export default function GetWidgetData() {
     await fetch('/api/get-widget-data?testID=getWidgetDataFromAPIWithValidPayload');
   };
 
+  const getWidgetDataFromAPIWithSearchPayload = async () => {
+    await fetch('/api/get-widget-data?testID=getWidgetDataFromAPIWithSearchPayload');
+  };
+
   const requestWidgetData = async () => {
     let contextRequestData;
 
@@ -98,6 +102,13 @@ export default function GetWidgetData() {
         data-testid='getWidgetDataFromAPIWithValidPayload'
         onClick={getWidgetDataFromAPIWithValidPayload}>
         Get Widget Data From API With Valid Data
+      </button>
+      <br />
+      <button
+        type='button'
+        data-testid='getWidgetDataFromAPIWithSearchPayload'
+        onClick={getWidgetDataFromAPIWithSearchPayload}>
+        Get Widget Data From API With Search Object
       </button>
     </div>
   );

@@ -15,6 +15,14 @@ Scenario: Developer requests widget data from API with a valid payload
         "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
     """
     
+Scenario: Developer requests widget data from API with valid search object payload
+    Given the '/get-widget-data' page is loaded
+    And the 'getWidgetDataFromAPIWithSearchPayload' button is clicked
+    Then the request with id 'getWidgetDataFromAPIWithSearchPayload' will contain:
+    """
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"group_by":"type"}}]}
+    """
+
 Scenario Outline: Developer requests widget data from browser with a valid payload
   Given the '/get-widget-data' page is loaded
   When the widget item parameters are:

@@ -5,8 +5,7 @@
  */
 export interface WidgetItemDTO {
   entity: string;
-  search?: WidgetItemSearch;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+  search?: WidgetItemSearchDTO;
   rfk_id: string;
 }
 
@@ -25,11 +24,26 @@ export type LogicalOperators = 'and' | 'or';
  * Represents a widget item search object.
  */
 export interface WidgetItemSearch {
-  content?: { fields?: string[] | unknown };
+  content?: { fields?: string[] };
   limit?: number;
   offset?: number;
   query?: {
     keyphrase: string;
     operator?: LogicalOperators;
   };
+  groupBy?: string;
+}
+
+/**
+ * Represents a widget item DTO search object.
+ */
+export interface WidgetItemSearchDTO {
+  content?: { fields?: string[] };
+  limit?: number;
+  offset?: number;
+  query?: {
+    keyphrase: string;
+    operator?: LogicalOperators;
+  };
+  group_by?: string;
 }

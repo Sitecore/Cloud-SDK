@@ -15,6 +15,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   let widgetRequestData: WidgetRequestData;
 
   decorateFetch(testID as string);
+
   switch (testID) {
     case 'getWidgetDataFromAPIWithValidPayload':
       await init(req, res, {
@@ -25,6 +26,20 @@ export async function GET(req: NextRequest, res: NextResponse) {
       });
 
       widget = new WidgetItem('content', 'rfkid_7');
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+      break;
+    case 'getWidgetDataFromAPIWithSearchPayload':
+      await init(req, res, {
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
+        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+        userId: 'test'
+      });
+
+      widget = new WidgetItem('content', 'rfkid_7');
+      widget.groupBy = 'type';
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

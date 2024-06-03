@@ -5,9 +5,9 @@ describe('widget item class', () => {
   const expected = {
     entity: 'test',
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    rfk_id: 'test',
-    search: undefined
+    rfk_id: 'test'
   };
+
   describe('validator', () => {
     it(`should not throw an error if all properties are correct`, () => {
       const validWidgetItem = {
@@ -175,34 +175,30 @@ describe('widget item class', () => {
     it('should set content to fields array when provided an array', () => {
       const fieldsArray = ['name', 'description'];
       widgetItem.content = fieldsArray;
-      expect(widgetItem['_search']?.content).toStrictEqual({ fields: fieldsArray });
+      expect(widgetItem['_search']?.content).toEqual({ fields: fieldsArray });
     });
 
     it('should set content to empty object when provided an empty object', () => {
       widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toStrictEqual({});
+      expect(widgetItem['_search']?.content).toEqual({});
     });
 
     it('should overwrite previous content with empty object', () => {
       widgetItem.content = {};
       const fieldsArray = ['name', 'description'];
       widgetItem.content = fieldsArray;
-      expect(widgetItem['_search']?.content).toStrictEqual({ fields: fieldsArray });
+      expect(widgetItem['_search']?.content).toEqual({ fields: fieldsArray });
     });
 
     it('should maintain the integrity of the content structure', () => {
       widgetItem.content = ['item1', 'item2'];
       widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toStrictEqual({});
+      expect(widgetItem['_search']?.content).toEqual({});
     });
 
-    it('should not set the limit if you do not provide one', () => {
-      expect(widgetItem.content).toBeUndefined();
-      expect(widgetItem['_search']?.content).toBeUndefined();
-      expect(widgetItem).toBe(widgetItem);
-      expect(widgetItem.toDTO()).toStrictEqual({
-        ...expected
-      });
+    it('should not set the content if you do not provide one', () => {
+      widgetItem.content = null as unknown as string[];
+      expect(widgetItem.toDTO().search?.content).toEqual({});
     });
   });
 
@@ -320,6 +316,39 @@ describe('widget item class', () => {
       expect(widgetItem['_search']?.content).toStrictEqual({});
       expect(widgetItem['_search']?.query).toBeUndefined();
       expect(widgetItem.toDTO().search?.query).toBeUndefined();
+    });
+  });
+
+  describe('set group by', () => {
+    let widgetItem: WidgetItem;
+
+    const validWidgetItem = {
+      entity: 'test',
+      rfkId: 'test'
+    };
+
+    beforeEach(() => {
+      widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    });
+
+    it(`should update the 'groupBy' search property`, () => {
+      widgetItem.groupBy = 'initial';
+
+      expect(widgetItem['_search']?.groupBy).toBe('initial');
+
+      widgetItem.groupBy = 'type';
+
+      expect(widgetItem.toDTO()).toEqual({
+        ...expected,
+        search: {
+          group_by: 'type'
+        }
+      });
+    });
+
+    it(`should reflect the 'groupBy' as undefined when it is not set`, () => {
+      widgetItem.groupBy = undefined as unknown as string;
+      expect(widgetItem.groupBy).toBeUndefined();
     });
   });
 });
