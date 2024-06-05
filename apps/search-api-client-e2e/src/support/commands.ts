@@ -31,8 +31,8 @@ Cypress.Commands.add('assertRequestBodyValue', (testID, bodyAttribute) => {
       }),
     {
       errorMsg: 'Request body not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });

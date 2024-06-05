@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
@@ -22,7 +21,7 @@ export async function POST(req: NextRequest) {
     fileData = JSON.parse(fileContents);
   }
 
-  fileData[testID] = { url, body, headers };
+  fileData[testID] = { body, headers, url };
 
   writeFileSync(dataFilePath, JSON.stringify(fileData, null, 2));
 

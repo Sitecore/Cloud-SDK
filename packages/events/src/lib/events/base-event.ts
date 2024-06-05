@@ -25,16 +25,16 @@ export class BaseEvent {
    */
   protected mapBaseEventPayload(): BasePayload {
     return {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: this.browserId,
       channel: this.baseEventData.channel,
-      /* eslint-disable @typescript-eslint/naming-convention */
       client_key: '',
       currency: this.baseEventData.currency,
       language: this.language,
       page: this.page,
       pos: '',
       requested_at: new Date().toISOString()
+      /* eslint-enable @typescript-eslint/naming-convention */
     };
   }
 }
@@ -43,6 +43,7 @@ export class BaseEvent {
  *  An interface describing the basic payload to be sent to the API
  */
 export interface BasePayload {
+  /* eslint-disable @typescript-eslint/naming-convention */
   browser_id: string;
   channel?: string;
   client_key: string;
@@ -51,6 +52,7 @@ export interface BasePayload {
   page?: string;
   pos: string;
   requested_at: string;
+  /* eslint-enable @typescript-eslint/naming-convention */
 }
 
 type BaseEventData = EventAttributesInput;

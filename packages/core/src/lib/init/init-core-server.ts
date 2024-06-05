@@ -22,7 +22,8 @@ export function setCoreSettings(settings: Settings) {
 /**
  * Initializes the core settings for browser-based applications.
  *
- * This function initializes core settings for the application, including creating settings and handling cookies if enabled.
+ * This function initializes core settings for the application,
+ * including creating settings and handling cookies if enabled.
  *
  * @param settingsInput - The settings input to configure the core settings.
  * @returns A Promise that resolves when initialization is complete.
@@ -36,7 +37,8 @@ export function getSettingsServer() {
 /**
  * Initializes the core settings for browser-based applications.
  *
- * This function initializes core settings for the application, including creating settings and handling cookies if enabled.
+ * This function initializes core settings for the application,
+ * including creating settings and handling cookies if enabled.
  *
  * @param settingsInput - The settings input to configure the core settings.
  * @param request - A request object of type HttpRequest or MiddlewareRequest

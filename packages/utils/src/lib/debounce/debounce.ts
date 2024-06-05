@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-/* eslint-disable @typescript-eslint/no-empty-function, tsdoc/syntax, sort-keys, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
+/* eslint-disable tsdoc/syntax, @typescript-eslint/no-explicit-any */
 
 /**
  * Creates a debounced function that delays invoking `fn` until after `wait` milliseconds have elapsed
@@ -45,6 +45,7 @@ export function debounce<T extends any[]>(
 
     Promise.resolve(
       opts.accumulate ? fn(...(pendingArgs as unknown as T)) : fn(...pendingArgs[pendingArgs.length - 1])
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     ).then(thisDeferred!.resolve, thisDeferred!.reject);
 
     pendingArgs.length = 0;
@@ -61,13 +62,19 @@ export function debounce<T extends any[]>(
  * @returns The deferred object.
  */
 function defer<T>(): Deferred<T> {
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   let resolve: (value: T) => void = () => {};
+  // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
   let reject: (reason: any) => void = () => {};
   const promise = new Promise<T>((res, rej) => {
     resolve = res;
     reject = rej;
   });
-  return { promise, resolve, reject };
+  return {
+    promise,
+    reject,
+    resolve
+  };
 }
 
 /**

@@ -2,6 +2,7 @@
 
 /* eslint-disable @typescript-eslint/naming-convention*/
 declare global {
+  // eslint-disable-next-line no-unused-vars
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     Engage: any;

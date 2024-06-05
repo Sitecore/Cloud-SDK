@@ -9,10 +9,11 @@ import packageJson from '../../package.json';
 export const LIBRARY_VERSION = packageJson.version;
 
 export enum ErrorMessages {
+  // eslint-disable-next-line max-len
   IE_0001 = '[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.',
   IE_0006 = '[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.',
   IE_0007 = '[IE-0007] You must first initialize the "personalize/server" module. Run the "init" function.',
-  MV_0004 = '[MV-0004] "friendlyId" is required.',
+  MV_0004 = '[MV-0004] "friendlyId" is required.'
 }
 
 /**

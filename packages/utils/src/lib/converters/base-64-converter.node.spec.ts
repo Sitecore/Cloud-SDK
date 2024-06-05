@@ -1,4 +1,3 @@
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 import { convertToBase64 } from './base-64-converter';
 describe('convertToBase64', () => {
   afterEach(() => {

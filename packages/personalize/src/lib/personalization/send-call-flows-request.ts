@@ -20,6 +20,7 @@ export async function sendCallFlowsRequest(
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
 
+  // eslint-disable-next-line max-len
   const requestUrl = `${settings.sitecoreEdgeUrl}/v1/personalize?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
 
   const fetchOptions: FetchOptions = {

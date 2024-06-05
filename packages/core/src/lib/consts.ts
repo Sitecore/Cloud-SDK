@@ -17,10 +17,12 @@ export const SITECORE_EDGE_URL = 'https://edge-platform.sitecorecloud.io';
 
 export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
 
+/* eslint-disable max-len */
 export enum ErrorMessages {
   IE_0003 = '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.',
   IE_0008 = '[IE-0008] You must first initialize the "core" package. Run the "init" function.',
   IV_0001 = '[IV-0001] Incorrect value for "sitecoreEdgeUrl". Set the value to a valid URL string.',
   MV_0001 = '[MV-0001] "sitecoreEdgeContextId" is required.',
-  MV_0002 = '[MV-0002] "siteName" is required.',
+  MV_0002 = '[MV-0002] "siteName" is required.'
 }
+/* eslint-enable max-len */

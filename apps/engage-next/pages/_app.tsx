@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import './index.css';
 import type { AppProps } from 'next/app';
 import Events from '../components/Events';

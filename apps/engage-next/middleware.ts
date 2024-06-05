@@ -1,5 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
 import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
@@ -28,11 +26,11 @@ export async function middleware(request: NextRequest) {
   const sitecoreEdgeUrl = request?.nextUrl?.searchParams?.get('sitecoreEdgeUrl') ?? undefined;
 
   await initEvents(request, response, {
-    sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
     cookieExpiryDays: 400,
     enableServerCookie,
-    sitecoreEdgeUrl,
-    siteName: process.env.SITE_ID || ''
+    siteName: process.env.SITE_ID || '',
+    sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+    sitecoreEdgeUrl
   });
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -110,8 +108,8 @@ export async function middleware(request: NextRequest) {
     }
 
     await initPersonalize(request, response, {
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl
     });
 
@@ -127,9 +125,9 @@ export async function middleware(request: NextRequest) {
       const personalizeData: PersonalizeData = {
         channel: 'WEB',
         currency: 'EUR',
+        email: 'test_personalize_callflows@test.com',
         friendlyId: 'personalizeintegrationtest',
-        language: 'EN',
-        email: 'test_personalize_callflows@test.com'
+        language: 'EN'
       };
 
       decorateAll(testID);
@@ -142,8 +140,8 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalize(request, response, {
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl
     });
 
@@ -169,14 +167,6 @@ export async function middleware(request: NextRequest) {
     response.cookies.set('EPResponse', JSON.stringify(personalizeRes));
     response.cookies.set('EPPersonalizeRequestCookie', capturedRequestBody.pop() as unknown as string);
   }
-
-  // Since we don't have e2e tests for those let's have something that we can check if needed
-  console.log(red('test red middleware'), 'reset test');
-  console.log(yellow('test yellow middleware'), 'reset test');
-  console.log(green('test green middleware'), 'reset test');
-  console.log(cyan('test cyan middleware'), 'reset test');
-  console.log(blue('test blue middleware'), 'reset test');
-  console.log(`${red('red')} reset ${blue('blue')}`);
 
   await requestedAtMiddleware(request);
   await customEventWithSearchDataMiddleware(request);

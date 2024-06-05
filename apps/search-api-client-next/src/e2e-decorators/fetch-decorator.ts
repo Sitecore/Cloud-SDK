@@ -5,9 +5,10 @@ export function decorateFetch(testID: string | null) {
     if (typeof input === 'string' && !input.includes('/search?')) return originalFetch(input, init);
 
     await originalFetch(`http://localhost:4300/api/save-e2e-data`, {
-      body: JSON.stringify({ url: input, init, testID: testID ?? 'not_defined' }),
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      body: JSON.stringify({ init, testID: testID ?? 'not_defined', url: input }),
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST'
     });
 
     return originalFetch(input, init);

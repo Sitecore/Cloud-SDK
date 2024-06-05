@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { PageViewData } from '@sitecore-cloudsdk/events/server';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import { useState } from 'react';

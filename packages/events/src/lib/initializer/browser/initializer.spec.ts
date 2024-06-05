@@ -182,7 +182,8 @@ describe('debug library in events', () => {
     expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsClient library initialized');
   });
 
-  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace when error occur`, async () => {
+  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events'
+   as a namespace when error occur`, async () => {
     jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
       throw new Error('error');
     });

@@ -45,8 +45,8 @@ Cypress.Commands.add('assertRequestHeader', (testID: string, headerName: string,
       }),
     {
       errorMsg: 'Error not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });
@@ -63,8 +63,8 @@ Cypress.Commands.add('assertRequestBody', (testID, bodyAttributeName) => {
       }),
     {
       errorMsg: 'Request body not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });
@@ -81,8 +81,8 @@ Cypress.Commands.add('assertRequestBodyNotContaining', (testID, bodyAttributeNam
       }),
     {
       errorMsg: 'Request body not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });
@@ -98,8 +98,8 @@ Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
       }),
     {
       errorMsg: 'Error not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });
@@ -115,8 +115,8 @@ Cypress.Commands.add('assertLogsNotContaining', (testID: string, log: string) =>
       }),
     {
       errorMsg: 'Log not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });
@@ -197,29 +197,24 @@ Cypress.Commands.add('requestGuestContext', () => {
     .should('exist')
     .then((c) => {
       const options = {
-        method: 'GET',
-        url: `${Cypress.env('GUEST_API_URL')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${
-          c?.value
-        }`,
         headers: {
           authorization
         },
-        timeout: 15000
+        method: 'GET',
+        timeout: 15000,
+        url: `${Cypress.env('GUEST_API_URL')}/${Cypress.env('GUEST_API_VERSION')}/guestContexts/?browserRef=${c?.value}`
       };
 
       cy.request(options)
         .as('guestContext')
         .then((response) => {
-          cy
-            .waitUntil(() => expect(response.body.items[0].sessions[0].events[0]).to.exist)
-            .then(() => {
-              return response.body.items[0].sessions[0].events[0];
-            }),
-            {
-              errorMsg: 'Event not returned from EP',
-              timeout: 15000,
-              interval: 100
-            };
+          cy.waitUntil(() => expect(response.body.items[0].sessions[0].events[0]).to.exist, {
+            errorMsg: 'Event not returned from EP',
+            interval: 100,
+            timeout: 15000
+          }).then(() => {
+            return response.body.items[0].sessions[0].events[0];
+          });
         });
     });
 });

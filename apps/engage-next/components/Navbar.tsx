@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import NavLink from './NavLink';
 import React from 'react';
 import { useRouter } from 'next/router';

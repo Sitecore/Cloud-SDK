@@ -3,7 +3,6 @@ import type { NextRequest } from 'next/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 
 export async function customEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {
-
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (
@@ -20,8 +19,8 @@ export async function customEventWithSearchDataMiddleware(request: NextRequest):
     case 'sendCustomEventFromMiddlewareWithSearchData':
       await event(request, {
         ...baseEventData,
-        type: 'CUSTOM_EVENT',
-        searchData: { test: 123 }
+        searchData: { test: 123 },
+        type: 'CUSTOM_EVENT'
       });
 
       break;

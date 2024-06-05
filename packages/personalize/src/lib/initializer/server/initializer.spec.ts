@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-/* eslint-disable sort-keys */
 import * as core from '@sitecore-cloudsdk/core';
 import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import debug from 'debug';
@@ -32,10 +30,10 @@ describe('initializer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   const settingsParams: core.ServerSettings = {
-    sitecoreEdgeContextId: '456',
     cookieDomain: 'cDomain',
     enableServerCookie: true,
     siteName: '123',
+    sitecoreEdgeContextId: '456',
     sitecoreEdgeUrl: ''
   };
 
@@ -69,7 +67,6 @@ describe('initializer', () => {
   const initCoreSpy = jest.spyOn(core, 'initCoreServer');
 
   jest.spyOn(core, 'getSettingsServer').mockReturnValue({
-    sitecoreEdgeContextId: '456',
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
@@ -77,6 +74,7 @@ describe('initializer', () => {
       cookiePath: '/'
     },
     siteName: '123',
+    sitecoreEdgeContextId: '456',
     sitecoreEdgeUrl: ''
   });
 

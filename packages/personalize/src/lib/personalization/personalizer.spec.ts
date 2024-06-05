@@ -122,7 +122,8 @@ describe('Test Personalizer Class', () => {
       jest.clearAllMocks();
     });
 
-    it('should return undefined language if language methods in not on window or window.document.documentElement.lang.length is less than 2', () => {
+    it(`should return undefined language if language methods in not on window 
+    or window.document.documentElement.lang.length is less than 2`, () => {
       personalizeInputMock.language = undefined;
       new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
@@ -564,7 +565,6 @@ describe('Test Personalizer Class', () => {
           params: {
             customNumber: 123,
             customString: 'example value',
-            // eslint-disable-next-line @typescript-eslint/naming-convention
             customValue: { value: 123 }
           },
           pointOfSale: ''
@@ -672,8 +672,10 @@ describe('Test Personalizer Class', () => {
       );
 
       expect(fetch).toHaveBeenCalledWith(
+        // eslint-disable-next-line max-len
         `${core.SITECORE_EDGE_URL}/v1/personalize?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
+          // eslint-disable-next-line max-len
           body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
           /* eslint-disable @typescript-eslint/naming-convention */
           headers: {
@@ -946,7 +948,8 @@ describe('Test Personalizer Class', () => {
       );
     });
 
-    it('should call sendCallFlowsRequest with UTM params passed manually (UTM params exists both in url and data sent manually by the developer)', () => {
+    it(`should call sendCallFlowsRequest with UTM params passed manually
+     (UTM params exists both in url and data sent manually by the developer)`, () => {
       const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
       const urlParams = '?utm_campaign=campaign&utm_medium=email';
       const opts = { timeout: 100, userAgent: 'test_ua' };

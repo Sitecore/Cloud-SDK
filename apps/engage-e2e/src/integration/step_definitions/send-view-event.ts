@@ -105,8 +105,8 @@ defineStep("the {string} attribute doesn't exist in the document", (attribute: s
 When('the cookies are removed from the browser', () => {
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
   cy.getCookie(Cypress.env('COOKIE_NAME'))
     .should('exist')
@@ -133,8 +133,8 @@ When('a cookie exists on the page with the respective {string} environment conte
     environment.toLowerCase() == 'production' ? Cypress.env('COOKIE_NAME') : Cypress.env('COOKIE_NAME_STAGING');
   cy.waitUntil(() => cy.getCookie(cookieName), {
     errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
 });
 

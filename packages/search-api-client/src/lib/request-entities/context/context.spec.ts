@@ -355,7 +355,8 @@ describe('context request data creation', () => {
       expect(() => new Context(invalidContext4)).toThrow(ErrorMessages.MV_0007);
     });
 
-    it(`should throw an error if one of the 'page' properties (custom, uri) is set (with valid value) and the other is empty`, () => {
+    it(`should throw an error if one of the 'page' properties (custom, uri) 
+        is set (with valid value) and the other is empty`, () => {
       const invalidContext1 = {
         ...context,
         ...{

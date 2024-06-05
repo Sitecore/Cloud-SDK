@@ -8,7 +8,7 @@ import { BaseFilter } from './base-filter';
 export class LogicalFilter<T extends keyof LogicalFilterValues> extends BaseFilter {
   /**
    * @param operator - The operator to be applied on attribute.
-   * @param value - The value to check against. If you use the "and" or the "or" filter, you must include minimum 2 filters.
+   * @param value - The value to check against. Using "and" or the "or" filter, you must include minimum 2 filters.
    */
   constructor(operator: T, value: LogicalFilterValues[T]) {
     super(operator, value);

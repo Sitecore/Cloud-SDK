@@ -4,8 +4,7 @@ import type { CyHttpMessages } from 'cypress/types/net-stubbing';
 import { defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 let statusCode: number;
-// eslint-disable-next-line @typescript-eslint/naming-convention
-let _response: CyHttpMessages.IncomingResponse | undefined;
+let searchResponse: CyHttpMessages.IncomingResponse | undefined;
 
 before(() => {
   cy.writeLocal('logsData.json', {});
@@ -16,10 +15,10 @@ defineStep('Search API responds with:', (params: string) => {
   if (params?.trim()) {
     const parameters = JSON.parse(params);
     const length = parameters.items.length;
-    if (_response)
+    if (searchResponse)
       for (let index = 0; index < length; index++) {
         const { rfkId, entity, search: searchParam } = parameters.items[index];
-        const { rfk_id: reqRfkId, entity: reqEntity, limit, offset, content } = _response.body.widgets[index];
+        const { rfk_id: reqRfkId, entity: reqEntity, limit, offset, content } = searchResponse.body.widgets[index];
 
         expect(reqRfkId).to.equal(rfkId);
         expect(reqEntity).to.equal(entity);
@@ -59,7 +58,7 @@ defineStep('the widget data request is sent with parameters:', (params: string) 
     expect(request).to.not.equal(undefined);
 
     if (response) {
-      _response = response;
+      searchResponse = response;
       statusCode = response.statusCode;
     }
 

@@ -6,28 +6,25 @@ import { nxE2EPreset } from '@nrwl/cypress/plugins/cypress-preset';
 
 const mochawesome = '../../node_modules/mochawesome';
 const cypressJsonConfig = {
+  chromeWebSecurity: true,
   defaultCommandTimeout: 10000,
-  modifyObstructiveCode: false,
   experimentalWebKitSupport: true,
   fileServerFolder: '.',
   fixturesFolder: './src/fixtures',
-  video: false,
-  videosFolder: '../engage-e2e/cypress/results/videos',
-  screenshotsFolder: '../engage-e2e/cypress/results/screenshots/',
-  screenshotOnRunFailure: true,
-  chromeWebSecurity: true,
+  modifyObstructiveCode: false,
   reporter: mochawesome,
   reporterOptions: {
-    reportDir: 'cypress/results',
-    overwrite: false,
     html: false,
-    json: true
+    json: true,
+    overwrite: false,
+    reportDir: 'cypress/results'
   },
   retries: {
     runMode: 2
   },
-  specPattern: '**/*.{feature,features}',
-  supportFile: 'src/support/e2e.ts',
+  screenshotOnRunFailure: true,
+  screenshotsFolder: '../engage-e2e/cypress/results/screenshots/',
+
   async setupNodeEvents(
     on: Cypress.PluginEvents,
     config: Cypress.PluginConfigOptions
@@ -51,8 +48,13 @@ const cypressJsonConfig = {
 
     // Make sure to return the config object as it might have been modified by the plugin.
     return config;
-  }
+  },
+  specPattern: '**/*.{feature,features}',
+  supportFile: 'src/support/e2e.ts',
+  video: false,
+  videosFolder: '../engage-e2e/cypress/results/videos'
 };
+
 export default defineConfig({
   e2e: {
     ...nxE2EPreset(__dirname),

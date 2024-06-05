@@ -4,7 +4,8 @@ import type { SettingsParams } from './interfaces';
 /**
  * Validates the core settings to ensure they meet required criteria.
  *
- * This function validates the provided core settings object to ensure that essential properties such as "sitecoreEdgeContextId," and "siteName" meet specific criteria and are not empty.
+ * This function validates the provided core settings object to ensure that essential properties
+ * such as "sitecoreEdgeContextId," and "siteName" meet specific criteria and are not empty.
  *
  * @param settings - The core settings object to validate.
  * @throws Error with specific error codes if any required property is missing or empty.

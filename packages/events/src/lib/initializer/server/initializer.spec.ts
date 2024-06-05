@@ -116,7 +116,8 @@ describe('initializer', () => {
       expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsServer library initialized');
     });
 
-    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace and log the error`, async () => {
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events'
+     as a namespace and log the error`, async () => {
       const debugMock = debug as unknown as jest.Mock;
 
       initCoreSpy.mockImplementationOnce(() => Promise.reject('Error'));

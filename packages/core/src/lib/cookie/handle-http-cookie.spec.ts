@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import * as Utils from '@sitecore-cloudsdk/utils';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import type { Settings } from '../settings/interfaces';
@@ -93,7 +91,8 @@ describe('httpCookieHandler', () => {
     expect(request.headers.cookie).toBe('sc_123=browser_id_from_proxy');
   });
 
-  it('should set the request header cookie when getCookieServerSide returns undefined but there is a cookie in the request headers', async () => {
+  it(`should set the request header cookie when getCookieServerSide
+     returns undefined but there is a cookie in the request headers`, async () => {
     getCookieServerSideSpy.mockReturnValue(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
     fetchBrowserIdFromEdgeProxySpy.mockResolvedValueOnce({ browserId: '123456789' });

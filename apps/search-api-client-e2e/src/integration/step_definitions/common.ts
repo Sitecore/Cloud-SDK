@@ -42,8 +42,8 @@ Then('an error is thrown: {string}', (expectedError: string) => {
       }),
     {
       errorMsg: 'Error not found',
-      timeout: 15000,
-      interval: 100
+      interval: 100,
+      timeout: 15000
     }
   );
 });

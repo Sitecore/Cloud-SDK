@@ -25,8 +25,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   await init(req, res, {
     cookieExpiryDays: 400,
     enableServerCookie: requestUrl.searchParams?.get('enableServerCookie')?.toLowerCase() === 'true',
-    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || ''
+    siteName: process.env.SITE_ID || '',
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
   });
 
   const timeoutParam = requestUrl.searchParams.get('timeout');
@@ -36,11 +36,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   if (testID === 'sendPersonalizeFromAPIWithCorrelationID') decorateAll(testID);
 
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   const EPResponse = await personalize(req, event, { timeout });
 
   if (testID === 'sendPersonalizeFromAPIWithCorrelationID') resetAllDecorators();
 
   res.status(200).json({
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     EPResponse,
     capturedDebugLogs: capturedDebugLogs
       .filter((item) => typeof item === 'string' && item.includes('Personalize request'))

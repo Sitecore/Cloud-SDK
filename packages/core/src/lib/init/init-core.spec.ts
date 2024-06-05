@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/naming-convention */
 import * as createCookieInit from '../cookie/create-cookie';
 import * as createSetting from '../settings/create-settings';
 import * as utils from '@sitecore-cloudsdk/utils';

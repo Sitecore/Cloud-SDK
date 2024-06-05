@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable sort-keys */
-/* eslint-disable @typescript-eslint/naming-convention */
-
 import * as core from '@sitecore-cloudsdk/core';
 import * as sendEventModule from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
@@ -38,16 +34,17 @@ describe('PageViewEvent', () => {
 
   function callPageViewEvent(pageViewData: any, id: any, settings: any, extensionData?: any, searchParams?: any) {
     new PageViewEvent({
-      sendEvent: sendEventModule.sendEvent,
-      pageViewData: { ...pageViewData, extensionData },
       id,
-      settings,
-      searchParams: searchParams ?? window.location.search
+      pageViewData: { ...pageViewData, extensionData },
+      searchParams: searchParams ?? window.location.search,
+      sendEvent: sendEventModule.sendEvent,
+      settings
     }).send();
   }
 
   beforeEach(() => {
     expectedBasicAttributes = {
+      /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: id,
       channel: 'WEB',
       client_key: '',
@@ -56,18 +53,18 @@ describe('PageViewEvent', () => {
       page: 'races',
       pos: '',
       requested_at: '2024-01-01T00:00:00.000Z'
+      /* eslint-enable @typescript-eslint/naming-convention */
     };
 
     pageViewData = {
       channel: 'WEB',
       currency: 'EUR',
+      includeUTMParameters: true,
       language: 'EN',
-      page: 'races',
-      includeUTMParameters: true
+      page: 'races'
     };
 
     settings = {
-      sitecoreEdgeContextId: '123',
       cookieSettings: {
         cookieDomain: 'cDomain',
         cookieExpiryDays: 730,
@@ -75,6 +72,7 @@ describe('PageViewEvent', () => {
         cookiePath: '/'
       },
       siteName: '456',
+      sitecoreEdgeContextId: '123',
       sitecoreEdgeUrl: ''
     };
     jest.spyOn(core, 'language').mockImplementation(() => 'EN');
@@ -100,10 +98,10 @@ describe('PageViewEvent', () => {
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
       const event = new PageViewEvent({
-        sendEvent: sendEventModule.sendEvent,
-        pageViewData,
         id,
+        pageViewData,
         searchParams: '',
+        sendEvent: sendEventModule.sendEvent,
         settings
       });
 
@@ -118,9 +116,9 @@ describe('PageViewEvent', () => {
     let pageViewData: PageViewData = {
       channel: 'WEB',
       currency: 'EUR',
+      includeUTMParameters: true,
       language: 'EN',
-      page: 'races',
-      includeUTMParameters: true
+      page: 'races'
     };
 
     beforeEach(() => {
@@ -132,9 +130,9 @@ describe('PageViewEvent', () => {
       pageViewData = {
         channel: 'WEB',
         currency: 'EUR',
+        includeUTMParameters: true,
         language: 'EN',
-        page: 'races',
-        includeUTMParameters: true
+        page: 'races'
       };
     });
 
@@ -155,11 +153,13 @@ describe('PageViewEvent', () => {
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
 
-    it('should return the variantid if exists in the search params that is passed from the server and not present in the event data', async () => {
+    it(`should return the variantid if exists in the search params
+     that is passed from the server and not present in the event data`, async () => {
       callPageViewEvent(pageViewData, id, settings, undefined, '?variantid=test_pageVariantId');
       expect(getPageVariantIdSpy).toHaveReturnedWith('test_pageVariantId');
     });
-    it('should return the variantid if passed as extension data and not present in neither the searchParams from the server nor in the event data', async () => {
+    it(`should return the variantid if passed as extension data and not
+     present in neither the searchParams from the server nor in the event data`, async () => {
       Object.defineProperty(window, 'location', {
         value: {
           search: ''
@@ -174,7 +174,8 @@ describe('PageViewEvent', () => {
       expect(getPageVariantIdSpy).toHaveReturnedWith('extVid');
     });
 
-    it('should return the variantid if passed as extension data and not present in neither the url nor in the event data', async () => {
+    it(`should return the variantid if passed as extension data and not
+     present in neither the url nor in the event data`, async () => {
       Object.defineProperty(window, 'location', {
         value: {
           search: ''
@@ -230,8 +231,8 @@ describe('PageViewEvent', () => {
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
-          type: 'VIEW',
-          ext: { pageVariantId: 'vid' }
+          ext: { pageVariantId: 'vid' },
+          type: 'VIEW'
         }
       };
 
@@ -271,8 +272,9 @@ describe('PageViewEvent', () => {
     const expectedAttributes = {
       ...expectedBasicAttributes,
       ...{
-        type: 'VIEW',
-        ext: { test_a_b: 'b', test_c: 11, testz: 22 }
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        ext: { test_a_b: 'b', test_c: 11, testz: 22 },
+        type: 'VIEW'
       }
     };
 
@@ -376,7 +378,8 @@ describe('PageViewEvent', () => {
       expect(getReferrerSpy).toHaveReturnedWith(null);
     });
 
-    it('getReferrer should be null if windows does not exists and referrer is not provided by the developer (Server Side Test)', async () => {
+    it(`getReferrer should be null if windows does not exists and referrer
+     is not provided by the developer (Server Side Test)`, async () => {
       Object.defineProperty(global, 'window', {
         get: jest.fn().mockReturnValueOnce(undefined)
         // writable: true,
@@ -513,6 +516,7 @@ describe('PageViewEvent', () => {
 
       callPageViewEvent(pageViewData, id, settings);
 
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       expect(getUTMParametersSpy).toHaveReturnedWith({ utm_campaign: 'campaign', utm_medium: 'email' });
     });
 
@@ -535,12 +539,14 @@ describe('PageViewEvent', () => {
     });
 
     it('should send an event with utm_ params if the returned object is not empty', () => {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       getUTMParametersSpy.mockReturnValueOnce({ utm_test: 'test' });
       callPageViewEvent(pageViewData, id, settings);
       const expectedAttributes = {
         ...expectedBasicAttributes,
         ...{
           type: 'VIEW',
+          // eslint-disable-next-line @typescript-eslint/naming-convention
           utm_test: 'test'
         }
       };
@@ -550,19 +556,21 @@ describe('PageViewEvent', () => {
 
   describe('send event with specific params', () => {
     let pageViewData: PageViewData = {
+      includeUTMParameters: false,
       language: 'EN',
-      page: 'races',
-      includeUTMParameters: false
+      page: 'races'
     };
 
     let expectedData = {
+      /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: id,
       client_key: '',
       language: 'EN',
       page: 'races',
       pos: '',
-      type: 'VIEW',
-      requested_at: '2024-01-01T00:00:00.000Z'
+      requested_at: '2024-01-01T00:00:00.000Z',
+      type: 'VIEW'
+      /* eslint-enable @typescript-eslint/naming-convention */
     };
 
     it(`should send an event without 'channel' and currency 'params'`, async () => {
@@ -584,9 +592,9 @@ describe('PageViewEvent', () => {
   describe('send event with search data', () => {
     it(`should send an event with 'sc_search' payload if searchData is provided`, async () => {
       const pageViewData: PageViewData = {
+        includeUTMParameters: false,
         language: 'EN',
         page: 'races',
-        includeUTMParameters: false,
         searchData: {
           action: 'view',
           name: 'home'
@@ -594,12 +602,12 @@ describe('PageViewEvent', () => {
       };
 
       const expectedData = {
+        /* eslint-disable @typescript-eslint/naming-convention */
         browser_id: id,
         client_key: '',
         language: 'EN',
         page: 'races',
         pos: '',
-        type: 'VIEW',
         requested_at: '2024-01-01T00:00:00.000Z',
         sc_search: {
           data: {
@@ -609,7 +617,9 @@ describe('PageViewEvent', () => {
           metadata: {
             ut_api_version: '1.0'
           }
-        }
+        },
+        type: 'VIEW'
+        /* eslint-enable @typescript-eslint/naming-convention */
       };
 
       callPageViewEvent(pageViewData, id, settings);
@@ -620,6 +630,7 @@ describe('PageViewEvent', () => {
 
   describe('send event with no params', () => {
     const expectedData = {
+      /* eslint-disable @typescript-eslint/naming-convention */
       browser_id: id,
       channel: undefined,
       client_key: '',
@@ -630,17 +641,18 @@ describe('PageViewEvent', () => {
       language: 'EN',
       page: 'races',
       pos: '',
-      type: 'VIEW',
-      requested_at: '2024-01-01T00:00:00.000Z'
+      requested_at: '2024-01-01T00:00:00.000Z',
+      type: 'VIEW'
+      /* eslint-enable @typescript-eslint/naming-convention */
     };
 
     it(`should send an event without params`, async () => {
       new PageViewEvent({
-        sendEvent: sendEventModule.sendEvent,
-        pageViewData: undefined,
         id,
-        settings,
-        searchParams: ''
+        pageViewData: undefined,
+        searchParams: '',
+        sendEvent: sendEventModule.sendEvent,
+        settings
       }).send();
       expect(sendEventSpy).toHaveBeenCalledWith(expectedData, settings);
     });

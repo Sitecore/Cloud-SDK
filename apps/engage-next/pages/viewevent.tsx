@@ -1,5 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import { init, pageView } from '@sitecore-cloudsdk/events/browser';
 import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { useEffect, useState } from 'react';

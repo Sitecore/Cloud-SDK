@@ -119,7 +119,8 @@ describe('handleServerCookie', () => {
     expect(isNextJsMiddlewareResponseSpy).not.toHaveBeenCalled();
   });
 
-  it('should not call handleNextJsMiddlewareCookie or handleHttpCookie when request is not isNextJsMiddlewareRequest or isHttpRequest', async () => {
+  it(`should not call handleNextJsMiddlewareCookie or handleHttpCookie
+     when request is not isNextJsMiddlewareRequest or isHttpRequest`, async () => {
     const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {

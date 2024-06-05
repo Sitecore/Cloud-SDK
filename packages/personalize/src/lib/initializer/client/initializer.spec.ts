@@ -146,7 +146,8 @@ describe('initializer', () => {
       expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
     });
 
-    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:personalize' as a namespace when error occur`, async () => {
+    it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:personalize'
+     as a namespace when error occur`, async () => {
       jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
         throw new Error('error');
       });

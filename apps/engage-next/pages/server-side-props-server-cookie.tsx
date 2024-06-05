@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { GetServerSidePropsContext } from 'next';
 import { init } from '@sitecore-cloudsdk/events/server';
 

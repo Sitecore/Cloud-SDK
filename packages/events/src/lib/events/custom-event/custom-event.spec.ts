@@ -212,18 +212,17 @@ describe('CustomEvent', () => {
       };
 
       const expectedData = {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
+        /* eslint-disable @typescript-eslint/naming-convention */
         browser_id: id,
         channel: 'WEB',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         client_key: '',
         currency: 'EUR',
         language: 'EN',
         page: 'races',
         pos: '',
-        // eslint-disable-next-line @typescript-eslint/naming-convention
         requested_at: '2024-01-01T00:00:00.000Z',
         type: 'CUSTOM_TYPE'
+        /* eslint-enable @typescript-eslint/naming-convention */
       };
 
       new CustomEvent({ eventData, id, sendEvent: sendEventModule.sendEvent, settings }).send();

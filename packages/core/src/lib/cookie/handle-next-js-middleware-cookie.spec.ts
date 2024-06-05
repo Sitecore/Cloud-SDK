@@ -71,7 +71,8 @@ describe('handleMiddlewareRequest', () => {
     expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
   });
 
-  it('should set the browser ID from settings temp value when getBrowserIdFromMiddlewareRequest returns undefined', async () => {
+  it(`should set the browser ID from settings temp value
+     when getBrowserIdFromMiddlewareRequest returns undefined`, async () => {
     getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);

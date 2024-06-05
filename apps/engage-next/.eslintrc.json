@@ -3,35 +3,14 @@
   "ignorePatterns": ["!**/*", ".next/**/*"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/next-app/pages"],
-        "import/no-default-export": 0,
-        "header/header": "off",
-        "sort-keys": 0,
-        "@typescript-eslint/naming-convention": 0
-      }
-    },
-    {
       "files": ["*.*"],
       "rules": {
-        "@next/next/no-html-link-for-pages": "off",
-        "import/no-default-export": "off"
+        "header/header": "off",
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@next/next/no-html-link-for-pages": ["error", "apps/engage-next/pages"],
+        "import/no-unresolved": "off"
       }
-    },
-    {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
-      "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/engage-next/pages"]
-      }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "rules": {}
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "rules": {}
     }
   ]
 }

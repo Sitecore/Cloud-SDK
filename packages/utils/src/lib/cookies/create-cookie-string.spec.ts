@@ -118,7 +118,9 @@ describe('createCookieString', () => {
     expect(createCookieString('cookieName', 'cookieValue', options)).toEqual(expectedString);
   });
 
-  it('should create a cookie string with all the valid properties and when using getDefaultCookieAttributes function', () => {
+  it(`should create a cookie string with all the valid 
+      properties and when using getDefaultCookieAttributes function`, () => {
+    // eslint-disable-next-line max-len
     const expectedString = `cookieName=cookieValue; Max-Age=${cookieMaxAge}; SameSite=None; Secure; Path=/; Domain=localhost`;
     const options: CookieProperties = {
       domain: 'localhost',

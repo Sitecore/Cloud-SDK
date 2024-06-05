@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { existsSync, readFileSync, writeFileSync } from 'fs';
 import path from 'path';
@@ -20,7 +19,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       fileData = JSON.parse(fileContents);
     }
 
-    fileData[testID] = { url, body, headers };
+    fileData[testID] = {
+      body,
+      headers,
+      url
+    };
 
     writeFileSync(dataFilePath, JSON.stringify(fileData, null, 2));
   } else if (type === 'logs') {

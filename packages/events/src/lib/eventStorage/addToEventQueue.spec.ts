@@ -15,7 +15,6 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 });
 
 const eventData: EventData = {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   channel: 'WEB',
   currency: 'EUR',
   language: 'EN',

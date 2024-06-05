@@ -12,8 +12,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   await init(req, res, {
     cookieExpiryDays: 400,
-    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || ''
+    siteName: process.env.SITE_ID || '',
+    sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
   });
 
   const testID = requestUrl.searchParams?.get('testID');

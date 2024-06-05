@@ -7,8 +7,8 @@ defineStep('the cookie is automatically set with the correct bid value for the u
   cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
 });
 

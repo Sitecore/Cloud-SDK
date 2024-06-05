@@ -6,22 +6,19 @@
     "tsconfigRootDir": "./"
   },
   "root": true,
-  "ignorePatterns": ["**/*config*", "**/*.config.js", "**/*config*", "**/*.config.ts"],
+  "ignorePatterns": ["**/*config*", "**/*.config.js", "**/*config*", "**/*.config.ts", "tools/**/*", "jest.preset.js"],
   "plugins": ["@stylistic/js", "@nx", "header", "@typescript-eslint/eslint-plugin", "eslint-plugin-tsdoc"],
+
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": ["*.ts", "*.tsx"],
+      "extends": ["plugin:@nx/typescript"],
+      "rules": {}
+    },
+    {
+      "files": ["*.ts"],
       "rules": {
-        "header/header": [
-          2,
-          "line",
-          [
-            " © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S."
-          ]
-        ],
-        "indent": ["error", 2],
-        "import/no-default-export": "error",
-        "import/no-unresolved": "off",
+        "curly": ["error", "multi"],
         "@typescript-eslint/naming-convention": [
           "error",
           {
@@ -49,19 +46,34 @@
             "format": ["PascalCase"]
           }
         ],
+        "max-len": ["error", { "code": 120 }],
+        "no-empty-function": ["error", { "allow": ["constructors"] }],
+        "tsdoc/syntax": "error",
+        "sort-keys": "error",
+        "@typescript-eslint/no-explicit-any": "error",
+        "@typescript-eslint/no-non-null-assertion": "error",
+        "header/header": [
+          2,
+          "line",
+          [
+            " © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S."
+          ]
+        ],
+        "indent": ["error", 2, { "SwitchCase": 1, "outerIIFEBody": 4 }],
+        "import/no-default-export": "error",
+        "import/no-unresolved": "off",
         "@typescript-eslint/member-ordering": [
           "error",
           {
             "default": ["static-field", "instance-field", "static-method", "instance-method"]
           }
         ],
-        "@typescript-eslint/no-non-null-assertion": "error",
-        "sort-keys": "error",
         "@typescript-eslint/type-annotation-spacing": [
           "error",
           {
             "before": true,
-            "after": true
+            "after": true,
+            "overrides": { "colon": { "before": false, "after": true } }
           }
         ],
         "@nx/enforce-module-boundaries": [
@@ -91,25 +103,6 @@
       }
     },
     {
-      "files": ["*.ts"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {
-        "tsdoc/syntax": "error"
-      }
-    },
-    {
-      "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nx/typescript"],
-      "rules": {
-        "curly": ["error", "multi"]
-      }
-    },
-    {
-      "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nx/javascript"],
-      "rules": {}
-    },
-    {
       "files": ["*spec.ts"],
       "rules": {
         "header/header": "off",
@@ -117,9 +110,35 @@
       }
     },
     {
-      "files": ["apps/**/*.ts", "apps/**/*.tsx"], // Matches TypeScript files in the "apps" folder and its subdirectories
+      "files": ["*.js"],
       "rules": {
-        "header/header": "off" // Turn off the "header/header" rule for these files
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "interface",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "variable",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "class",
+            "format": ["PascalCase"]
+          },
+          {
+            "selector": "method",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "property",
+            "format": ["camelCase"]
+          },
+          {
+            "selector": "enum",
+            "format": ["PascalCase"]
+          }
+        ]
       }
     }
   ]

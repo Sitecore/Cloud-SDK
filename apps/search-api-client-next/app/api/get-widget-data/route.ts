@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { WidgetItem, WidgetRequestData, getWidgetData, init } from '@sitecore-cloudsdk/search-api-client/server';
 import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
 import type { NextRequest } from 'next/server';

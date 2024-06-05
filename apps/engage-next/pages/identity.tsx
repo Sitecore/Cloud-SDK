@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { IdentityData } from '@sitecore-cloudsdk/events/browser';
 import { getParamsFromUrl } from '../utils/getParamsFromUrl';
 import { identity } from '@sitecore-cloudsdk/events/browser';
@@ -16,13 +15,11 @@ export default function Identity() {
       lastname: HTMLInputElement;
       mobile: HTMLInputElement;
       phone: HTMLInputElement;
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       postal_code: HTMLInputElement;
       state: HTMLInputElement;
       street: HTMLInputElement;
       title: HTMLInputElement;
       dob: HTMLInputElement;
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       expiry_date: HTMLInputElement;
     }
 

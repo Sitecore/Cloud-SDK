@@ -1,4 +1,3 @@
-// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { LIBRARY_VERSION as eventVersion, getBrowserId, pageView } from '@sitecore-cloudsdk/events/browser';
 import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';

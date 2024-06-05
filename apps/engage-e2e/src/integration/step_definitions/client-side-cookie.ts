@@ -19,8 +19,8 @@ Then('the cookie is automatically set with the correct bid value for the user', 
   cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
     errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
 });
 
@@ -50,15 +50,13 @@ defineStep('a client cookie is created at {string} page with {string} domain', (
   cy.clearCookies();
   cy.waitUntil(() => cy.getCookies().then((cookies) => cookies.length === 0), {
     errorMsg: 'Failed to clear cookies',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
   cy.visit(page, {
-    /* eslint-disable @typescript-eslint/naming-convention */
     qs: {
       cookieDomain: domain
     }
-    /* eslint-enable @typescript-eslint/naming-convention */
   });
 });
 
@@ -68,8 +66,8 @@ defineStep('{string} cookie is created with the {string} domain', (result: strin
   cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => cookie?.domain === domain), {
     errorMsg: 'Cookie not found',
-    timeout: 10000,
-    interval: 500
+    interval: 500,
+    timeout: 10000
   });
 });
 
@@ -97,8 +95,8 @@ Then('the cookie is set with the default expiry', () => {
       }),
     {
       errorMsg: 'Cookie not found',
-      timeout: 10000,
-      interval: 500
+      interval: 500,
+      timeout: 10000
     }
   );
 });

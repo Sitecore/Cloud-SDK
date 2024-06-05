@@ -20,7 +20,7 @@ export default function Init({ enableBrowserCookie }: InitProps) {
       await init(settings);
     }
     initSearch();
-  }, []);
+  }, [enableBrowserCookie]);
 
   return (
     <div style={{ border: '2px solid black', padding: 16, margin: 16, display: 'inline-block' }}>

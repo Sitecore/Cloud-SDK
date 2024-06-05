@@ -100,8 +100,8 @@ defineStep('the {string} string is printed in {string} element', (message: strin
   cy.wait(1000);
   cy.waitUntil(() => cy.get(selector).contains(message), {
     errorMsg: 'Server error not found',
-    timeout: 10000,
-    interval: 100
+    interval: 100,
+    timeout: 10000
   });
 });
 
@@ -247,8 +247,8 @@ Then('an error is thrown: {string}', (expectedError: string) => {
   //Allowing for the error to be printed on console and retrieved from cypress fixtures
   cy.waitUntil(() => cy.readLocal('error.txt').then((actualError: string) => actualError !== ''), {
     errorMsg: 'Error not found',
-    timeout: 15000,
-    interval: 100
+    interval: 100,
+    timeout: 15000
   });
   cy.readLocal('error.txt').should('include', expectedError);
 });

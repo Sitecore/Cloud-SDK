@@ -11,6 +11,7 @@ import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../c
  * @param settings - The global settings
  */
 export async function sendEvent(body: EPFetchBody & BasePayload, settings: Settings): Promise<EPResponse | null> {
+  // eslint-disable-next-line max-len
   const eventUrl = `${settings.sitecoreEdgeUrl}/v1/events/${API_VERSION}/events?sitecoreContextId=${settings.sitecoreEdgeContextId}&siteId=${settings.siteName}`;
   const startTimestamp = Date.now();
   let debugResponse: DebugResponse = {};
@@ -18,12 +19,11 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
   const fetchOptions = {
     body: JSON.stringify(body),
     headers: {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
+      /* eslint-disable @typescript-eslint/naming-convention */
       'Content-Type': 'application/json',
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-      // eslint-disable-next-line @typescript-eslint/naming-convention
       'X-Library-Version': LIBRARY_VERSION
+      /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST'
   };

@@ -16,7 +16,7 @@ import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
  * @param options - The settings object containing configuration options.
  * @param defaultCookieAttributes - The default attributes for the cookie.
  *
- * @throws [IE-0003] - This exception is thrown in the case fetchBrowserIdFromEdgeProxy wasn't able to retrieve a browserId.
+ * @throws [IE-0003] - This exception is thrown when fetchBrowserIdFromEdgeProxy wasn't able to retrieve a browserId.
  *
  */
 export async function handleNextJsMiddlewareCookie(

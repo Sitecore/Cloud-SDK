@@ -8,5 +8,6 @@ import { API_VERSION } from '../consts';
  */
 
 export function constructGetBrowserIdUrl(sitecoreEdgeUrl: string, sitecoreEdgeContextId: string): string {
+  // eslint-disable-next-line max-len
   return `${sitecoreEdgeUrl}/v1/events/${API_VERSION}/browser/create.json?sitecoreContextId=${sitecoreEdgeContextId}&client_key=`;
 }

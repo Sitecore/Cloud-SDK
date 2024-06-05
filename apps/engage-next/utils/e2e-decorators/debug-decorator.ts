@@ -7,8 +7,9 @@ export function decorateDebug(testID: string | null) {
   debug.log = async (...args: any): Promise<Response> => {
     await fetch(`http://localhost:4200/api/save-e2e-data?type=logs`, {
       body: JSON.stringify({ args: [...args], testID: testID ?? 'not_defined' }),
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' }
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      headers: { 'Content-Type': 'application/json' },
+      method: 'POST'
     });
 
     return originalDebug(...args);

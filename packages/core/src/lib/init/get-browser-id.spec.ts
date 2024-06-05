@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-
 import * as init from './init-core';
 import { getBrowserId } from './get-browser-id';
 

@@ -116,7 +116,8 @@ describe('personalizeServer', () => {
     );
   });
 
-  it('should use the request.geo if personalizeData.geo is empty and request is a valid MiddlewareRequest', async () => {
+  it(`should use the request.geo if personalizeData.geo is empty
+   and request is a valid MiddlewareRequest`, async () => {
     req.geo = {
       city: 'Tarnów',
       country: 'PL',

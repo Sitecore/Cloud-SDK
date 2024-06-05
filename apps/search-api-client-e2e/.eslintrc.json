@@ -3,11 +3,11 @@
   "ignorePatterns": ["!**/*"],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": ["*.*"],
       "rules": {
         "header/header": "off",
-        "sort-keys": "off",
-        "import/no-default-export": "off"
+        "import/no-default-export": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

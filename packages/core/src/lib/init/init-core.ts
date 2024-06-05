@@ -16,7 +16,8 @@ let coreSettings: Settings | null = null;
 /**
  * Retrieves the core settings object.
  *
- * This function ensures that the core settings have been initialized and contain essential properties like `clientKey`, `cookieSettings`, and `targetURL`.
+ * This function ensures that the core settings have been initialized and contain essential properties
+ * like `clientKey`, `cookieSettings`, and `targetURL`.
  *
  * @returns The core settings object.
  * @throws Error if the core settings haven't been initialized with the required properties.
@@ -32,7 +33,8 @@ let createCookiePromise: Promise<void> | null = null;
 /**
  * Initializes the core settings for browser-based applications.
  *
- * This function initializes core settings for the application, including creating settings and handling cookies if enabled.
+ * This function initializes core settings for the application,
+ * including creating settings and handling cookies if enabled.
  *
  * @param settingsInput - The settings input to configure the core settings.
  * @returns A Promise that resolves when initialization is complete.

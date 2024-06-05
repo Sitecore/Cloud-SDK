@@ -3,7 +3,8 @@ import { cookieExists } from './cookie-exists';
 describe('cookieExists', () => {
   const cookieValue = 'cookieValue';
 
-  it('should accept a cookie string and a cookie name as parameters and return a cookie string if the cookie name is found in the cookie string', () => {
+  it(`should accept a cookie string and a cookie name as parameters and return
+    a cookie string if the cookie name is found in the cookie string`, () => {
     const cookieName = 'cookieName';
     const cookieString = `${cookieName}=${cookieValue}`;
 

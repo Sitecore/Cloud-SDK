@@ -13,16 +13,16 @@ export async function initMiddleware(request: NextRequest, response: NextRespons
       await init(request, response, {
         enableServerCookie: true,
         siteName: 'TestSite',
-        userId: 'user123',
-        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+        userId: 'user123'
       });
       break;
     case 'initFromMiddlewareWithEnableServerCookieFasle':
       await init(request, response, {
         enableServerCookie: false,
         siteName: 'TestSite',
-        userId: 'user123',
-        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+        userId: 'user123'
       });
       break;
   }
