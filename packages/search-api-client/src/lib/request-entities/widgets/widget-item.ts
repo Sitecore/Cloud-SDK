@@ -7,7 +7,8 @@ import { ErrorMessages } from '../../const';
 export class WidgetItem {
   protected entity: string;
   protected rfkId: string;
-  private _search?: WidgetItemSearch;
+  protected _search?: WidgetItemSearch;
+
   /**
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.

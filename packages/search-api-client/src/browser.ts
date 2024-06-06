@@ -2,6 +2,7 @@
 export { getSettings, init } from './lib/initializer/browser/initializer';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
+export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { getWidgetData } from './lib/requests/get-widget-data';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';

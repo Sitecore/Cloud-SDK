@@ -38,7 +38,24 @@ export interface WidgetItemSearch {
   };
 }
 
-// Create a type that intersects `WidgetItemSearch` with an override for `filter`
+export interface Facet {
+  all?: boolean;
+  max?: number;
+}
+
+export interface FacetDTO {
+  all?: boolean;
+  max?: number;
+}
+
+/**
+ * Represents a search widget item DTO search object.
+ */
+export interface SearchWidgetItemDTO extends WidgetItemDTO {
+  search?: WidgetItemSearchDTO & { facet?: FacetDTO };
+}
+
 export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
   filter?: FilterDTO;
 };
+

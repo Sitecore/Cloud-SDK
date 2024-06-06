@@ -2,6 +2,7 @@
 export { getSettings, initServer as init } from './lib/initializer/server/initializer';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
+export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/get-widget-data-server';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
