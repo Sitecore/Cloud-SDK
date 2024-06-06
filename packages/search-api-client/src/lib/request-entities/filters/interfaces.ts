@@ -1,6 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { BaseFilter } from './base-filter';
+import type { ComparisonFilter } from './comparison-filter';
+import type { GeoFilter } from './geo-filter';
 import type { LocationData } from '../context/interfaces';
+import type { LogicalFilter } from './logical-filter';
+
+export type Filter = LogicalFilter<keyof LogicalFilterValues> | GeoFilter | ComparisonFilter;
+export type FilterDTO = LogicalFilter<keyof LogicalFilterValues> | GeoFilterDTO | ComparisonFilterDTO;
 
 export interface ComparisonFilterDTO {
   name: string;

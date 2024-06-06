@@ -2,6 +2,7 @@
 import {
   type BrowserSettings,
   Context,
+  GeoFilter,
   WidgetItem,
   WidgetRequestData,
   getWidgetData,
@@ -25,7 +26,7 @@ export default function GetWidgetData() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7","search":{"limit":10,"offset":0}}]}'
+    '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0,  "filter": "add"}}]}'
   );
 
   const [inputContextData, setInputContextData] = useState('{"context":{"locale":{"country":"us","language":"en"}}}');
@@ -57,6 +58,23 @@ export default function GetWidgetData() {
           if (item.search?.query) {
             if (item.search.query?.keyphrase !== undefined) widget.keyphrase = item.search.query.keyphrase;
             if (item.search.query?.operator !== undefined) widget.operator = item.search.query.operator;
+          }
+
+          if (item.search?.filter) {
+            const filter = new GeoFilter('location', {
+              location: { latitude: -16.181724, longitude: -47.277881 },
+              distance: '3000km'
+            });
+
+            switch (item.search?.filter) {
+              case 'add':
+                widget.filter = filter;
+                break;
+              case 'remove':
+                widget.filter = filter;
+                widget.removeSearchFilter();
+                break;
+            }
           }
 
           return widget;

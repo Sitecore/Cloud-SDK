@@ -1,3 +1,4 @@
+import { ComparisonFilter } from '../filters/comparison-filter';
 import { ErrorMessages } from '../../const';
 import { WidgetItem } from './widget-item';
 
@@ -7,6 +8,13 @@ describe('widget item class', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     rfk_id: 'test'
   };
+  const mockFilter = {
+    toDTO: jest.fn()
+  };
+
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
 
   describe('validator', () => {
     it(`should not throw an error if all properties are correct`, () => {
@@ -85,6 +93,7 @@ describe('widget item class', () => {
         expect(widgetItem.toDTO()).toStrictEqual({
           ...expected,
           search: {
+            filter: undefined,
             offset
           }
         });
@@ -133,6 +142,7 @@ describe('widget item class', () => {
         expect(widgetItem.toDTO()).toStrictEqual({
           ...expected,
           search: {
+            filter: undefined,
             limit
           }
         });
@@ -180,7 +190,7 @@ describe('widget item class', () => {
 
     it('should set content to empty object when provided an empty object', () => {
       widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toEqual({});
+      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
     });
 
     it('should overwrite previous content with empty object', () => {
@@ -193,12 +203,12 @@ describe('widget item class', () => {
     it('should maintain the integrity of the content structure', () => {
       widgetItem.content = ['item1', 'item2'];
       widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toEqual({});
+      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
     });
 
     it('should not set the content if you do not provide one', () => {
       widgetItem.content = null as unknown as string[];
-      expect(widgetItem.toDTO().search?.content).toEqual({});
+      expect(widgetItem.toDTO().search?.content).toEqual(undefined);
     });
   });
 
@@ -312,8 +322,8 @@ describe('widget item class', () => {
 
     it('resetSearchQuery should set the query property to undefined', () => {
       widgetItem.resetSearchQuery();
-      expect(widgetItem['_search']).toStrictEqual({ content: {}, query: undefined });
-      expect(widgetItem['_search']?.content).toStrictEqual({});
+      expect(widgetItem['_search']).toStrictEqual({ content: undefined, query: undefined });
+      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
       expect(widgetItem['_search']?.query).toBeUndefined();
       expect(widgetItem.toDTO().search?.query).toBeUndefined();
     });
@@ -341,14 +351,76 @@ describe('widget item class', () => {
       expect(widgetItem.toDTO()).toEqual({
         ...expected,
         search: {
-          group_by: 'type'
+          filter: undefined,
+          groupBy: 'type'
         }
       });
+
+      const dto = widgetItem.toDTO();
+      expect(JSON.stringify(dto.search)).toEqual('{"groupBy":"type"}');
+      expect(mockFilter.toDTO).not.toHaveBeenCalled();
     });
 
     it(`should reflect the 'groupBy' as undefined when it is not set`, () => {
       widgetItem.groupBy = undefined as unknown as string;
       expect(widgetItem.groupBy).toBeUndefined();
+    });
+  });
+
+  describe('filter', () => {
+    let widgetItem: WidgetItem;
+    const validWidgetItem = {
+      entity: 'test',
+      rfkId: 'test'
+    };
+
+    const comparisonFilter = new ComparisonFilter('price', 'lt', 100);
+    beforeEach(() => {
+      widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    });
+
+    it('should get the current filter', () => {
+      const filterEqual = new ComparisonFilter('title', 'eq', 'title1');
+      widgetItem.filter = filterEqual;
+      const dto = widgetItem.toDTO();
+      expect(JSON.stringify(dto.search)).toEqual('{"filter":{"name":"title","type":"eq","value":"title1"}}');
+      expect(mockFilter.toDTO).not.toHaveBeenCalled();
+    });
+
+    it('filter should be undefined if you dont have a filter', () => {
+      expect(widgetItem.filter).toBeUndefined();
+      expect(widgetItem['_search']).toBeUndefined();
+      expect(widgetItem['_search']?.filter).toBeUndefined();
+    });
+
+    it('should reset the filter to undefined', () => {
+      widgetItem.filter = comparisonFilter;
+      widgetItem.removeSearchFilter();
+      expect(widgetItem.filter).toBeUndefined();
+    });
+
+    it('resetSearchFilter should set the filter property to undefined', () => {
+      widgetItem.content = {
+        query: { keyphrase: 'example', operator: 'and' }
+      };
+
+      widgetItem.removeSearchFilter();
+      expect(widgetItem['_search']).toStrictEqual({ content: undefined, filter: undefined });
+      expect(widgetItem['_search']?.filter).toBeUndefined();
+      expect(widgetItem.toDTO().search?.filter).toBeUndefined();
+      const dto = widgetItem.toDTO();
+
+      expect(JSON.stringify(dto.search)).toBeUndefined();
+      expect(JSON.stringify(dto.search)).not.toEqual('');
+      expect(mockFilter.toDTO).not.toHaveBeenCalled();
+    });
+
+    it('toDTO returns correct DTO when _search is empty', () => {
+      widgetItem['_search'] = {};
+      const dto = widgetItem.toDTO();
+
+      expect(JSON.stringify(dto.search)).toBeUndefined();
+      expect(mockFilter.toDTO).not.toHaveBeenCalled();
     });
   });
 });

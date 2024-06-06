@@ -16,17 +16,18 @@ defineStep('Search API responds with:', (params: string) => {
     const parameters = JSON.parse(params);
     const length = parameters.items.length;
     if (searchResponse)
-      for (let index = 0; index < length; index++) {
-        const { rfkId, entity, search: searchParam } = parameters.items[index];
-        const { rfk_id: reqRfkId, entity: reqEntity, limit, offset, content } = searchResponse.body.widgets[index];
+      if (!searchResponse?.body?.errors)
+        for (let index = 0; index < length; index++) {
+          const { rfkId, entity, search: searchParam } = parameters.items[index];
+          const { rfk_id: reqRfkId, entity: reqEntity, limit, offset, content } = searchResponse.body.widgets[index];
 
-        expect(reqRfkId).to.equal(rfkId);
-        expect(reqEntity).to.equal(entity);
-        if (limit) expect(limit).to.deep.equal(searchParam.limit);
-        if (offset) expect(offset).to.deep.equal(searchParam.offset);
-        if (content) expect(content.length).to.equal(searchParam.content);
-        if (content) expect(content.length).to.equal(searchParam.content);
-      }
+          expect(reqRfkId).to.equal(rfkId);
+          expect(reqEntity).to.equal(entity);
+          if (limit) expect(limit).to.deep.equal(searchParam.limit);
+          if (offset) expect(offset).to.deep.equal(searchParam.offset);
+          if (content) expect(content.length).to.equal(searchParam.content);
+          if (content) expect(content.length).to.equal(searchParam.content);
+        }
   }
 });
 

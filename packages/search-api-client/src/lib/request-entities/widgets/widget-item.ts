@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+
+import type { Filter, FilterDTO } from '../filters/interfaces';
 import type { LogicalOperators, WidgetItemDTO, WidgetItemSearch } from './interfaces';
 import { ErrorMessages } from '../../const';
 
@@ -6,7 +8,6 @@ export class WidgetItem {
   protected entity: string;
   protected rfkId: string;
   private _search?: WidgetItemSearch;
-
   /**
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.
@@ -66,7 +67,7 @@ export class WidgetItem {
   set content(value: object | string[]) {
     this._search = {
       ...this._search,
-      content: Array.isArray(value) ? { fields: value } : {}
+      content: Array.isArray(value) ? { fields: value } : undefined
     };
   }
   /**
@@ -124,6 +125,25 @@ export class WidgetItem {
       query: undefined
     };
   }
+  /**
+   * Set the search filter
+   */
+  set filter(filter: Filter) {
+    this._search = {
+      ...this._search,
+      filter
+    };
+  }
+
+  /**
+   * Reset the search filter to undefined
+   */
+  removeSearchFilter() {
+    this._search = {
+      ...this._search,
+      filter: undefined
+    };
+  }
 
   /**
    * Maps the widget item to its DTO format.
@@ -131,20 +151,12 @@ export class WidgetItem {
   toDTO(): WidgetItemDTO {
     const dto: WidgetItemDTO = {
       entity: this.entity,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
       rfk_id: this.rfkId
     };
 
-    if (this._search?.offset === 0 || this._search?.offset) dto.search = { ...dto.search, offset: this._search.offset };
-    if (this._search?.limit) dto.search = { ...dto.search, limit: this._search.limit };
-    if (this._search?.content) dto.search = { ...dto.search, content: this._search.content };
-    if (this._search?.query?.keyphrase)
-      dto.search = { ...dto.search, query: { ...dto.search?.query, keyphrase: this._search.query.keyphrase } };
-    if (this._search?.query?.operator)
-      dto.search = {
-        ...dto.search,
-        query: { keyphrase: this._search.query.keyphrase, operator: this._search.query.operator }
-      };
-    if (this._search?.groupBy) dto.search = { ...dto.search, group_by: this._search.groupBy };
+    if (this._search && JSON.stringify(this._search) !== '{}')
+      dto.search = { ...this._search, filter: this._search?.filter?.toDTO() as FilterDTO };
 
     return dto;
   }

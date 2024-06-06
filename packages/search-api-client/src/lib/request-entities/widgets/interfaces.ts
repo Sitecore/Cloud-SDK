@@ -1,11 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
+import type { Filter, FilterDTO } from '../filters/interfaces';
+
 /**
  * Represents a widget item object that holds all possible members in its DTO format.
  */
 export interface WidgetItemDTO {
   entity: string;
   search?: WidgetItemSearchDTO;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
 }
 
@@ -24,26 +27,18 @@ export type LogicalOperators = 'and' | 'or';
  * Represents a widget item search object.
  */
 export interface WidgetItemSearch {
-  content?: { fields?: string[] };
+  content?: { fields?: string[] | unknown };
   limit?: number;
   offset?: number;
+  filter?: Filter;
+  groupBy?: string;
   query?: {
     keyphrase: string;
     operator?: LogicalOperators;
   };
-  groupBy?: string;
 }
 
-/**
- * Represents a widget item DTO search object.
- */
-export interface WidgetItemSearchDTO {
-  content?: { fields?: string[] };
-  limit?: number;
-  offset?: number;
-  query?: {
-    keyphrase: string;
-    operator?: LogicalOperators;
-  };
-  group_by?: string;
-}
+// Create a type that intersects `WidgetItemSearch` with an override for `filter`
+export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
+  filter?: FilterDTO;
+};
