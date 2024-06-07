@@ -53,7 +53,7 @@ Scenario Outline: Developer requests search widget data from browser with invali
   Then an error is thrown: '<error_code>'
   
   Examples:
-    | items                                                                   | error_code                                                                                  | 
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":150}}}] | [IV-0014] Incorrect value for "max"​​. Set the value to a number between 1 and 100 inclusive. | 
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":0}}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to a number between 1 and 100 inclusive. | 
+    | items                                                                   | error_code                                                                                    | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":150}}}] | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":0}}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
     

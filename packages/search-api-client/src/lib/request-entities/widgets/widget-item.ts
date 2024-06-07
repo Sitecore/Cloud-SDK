@@ -126,6 +126,7 @@ export class WidgetItem {
       query: undefined
     };
   }
+
   /**
    * Set the search filter
    */
@@ -137,7 +138,7 @@ export class WidgetItem {
   }
 
   /**
-   * Reset the search filter to undefined
+   * Sets the search filter to undefined
    */
   removeSearchFilter() {
     this._search = {

@@ -2,10 +2,18 @@
 import type { BaseFilter } from './base-filter';
 import type { ComparisonFilter } from './comparison-filter';
 import type { GeoFilter } from './geo-filter';
+import type { GeoWithinFilter } from './geo-within-filter';
+import type { ListFilter } from './list-filter';
 import type { LocationData } from '../context/interfaces';
 import type { LogicalFilter } from './logical-filter';
 
-export type Filter = LogicalFilter<keyof LogicalFilterValues> | GeoFilter | ComparisonFilter;
+export type Filter =
+  | LogicalFilter<keyof LogicalFilterValues>
+  | GeoFilter
+  | ComparisonFilter
+  | ListFilter
+  | GeoWithinFilter;
+
 export type FilterDTO = LogicalFilter<keyof LogicalFilterValues> | GeoFilterDTO | ComparisonFilterDTO;
 
 export interface ComparisonFilterDTO {
