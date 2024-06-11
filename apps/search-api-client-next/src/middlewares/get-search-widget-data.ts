@@ -27,6 +27,21 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
       await getWidgetData(widgetRequestData);
 
       break;
+    case 'getSearchWidgetDataFromMiddlewareWithValidPayloadUsingSetter':
+      await init(request, response, {
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
+        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+        userId: 'test'
+      });
+
+      widget = new SearchWidgetItem('content', 'rfkid_7');
+      widget.facet = { all: true, max: 50 };
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+
+      break;
   }
   resetFetch();
 }

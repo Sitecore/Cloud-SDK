@@ -29,6 +29,28 @@ export class SearchWidgetItem extends WidgetItem {
   }
 
   /**
+   * Sets the search facet for the SearchWidgetItem.
+   * This method updates the `facet` property of the search configuration within the SearchWidgetItem instance.
+   *
+   * @param facet - The object to set as the search facet.
+   * @throws Error If the max is less than 1 or greater than 100, indicating an invalid range.
+   */
+  set facet(facet: Facet) {
+    if (typeof facet.max === 'number') this._validateMax(facet.max);
+
+    this._all = facet.all;
+    this._max = facet.max;
+  }
+
+  /**
+   * Sets the facet data to undefined
+   */
+  removeFacet() {
+    this._all = undefined;
+    this._max = undefined;
+  }
+
+  /**
    * Maps the search widget item to its DTO format.
    */
   toDTO(): SearchWidgetItemDTO {

@@ -29,6 +29,20 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
       await getWidgetData(widgetRequestData);
       break;
+    case 'getSearchWidgetDataFromAPIWithValidPayloadUsingSetter':
+      await init(req, res, {
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
+        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
+        userId: 'test'
+      });
+
+      widget = new SearchWidgetItem('content', 'rfkid_7');
+      widget.facet = { all: true, max: 50 };
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+      break;
   }
   resetFetch();
 

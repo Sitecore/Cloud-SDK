@@ -6,9 +6,12 @@ import {
   init,
   SearchWidgetItem
 } from '@sitecore-cloudsdk/search-api-client/browser';
+import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
 export default function GetSearchWidgetData() {
+  const searchParams = useSearchParams();
+
   useEffect(() => {
     const settings: BrowserSettings = {
       enableBrowserCookie: true,
@@ -28,7 +31,8 @@ export default function GetSearchWidgetData() {
   );
 
   const getSearchWidgetDataFromAPIWithValidPayload = async () => {
-    await fetch('/api/get-search-widget-data?testID=getSearchWidgetDataFromAPIWithValidPayload');
+    const testID = searchParams.get('testID') || '';
+    await fetch(`/api/get-search-widget-data?testID=${testID}`);
   };
 
   const requestSearchWidgetData = async () => {
@@ -41,6 +45,13 @@ export default function GetSearchWidgetData() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
+          if (item.search?.facetSetter) {
+            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            widget.facet = item.search.facetSetter;
+
+            return widget;
+          }
+
           const facet = { all: item.search?.facet?.all, max: item.search?.facet?.max };
           const widget = new SearchWidgetItem(item.entity, item.rfkId, facet);
 
