@@ -24,7 +24,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
         userId: 'test'
       });
 
-      widget = new SearchWidgetItem('content', 'rfkid_7', { all: true, max: 50 });
+      widget = new SearchWidgetItem('content', 'rfkid_7', {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: { name: 'count', order: 'asc' }
+      });
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);
@@ -38,7 +43,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
       });
 
       widget = new SearchWidgetItem('content', 'rfkid_7');
-      widget.facet = { all: true, max: 50 };
+      widget.facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: { name: 'count', order: 'asc' }
+      };
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

@@ -52,8 +52,7 @@ export default function GetSearchWidgetData() {
             return widget;
           }
 
-          const facet = { all: item.search?.facet?.all, max: item.search?.facet?.max };
-          const widget = new SearchWidgetItem(item.entity, item.rfkId, facet);
+          const widget = new SearchWidgetItem(item.entity, item.rfkId, item.search?.facet);
 
           return widget;
         });

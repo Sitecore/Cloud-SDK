@@ -1,11 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Facet, SearchWidgetItemDTO } from './interfaces';
+import type { Facet, FacetSort, SearchWidgetItemDTO } from './interfaces';
 import { ErrorMessages } from '../../const';
 import { WidgetItem } from './widget-item';
 
 export class SearchWidgetItem extends WidgetItem {
   private _all?: boolean;
   private _max?: number;
+  private _coverage?: boolean;
+  private _sort?: FacetSort;
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
@@ -16,12 +18,15 @@ export class SearchWidgetItem extends WidgetItem {
   constructor(entity: string, rfkId: string, facet?: Facet) {
     super(entity, rfkId);
 
-    if (facet?.max !== undefined) {
+    if (!facet || !Object.keys(facet).length) return;
+
+    if (typeof facet.max === 'number') {
       this._validateMax(facet.max);
       this._max = facet.max;
     }
-
-    if (facet?.all !== undefined) this._all = facet.all;
+    this._all = facet.all;
+    this._coverage = facet.coverage;
+    this._sort = facet.sort;
   }
 
   private _validateMax(max: number) {
@@ -40,6 +45,8 @@ export class SearchWidgetItem extends WidgetItem {
 
     this._all = facet.all;
     this._max = facet.max;
+    this._coverage = facet.coverage;
+    this._sort = facet.sort;
   }
 
   /**
@@ -48,6 +55,8 @@ export class SearchWidgetItem extends WidgetItem {
   removeFacet() {
     this._all = undefined;
     this._max = undefined;
+    this._coverage = undefined;
+    this._sort = undefined;
   }
 
   /**
@@ -57,7 +66,9 @@ export class SearchWidgetItem extends WidgetItem {
     const superDTO = super.toDTO();
     const facet = {
       all: this._all,
-      max: this._max
+      coverage: this._coverage,
+      max: this._max,
+      sort: this._sort
     };
 
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;

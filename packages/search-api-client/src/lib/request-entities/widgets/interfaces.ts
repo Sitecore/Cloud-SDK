@@ -38,14 +38,26 @@ export interface WidgetItemSearch {
   };
 }
 
+type FacetSortName = 'text' | 'count';
+type FacetSortOrder = 'asc' | 'desc';
+
+export interface FacetSort {
+  name: FacetSortName;
+  order: FacetSortOrder;
+}
+
 export interface Facet {
   all?: boolean;
   max?: number;
+  coverage?: boolean;
+  sort?: FacetSort;
 }
 
 export interface FacetDTO {
   all?: boolean;
   max?: number;
+  coverage?: boolean;
+  sort?: FacetSort;
 }
 
 /**
@@ -58,4 +70,3 @@ export interface SearchWidgetItemDTO extends WidgetItemDTO {
 export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
   filter?: FilterDTO;
 };
-

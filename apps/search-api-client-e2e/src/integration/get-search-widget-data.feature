@@ -4,7 +4,7 @@ Scenario: Developer requests search widget data from Middleware with a valid pay
     Given the '/get-search-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
     Then the request with id '<testID>' will contain:
     """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"max":50}}}]}
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"}}}}]}
     """
 
     Examples:
@@ -17,7 +17,7 @@ Scenario: Developer search requests widget data from API with a valid payload
     And the 'getSearchWidgetDataFromAPIWithValidPayload' button is clicked
     Then the request with id '<testID>' will contain:
     """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"max":50}}}]}
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"}}}}]}
     """
 
     Examples:
@@ -44,12 +44,17 @@ Scenario Outline: Developer requests search widget data from browser with a vali
 
 
   Examples:
-    | items                                                                             | items_payload                                                                     | status_code | 
-    | [{"rfkId":"rfkid_7","entity":"content"}]                                          | [{"rfkId":"rfkid_7","entity":"content"}]                                          | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{}}}]                    | [{"rfkId":"rfkid_7","entity":"content"}]                                          | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}] | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]         | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]         | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]            | 200         |  
+    | items                                                                                                                           | items_payload                                                                                                                   | status_code | 
+    | [{"rfkId":"rfkid_7","entity":"content"}]                                                                                        | [{"rfkId":"rfkid_7","entity":"content"}]                                                                                        | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{}}}]                                                                  | [{"rfkId":"rfkid_7","entity":"content"}]                                                                                        | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}]                                               | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}]                                               | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]                                                       | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]                                                       | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]                                                          | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]                                                          | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":true}}}]                                                   | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":true}}}]                                                   | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":false}}}]                                                  | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":false}}}]                                                  | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | 200         |  
 
 Scenario Outline: Developer requests search widget data from browser with invalid max attribute
   Given the '/get-search-widget-data' page is loaded
@@ -86,12 +91,17 @@ Scenario Outline: Developer requests search widget data from browser with a vali
 
 
   Examples:
-    | items                                                                                    | items_payload                                                                      | status_code | 
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{}}}]                     | [{"rfkId":"rfkid_7","entity":"content"}]                                           | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"max":50}}}]  | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}]  | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":false}}}]          | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]          | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"max":50}}}]             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]             | 200         |  
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":false,"max":50}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false,"max":50}}}] | 200         |  
+    | items                                                                                                                                 | items_payload                                                                                                                   | status_code | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{}}}]                                                                  | [{"rfkId":"rfkid_7","entity":"content"}]                                                                                        | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":false,"max":50}}}]                                              | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false,"max":50}}}]                                              | 200         |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"max":50}}}]                                               | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"max":50}}}]                                               | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":false}}}]                                                       | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":false}}}]                                                       | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"max":50}}}]                                                          | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":50}}}]                                                          | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"coverage":true}}}]                                                   | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":true}}}]                                                   | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"coverage":false}}}]                                                  | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"coverage":false}}}]                                                  | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"sort":{"name":"text","order":"asc"}}}}]                              | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"sort":{"name":"count","order":"desc"}}}}]                            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | 200         |    
 
 Scenario Outline: Developer requests search widget data from browser with invalid max attribute using setter method
   Given the '/get-search-widget-data' page is loaded
