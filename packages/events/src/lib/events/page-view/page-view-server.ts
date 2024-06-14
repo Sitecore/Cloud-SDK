@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { getCookieValueFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import type { EPResponse } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
 import type { PageViewData } from './page-view-event';
@@ -16,7 +16,7 @@ import { sendEvent } from '../send-event/sendEvent';
  */
 export function pageViewServer<T extends Request>(request: T, pageViewData?: PageViewData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
-  const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
   // Host is irrelevant but necessary to support relative URL
   const requestUrl = new URL(request.url as string, `https://localhost`);
 

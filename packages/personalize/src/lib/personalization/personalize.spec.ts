@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core';
 import * as initializerModule from '../initializer/client/initializer';
+import * as utils from '@sitecore-cloudsdk/utils';
 import { Personalizer } from './personalizer';
 import { personalize } from './personalize';
 
@@ -15,8 +16,19 @@ jest.mock('@sitecore-cloudsdk/core', () => {
   };
 });
 
+jest.mock('@sitecore-cloudsdk/utils', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule
+  };
+});
+
 describe('personalize', () => {
-  const id = 'test_id';
+  const browserId = 'browser_id_value';
+  const guestRef = 'guest_ref_value';
   const personalizeData = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     channel: 'WEB',
@@ -43,7 +55,9 @@ describe('personalize', () => {
 
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(browserId);
+  jest.spyOn(utils, 'getCookieValueClientSide').mockReturnValue(guestRef);
+
   jest.spyOn(core, 'createCookie').mock;
 
   beforeEach(() => {
@@ -65,6 +79,8 @@ describe('personalize', () => {
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
+    expect(utils.getCookieValueClientSide).toHaveBeenCalledWith('guestRef');
+    expect(utils.getCookieValueClientSide).toHaveBeenCalledTimes(1);
   });
 
   it('should throw error if settings have not been configured properly', () => {

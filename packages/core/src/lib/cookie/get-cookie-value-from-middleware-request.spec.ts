@@ -1,4 +1,4 @@
-import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
+import { getCookieValueFromMiddlewareRequest } from './get-cookie-value-from-middleware-request';
 
 const mockCookieName = 'bid_key';
 const mockRequest = {
@@ -8,36 +8,36 @@ const mockRequest = {
   }
 };
 
-describe('getBrowserIdFromMiddlewareRequest', () => {
+describe('getCookieValueFromMiddlewareRequest', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it('should return browser ID when found in Next.js v12 cookie format', () => {
+  it('should return cookie value when found in Next.js v12 cookie format', () => {
     const expectedBrowserId = 'your-browser-id';
     mockRequest.cookies.get.mockReturnValue(expectedBrowserId);
 
-    const result = getBrowserIdFromMiddlewareRequest(mockRequest, mockCookieName);
+    const result = getCookieValueFromMiddlewareRequest(mockRequest, mockCookieName);
 
     expect(result).toBe(expectedBrowserId);
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(mockCookieName);
   });
 
-  it('should return browser ID when found in Next.js v13 cookie format', () => {
+  it('should return cookie value when found in Next.js v13 cookie format', () => {
     const expectedBrowserId = 'your-browser-id';
     const cookieObject = { value: expectedBrowserId };
     mockRequest.cookies.get.mockReturnValue(cookieObject);
 
-    const result = getBrowserIdFromMiddlewareRequest(mockRequest, mockCookieName);
+    const result = getCookieValueFromMiddlewareRequest(mockRequest, mockCookieName);
 
     expect(result).toBe(expectedBrowserId);
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(mockCookieName);
   });
 
-  it('should return undefined when browser ID is not found', () => {
+  it('should return undefined when cookie value is not found', () => {
     mockRequest.cookies.get.mockReturnValue(undefined);
 
-    const result = getBrowserIdFromMiddlewareRequest(mockRequest, mockCookieName);
+    const result = getCookieValueFromMiddlewareRequest(mockRequest, mockCookieName);
 
     expect(result).toBeUndefined();
     expect(mockRequest.cookies.get).toHaveBeenCalledWith(mockCookieName);

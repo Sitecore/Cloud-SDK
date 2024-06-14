@@ -3,7 +3,7 @@
 import type { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import type { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
-import { getBrowserIdFromMiddlewareRequest } from './get-browser-id-from-middleware-request';
+import { getCookieValueFromMiddlewareRequest } from './get-cookie-value-from-middleware-request';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 /**
@@ -27,7 +27,7 @@ export async function handleNextJsMiddlewareCookie(
 ) {
   const { cookieName } = options.cookieSettings;
 
-  let cookieValue = getBrowserIdFromMiddlewareRequest(request, cookieName);
+  let cookieValue = getCookieValueFromMiddlewareRequest(request, cookieName);
 
   if (!cookieValue)
     cookieValue = (await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout))

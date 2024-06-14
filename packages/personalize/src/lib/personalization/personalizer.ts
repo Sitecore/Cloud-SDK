@@ -11,7 +11,7 @@ export class Personalizer {
    * The Personalizer Class runs a flow of interactive experiments.
    * @param id - The browser id of the user
    */
-  constructor(private id: string) {}
+  constructor(private id: string, private guestRef: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
@@ -77,12 +77,12 @@ export class Personalizer {
       currencyCode: input.currency,
       email: input.email,
       friendlyId: input.friendlyId,
+      ...(this.guestRef && { guestRef: this.guestRef }),
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,
       pointOfSale: ''
     };
-
     return mappedData;
   }
 

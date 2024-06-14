@@ -1,5 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core';
-import type { PageViewData} from './page-view-event';
+import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { pageViewServer } from './page-view-server';
 import { sendEvent } from '../send-event/sendEvent';

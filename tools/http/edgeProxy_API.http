@@ -14,7 +14,8 @@
 GET {{targetURL}}/events/v1.2/browser/create.json?sitecoreContextId={{contextID}}&client_key=
 
 @browserID = {{getBrowserID.response.body.ref}}
-
+@guestRef = {{getBrowserID.response.body.customer_ref}}
+ 
 ### Send Custom Event
 POST {{targetURL}}/events/v1.2/events?sitecoreContextId={{contextID}}&siteId={{siteId}}
 Content-Type: application/json
@@ -80,6 +81,7 @@ Content-Type: application/json
     "clientKey": "",
     "currencyCode": "USD",
     "friendlyId": "personalizeintegrationtest",
+    "guestRef":"{{guestRef}}",
     "language": "EN",
     "pointOfSale": "",
     "browserId": "{{browserID}}"

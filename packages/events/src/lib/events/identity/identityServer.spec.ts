@@ -1,5 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core';
-import type { IdentityData} from './identity-event';
+import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
 import { identityServer } from './identityServer'; // Import the function to be tested
 import { sendEvent } from '../send-event/sendEvent';
@@ -62,7 +62,7 @@ describe('eventServer', () => {
     };
   });
 
-  const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
+  const getCookieValueFromRequestSpy = jest.spyOn(core, 'getCookieValueFromRequest').mockReturnValueOnce('1234');
   const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
 
   it('should send a custom event to the server', async () => {
@@ -80,7 +80,7 @@ describe('eventServer', () => {
 
     await identityServer(req, { ...identityData, extensionData });
 
-    expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
+    expect(getCookieValueFromRequestSpy).toHaveBeenCalled();
     expect(IdentityEvent).toHaveBeenCalledTimes(1);
     expect(IdentityEvent).toHaveBeenCalledWith({
       id: '1234',

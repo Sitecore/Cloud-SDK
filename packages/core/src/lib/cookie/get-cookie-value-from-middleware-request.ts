@@ -3,15 +3,15 @@
 import type { Cookie, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 
 /**
- * Retrieves the browser ID from the provided Middleware Request by extracting the cookie value
- * associated with the specified 'cookieName'. The function first checks for Next.js v12 cookie values,
+ * Extracts the cookie value from the provided Middleware Request by reading the
+ * given `cookieName` The function first checks for Next.js v12 cookie values,
  * and if not found, it checks for Next.js v13 cookie values.
  *
  * @param request - The Middleware Request object.
  * @param cookieName - The name of the cookie to retrieve.
- * @returns The browser ID extracted from the cookie, or undefined if not found.
+ * @returns The cookie value extracted from the cookie, or undefined if not found.
  */
-export function getBrowserIdFromMiddlewareRequest(request: MiddlewareRequest, cookieName: string) {
+export function getCookieValueFromMiddlewareRequest(request: MiddlewareRequest, cookieName: string) {
   const cookieValueFromRequest: Cookie | string | undefined = request.cookies.get(cookieName);
   // It checks nextjs v12 cookie values
   if (typeof cookieValueFromRequest === 'string') return cookieValueFromRequest;

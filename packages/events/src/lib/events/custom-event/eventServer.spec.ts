@@ -59,7 +59,7 @@ describe('eventServer', () => {
     };
   });
 
-  const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest').mockReturnValueOnce('1234');
+  const getCookieNameFromRequestSpy = jest.spyOn(core, 'getCookieValueFromRequest').mockReturnValueOnce('1234');
   const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
 
   it('should send a custom event to the server', async () => {
@@ -77,7 +77,7 @@ describe('eventServer', () => {
 
     await eventServer(req, eventData);
 
-    expect(getBrowserIdFromRequestSpy).toHaveBeenCalled();
+    expect(getCookieNameFromRequestSpy).toHaveBeenCalled();
     expect(CustomEvent).toHaveBeenCalledTimes(1);
     expect(CustomEvent).toHaveBeenCalledWith({
       eventData,

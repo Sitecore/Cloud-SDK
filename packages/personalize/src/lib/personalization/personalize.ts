@@ -5,6 +5,7 @@ import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import { awaitInit } from '../initializer/client/initializer';
+import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -20,8 +21,14 @@ export async function personalize(
 
   const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0006);
   const id = getBrowserId();
+  const guestRef = getCookieValueClientSide('guestRef');
 
-  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, window.location.search, {
-    timeout: opts?.timeout
-  });
+  return new Personalizer(id, guestRef).getInteractiveExperienceData(
+    personalizeData,
+    settings,
+    window.location.search,
+    {
+      timeout: opts?.timeout
+    }
+  );
 }

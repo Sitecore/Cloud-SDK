@@ -59,14 +59,15 @@ describe('personalizeServer', () => {
 
   it('should return an object with available functionality', async () => {
     req.headers.get = () => null;
-    const getBrowserIdFromRequestSpy = jest.spyOn(core, 'getBrowserIdFromRequest');
+    const getCookieValueFromRequestSpy = jest.spyOn(core, 'getCookieValueFromRequest');
     const getSettingsServerSpy = jest.spyOn(core, 'getSettingsServer');
     getSettingsServerSpy.mockReturnValue(settings);
 
     expect(typeof personalizeServer).toBe('function');
 
     personalizeServer(req, personalizeData);
-    expect(getBrowserIdFromRequestSpy).toHaveBeenCalledTimes(1);
+    expect(getCookieValueFromRequestSpy).toHaveBeenCalledTimes(2);
+    expect(getCookieValueFromRequestSpy).toHaveBeenLastCalledWith(req, 'guestRef');
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {

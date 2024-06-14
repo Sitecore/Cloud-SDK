@@ -53,6 +53,7 @@ describe('sendCallFlowsRequest', () => {
     clientKey: '',
     currencyCode: 'EUR',
     friendlyId: 'personalizeintegrationtest',
+    guestRef: 'guestRef',
     language: 'EN',
     pointOfSale: ''
   };
@@ -101,6 +102,7 @@ describe('sendCallFlowsRequest', () => {
         clientKey: 'key',
         currencyCode: 'EUR',
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         language: 'EN',
         pointOfSale: ''
       };
@@ -138,6 +140,7 @@ describe('sendCallFlowsRequest', () => {
         clientKey: 'key',
         currencyCode: 'EUR',
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         language: 'EN',
         pointOfSale: ''
       };
@@ -301,6 +304,7 @@ describe('sendCallFlowsRequest', () => {
         clientKey: '',
         currencyCode: 'EUR',
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         language: 'EN',
         pointOfSale: '',
         // eslint-disable-next-line sort-keys

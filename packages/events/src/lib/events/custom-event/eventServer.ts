@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { getCookieValueFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { CustomEvent } from './custom-event';
 import type { EPResponse } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../../consts';
@@ -17,7 +17,7 @@ import { sendEvent } from '../send-event/sendEvent';
  */
 export function eventServer<T extends Request>(request: T, eventData: EventData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
-  const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
 
   return new CustomEvent({
     eventData,

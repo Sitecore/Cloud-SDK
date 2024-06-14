@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
-import { getBrowserIdFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import { getCookieValueFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
 import { ErrorMessages } from '../consts';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 import { Personalizer } from './personalizer';
@@ -21,7 +21,8 @@ export function personalizeServer<T extends Request>(
   opts?: { timeout?: number }
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0007);
-  const id = getBrowserIdFromRequest(request, settings.cookieSettings.cookieName);
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
+  const guestRef = getCookieValueFromRequest(request, 'guestRef');
 
   const requestUrl = new URL(request.url as string, `https://localhost`);
 
@@ -32,7 +33,7 @@ export function personalizeServer<T extends Request>(
   if (!personalizeData.geo && isNextJsMiddlewareRequest(request) && request.geo && Object.keys(request.geo).length)
     personalizeData.geo = request.geo as PersonalizeGeolocation;
 
-  return new Personalizer(id).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
+  return new Personalizer(id, guestRef).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
     timeout: opts?.timeout,
     userAgent
   });

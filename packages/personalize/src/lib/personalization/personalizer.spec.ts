@@ -28,9 +28,10 @@ describe('Test Personalizer Class', () => {
   const { window } = global;
   let settingsMock: core.Settings;
   let personalizeInputMock: PersonalizeData;
-  const id = 'test_id';
+  const browserId = 'browserId';
+  const guestRef = 'guestRef';
 
-  jest.spyOn(core, 'getBrowserId').mockReturnValue(id);
+  jest.spyOn(core, 'getBrowserId').mockReturnValue(browserId);
 
   beforeEach(() => {
     jest.spyOn(core as any, 'language').mockImplementation(() => 'EN');
@@ -63,7 +64,11 @@ describe('Test Personalizer Class', () => {
   describe('Test Personalizer validation ', () => {
     function callValidation(personalizeInputMock: PersonalizeData, errorMessage: string) {
       const action = async () => {
-        await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+        await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+          personalizeInputMock,
+          settingsMock,
+          ''
+        );
       };
       expect(() => action()).rejects.toThrow(errorMessage);
       expect(validateSpy).toHaveBeenCalledTimes(1);
@@ -82,7 +87,7 @@ describe('Test Personalizer Class', () => {
     });
 
     it('should not throw error when friendlyId are provided', async () => {
-      await new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      await new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(validateSpy).toHaveBeenCalledTimes(1);
       expect(() => validateSpy).not.toThrow(`[MV-0004] "friendlyId" is required.`);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
@@ -125,16 +130,17 @@ describe('Test Personalizer Class', () => {
     it(`should return undefined language if language methods in not on window 
     or window.document.documentElement.lang.length is less than 2`, () => {
       personalizeInputMock.language = undefined;
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(core.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        browserId: 'test_id',
+        browserId: 'browserId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
         email: undefined,
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: undefined,
         language: 'EN',
         params: undefined,
@@ -144,16 +150,17 @@ describe('Test Personalizer Class', () => {
 
     it('should return infer language if infer is provided and no page is provided ', () => {
       personalizeInputMock.language = undefined;
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(core.language).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        browserId: 'test_id',
+        browserId: 'browserId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
         email: undefined,
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: undefined,
         language: 'EN',
         params: undefined,
@@ -174,7 +181,7 @@ describe('Test Personalizer Class', () => {
         customString: 'example value'
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(
@@ -219,6 +226,7 @@ describe('Test Personalizer Class', () => {
         currencyCode: 'EUR',
         email: 'test',
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: { id: '1', provider: 'email' },
         language: undefined,
         params: { customNumber: 123, customString: 'example value' },
@@ -233,6 +241,7 @@ describe('Test Personalizer Class', () => {
           currencyCode: 'EUR',
           email: 'test',
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: {
             id: '1',
             provider: 'email'
@@ -303,7 +312,11 @@ describe('Test Personalizer Class', () => {
         sitecoreEdgeUrl: core.SITECORE_EDGE_URL
       };
 
-      new Personalizer(id).getInteractiveExperienceData(interactiveExperienceDataMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        interactiveExperienceDataMock,
+        settingsMock,
+        ''
+      );
 
       const expectedResult = {
         channel: 'WEB',
@@ -317,7 +330,7 @@ describe('Test Personalizer Class', () => {
       expect(sanitizeInputSpy).toHaveReturnedWith(expectedResult);
     });
     it('Test return object of the sanitizeInput method without email and identifier ', () => {
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -331,7 +344,7 @@ describe('Test Personalizer Class', () => {
         provider: 'email'
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -348,7 +361,7 @@ describe('Test Personalizer Class', () => {
         provider: 'email'
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -360,7 +373,7 @@ describe('Test Personalizer Class', () => {
       const mockIdentifier = {} as PersonalizeIdentifierInput;
       personalizeInputMock.identifier = mockIdentifier;
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -376,7 +389,7 @@ describe('Test Personalizer Class', () => {
         customValue: { value: 123 }
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -387,7 +400,7 @@ describe('Test Personalizer Class', () => {
     it('Test return object of the sanitizeInput method with params object as empty object', () => {
       personalizeInputMock.params = {};
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -411,7 +424,7 @@ describe('Test Personalizer Class', () => {
         }
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -431,7 +444,7 @@ describe('Test Personalizer Class', () => {
         }
       };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -441,7 +454,7 @@ describe('Test Personalizer Class', () => {
     it('should return an object without params if empty geo is provided', () => {
       personalizeInputMock.geo = {};
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
       expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -467,18 +480,19 @@ describe('Test Personalizer Class', () => {
     it('Test return object of the map method without email and identifier ', () => {
       personalizeInputMock.email = undefined;
       personalizeInputMock.identifier = undefined;
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(core.language).toHaveBeenCalledTimes(0);
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        browserId: 'test_id',
+        browserId: 'browserId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
         email: undefined,
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: undefined,
         language: 'EN',
         params: undefined,
@@ -487,12 +501,13 @@ describe('Test Personalizer Class', () => {
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledTimes(1);
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          browserId: 'test_id',
+          browserId: 'browserId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: undefined,
           language: 'EN',
           params: undefined,
@@ -522,7 +537,7 @@ describe('Test Personalizer Class', () => {
       };
       personalizeInputMock.email = undefined;
       personalizeInputMock.identifier = undefined;
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(core.language).toHaveBeenCalledTimes(0);
 
@@ -539,12 +554,13 @@ describe('Test Personalizer Class', () => {
       });
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
-        browserId: 'test_id',
+        browserId: 'browserId',
         channel: 'WEB',
         clientKey: '',
         currencyCode: 'EUR',
         email: undefined,
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: undefined,
         language: 'EN',
         params: { customNumber: 123, customString: 'example value', customValue: { value: 123 } },
@@ -553,13 +569,14 @@ describe('Test Personalizer Class', () => {
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledTimes(1);
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          browserId: 'test_id',
+          browserId: 'browserId',
           channel: 'WEB',
 
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: undefined,
           language: 'EN',
           params: {
@@ -590,7 +607,7 @@ describe('Test Personalizer Class', () => {
         id: '1',
         provider: 'email'
       };
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
 
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledTimes(1);
       expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
@@ -600,6 +617,7 @@ describe('Test Personalizer Class', () => {
         currencyCode: 'EUR',
         email: undefined,
         friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestRef',
         identifiers: { id: '1', provider: 'email' },
         language: 'EN',
         params: undefined,
@@ -610,11 +628,11 @@ describe('Test Personalizer Class', () => {
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
           channel: 'WEB',
-
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: {
             id: '1',
             provider: 'email'
@@ -662,7 +680,7 @@ describe('Test Personalizer Class', () => {
         .fn()
         .mockImplementation(() => Promise.resolve({ json: () => Promise.resolve(expectedResponse) }));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(
+      const response = await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
         personalizeInputMock,
         settingsMock,
         window.location.search,
@@ -676,7 +694,7 @@ describe('Test Personalizer Class', () => {
         `${core.SITECORE_EDGE_URL}/v1/personalize?sitecoreContextId=${settingsMock.sitecoreEdgeContextId}&siteId=${settingsMock.siteName}`,
         {
           // eslint-disable-next-line max-len
-          body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","language":"EN","pointOfSale":"","browserId":"test_id"}',
+          body: '{"channel":"WEB","clientKey":"","currencyCode":"EUR","friendlyId":"personalizeintegrationtest","guestRef":"guestRef","language":"EN","pointOfSale":"","browserId":"browserId"}',
           /* eslint-disable @typescript-eslint/naming-convention */
           headers: {
             'Content-Type': 'application/json',
@@ -709,7 +727,7 @@ describe('Test Personalizer Class', () => {
         '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
-        await new Personalizer(id).getInteractiveExperienceData(
+        await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
           personalizeInputMock,
           settingsMock,
           window.location.search,
@@ -725,7 +743,7 @@ describe('Test Personalizer Class', () => {
         '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
 
       expect(async () => {
-        await new Personalizer(id).getInteractiveExperienceData(
+        await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
           personalizeInputMock,
           settingsMock,
           window.location.search,
@@ -743,9 +761,14 @@ describe('Test Personalizer Class', () => {
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, window.location.search, {
-        timeout: 100
-      });
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        personalizeInputMock,
+        settingsMock,
+        window.location.search,
+        {
+          timeout: 100
+        }
+      );
       jest.advanceTimersByTime(1000);
 
       expect(abortSpy).toHaveBeenCalledTimes(1);
@@ -765,7 +788,7 @@ describe('Test Personalizer Class', () => {
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       try {
-        await new Personalizer(id).getInteractiveExperienceData(
+        await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
           personalizeInputMock,
           settingsMock,
           window.location.search,
@@ -788,7 +811,7 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      new Personalizer(id)
+      new Personalizer(browserId, guestRef)
         .getInteractiveExperienceData(personalizeInputMock, settingsMock, window.location.search, { timeout: 100 })
         .catch((err) => {
           expect(err.message).toEqual(expectedError);
@@ -805,7 +828,7 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(
+      const response = await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
         personalizeInputMock,
         settingsMock,
         window.location.search,
@@ -827,7 +850,7 @@ describe('Test Personalizer Class', () => {
 
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(
+      const response = await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
         personalizeInputMock,
         settingsMock,
         window.location.search,
@@ -844,7 +867,7 @@ describe('Test Personalizer Class', () => {
 
       const abortSpy = jest.spyOn(AbortController.prototype, 'abort');
 
-      const response = await new Personalizer(id).getInteractiveExperienceData(
+      const response = await new Personalizer(browserId, guestRef).getInteractiveExperienceData(
         personalizeInputMock,
         settingsMock,
         window.location.search,
@@ -864,7 +887,6 @@ describe('Test Personalizer Class', () => {
       const sanitizeInputSpy = jest.spyOn(Personalizer.prototype as any, 'sanitizeInput');
       const mapPersonalizeInputToEPDataSpy = jest.spyOn(Personalizer.prototype as any, 'mapPersonalizeInputToEPData');
       const sendCallFlowsRequestSpy = jest.spyOn(CallFlowsRequest, 'sendCallFlowsRequest');
-      const id = 'test_id';
       const settings = {} as core.Settings;
       const data = {} as PersonalizeData;
       const opts = { timeout: 100, userAgent: 'test_ua' };
@@ -876,9 +898,9 @@ describe('Test Personalizer Class', () => {
       sanitizeInputSpy.mockReturnValueOnce({});
       mapPersonalizeInputToEPDataSpy.mockReturnValueOnce({});
 
-      new Personalizer(id).getInteractiveExperienceData(data, settings, window.location.search, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(data, settings, window.location.search, opts);
 
-      expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith({ browserId: 'test_id' }, settings, opts);
+      expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith({ browserId: 'browserId' }, settings, opts);
     });
   });
 
@@ -888,7 +910,12 @@ describe('Test Personalizer Class', () => {
       const urlParams = '?utm_campaign=campaign&utm_medium=email';
       const opts = { timeout: 100, userAgent: 'test_ua' };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, urlParams, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        personalizeInputMock,
+        settingsMock,
+        urlParams,
+        opts
+      );
 
       expect(extractUrlParamsWithPrefixSpy).toHaveBeenCalledTimes(1);
       expect(extractUrlParamsWithPrefixSpy).toHaveReturnedWith({
@@ -902,7 +929,12 @@ describe('Test Personalizer Class', () => {
       const urlParams = '?utm56_campaign=campaign&utm7_medium=email&utm_campaign=campaign';
       const opts = { timeout: 100, userAgent: 'test_ua' };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, urlParams, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        personalizeInputMock,
+        settingsMock,
+        urlParams,
+        opts
+      );
       expect(extractUrlParamsWithPrefixSpy).toHaveBeenCalledTimes(1);
       expect(extractUrlParamsWithPrefixSpy).toHaveReturnedWith({
         campaign: 'campaign'
@@ -914,7 +946,12 @@ describe('Test Personalizer Class', () => {
       const urlParams = '?utm56_campaign=campaign&utm7_medium=email';
       const opts = { timeout: 100, userAgent: 'test_ua' };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, urlParams, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        personalizeInputMock,
+        settingsMock,
+        urlParams,
+        opts
+      );
       expect(extractUrlParamsWithPrefixSpy).toHaveBeenCalledTimes(0);
     });
 
@@ -923,16 +960,22 @@ describe('Test Personalizer Class', () => {
       const urlParams = '?utm_campaign=campaign&utm_medium=email';
       const opts = { timeout: 100, userAgent: 'test_ua' };
 
-      new Personalizer(id).getInteractiveExperienceData(personalizeInputMock, settingsMock, urlParams, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        personalizeInputMock,
+        settingsMock,
+        urlParams,
+        opts
+      );
 
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          browserId: 'test_id',
+          browserId: 'browserId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: undefined,
           language: 'EN',
           params: {
@@ -965,16 +1008,22 @@ describe('Test Personalizer Class', () => {
         }
       };
 
-      new Personalizer(id).getInteractiveExperienceData(inputMockWithUTMParams, settingsMock, urlParams, opts);
+      new Personalizer(browserId, guestRef).getInteractiveExperienceData(
+        inputMockWithUTMParams,
+        settingsMock,
+        urlParams,
+        opts
+      );
 
       expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
         {
-          browserId: 'test_id',
+          browserId: 'browserId',
           channel: 'WEB',
           clientKey: '',
           currencyCode: 'EUR',
           email: undefined,
           friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestRef',
           identifiers: undefined,
           language: 'EN',
           params: {

@@ -1,4 +1,4 @@
-import * as BrowserIdFromMiddlewareRequest from './get-browser-id-from-middleware-request';
+import * as CookieValueFromMiddlewareRequest from './get-cookie-value-from-middleware-request';
 import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
 import type { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { COOKIE_NAME_PREFIX } from '../consts';
@@ -36,9 +36,9 @@ describe('handleMiddlewareRequest', () => {
     options.cookieSettings.cookieDomain
   );
 
-  const getBrowserIdFromMiddlewareRequestSpy = jest.spyOn(
-    BrowserIdFromMiddlewareRequest,
-    'getBrowserIdFromMiddlewareRequest'
+  const getCookieValueFromMiddlewareRequestSpy = jest.spyOn(
+    CookieValueFromMiddlewareRequest,
+    'getCookieValueFromMiddlewareRequest'
   );
 
   const request: MiddlewareRequest = {
@@ -60,20 +60,20 @@ describe('handleMiddlewareRequest', () => {
     jest.clearAllMocks();
   });
 
-  it('should set the browser ID from getBrowserIdFromMiddlewareRequest when available', async () => {
-    getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce('dac13bc5-cdae-4e65-8868-13443409d05e');
+  it('should set the browser ID from getCookieValueFromMiddlewareRequest when available', async () => {
+    getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce('dac13bc5-cdae-4e65-8868-13443409d05e');
     const cookieName = 'sc_123';
 
     await handleNextJsMiddlewareCookie(request, response, options);
 
-    expect(getBrowserIdFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, cookieName);
-    expect(getBrowserIdFromMiddlewareRequestSpy).toBeCalledTimes(1);
+    expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, cookieName);
+    expect(getCookieValueFromMiddlewareRequestSpy).toBeCalledTimes(1);
     expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
   });
 
   it(`should set the browser ID from settings temp value
-     when getBrowserIdFromMiddlewareRequest returns undefined`, async () => {
-    getBrowserIdFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
+     when getCookieValueFromMiddlewareRequest returns undefined`, async () => {
+    getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 

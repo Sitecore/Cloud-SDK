@@ -1,5 +1,5 @@
 import * as utils from '@sitecore-cloudsdk/utils';
-import { getBrowserIdFromRequest } from './get-browser-id-from-request';
+import { getCookieValueFromRequest } from './get-cookie-value-from-request';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -11,7 +11,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
   };
 });
 
-describe('getBrowserIdFromRequest', () => {
+describe('getCookieValueFromRequest', () => {
   const cookieName = 'BID_pqsDATA3lw12v5a9rrHPW1c4hET73GxQ';
 
   const isMiddlewareRequestSpy = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
@@ -19,7 +19,7 @@ describe('getBrowserIdFromRequest', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
-  it('should return the browser id when retrieved from a nextJS v12 middleware request', async () => {
+  it('should return the cookie value when retrieved from a nextJS v12 middleware request', async () => {
     const expectedResult = 'test_bid';
 
     const request = {
@@ -33,11 +33,11 @@ describe('getBrowserIdFromRequest', () => {
       url: ''
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return the browser id when retrieved from a nextJS v13 middleware request', async () => {
+  it('should return the cookie value when retrieved from a nextJS v13 middleware request', async () => {
     const expectedResult = 'test_bid';
 
     const request = {
@@ -50,11 +50,11 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return the browser id when retrieved from a nextJS api request', async () => {
+  it('should return the cookie value when retrieved from a nextJS api request', async () => {
     const expectedResult = 'test_bid';
 
     const request = {
@@ -67,11 +67,11 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return the browser id when retrieved from an HTTP request', async () => {
+  it('should return the cookie value when retrieved from an HTTP request', async () => {
     const expectedResult = 'test_bid';
 
     const request = {
@@ -80,11 +80,11 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return an empty string when no bid was retrieved from a nextJS middleware request', async () => {
+  it('should return an empty string when no cookie was retrieved from a nextJS middleware request', async () => {
     const expectedResult = '';
 
     const request = {
@@ -97,11 +97,11 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
-  it('should return an empty string when no bid was retrieved from a nextJS api request', async () => {
+  it('should return an empty string when no cookie was retrieved from a nextJS api request', async () => {
     const expectedResult = '';
 
     const request = {
@@ -112,7 +112,7 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
   it('should return an empty string when no cookie header exists', async () => {
@@ -122,7 +122,7 @@ describe('getBrowserIdFromRequest', () => {
       headers: {}
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
@@ -133,7 +133,7 @@ describe('getBrowserIdFromRequest', () => {
       headers: {}
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).not.toEqual(expectedResult);
   });
   it('should return an empty string when no bid exists in cookie-header', async () => {
@@ -144,14 +144,14 @@ describe('getBrowserIdFromRequest', () => {
       }
     };
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
     expect(result).toEqual(expectedResult);
   });
 
   it('should not call any functions if request is not of type isMiddlewareRequest or isHttpRequest', async () => {
     const request = {} as unknown as utils.Request;
 
-    const result = getBrowserIdFromRequest(request, cookieName);
+    const result = getCookieValueFromRequest(request, cookieName);
 
     expect(result).toBe('');
     expect(isMiddlewareRequestSpy).toHaveBeenCalledTimes(1);
