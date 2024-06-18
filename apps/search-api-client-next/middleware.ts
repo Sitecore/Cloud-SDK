@@ -1,6 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { getFilteredWidgetDataMiddleware } from './src/middlewares/get-filtered-widget-data';
+import { getPageWidgetDataMiddleware } from './src/middlewares/get-page-widget-data';
 import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
 import { getWidgetDataMiddleware } from './src/middlewares/get-widget-data';
 import { initMiddleware } from './src/middlewares/init';
@@ -12,6 +13,7 @@ export async function middleware(request: NextRequest) {
   await getFilteredWidgetDataMiddleware(request, response);
   await getSearchWidgetDataMiddleware(request, response);
   await initMiddleware(request, response);
+  await getPageWidgetDataMiddleware(request, response);
 
   return response;
 }

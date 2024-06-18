@@ -9,6 +9,7 @@ export { ComparisonFilter } from './lib/request-entities/filters/comparison-filt
 export { GeoFilter } from './lib/request-entities/filters/geo-filter';
 export { ListFilter } from './lib/request-entities/filters/list-filter';
 export { GeoWithinFilter } from './lib/request-entities/filters/geo-within-filter';
+export { getPageWidgetData } from './lib/requests/get-page-widget-data';
 
 export type { BrowserSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';

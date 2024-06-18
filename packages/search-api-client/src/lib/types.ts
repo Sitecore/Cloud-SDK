@@ -15,3 +15,5 @@ export interface ServerSettings extends BasicSettings {
   userId: string;
   enableServerCookie?: boolean;
 }
+
+export type Pathname = `/${string}`;
