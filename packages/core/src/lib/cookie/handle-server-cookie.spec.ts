@@ -21,23 +21,32 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
 });
 
 describe('handleServerCookie', () => {
-  const mockFetchResponse = {
+  const commonPayloadResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
-    ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
+    ref: 'browser_id_from_proxy',
     status: 'OK',
     version: '1.2'
   };
-  const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse)
-  });
-  global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
+  const mockFetchBrowserIdFromEPResponse = {
+    ...commonPayloadResponse,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    customer_ref: 'guest_id_from_proxy'
+  };
+
+  const mockGuestIdResponse = {
+    ...commonPayloadResponse,
+    customer: {
+      ref: 'guest_id_from_proxy'
+    }
+  };
 
   const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: '',
+      cookieNames: { browserId: 'sc_123', guestId: 'sc_123_personalize' },
       cookiePath: '/'
     },
     siteName: '',
@@ -61,11 +70,13 @@ describe('handleServerCookie', () => {
     jest.clearAllMocks();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should call handleNextJsMiddlewareCookie when request is a isNextJsMiddlewareRequest', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
+    });
+
+    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
     const request: utils.Request = {
       cookies: { get: jest.fn(), set: jest.fn() },
       headers: {
@@ -92,11 +103,18 @@ describe('handleServerCookie', () => {
   });
 
   it('should call handleHttpCookie when request is an HTTP Request', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(mockGuestIdResponse),
+      ok: 'ok'
+    });
+
+    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
     const request: utils.Request = {
       headers: {
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'content-language': 'EN',
-        'cookie': 'test=test',
+        'cookie': 'sc_123=test',
         'referer': 'test'
       },
       url: 'test'

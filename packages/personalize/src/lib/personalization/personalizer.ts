@@ -9,9 +9,10 @@ import { sendCallFlowsRequest } from './send-call-flows-request';
 export class Personalizer {
   /**
    * The Personalizer Class runs a flow of interactive experiments.
-   * @param id - The browser id of the user
+   * @param browserId - The browser id of the user
+   * @param guestId - The guestRef of the user
    */
-  constructor(private id: string, private guestRef: string) {}
+  constructor(private browserId: string, private guestId: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint
@@ -36,7 +37,7 @@ export class Personalizer {
     }
 
     const mappedData = this.mapPersonalizeInputToEPData(sanitizedInput);
-    if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.id;
+    if (!mappedData.email && !mappedData.identifiers) mappedData.browserId = this.browserId;
 
     return await sendCallFlowsRequest(mappedData, settings, opts);
   }
@@ -77,7 +78,7 @@ export class Personalizer {
       currencyCode: input.currency,
       email: input.email,
       friendlyId: input.friendlyId,
-      ...(this.guestRef && { guestRef: this.guestRef }),
+      guestRef: this.guestId,
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,

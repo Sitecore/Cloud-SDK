@@ -16,7 +16,7 @@ Scenario Outline: Cookie is not created with an invalid defined cookieDomain att
 Scenario: Init engage library when no cookie exists
     Given no cookie is created on the '/' page
     When the '/' page is loaded
-    Then the cookie is automatically set with the correct bid value for the user
+    Then the cookie is automatically set with the correct bid and gid value for the user
 
 @Smoke-Test-Events
 Scenario: Init engage library when cookie exists
@@ -43,4 +43,4 @@ Scenario: Cookie is created with expiry upon initialization of Engage library
 Scenario: Error is thrown if no browser id is retrieved
     #Artificial way to make the get cookie from edge proxy fail by passing a valid random url
     Given '/' page is loaded with enableBrowserCookie true and an invalid sitecoreEdgeContextId parameter
-    Then an error is thrown: '[IE-0003] Unable to set the cookie because the browser ID could not be retrieved from the server. Try again later, or use try-catch blocks to handle this error.'
+    Then an error is thrown: '[IE-0003] Unable to set the "sc_{SitecoreEdgeContextId}" cookie because the browser ID could not be retrieved from the server. Make sure to set the correct values for "sitecoreEdgeContextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.'

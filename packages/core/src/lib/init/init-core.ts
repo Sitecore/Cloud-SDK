@@ -2,7 +2,7 @@
 import type { BrowserSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
-import { createCookie } from '../cookie/create-cookie';
+import { createCookies } from '../cookie/create-cookies';
 import { createSettings } from '../settings/create-settings';
 import { debug } from '../debug/debug';
 
@@ -28,7 +28,7 @@ export function getSettings() {
   return coreSettings;
 }
 
-let createCookiePromise: Promise<void> | null = null;
+let createCookiesPromise: Promise<void> | null = null;
 
 /**
  * Initializes the core settings for browser-based applications.
@@ -44,10 +44,10 @@ export async function initCore(settingsInput: BrowserSettings): Promise<void> {
 
   if (coreSettings === null) coreSettings = createSettings(settingsInput);
 
-  if (settingsInput.enableBrowserCookie && createCookiePromise === null)
-    createCookiePromise = createCookie(coreSettings);
+  if (settingsInput.enableBrowserCookie && createCookiesPromise === null)
+    createCookiesPromise = createCookies(coreSettings);
 
-  await createCookiePromise;
+  await createCookiesPromise;
 }
 
 /**
@@ -57,5 +57,5 @@ export function setCoreSettings(settings: Settings) {
   coreSettings = settings;
 }
 export function setCookiePromise(promise: Promise<void>) {
-  createCookiePromise = promise;
+  createCookiesPromise = promise;
 }

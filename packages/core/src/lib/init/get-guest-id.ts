@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { API_VERSION, LIBRARY_VERSION } from '../consts';
+import { API_VERSION, ErrorMessages, LIBRARY_VERSION } from '../consts';
 
 /**
  * A function that gets the guest ref from EP.
@@ -25,6 +25,8 @@ export async function getGuestId(
 
     throw new Error(`${errorMsg}, for more info: ${moreInfo}`);
   }
+
+  if (!data.customer.ref) throw new Error(ErrorMessages.IE_0011);
 
   return (data as GetGuestRefResponse).customer.ref;
 }

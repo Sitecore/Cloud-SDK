@@ -21,14 +21,9 @@ export async function personalize(
 
   const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0006);
   const id = getBrowserId();
-  const guestRef = getCookieValueClientSide('guestRef');
+  const guestId = getCookieValueClientSide(settings.cookieSettings.cookieNames.guestId);
 
-  return new Personalizer(id, guestRef).getInteractiveExperienceData(
-    personalizeData,
-    settings,
-    window.location.search,
-    {
-      timeout: opts?.timeout
-    }
-  );
+  return new Personalizer(id, guestId).getInteractiveExperienceData(personalizeData, settings, window.location.search, {
+    timeout: opts?.timeout
+  });
 }

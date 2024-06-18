@@ -1,4 +1,4 @@
-import * as createCookieInit from '../cookie/create-cookie';
+import * as createCookies from '../cookie/create-cookies';
 import * as createSetting from '../settings/create-settings';
 import * as utils from '@sitecore-cloudsdk/utils';
 import type { BrowserSettings, Settings } from '../settings/interfaces';
@@ -8,8 +8,8 @@ import { ErrorMessages } from '../consts';
 import debug from 'debug';
 
 // Mock the dependencies
-jest.mock('../cookie/create-cookie', () => ({
-  createCookie: jest.fn()
+jest.mock('../cookie/create-cookies', () => ({
+  createCookies: jest.fn()
 }));
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
@@ -28,7 +28,7 @@ const mockSettings = {
   cookieSettings: {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,
-    cookieName: '',
+    cookieNames: { browserId: '', guestId: '' },
     cookiePath: '/'
   },
   siteName: '456',
@@ -54,7 +54,7 @@ describe('initCore', () => {
   it('should run initialize without creating a cookie', async () => {
     jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
     jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    const createCookieInitSpy = jest.spyOn(createCookieInit, 'createCookie');
+    const createCookiesSpy = jest.spyOn(createCookies, 'createCookies');
 
     mockSettingsInput.enableBrowserCookie = false;
 
@@ -62,13 +62,13 @@ describe('initCore', () => {
     const settings = getSettings();
 
     expect(settings).toEqual(mockSettings);
-    expect(createCookieInitSpy).toHaveBeenCalledTimes(0);
+    expect(createCookiesSpy).toHaveBeenCalledTimes(0);
   });
 
   it('should run initialize and create cookie', async () => {
     jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
     jest.spyOn(utils, 'cookieExists').mockReturnValueOnce(false);
-    const createCookieInitSpy = jest.spyOn(createCookieInit, 'createCookie');
+    const createCookiesSpy = jest.spyOn(createCookies, 'createCookies');
 
     mockSettingsInput.enableBrowserCookie = true;
 
@@ -76,23 +76,23 @@ describe('initCore', () => {
     const settings = getSettings();
 
     expect(settings).toEqual(mockSettings);
-    expect(createCookieInitSpy).toHaveBeenCalledTimes(1);
+    expect(createCookiesSpy).toHaveBeenCalledTimes(1);
   });
 
   it('should not call secondary functions when re-initializing', async () => {
     const createSettingsSpy = jest.spyOn(createSetting, 'createSettings').mockReturnValueOnce(mockSettings);
-    const createCookieSpy = jest.spyOn(createCookieInit, 'createCookie').mockResolvedValueOnce();
+    const createCookiesSpy = jest.spyOn(createCookies, 'createCookies').mockResolvedValueOnce();
     mockSettingsInput.enableBrowserCookie = true;
 
     await initCore(mockSettingsInput);
 
     expect(createSettingsSpy).toHaveBeenCalledTimes(1);
-    expect(createCookieSpy).toHaveBeenCalledTimes(1);
+    expect(createCookiesSpy).toHaveBeenCalledTimes(1);
 
     await initCore(mockSettingsInput);
 
     expect(createSettingsSpy).toHaveBeenCalledTimes(1);
-    expect(createCookieSpy).toHaveBeenCalledTimes(1);
+    expect(createCookiesSpy).toHaveBeenCalledTimes(1);
   });
 
   it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:test' as a namespace`, async () => {

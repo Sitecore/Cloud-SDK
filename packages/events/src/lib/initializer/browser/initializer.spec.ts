@@ -56,7 +56,7 @@ describe('initializer', () => {
     global.window ??= Object.create(window);
   });
 
-  jest.spyOn(core, 'createCookie').mock;
+  jest.spyOn(core, 'createCookies').mock;
   jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
   jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
   jest.spyOn(core, 'initCore');

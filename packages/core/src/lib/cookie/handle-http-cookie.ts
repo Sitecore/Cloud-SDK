@@ -5,6 +5,7 @@ import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/util
 import type { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { getGuestId } from '../init/get-guest-id';
 
 /**
  * Handles HTTP Cookie operations for setting the browser ID cookie in the request and response.
@@ -23,31 +24,50 @@ export async function handleHttpCookie(
   options: Settings,
   timeout?: number
 ) {
-  const { cookieName } = options.cookieSettings;
+  const { browserId, guestId } = options.cookieSettings.cookieNames;
 
-  const cookieValueFromRequest = request.headers.cookie;
-
-  let cookie;
-  let cookieValue;
-
-  if (cookieValueFromRequest) {
-    cookie = getCookieServerSide(cookieValueFromRequest, cookieName);
-    if (cookie) cookieValue = cookie.value;
-  }
-
-  if (!cookieValue)
-    cookieValue = (await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout))
-      .browserId;
+  const browserIdCookie = getCookieServerSide(request.headers.cookie, browserId);
+  let browserIdCookieValue;
+  const guestIdCookie = getCookieServerSide(request.headers.cookie, guestId);
+  let guestIdCookieValue;
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,
     options.cookieSettings.cookieDomain
   );
 
-  const cookieString = createCookieString(cookieName, cookieValue, defaultCookieAttributes);
+  if (!browserIdCookie) {
+    const cookieValues = await fetchBrowserIdFromEdgeProxy(
+      options.sitecoreEdgeUrl,
+      options.sitecoreEdgeContextId,
+      timeout
+    );
 
-  if (!cookie)
-    request.headers.cookie = cookieValueFromRequest ? cookieValueFromRequest + '; ' + cookieString : cookieString;
+    browserIdCookieValue = cookieValues.browserId;
+    guestIdCookieValue = cookieValues.guestId;
+  } else {
+    browserIdCookieValue = browserIdCookie.value;
+    if (!guestIdCookie)
+      guestIdCookieValue = await getGuestId(
+        browserIdCookie.value,
+        options.sitecoreEdgeContextId,
+        options.sitecoreEdgeUrl
+      );
+    else guestIdCookieValue = guestIdCookie.value;
+  }
 
-  response.setHeader('Set-Cookie', cookieString);
+  const browserIdCookieString = createCookieString(browserId, browserIdCookieValue, defaultCookieAttributes);
+  const guestIdCookieString = createCookieString(guestId, guestIdCookieValue, defaultCookieAttributes);
+
+  if (!browserIdCookie)
+    request.headers.cookie = request.headers.cookie
+      ? request.headers.cookie + '; ' + browserIdCookieString
+      : browserIdCookieString;
+
+  if (!guestIdCookie)
+    request.headers.cookie = request.headers.cookie
+      ? request.headers.cookie + '; ' + guestIdCookieString
+      : guestIdCookieString;
+
+  response.setHeader('Set-Cookie', [browserIdCookieString, guestIdCookieString]);
 }

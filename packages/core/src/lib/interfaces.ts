@@ -7,12 +7,15 @@ export interface EPResponse {
   ref: string;
   status: string;
   version: string;
-  // eslint-disable-next-line @typescript-eslint/naming-convention
+  /* eslint-disable @typescript-eslint/naming-convention */
   client_key: string;
+  customer_ref: string;
+  /* eslint-enable @typescript-eslint/naming-convention */
 }
 
 export interface ProxySettings {
   browserId: string;
+  guestId: string;
 }
 
 /**

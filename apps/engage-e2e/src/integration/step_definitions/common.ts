@@ -220,7 +220,10 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
     }
   });
 
-  cy.wait('@initialCall', { timeout: 30000 });
+  const personalizeForEnvironment = new URLSearchParams(attributes).get('personalizeForEnvironment');
+  if (personalizeForEnvironment === 'serverSideProps' || personalizeForEnvironment === 'middleware') {
+    /* empty */
+  } else cy.wait('@initialCall', { timeout: 30000 });
 
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1000);

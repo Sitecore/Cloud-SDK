@@ -17,7 +17,7 @@ import { sendEvent } from '../send-event/sendEvent';
  */
 export function identityServer(request: Request, identityData: IdentityData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
-  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
 
   return new IdentityEvent({
     id,

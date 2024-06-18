@@ -7,7 +7,7 @@ describe('createSettings', () => {
   });
   it('should store all provided settings', () => {
     const {
-      cookieSettings: { cookieDomain, cookieExpiryDays, cookiePath, cookieName },
+      cookieSettings: { cookieDomain, cookieExpiryDays, cookiePath, cookieNames },
       siteName,
       sitecoreEdgeContextId,
       sitecoreEdgeUrl
@@ -22,7 +22,8 @@ describe('createSettings', () => {
     expect(cookieDomain).toEqual('domain');
     expect(cookieExpiryDays).toEqual(40);
     expect(cookiePath).toEqual('/path');
-    expect(cookieName).toEqual(`${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`);
+    expect(cookieNames.browserId).toEqual(`${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`);
+    expect(cookieNames.guestId).toEqual(`${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}_personalize`);
     expect(siteName).toEqual('4567');
     expect(sitecoreEdgeContextId).toEqual('0123');
     expect(sitecoreEdgeUrl).toEqual(SITECORE_EDGE_URL);

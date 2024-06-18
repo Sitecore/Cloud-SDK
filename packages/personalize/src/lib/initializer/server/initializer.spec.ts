@@ -70,7 +70,7 @@ describe('initializer', () => {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'bid_key',
+      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
       cookiePath: '/'
     },
     siteName: '123',

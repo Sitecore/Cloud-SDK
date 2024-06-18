@@ -49,26 +49,5 @@ Scenario: Developer loads next app and personalize lib and sends personalize eve
     And the 'requestPersonalizeFromClientWithTimeout' button is clicked
     Then debug log is printed out in the console with message including 'Error personalize response'
     Then we display the debug server to UI including: 'Personalize response'
-        
-Scenario Outline: Developer loads next app and personalize lib with invalid parameters
-    Given the '/personalize' page is loaded
-    When personalize parameters are: 
-    """
-        {
-            "friendlyId": "personalizeintegrationtest",             
-            "identifier": "testIdentifier" 
-        }
-    """
-    And the 'requestPersonalizeFromClient' button is clicked
-    Then a personalize request is sent with parameters:
-    """
-        {
-            "friendlyId": "personalizeintegrationtest",             
-            "identifier": "testIdentifier"
-        }
-    """
-    But Personalize API responds with '400' status code
-    And debug log is printed out in the console with message including 'Personalize response'
-    And debug log response status should be '400'
-    
+
    

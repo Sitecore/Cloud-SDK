@@ -140,6 +140,7 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/personalize')) {
     await initPersonalize(request, response, {
+      enableServerCookie: request?.nextUrl?.searchParams?.get('personalizeForEnvironment') === 'middleware',
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl

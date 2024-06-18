@@ -50,7 +50,7 @@ describe('initializer', () => {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'name',
+      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
       cookiePath: '/'
     },
     siteName: '456',

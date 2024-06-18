@@ -346,7 +346,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
     enableServerCookie:
-      typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
+      typeof context.query.enableServerCookie === 'string' &&
+      context.query.enableServerCookie.toLowerCase() === 'true' &&
+      context.query.personalizeForEnvironment === 'serverSideProps',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
     siteName: process.env.SITE_ID || ''
   });

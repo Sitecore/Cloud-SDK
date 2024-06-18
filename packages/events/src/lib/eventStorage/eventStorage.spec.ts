@@ -50,7 +50,7 @@ describe('Event Storage', () => {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'bid_name',
+      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
       cookiePath: '/'
     },
     siteName: '456',

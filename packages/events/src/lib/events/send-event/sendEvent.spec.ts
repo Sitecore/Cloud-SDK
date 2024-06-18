@@ -36,7 +36,7 @@ const settingsObj: core.Settings = {
   cookieSettings: {
     cookieDomain: 'cDomain',
     cookieExpiryDays: 730,
-    cookieName: 'name',
+    cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
     cookiePath: '/'
   },
   siteName: 'site',
@@ -117,7 +117,6 @@ describe('EventApiClient', () => {
     );
 
     expect(debugMock.mock.results[1].value.mock.calls[0][0]).toBe('Events response in %dms : %O');
-    //expect(normalizeHeadersSpy).toHaveBeenCalledTimes(1);
     expect(debugMock.mock.results[1].value.mock.calls[0][1]).toBe(1000);
     expect(debugMock.mock.results[1].value.mock.calls[0][2]).toStrictEqual({
       body: { status: 'OK' },

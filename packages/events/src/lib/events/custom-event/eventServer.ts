@@ -17,7 +17,7 @@ import { sendEvent } from '../send-event/sendEvent';
  */
 export function eventServer<T extends Request>(request: T, eventData: EventData): Promise<EPResponse | null> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
-  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
 
   return new CustomEvent({
     eventData,

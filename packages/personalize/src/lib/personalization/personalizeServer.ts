@@ -21,8 +21,8 @@ export function personalizeServer<T extends Request>(
   opts?: { timeout?: number }
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0007);
-  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieName);
-  const guestRef = getCookieValueFromRequest(request, 'guestRef');
+  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
+  const guestId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.guestId);
 
   const requestUrl = new URL(request.url as string, `https://localhost`);
 
@@ -33,7 +33,7 @@ export function personalizeServer<T extends Request>(
   if (!personalizeData.geo && isNextJsMiddlewareRequest(request) && request.geo && Object.keys(request.geo).length)
     personalizeData.geo = request.geo as PersonalizeGeolocation;
 
-  return new Personalizer(id, guestRef).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
+  return new Personalizer(id, guestId).getInteractiveExperienceData(personalizeData, settings, requestUrl.search, {
     timeout: opts?.timeout,
     userAgent
   });

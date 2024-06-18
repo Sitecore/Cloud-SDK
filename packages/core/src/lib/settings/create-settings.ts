@@ -15,7 +15,10 @@ export function createSettings(settingsInput: SettingsParams): Settings {
     cookieSettings: {
       cookieDomain,
       cookieExpiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-      cookieName: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
+      cookieNames: {
+        browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
+        guestId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}_personalize`
+      },
       cookiePath: cookiePath || '/'
     },
     siteName,

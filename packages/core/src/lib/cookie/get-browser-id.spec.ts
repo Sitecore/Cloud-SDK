@@ -1,4 +1,5 @@
 import * as init from '../init/init-core';
+import { COOKIE_NAME_PREFIX } from '../consts';
 import { getBrowserId } from './get-browser-id';
 
 describe('getBrowserId', () => {
@@ -6,7 +7,7 @@ describe('getBrowserId', () => {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'cookieName',
+      cookieNames: { browserId: `${COOKIE_NAME_PREFIX}123`, guestId: `${COOKIE_NAME_PREFIX}123_personalize` },
       cookiePath: '/'
     },
     siteName: '456',
@@ -15,22 +16,19 @@ describe('getBrowserId', () => {
   });
 
   afterEach(() => {
-    document.cookie = 'cookieName=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-    document.cookie = 'WrongCookieName=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-
     jest.clearAllMocks();
   });
 
   it('should return the cookie value when cookie exists on the page ', async () => {
-    global.document.cookie = 'cookieName=cookieValue';
+    jest.spyOn(document, 'cookie', 'get').mockReturnValueOnce(`${COOKIE_NAME_PREFIX}123=bid_value`);
 
     const cookieValue = getBrowserId();
-    expect(cookieValue).toEqual('cookieValue');
+    expect(cookieValue).toEqual('bid_value');
     expect(init.getSettings).toHaveBeenCalledTimes(1);
   });
 
   it('should return empty string if there is a cookie but not the correct one', async () => {
-    global.document.cookie = 'WrongCookieName=cookieValue';
+    jest.spyOn(document, 'cookie', 'get').mockReturnValueOnce('WrongCookieName=cookieValue');
 
     const cookieValue = getBrowserId();
     expect(cookieValue).toEqual('');

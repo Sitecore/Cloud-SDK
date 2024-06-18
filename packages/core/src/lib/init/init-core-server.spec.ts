@@ -30,7 +30,7 @@ describe('core-server', () => {
     cookieSettings: {
       cookieDomain: 'domain',
       cookieExpiryDays: 40,
-      cookieName: '',
+      cookieNames: { browserId: '', guestId: '' },
       cookiePath: '/path'
     },
     siteName: '4567',
@@ -100,7 +100,7 @@ describe('core-server', () => {
         cookieSettings: {
           cookieDomain: 'domain',
           cookieExpiryDays: 40,
-          cookieName: '',
+          cookieNames: { browserId: '', guestId: '' },
           cookiePath: '/path'
         },
         siteName: '4567',

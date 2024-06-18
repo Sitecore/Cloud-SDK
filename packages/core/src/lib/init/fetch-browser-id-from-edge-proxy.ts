@@ -43,6 +43,6 @@ export async function fetchBrowserIdFromEdgeProxy(
 
   if (!payload?.ref) throw new Error(ErrorMessages.IE_0003);
 
-  const { ref: browserId }: EPResponse = payload;
-  return { browserId };
+  const { ref: browserId, customer_ref: guestId }: EPResponse = payload;
+  return { browserId, guestId };
 }

@@ -39,15 +39,11 @@ interface CookieSettingsInput {
  * Properties for the cookie object
  */
 export interface CookieSettings {
-  cookieName: string;
+  cookieNames: {
+    browserId: string;
+    guestId: string;
+  };
   cookieDomain?: string;
   cookieExpiryDays: number;
   cookiePath?: string;
-}
-
-/**
- * Properties for the cookie object
- */
-export interface CookieSettingsBrowser extends CookieSettings {
-  enableBrowserCookie: boolean;
 }

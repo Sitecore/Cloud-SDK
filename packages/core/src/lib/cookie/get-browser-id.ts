@@ -8,5 +8,5 @@ import { getSettings } from '../init/init-core';
  */
 export function getBrowserId() {
   const settings = getSettings();
-  return getCookieValueClientSide(settings.cookieSettings.cookieName);
+  return getCookieValueClientSide(settings.cookieSettings.cookieNames.browserId);
 }

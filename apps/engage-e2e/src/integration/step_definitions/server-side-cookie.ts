@@ -21,7 +21,7 @@ Before({ tags: '@Server-Side-Props-Server-Cookie' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, `###${Date.now()}###`);
 });
 
-defineStep('a server cookie is created on the {string} page', (page) => {
+defineStep('server cookies are created on the {string} page', (page) => {
   cy.intercept(`${Cypress.config('baseUrl')}${page}*`).as('callToServer');
   cy.visit(`${page}?enableServerCookie=true`);
 
@@ -33,9 +33,21 @@ defineStep('a server cookie is created on the {string} page', (page) => {
     interval: 500
   });
 
+  cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')), {
+    errorMsg: 'Cookie not found',
+    timeout: 10000,
+    interval: 500
+  });
+
   cy.getCookies().then((cookies) => {
-    const serverCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-    cy.writeLocal('initialCookie.json', serverCookie);
+    const serverBrowserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
+    const serverGuestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
+
+    const serverCookies = {
+      browserId: serverBrowserIdCookie,
+      guestId: serverGuestIdCookie
+    };
+    cy.writeLocal('initialCookies.json', serverCookies);
   });
 });
 
@@ -62,50 +74,76 @@ Given(
   }
 );
 
-Then('the server updates the TTL of the server cookie according to the settings', () => {
+Then('the server updates the TTL of the server cookies according to the settings', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cy.readLocal('initialCookie.json').then((initialCookie: any) => {
+  cy.readLocal('initialCookies.json').then((initialCookies: any) => {
     cy.wait('@callToServer').then((res) => {
       expect(res?.response?.headers).to.have.property('set-cookie');
       expect(res?.response?.headers['set-cookie'][0]).to.include(Cypress.env('COOKIE_NAME'));
+      expect(res?.response?.headers['set-cookie'][1]).to.include(Cypress.env('COOKIE_NAME_PERSONALIZE'));
     });
     cy.getCookies()
-      .should('have.length', 1)
+      .should('have.length', 2)
       .then((cookies) => {
-        const serverCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-        expect(serverCookie).to.have.property('name', initialCookie.name);
-        expect(serverCookie).to.have.property('value', initialCookie.value);
-        expect(serverCookie?.expiry).to.not.equal(initialCookie.expiry);
-        expect(serverCookie?.secure).to.be.true;
-        expect(serverCookie?.sameSite).to.equal('no_restriction');
+        const browserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
+        const guestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
+
+        expect(browserIdCookie).to.have.property('name', initialCookies.browserId.name);
+        expect(browserIdCookie).to.have.property('value', initialCookies.browserId.value);
+        expect(browserIdCookie?.expiry).to.not.equal(initialCookies.browserId.expiry);
+        expect(browserIdCookie?.secure).to.be.true;
+        expect(browserIdCookie?.sameSite).to.equal('no_restriction');
+
+        expect(guestIdCookie).to.have.property('name', initialCookies.guestId.name);
+        expect(guestIdCookie).to.have.property('value', initialCookies.guestId.value);
+        expect(guestIdCookie?.expiry).to.not.equal(initialCookies.guestId.expiry);
+        expect(guestIdCookie?.secure).to.be.true;
+        expect(guestIdCookie?.sameSite).to.equal('no_restriction');
       });
   });
 });
 
-Then('the server cookie contains the browserID returned from the API call', () => {
+Then('the server cookies contain the browserID and guestID cookies returned from the API call', () => {
   cy.wait('@callToServer').then((res) => {
     expect(res?.response?.headers).to.have.property('set-cookie');
     expect(res?.response?.headers['set-cookie'][0]).to.include(Cypress.env('COOKIE_NAME'));
+    expect(res?.response?.headers['set-cookie'][1]).to.include(Cypress.env('COOKIE_NAME_PERSONALIZE'));
   });
+
   cy.getCookies()
-    .should('have.length', 1)
+    .should('have.length', 2)
     .then((cookies) => {
-      const serverCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-      expect(serverCookie).to.have.property('value');
+      const browserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
+      const guestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
+
+      expect(browserIdCookie).to.have.property('value');
+      expect(guestIdCookie).to.have.property('value');
     });
 });
 
 defineStep(
-  'a server cookie is requested to be created at {string} page with {string} domain',
+  'server cookies are requested to be created at {string} page with {string} domain',
   (page: string, domain: string) => {
     cy.visit(`${page}?enableServerCookie=true&cookieDomain=${domain}`);
   }
 );
 
-defineStep('a server cookie is created with {string} domain', (domain: string) => {
+defineStep('server cookies are created with {string} domain', (domain: string) => {
   cy.waitUntil(
     () =>
       cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => {
+        expect(cookie?.domain).to.eq(domain);
+      }),
+    {
+      errorMsg: 'Cookie not found',
+      timeout: 10000,
+      interval: 100
+    }
+  );
+
+  cy.waitUntil(
+    () =>
+      cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')).then((cookie) => {
         expect(cookie?.domain).to.eq(domain);
       }),
     {

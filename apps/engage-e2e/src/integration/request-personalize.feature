@@ -17,7 +17,9 @@ Scenario: Developer requests personalize from API route
     """
 
 Scenario Outline: Developer requests personalize from middleware
-    Given the '/personalize' page is loaded
+    Given the '/personalize' page is loaded with query parameters
+        | personalizeForEnvironment |
+        | middleware |
     When the 'requestPersonalizeFromMiddleware' button is clicked
     Then we display the callflow's content to UI: 
     """
@@ -30,7 +32,9 @@ Scenario Outline: Developer requests personalize from middleware with User Agent
     Then we display 'Mozilla/5.0' User Agent to UI
 
 Scenario Outline: Developer requests personalize from serverSideProps
-    Given the '/personalize' page is loaded
+    Given the '/personalize' page is loaded with query parameters
+        | personalizeForEnvironment | enableServerCookie |
+        | serverSideProps | true |
     And the 'requestPersonalizeFromServerSideProps' button is clicked
     Then we display the callflow's content to UI: 
     """
@@ -192,7 +196,6 @@ Scenario Outline: Developer requests personalize with invalid parameters
 
     Examples:
         | friendlyId                 | email                      | identifier     |
-        | personalizeintegrationtest |                            | testIdentifier |
         | personalizeintegrationtest | test_personalize_1@tst.com | testIdentifier |
         | 123414                     | test_personalize_1@tst.com | testIdentifier |
 

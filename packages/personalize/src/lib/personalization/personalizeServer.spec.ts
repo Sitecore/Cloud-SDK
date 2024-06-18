@@ -19,7 +19,7 @@ jest.mock('@sitecore-cloudsdk/core', () => {
 describe('personalizeServer', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  jest.spyOn(core, 'createCookie').mock;
+  jest.spyOn(core, 'createCookies').mock;
   const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
 
   const originalReq = {
@@ -41,7 +41,12 @@ describe('personalizeServer', () => {
     language: 'EN'
   };
   const settings = {
-    cookieSettings: { cookieDomain: 'cDomain', cookieExpiryDays: 730, cookieName: 'bid_name', cookiePath: '/' },
+    cookieSettings: {
+      cookieDomain: 'cDomain',
+      cookieExpiryDays: 730,
+      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
+      cookiePath: '/'
+    },
     siteName: '456',
     sitecoreEdgeContextId: '123',
     sitecoreEdgeUrl: ''
@@ -67,7 +72,7 @@ describe('personalizeServer', () => {
 
     personalizeServer(req, personalizeData);
     expect(getCookieValueFromRequestSpy).toHaveBeenCalledTimes(2);
-    expect(getCookieValueFromRequestSpy).toHaveBeenLastCalledWith(req, 'guestRef');
+    expect(getCookieValueFromRequestSpy).toHaveBeenLastCalledWith(req, settings.cookieSettings.cookieNames.guestId);
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
 
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, settings, '', {

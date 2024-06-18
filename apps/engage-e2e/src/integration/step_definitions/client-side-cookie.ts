@@ -14,10 +14,15 @@ declare global {
 
 let errorMessage: string;
 
-Then('the cookie is automatically set with the correct bid value for the user', () => {
+Then('the cookie is automatically set with the correct bid and gid value for the user', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
+    errorMsg: 'Cookie not found',
+    interval: 100,
+    timeout: 10000
+  });
+  cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')), {
     errorMsg: 'Cookie not found',
     interval: 100,
     timeout: 10000
@@ -28,6 +33,8 @@ Given('a client cookie exists on the {string} page', (page: string) => {
   cy.intercept('*', { hostname: Cypress.env('HOSTNAME') }, (req) => {
     req.continue((res) => {
       res.body = {
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        customer_ref: '5678',
         ref: '1234',
         status: '200',
         version: Cypress.env('API_VERSION')
@@ -41,7 +48,8 @@ Then('only one cookie is set', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(700);
   cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => cookie?.value == '1234');
-  cy.getCookies().should('have.length', 1);
+  cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')).then((cookie) => cookie?.value == '5678');
+  cy.getCookies().should('have.length', 2);
 });
 
 defineStep('a client cookie is created at {string} page with {string} domain', (page: string, domain: string) => {

@@ -5,6 +5,7 @@ import type { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
 import { getCookieValueFromMiddlewareRequest } from './get-cookie-value-from-middleware-request';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
+import { getGuestId } from '../init/get-guest-id';
 
 /**
  * Handles the Middleware Request and sets a cookie with the provided 'cookieName' and 'cookieValue'.
@@ -25,18 +26,31 @@ export async function handleNextJsMiddlewareCookie(
   options: Settings,
   timeout?: number
 ) {
-  const { cookieName } = options.cookieSettings;
+  const { browserId, guestId } = options.cookieSettings.cookieNames;
 
-  let cookieValue = getCookieValueFromMiddlewareRequest(request, cookieName);
+  let browserIdCookieValue = getCookieValueFromMiddlewareRequest(request, browserId);
+  let guestIdCookieValue = getCookieValueFromMiddlewareRequest(request, guestId);
 
-  if (!cookieValue)
-    cookieValue = (await fetchBrowserIdFromEdgeProxy(options.sitecoreEdgeUrl, options.sitecoreEdgeContextId, timeout))
-      .browserId;
+  if (!browserIdCookieValue) {
+    const cookieValues = await fetchBrowserIdFromEdgeProxy(
+      options.sitecoreEdgeUrl,
+      options.sitecoreEdgeContextId,
+      timeout
+    );
+
+    browserIdCookieValue = cookieValues.browserId;
+    guestIdCookieValue = cookieValues.guestId;
+  } else if (!guestIdCookieValue)
+    guestIdCookieValue = await getGuestId(browserIdCookieValue, options.sitecoreEdgeContextId, options.sitecoreEdgeUrl);
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,
     options.cookieSettings.cookieDomain
   );
-  request.cookies.set(cookieName, cookieValue, defaultCookieAttributes);
-  response.cookies.set(cookieName, cookieValue, defaultCookieAttributes);
+
+  request.cookies.set(browserId, browserIdCookieValue, defaultCookieAttributes);
+  request.cookies.set(guestId, guestIdCookieValue, defaultCookieAttributes);
+
+  response.cookies.set(browserId, browserIdCookieValue, defaultCookieAttributes);
+  response.cookies.set(guestId, guestIdCookieValue, defaultCookieAttributes);
 }

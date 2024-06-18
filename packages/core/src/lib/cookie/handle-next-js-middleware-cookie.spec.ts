@@ -7,23 +7,32 @@ import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { handleNextJsMiddlewareCookie } from './handle-next-js-middleware-cookie';
 
 describe('handleMiddlewareRequest', () => {
-  const mockFetchResponse = {
+  const commonPayloadResponse = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     client_key: 'pqsDATA3lw12v5a9rrHPW1c4hET73GxQ',
-    ref: 'dac13bc5-cdae-4e65-8868-13443409d05e',
+    ref: 'browser_id_from_proxy',
     status: 'OK',
     version: '1.2'
   };
 
-  const mockFetch = Promise.resolve({
-    json: () => Promise.resolve(mockFetchResponse)
-  });
+  const mockFetchBrowserIdFromEPResponse = {
+    ...commonPayloadResponse,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    customer_ref: 'guest_id_from_proxy'
+  };
+
+  const mockGuestIdResponse = {
+    ...commonPayloadResponse,
+    customer: {
+      ref: 'guest_id_from_proxy'
+    }
+  };
 
   const options: Settings = {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: `${COOKIE_NAME_PREFIX}123`,
+      cookieNames: { browserId: `${COOKIE_NAME_PREFIX}123`, guestId: `${COOKIE_NAME_PREFIX}123_personalize` },
       cookiePath: '/'
     },
     siteName: '',
@@ -60,26 +69,55 @@ describe('handleMiddlewareRequest', () => {
     jest.clearAllMocks();
   });
 
-  it('should set the browser ID from getCookieValueFromMiddlewareRequest when available', async () => {
-    getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce('dac13bc5-cdae-4e65-8868-13443409d05e');
-    const cookieName = 'sc_123';
+  it(`should handle the browser ID and guest ID cookies in the request and response 
+    when the cookies are present`, async () => {
+    const browserIdCookieName = 'sc_123';
+    const guestIdCookieName = 'sc_123_personalize';
+
+    getCookieValueFromMiddlewareRequestSpy
+      .mockReturnValueOnce('browser_id_from_proxy')
+      .mockReturnValueOnce('guest_id_from_proxy');
 
     await handleNextJsMiddlewareCookie(request, response, options);
 
-    expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, cookieName);
-    expect(getCookieValueFromMiddlewareRequestSpy).toBeCalledTimes(1);
-    expect(setSpy).toHaveBeenCalledWith(cookieName, 'dac13bc5-cdae-4e65-8868-13443409d05e', defaultCookieAttributes);
+    expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, 'browser_id_from_proxy', defaultCookieAttributes);
+    expect(setSpy).toHaveBeenCalledWith(guestIdCookieName, 'guest_id_from_proxy', defaultCookieAttributes);
   });
 
-  it(`should set the browser ID from settings temp value
-     when getCookieValueFromMiddlewareRequest returns undefined`, async () => {
+  it('should set the guest ID when browser ID cookie is available', async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(mockGuestIdResponse),
+      ok: 'ok'
+    });
+
+    global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+
+    getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce('browser_id_from_proxy');
+
+    const browserIdCookieName = 'sc_123';
+    const guestIdCookieName = 'sc_123_personalize';
+
+    await handleNextJsMiddlewareCookie(request, response, options);
+
+    expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, browserIdCookieName);
+    expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, guestIdCookieName);
+    expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledTimes(2);
+    expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, 'browser_id_from_proxy', defaultCookieAttributes);
+    expect(setSpy).toHaveBeenCalledWith(guestIdCookieName, 'guest_id_from_proxy', defaultCookieAttributes);
+  });
+
+  it(`should set the browser ID and guest ID cookies in the request and response 
+    when the cookies are not present`, async () => {
+    const mockFetch = Promise.resolve({
+      json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
+    });
+
     getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
     const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
     global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
-    const cookieName = 'sc_123';
-
-    const mockBrowserId = 'dac13bc5-cdae-4e65-8868-13443409d05e';
+    const mockBrowserIdCookie = { name: 'sc_123', value: 'browser_id_from_proxy' };
+    const mockGuestIdCookie = { name: 'sc_123_personalize', value: 'guest_id_from_proxy' };
 
     const request: MiddlewareRequest = {
       cookies: { get: jest.fn(), set: jest.fn() },
@@ -97,7 +135,8 @@ describe('handleMiddlewareRequest', () => {
       undefined
     );
 
-    expect(setSpy).toHaveBeenCalledTimes(1);
-    expect(setSpy).toHaveBeenCalledWith(cookieName, mockBrowserId, defaultCookieAttributes);
+    expect(setSpy).toHaveBeenCalledTimes(2);
+    expect(setSpy).toHaveBeenCalledWith(mockBrowserIdCookie.name, mockBrowserIdCookie.value, defaultCookieAttributes);
+    expect(setSpy).toHaveBeenCalledWith(mockGuestIdCookie.name, mockGuestIdCookie.value, defaultCookieAttributes);
   });
 });

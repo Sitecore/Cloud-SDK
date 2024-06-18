@@ -28,7 +28,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
 
 describe('personalize', () => {
   const browserId = 'browser_id_value';
-  const guestRef = 'guest_ref_value';
+  const guestId = 'guest_id_value';
   const personalizeData = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     channel: 'WEB',
@@ -43,7 +43,7 @@ describe('personalize', () => {
     cookieSettings: {
       cookieDomain: 'cDomain',
       cookieExpiryDays: 730,
-      cookieName: 'bid_name',
+      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
       cookiePath: '/'
     },
     siteName: '456',
@@ -56,9 +56,9 @@ describe('personalize', () => {
   const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
   global.fetch = jest.fn().mockImplementation(() => mockFetch);
   jest.spyOn(core, 'getBrowserId').mockReturnValue(browserId);
-  jest.spyOn(utils, 'getCookieValueClientSide').mockReturnValue(guestRef);
+  jest.spyOn(utils, 'getCookieValueClientSide').mockReturnValue(guestId);
 
-  jest.spyOn(core, 'createCookie').mock;
+  jest.spyOn(core, 'createCookies').mock;
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -79,7 +79,7 @@ describe('personalize', () => {
     expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
     expect(Personalizer).toHaveBeenCalledTimes(1);
     expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-    expect(utils.getCookieValueClientSide).toHaveBeenCalledWith('guestRef');
+    expect(utils.getCookieValueClientSide).toHaveBeenCalledWith(settings.cookieSettings.cookieNames.guestId);
     expect(utils.getCookieValueClientSide).toHaveBeenCalledTimes(1);
   });
 

@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-export { createCookie } from './lib/cookie/create-cookie';
+export { createCookies } from './lib/cookie/create-cookies';
 export { getCookieValueFromMiddlewareRequest } from './lib/cookie/get-cookie-value-from-middleware-request';
 export { getDefaultCookieAttributes } from './lib/cookie/get-default-cookie-attributes';
 export { handleHttpCookie } from './lib/cookie/handle-http-cookie';
