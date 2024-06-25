@@ -1,5 +1,23 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
+export interface SearchEventEntityDTO {
+  id: string;
+  entity_type: string;
+  entity_subtype?: string;
+  uri?: string;
+  attributes?: Record<string, string>;
+  source_id?: string;
+}
+
+export interface SearchEventEntity {
+  id: string;
+  entity: string;
+  entityType?: string;
+  uri?: string;
+  attributes?: Record<string, string>;
+  sourceId?: string;
+}
+
 export interface SearchEventRequestDTO {
   keyword?: string;
   advanced_query_text?: string;
