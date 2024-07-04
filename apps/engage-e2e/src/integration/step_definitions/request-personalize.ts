@@ -19,6 +19,10 @@ defineStep('personalize parameters are:', (params: string) => {
   if (parameters.friendlyId) cy.get('[data-testid="friendlyId"]').clear().type(parameters.friendlyId);
   if (parameters.email) cy.get('[data-testid="email"]').clear().type(parameters.email);
   if (parameters.identifier) cy.get('[data-testid="identifier"]').clear().type(parameters.identifier);
+  if (parameters.pageVariantIds)
+    cy.get('[data-testid="pageVariantIds"]')
+      .clear()
+      .type(JSON.stringify({ pageVariantIds: parameters.pageVariantIds }), { parseSpecialCharSequences: false });
   if (parameters.params)
     cy.get('[data-testid="params"]')
       .clear()
@@ -41,6 +45,11 @@ defineStep('a personalize request is sent with parameters:', (params: string) =>
     if (parameters.params) {
       const params = parameters.params;
       expect(request.body.params).to.deep.equal(params);
+    }
+    if (parameters.variants) {
+      const { variants } = parameters;
+      if (variants === 'undefined') expect(request.body.variants).to.undefined;
+      else expect(request.body.variants).to.deep.equal(variants);
     }
   });
 });

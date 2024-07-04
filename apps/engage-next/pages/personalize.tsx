@@ -21,6 +21,7 @@ export default function PersonalizeCall({
     language: 'EN',
     page: 'personalize'
   });
+  const [pageVariantIdsInput, setPageVariantIdsInput] = useState<any>('');
 
   const [response, setResponse] = useState('');
 
@@ -123,6 +124,14 @@ export default function PersonalizeCall({
             setPersonalizetData((prev: any) => ({ ...prev, identifier: { id: e.target.value, provider: 'email' } }))
           }
         />
+        <label htmlFor='params'> pageVariantIds:</label>
+        <input
+          type='text'
+          id='pageVariantIds'
+          data-testid='pageVariantIds'
+          name='pageVariantIds'
+          onChange={(e) => setPageVariantIdsInput(e.target.value)}
+        />
         <label htmlFor='params'> params:</label>
         <input
           type='text'
@@ -146,7 +155,10 @@ export default function PersonalizeCall({
           type='button'
           data-testid='requestPersonalizeFromClient'
           onClick={async () => {
-            const response = await personalize(personalizeData as unknown as PersonalizeData);
+            const data = { ...personalizeData };
+            data.pageVariantIds = pageVariantIdsInput ? JSON.parse(pageVariantIdsInput).pageVariantIds : undefined;
+
+            const response = await personalize(data as unknown as PersonalizeData);
             setResponse(response ? JSON.stringify(response) : '');
           }}>
           Request Personalize from Client{' '}

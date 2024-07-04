@@ -126,6 +126,7 @@ export interface EPCallFlowsBody {
   params?: EPCallFlowsParams;
   pointOfSale: string;
   guestRef: string;
+  variants?: string[];
 }
 
 /**

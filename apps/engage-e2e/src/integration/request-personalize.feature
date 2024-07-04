@@ -105,6 +105,48 @@ Scenario: Developer requests personalize with timeout from the client and EP res
     And the 'requestPersonalizeFromClientWithTimeout' button is clicked
     Then no error is thrown
 
+Scenario Outline: Developer requests personalize with pageVariantIds
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "pageVariantIds": ["test","test2"]
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "variants": ["test","test2"]
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
+Scenario Outline: Developer requests personalize with empty pageVariantIds
+    Given the '/personalize' page is loaded
+    When personalize parameters are: 
+    """
+        {
+            "friendlyId": "personalizeintegrationtest", 
+            "pageVariantIds": []
+        }
+    """
+    And the 'requestPersonalizeFromClient' button is clicked
+    Then a personalize request is sent with parameters:
+    """
+        {
+            "variants": "undefined"
+        }
+    """
+    Then we display the callflow's content to UI: 
+    """
+        {"Key":"value"}
+    """
+
 Scenario Outline: Developer requests personalize with valid parameters
     Given the '/personalize' page is loaded
     When personalize parameters are: 
@@ -112,7 +154,7 @@ Scenario Outline: Developer requests personalize with valid parameters
         {
             "friendlyId": "<friendlyId>", 
             "email": "<email>", 
-            "identifier": "<identifier>" 
+            "identifier": "<identifier>"
         }
     """
     And the 'requestPersonalizeFromClient' button is clicked

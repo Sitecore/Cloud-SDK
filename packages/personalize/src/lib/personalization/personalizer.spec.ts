@@ -287,6 +287,91 @@ describe('Test Personalizer Class', () => {
       jest.clearAllMocks();
     });
 
+    it('should return an object containing the pageVariantIds', () => {
+      const interactiveExperienceDataMock = {
+        channel: 'WEB',
+        currency: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        pageVariantIds: ['test']
+      };
+
+      personalizeInputMock.pageVariantIds = ['test'];
+
+      settingsMock = {
+        cookieSettings: {
+          cookieDomain: 'cDomain',
+          cookieExpiryDays: 730,
+          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
+          cookiePath: '/'
+        },
+
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: core.SITECORE_EDGE_URL
+      };
+
+      new Personalizer(browserId, guestId).getInteractiveExperienceData(
+        interactiveExperienceDataMock,
+        settingsMock,
+        ''
+      );
+
+      const expectedResult = {
+        channel: 'WEB',
+        currency: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        pageVariantIds: ['test']
+      };
+
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
+      expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(sanitizeInputSpy).toHaveReturnedWith(expectedResult);
+    });
+
+    it('should return an object not containing the pageVariantIds if empty array is passed', () => {
+      const interactiveExperienceDataMock = {
+        channel: 'WEB',
+        currency: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN',
+        pageVariantIds: []
+      };
+
+      personalizeInputMock.pageVariantIds = [];
+
+      settingsMock = {
+        cookieSettings: {
+          cookieDomain: 'cDomain',
+          cookieExpiryDays: 730,
+          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
+          cookiePath: '/'
+        },
+
+        siteName: '456',
+        sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: core.SITECORE_EDGE_URL
+      };
+
+      new Personalizer(browserId, guestId).getInteractiveExperienceData(
+        interactiveExperienceDataMock,
+        settingsMock,
+        ''
+      );
+
+      const expectedResult = {
+        channel: 'WEB',
+        currency: 'EUR',
+        friendlyId: 'personalizeintegrationtest',
+        language: 'EN'
+      };
+
+      expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
+      expect(sanitizeInputSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(sanitizeInputSpy).toHaveReturnedWith(expectedResult);
+    });
+
     it('should return an object from the sanitizeInput method that uses the pointOfSale from the settings', () => {
       const interactiveExperienceDataMock = {
         channel: 'WEB',
@@ -473,6 +558,55 @@ describe('Test Personalizer Class', () => {
     afterEach(() => {
       jest.clearAllMocks();
     });
+    it('should map the pageVariantIds to variants', () => {
+      personalizeInputMock.pageVariantIds = ['test'];
+      new Personalizer(browserId, guestId).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
+      expect(mapPersonalizeInputToEPDataSpy).toHaveBeenCalledWith(personalizeInputMock);
+      expect(mapPersonalizeInputToEPDataSpy).toHaveReturnedWith({
+        browserId: 'browserId',
+        channel: 'WEB',
+        clientKey: '',
+        currencyCode: 'EUR',
+        email: undefined,
+        friendlyId: 'personalizeintegrationtest',
+        guestRef: 'guestId',
+        identifiers: undefined,
+        language: 'EN',
+        params: undefined,
+        pointOfSale: '',
+        variants: ['test']
+      });
+      expect(sendCallFlowsRequestSpy).toHaveBeenCalledWith(
+        {
+          browserId: 'browserId',
+          channel: 'WEB',
+          clientKey: '',
+          currencyCode: 'EUR',
+          email: undefined,
+          friendlyId: 'personalizeintegrationtest',
+          guestRef: 'guestId',
+          identifiers: undefined,
+          language: 'EN',
+          params: undefined,
+          pointOfSale: '',
+          variants: ['test']
+        },
+        {
+          cookieSettings: {
+            cookieDomain: 'cDomain',
+            cookieExpiryDays: 730,
+            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
+            cookiePath: '/'
+          },
+
+          siteName: '456',
+          sitecoreEdgeContextId: '123',
+          sitecoreEdgeUrl: core.SITECORE_EDGE_URL
+        },
+        undefined
+      );
+    });
+
     it('Test return object of the map method without email and identifier ', () => {
       personalizeInputMock.email = undefined;
       personalizeInputMock.identifier = undefined;

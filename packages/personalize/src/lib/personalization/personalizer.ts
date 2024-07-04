@@ -65,6 +65,8 @@ export class Personalizer {
     if (personalizeData.geo && Object.keys(personalizeData.geo).length > 0)
       sanitizedData.params = { ...personalizeData.params, geo: { ...personalizeData.geo } };
 
+    if (personalizeData.pageVariantIds?.length) sanitizedData.pageVariantIds = personalizeData.pageVariantIds;
+
     return sanitizedData;
   }
   /**
@@ -82,8 +84,10 @@ export class Personalizer {
       identifiers: input.identifier,
       language: input.language ?? language(),
       params: input.params,
-      pointOfSale: ''
+      pointOfSale: '',
+      variants: input.pageVariantIds
     };
+
     return mappedData;
   }
 
@@ -138,6 +142,7 @@ export interface PersonalizeData {
   identifier?: PersonalizeIdentifierInput;
   language?: string;
   params?: PersonalizeInputParams;
+  pageVariantIds?: string[];
 }
 
 /**
