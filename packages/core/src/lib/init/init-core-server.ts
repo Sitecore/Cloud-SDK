@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import type { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import type { Request, Response } from '@sitecore-cloudsdk/utils';
 import type { ServerSettings, Settings } from '../settings/interfaces';
 import { CORE_NAMESPACE } from '../debug/namespaces';
 import { ErrorMessages } from '../consts';
@@ -45,7 +45,7 @@ export function getSettingsServer() {
  * @param response - A response object of type HttpResponse or MiddlewareNextResponse
  * @returns A Promise that resolves when initialization is complete.
  */
-export async function initCoreServer<Response extends MiddlewareNextResponse | HttpResponse>(
+export async function initCoreServer(
   settingsInput: ServerSettings,
   request: Request,
   response: Response

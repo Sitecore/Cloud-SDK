@@ -73,3 +73,5 @@ export interface MiddlewareNextResponse {
     /* eslint-enable @typescript-eslint/no-explicit-any */
   };
 }
+
+export type Response = HttpResponse | MiddlewareNextResponse;

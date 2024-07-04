@@ -15,3 +15,4 @@ export type { ServerSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
 
 export { Context } from './lib/request-entities/context/context';
+export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/requests/send-widget-click-event-server';

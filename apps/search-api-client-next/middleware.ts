@@ -5,6 +5,7 @@ import { getPageWidgetDataMiddleware } from './src/middlewares/get-page-widget-d
 import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
 import { getWidgetDataMiddleware } from './src/middlewares/get-widget-data';
 import { initMiddleware } from './src/middlewares/init';
+import { sendWidgetClickEventMiddleware } from './src/middlewares/send-widget-click-event';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -14,6 +15,7 @@ export async function middleware(request: NextRequest) {
   await getSearchWidgetDataMiddleware(request, response);
   await initMiddleware(request, response);
   await getPageWidgetDataMiddleware(request, response);
+  await sendWidgetClickEventMiddleware(request, response);
 
   return response;
 }

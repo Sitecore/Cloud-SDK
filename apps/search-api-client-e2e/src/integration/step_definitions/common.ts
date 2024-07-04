@@ -49,6 +49,8 @@ Then('an error is thrown: {string}', (expectedError: string) => {
 });
 
 defineStep('the request with id {string} will contain:', (testID: string, bodyAttribute: string) => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(1000);
   cy.assertRequestBodyValue(testID, bodyAttribute.trim());
 });
 

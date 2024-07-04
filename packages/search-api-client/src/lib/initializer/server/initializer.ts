@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import type { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import type { Request, Response } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../../const';
 import type { ServerSettings } from '../../types';
 import { initCoreServer } from '@sitecore-cloudsdk/core';
@@ -24,11 +23,7 @@ export function getSettings(): ServerSettings {
  * @param settings - The settings to initialize the search-api-client
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function initServer<Response extends MiddlewareNextResponse | HttpResponse>(
-  request: Request,
-  response: Response,
-  settings: ServerSettings
-): Promise<void> {
+export async function initServer(request: Request, response: Response, settings: ServerSettings): Promise<void> {
   try {
     if (!settings.userId) throw new Error(ErrorMessages.MV_0005);
     await initCoreServer(settings, request, response);

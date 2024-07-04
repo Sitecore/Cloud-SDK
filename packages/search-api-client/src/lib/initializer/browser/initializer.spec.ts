@@ -1,5 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core';
-import { getSettings, init } from './initializer';
+import { awaitInit, getSettings, init } from './initializer';
 import type { BrowserSettings } from '../../types';
 import { ErrorMessages } from '../../const';
 
@@ -84,5 +84,29 @@ describe('Browser Initialization and Settings Retrieval', () => {
     await expect(async () => {
       await init(browserSettings);
     }).rejects.toThrow(ErrorMessages.IE_0001);
+  });
+});
+
+describe('awaitInit', () => {
+  it('should throw error if initPromise is null', async () => {
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrow(ErrorMessages.IE_0009);
+  });
+  it('should not throw if initPromise is a Promise', async () => {
+    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
+
+    const settingsParams: core.BrowserSettings = {
+      cookieDomain: 'cDomain',
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://localhost'
+    };
+
+    await init(settingsParams);
+
+    expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
   });
 });

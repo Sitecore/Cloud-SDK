@@ -1,4 +1,3 @@
-import '../../../global.d.ts';
 import * as core from '@sitecore-cloudsdk/core';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { EVENTS_NAMESPACE, ErrorMessages, LIBRARY_VERSION } from '../../consts';

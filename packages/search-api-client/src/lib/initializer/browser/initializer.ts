@@ -27,11 +27,18 @@ export async function init(settings: BrowserSettings): Promise<void> {
     initPromise = initCore(settings);
     searchSettings = settings;
     await initPromise;
-
-    getSettings();
   } catch (error) {
     initPromise = null;
 
     throw new Error(error as string);
   }
+}
+
+/**
+ * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ */
+export async function awaitInit() {
+  if (initPromise === null) throw new Error(ErrorMessages.IE_0009);
+
+  await initPromise;
 }

@@ -27,7 +27,8 @@ export type {
   HttpResponse,
   MiddlewareRequest,
   HttpRequest,
-  BasicTypes
+  BasicTypes,
+  Response
 } from './lib/interfaces';
 
 export type { Cookie, CookieProperties } from './lib/cookies/interfaces';

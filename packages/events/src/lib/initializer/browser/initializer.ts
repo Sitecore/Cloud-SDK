@@ -5,6 +5,23 @@ import type { BrowserSettings } from '@sitecore-cloudsdk/core';
 
 export let initPromise: Promise<void> | null = null;
 
+declare global {
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    Engage: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [x: string]: any;
+      getBrowserId?: () => string;
+      versions?: {
+        personalize?: string;
+        events?: string;
+      };
+    };
+  }
+}
+
+export {};
+
 /**
  * Initiates the Events library using the global settings added by the developer
  * @param settings - Global settings added by the developer

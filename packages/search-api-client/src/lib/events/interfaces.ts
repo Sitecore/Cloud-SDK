@@ -27,7 +27,7 @@ export interface SearchEventRequestDTO {
   num_requested?: number;
   page_size?: number;
   page_number?: number;
-  redirect_url?: number;
+  redirect_url?: string;
 }
 
 export interface SearchEventRequest {
@@ -72,3 +72,15 @@ export interface RangeFacetFilter extends SuggestionFilter {
 }
 
 export type EventFilter = SuggestionFilter | FacetFilter | RangeFacetFilter;
+
+export interface WidgetClickEventParams {
+  request: SearchEventRequest;
+  entity: SearchEventEntity;
+  itemPosition: number;
+  pathname: string;
+  widgetIdentifier: string;
+  page?: string;
+  currency?: string;
+  language?: string;
+  channel?: string;
+}

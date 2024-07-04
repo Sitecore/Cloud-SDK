@@ -2,7 +2,8 @@ const originalFetch = globalThis.fetch;
 
 export function decorateFetch(testID: string | null) {
   globalThis.fetch = async (input: RequestInfo | URL, init?: RequestInit): Promise<Response> => {
-    if (typeof input === 'string' && !input.includes('/search?')) return originalFetch(input, init);
+    if (typeof input === 'string' && !input.includes('/search?') && !input.includes('/events?'))
+      return originalFetch(input, init);
 
     await originalFetch(`http://localhost:4300/api/save-e2e-data`, {
       body: JSON.stringify({ init, testID: testID ?? 'not_defined', url: input }),

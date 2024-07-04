@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import type { HttpResponse, MiddlewareNextResponse, Request } from '@sitecore-cloudsdk/utils';
+import type { Request, Response } from '@sitecore-cloudsdk/utils';
 import { debug, initCoreServer } from '@sitecore-cloudsdk/core';
 import { PERSONALIZE_NAMESPACE } from '../../consts';
 import type { ServerSettings } from '@sitecore-cloudsdk/core';
@@ -12,11 +12,7 @@ import type { ServerSettings } from '@sitecore-cloudsdk/core';
  * @param settings - Global settings added by the developer
  * @returns A promise that resolves with an object that handles the library functionality
  */
-export async function initServer<Response extends MiddlewareNextResponse | HttpResponse>(
-  request: Request,
-  response: Response,
-  settings: ServerSettings
-): Promise<void> {
+export async function initServer(request: Request, response: Response, settings: ServerSettings): Promise<void> {
   try {
     await initCoreServer(settings, request, response);
 
