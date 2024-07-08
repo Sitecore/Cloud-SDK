@@ -20,8 +20,6 @@ declare global {
   }
 }
 
-export {};
-
 /**
  * Initiates the Events library using the global settings added by the developer
  * @param settings - Global settings added by the developer

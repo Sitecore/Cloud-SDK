@@ -73,6 +73,16 @@ export interface RangeFacetFilter extends SuggestionFilter {
 
 export type EventFilter = SuggestionFilter | FacetFilter | RangeFacetFilter;
 
+export interface WidgetNavigationEventParams {
+  pathname: string;
+  page?: string;
+  itemPosition: number;
+  currency?: string;
+  language?: string;
+  channel?: string;
+  widgetIdentifier: string;
+}
+
 export interface WidgetClickEventParams {
   request: SearchEventRequest;
   entity: SearchEventEntity;

@@ -23,12 +23,12 @@ export { isValidLocation } from './lib/validators/is-valid-location';
 
 export type {
   Request,
+  Response,
   MiddlewareNextResponse,
   HttpResponse,
   MiddlewareRequest,
   HttpRequest,
-  BasicTypes,
-  Response
+  BasicTypes
 } from './lib/interfaces';
 
 export type { Cookie, CookieProperties } from './lib/cookies/interfaces';

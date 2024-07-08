@@ -10,6 +10,8 @@ export { GeoFilter } from './lib/request-entities/filters/geo-filter';
 export { ListFilter } from './lib/request-entities/filters/list-filter';
 export { GeoWithinFilter } from './lib/request-entities/filters/geo-within-filter';
 export { getPageWidgetDataServer as getPageWidgetData } from './lib/requests/get-page-widget-data-server';
+// eslint-disable-next-line max-len
+export { sendWidgetNavigationClickEventServer as sendWidgetNavigationClickEvent } from './lib/requests/send-widget-navigation-click-event-server';
 
 export type { ServerSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
