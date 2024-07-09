@@ -16,8 +16,8 @@ before(() => {
 });
 
 defineStep('the event request parameters are:', (params: string) => {
-  cy.get('[data-testid="sendWidgetClickEventInputData"]').clear();
-  cy.get('[data-testid="sendWidgetClickEventInputData"]').type(params, {
+  cy.get('[data-testid="eventInputData"]').clear();
+  cy.get('[data-testid="eventInputData"]').type(params, {
     parseSpecialCharSequences: false
   });
 });

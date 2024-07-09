@@ -61,14 +61,31 @@ export interface SuggestionFilter {
   displayName: string;
 }
 
+export interface SuggestionFilterDTO {
+  name: string;
+  title: string;
+  value: string[];
+  value_position: number[];
+  display_name: string[];
+}
+
 export interface FacetFilter extends SuggestionFilter {
   facetPosition: number;
+}
+
+export interface FacetFilterDTO extends SuggestionFilterDTO {
+  facet_position: number;
 }
 
 export interface RangeFacetFilter extends SuggestionFilter {
   startValue: string;
   endValue: string;
-  facetPosition: 0;
+}
+
+export interface RangeFacetFilterDTO extends SuggestionFilterDTO {
+  start_value: string;
+  end_value: string;
+  facet_position: 0;
 }
 
 export type EventFilter = SuggestionFilter | FacetFilter | RangeFacetFilter;
@@ -87,6 +104,17 @@ export interface WidgetClickEventParams {
   request: SearchEventRequest;
   entity: SearchEventEntity;
   itemPosition: number;
+  pathname: string;
+  widgetIdentifier: string;
+  page?: string;
+  currency?: string;
+  language?: string;
+  channel?: string;
+}
+
+export interface WidgetFacetClickEventParams {
+  request: SearchEventRequest;
+  filters: Array<FacetFilter | RangeFacetFilter>;
   pathname: string;
   widgetIdentifier: string;
   page?: string;

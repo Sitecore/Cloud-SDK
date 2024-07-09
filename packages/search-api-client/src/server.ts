@@ -18,3 +18,5 @@ export type { GeoData } from './lib/request-entities/context/interfaces';
 
 export { Context } from './lib/request-entities/context/context';
 export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/requests/send-widget-click-event-server';
+// eslint-disable-next-line max-len
+export { sendWidgetFacetClickEventServer as sendWidgetFacetClickEvent } from './lib/requests/send-widget-facet-click-event-server';
