@@ -81,7 +81,7 @@ npx nx run <YOUR_E2E_APP>:<YOUR_TARGET> --watch
 For example:
 
 ```
-npx nx run engage-e2e:engage-next-events --watch
+npx nx run apps/engage-e2e:engage-next-events --watch
 ```
 
 From the Cypress Runner you can choose which feature file’s tests you wish to run specifically.
@@ -97,7 +97,7 @@ Once your feature’s tests have successfully passed and before you open a PR, m
 For example:
 
 ```
-npx nx run engage-e2e:engage-events-smoke-test
+npx nx run apps/engage-e2e:engage-events-smoke-test
 ```
 
 Cypress will headlessly run all the available tests and will print the test results on your terminal.

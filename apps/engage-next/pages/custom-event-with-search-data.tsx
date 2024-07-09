@@ -5,7 +5,6 @@ import { event } from '@sitecore-cloudsdk/events/browser';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 
-
 export default function SearchData() {
   const sendCustomEventFromAPIWithSearchData = async () => {
     await fetch('/api/custom-event-with-search-data?&testID=sendCustomEventFromAPIWithSearchData');

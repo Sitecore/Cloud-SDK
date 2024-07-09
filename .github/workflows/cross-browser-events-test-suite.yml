@@ -19,7 +19,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run Chrome Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=chrome
+        run: npx nx run apps/engage-e2e:engage-events-smoke-test --browser=chrome
       - name: Generate Next Regression Chrome Test Report
         if: always()
         run: npm run generate-e2e-report
@@ -41,7 +41,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run Edge Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=edge
+        run: npx nx run apps/engage-e2e:engage-events-smoke-test --browser=edge
       - name: Generate Next Regression Edge Test Report
         if: always()
         run: npm run generate-e2e-report
@@ -63,8 +63,8 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run Firefox Events Smoke Test
-        run: npx nx run engage-e2e:engage-events-smoke-test --browser=firefox
-      - name: Generate npx nx run engage-e2e:engage-events-smoke-test
+        run: npx nx run apps/engage-e2e:engage-events-smoke-test --browser=firefox
+      - name: Generate npx nx run apps/engage-e2e:engage-events-smoke-test
         if: always()
         run: npm run generate-e2e-report
       - name: Upload Firefox Events Smoke Test Report

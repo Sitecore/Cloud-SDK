@@ -1,3 +1,4 @@
+set -e
 readarray -t affected_packages < <(npx nx show projects --affected --base="$1" --exclude="apps/*,@sitecore-cloudsdk")
 cd packages
 for affected in "${affected_packages[@]}"; do

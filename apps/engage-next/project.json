@@ -1,5 +1,5 @@
 {
-  "name": "engage-next",
+  "name": "apps/engage-next",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/engage-next",
   "projectType": "application",
@@ -22,16 +22,16 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "engage-next:build",
+        "buildTarget": "apps/engage-next:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "engage-next:build:development",
+          "buildTarget": "apps/engage-next:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "engage-next:build:production",
+          "buildTarget": "apps/engage-next:build:production",
           "dev": false
         }
       }
@@ -39,7 +39,7 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "engage-next:build:production"
+        "buildTarget": "apps/engage-next:build:production"
       }
     },
     "lint": {
