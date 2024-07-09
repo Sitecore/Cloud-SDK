@@ -112,6 +112,17 @@ export interface WidgetClickEventParams {
   channel?: string;
 }
 
+export interface WidgetSuggestionClickEventParams {
+  request: SearchEventRequest;
+  filters: Array<SuggestionFilter>;
+  pathname: string;
+  widgetIdentifier: string;
+  page: string;
+  currency?: string;
+  language?: string;
+  channel?: string;
+}
+
 export interface WidgetFacetClickEventParams {
   request: SearchEventRequest;
   filters: Array<FacetFilter | RangeFacetFilter>;
