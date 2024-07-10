@@ -5,6 +5,7 @@ import { getPageWidgetDataMiddleware } from './src/middlewares/get-page-widget-d
 import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
 import { getWidgetDataMiddleware } from './src/middlewares/get-widget-data';
 import { initMiddleware } from './src/middlewares/init';
+import { sendConversionEventMiddleware } from './src/middlewares/send-conversion-event';
 import { sendWidgetClickEventMiddleware } from './src/middlewares/send-widget-click-event';
 import { sendWidgetFacetClickEventMiddleware } from './src/middlewares/send-widget-facet-click-event';
 import { sendWidgetNavigationClickEventMiddleware } from './src/middlewares/send-widget-navigation-click-event';
@@ -22,6 +23,7 @@ export async function middleware(request: NextRequest) {
   await sendWidgetSuggestionClickEventMiddleware(request, response);
   await sendWidgetFacetClickEventMiddleware(request, response);
   await sendWidgetNavigationClickEventMiddleware(request, response);
+  await sendConversionEventMiddleware(request, response);
 
   return response;
 }

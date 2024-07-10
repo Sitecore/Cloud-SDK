@@ -22,3 +22,4 @@ export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/reques
 export { sendWidgetFacetClickEventServer as sendWidgetFacetClickEvent } from './lib/requests/send-widget-facet-click-event-server';
 export { sendWidgetSuggestionClickEventServer as sendWidgetSuggestionClickEvent } from './lib/requests/send-widget-suggestion-click-server';
 /* eslint-enable max-len */
+export { sendConversionEventServer as sendConversionEvent } from './lib/requests/send-conversion-event-server';

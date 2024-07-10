@@ -133,3 +133,11 @@ export interface WidgetFacetClickEventParams {
   language?: string;
   channel?: string;
 }
+
+export interface ConvertionEventParams {
+  page: string;
+  currency: string;
+  language: string;
+  pathname: string;
+  entity: SearchEventEntity;
+}

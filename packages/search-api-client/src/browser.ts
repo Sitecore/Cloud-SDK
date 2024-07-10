@@ -19,3 +19,4 @@ export { Context } from './lib/request-entities/context/context';
 export { sendWidgetClickEvent } from './lib/requests/send-widget-click-event';
 export { sendWidgetSuggestionClickEvent } from './lib/requests/send-widget-suggestion-click';
 export { sendWidgetFacetClickEvent } from './lib/requests/send-widget-facet-click-event';
+export { sendConversionEvent } from './lib/requests/send-conversion-event';
