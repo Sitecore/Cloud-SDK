@@ -134,6 +134,17 @@ export interface WidgetFacetClickEventParams {
   channel?: string;
 }
 
+export interface WidgetViewEventParams {
+  request: SearchEventRequest;
+  entities: Array<SearchEventEntity>;
+  pathname: string;
+  widgetIdentifier: string;
+  page?: string;
+  currency?: string;
+  language?: string;
+  channel?: string;
+}
+
 export interface ConvertionEventParams {
   page: string;
   currency: string;

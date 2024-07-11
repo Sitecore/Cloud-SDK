@@ -10,6 +10,7 @@ import { sendWidgetClickEventMiddleware } from './src/middlewares/send-widget-cl
 import { sendWidgetFacetClickEventMiddleware } from './src/middlewares/send-widget-facet-click-event';
 import { sendWidgetNavigationClickEventMiddleware } from './src/middlewares/send-widget-navigation-click-event';
 import { sendWidgetSuggestionClickEventMiddleware } from './src/middlewares/send-widget-suggestion-click-event';
+import { widgetViewMiddleware } from './src/middlewares/widget-view';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -23,6 +24,7 @@ export async function middleware(request: NextRequest) {
   await sendWidgetSuggestionClickEventMiddleware(request, response);
   await sendWidgetFacetClickEventMiddleware(request, response);
   await sendWidgetNavigationClickEventMiddleware(request, response);
+  await widgetViewMiddleware(request, response);
   await sendConversionEventMiddleware(request, response);
 
   return response;

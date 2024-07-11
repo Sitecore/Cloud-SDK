@@ -30,7 +30,7 @@ export default function SendWidgetClickEvent() {
         style={{ width: '1000px' }}
         value={sendWidgetNavigationClickEventData}
         onChange={(e) => setSendWidgetNavigationClickEventData(e.target.value)}
-        data-testid='sendWidgetNavigationClickEventInputData'
+        data-testid='eventInputData'
         rows={4}
         cols={40}
       />

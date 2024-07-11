@@ -2,7 +2,7 @@ Feature: Send widget click event
 
 Scenario Outline: Developer sends search widget navigation click event from browser with a valid payload
     Given the '/send-widget-navigation-click-event' page is loaded
-    When the event request parameters for WidgetNavigationClickEvent are:
+    When the event request parameters are:
     """
         {
         	"channel": "WEB",
