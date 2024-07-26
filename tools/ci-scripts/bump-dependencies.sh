@@ -1,5 +1,5 @@
 set -e
-readarray -t affected_packages < <(npx nx show projects --affected --base="$1" --exclude="apps/*,@sitecore-cloudsdk")
+readarray -t affected_packages < <(npx nx show projects --affected --base="$1" --exclude="apps/*,examples/*,@sitecore-cloudsdk")
 cd packages
 for affected in "${affected_packages[@]}"; do
     new_version="^$(cd $affected && npm pkg get version | jq -r '.[]' && cd ..)"
