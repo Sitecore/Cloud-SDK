@@ -152,10 +152,15 @@ export class Context {
     /* eslint-disable @typescript-eslint/naming-convention */
     const dto: ContextDTO = {
       context: {
-        locale: this._locale,
         page: this._page
       }
     };
+
+    if (this._locale)
+      dto.context.locale = {
+        country: this._locale.country.toLowerCase(),
+        language: this._locale.language.toLowerCase()
+      };
 
     if (this._store)
       dto.context.store = {

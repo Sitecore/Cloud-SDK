@@ -109,9 +109,7 @@ Scenario Outline: Developer requests widget data with context object from browse
   """
   And Search REST API responds with status code '<status_code>'
   Examples:
-    | items                                                                           | context                                          | status_code |
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"}}      | 200         |
-
-
+    | items                                                                           | context                                       | status_code |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"}}   | 200         |
 
         

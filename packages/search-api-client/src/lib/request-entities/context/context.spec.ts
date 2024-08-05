@@ -275,17 +275,17 @@ describe('context request data creation', () => {
 
     it('should update locale object when country property is valid', () => {
       const newContext = new Context(context);
-      newContext.locale = { country: 'EN', language: 'us' };
+      newContext.locale = { country: 'EN', language: 'US' };
 
-      expect(newContext.toDTO().context.locale?.country).toBe('EN');
+      expect(newContext.toDTO().context.locale?.country).toBe('en');
       expect(newContext.toDTO().context.locale?.language).toBe('us');
     });
 
     it('should update locale object when language property is valid', () => {
       const newContext = new Context(context);
-      newContext.locale = { country: 'EN', language: 'gr' };
+      newContext.locale = { country: 'EN', language: 'GR' };
 
-      expect(newContext.toDTO().context.locale?.country).toBe('EN');
+      expect(newContext.toDTO().context.locale?.country).toBe('en');
       expect(newContext.toDTO().context.locale?.language).toBe('gr');
     });
 

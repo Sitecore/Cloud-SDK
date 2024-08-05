@@ -29,7 +29,7 @@ export default function GetWidgetData() {
     '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0,  "filter": "add"}}]}'
   );
 
-  const [inputContextData, setInputContextData] = useState('{"context":{"locale":{"country":"us","language":"en"}}}');
+  const [inputContextData, setInputContextData] = useState('{"context":{"locale":{"country":"US","language":"EN"}}}');
 
   const getWidgetDataFromAPIWithValidPayload = async () => {
     await fetch('/api/get-widget-data?testID=getWidgetDataFromAPIWithValidPayload');
