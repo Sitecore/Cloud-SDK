@@ -11,6 +11,10 @@ const nextConfig = {
     // Set this to true if you would like to use SVGR
     // See: https://github.com/gregberge/svgr
     svgr: false
+  },
+  images: {
+    domains: ['delivery-sitecore.sitecorecontenthub.cloud'],
+    dangerouslyAllowSVG: true
   }
 };
 

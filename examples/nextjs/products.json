@@ -1,0 +1,74 @@
+[
+  {
+    "id": "PSPAMMWSSRCJ-BL-L",
+    "title": "Male Moisture-Wicking Short Sleeved Road Cycling Jersey - blue",
+    "price": 12.99,
+    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-2.jpg"
+  },
+  {
+    "id": "PSPAMMWSSRCJ-BK-L",
+    "title": "Male Moisture-Wicking Short Sleeved Road Cycling Jersey - black",
+    "price": 12.99,
+    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-1.jpg"
+  },
+  {
+    "id": "PSPCCSB",
+    "title": "Saddle Bag",
+    "price": 14.99,
+    "imageUrl": "/images/sc-Saddle-Bag.jpg"
+  },
+  {
+    "id": "PSPRRTCB",
+    "title": "Camel Back",
+    "price": 45,
+    "imageUrl": "/images/sc-Camel-Back.jpg"
+  },
+  {
+    "id": "PSPGG",
+    "title": "Gym bag",
+    "price": 50,
+    "imageUrl": "/images/sc-Gym-bag.jpg"
+  },
+  {
+    "id": "PSPCCBHB",
+    "title": "Bike Handlebar Bag",
+    "price": 19.99,
+    "imageUrl": "/images/sc-Bike-Handlebar-Bag.jpg"
+  },
+  {
+    "id": "PSPSCP",
+    "title": "Pillowbot",
+    "price": 650,
+    "imageUrl": "/images/sc-pillow.jpg"
+  },
+  {
+    "id": "PSPSSFT",
+    "title": "Smart Fitness Tracker",
+    "price": 19.95,
+    "imageUrl": "/images/sc-Fitness-Tracker.jpg"
+  },
+  {
+    "id": "PSPSSAB",
+    "title": "Smart Audio Band",
+    "price": 150,
+    "imageUrl": "/images/sc-Smart-audio-band.jpg"
+  },
+  {
+    "id": "PSPSSB",
+    "title": "Smart Band",
+    "price": 45,
+    "imageUrl": "/images/sc-smart-band-1.jpg"
+  },
+  {
+    "id": "PSPOUS",
+    "title": "Smartwatch",
+    "price": 100,
+    "imageUrl": "/images/sc-smart-watch.jpg"
+  },
+  {
+    "id": "PSPGSB",
+    "title": "Sports Bottle",
+    "price": 5,
+    "imageUrl": "/images/sc-water-bottle.jpg"
+  }
+]

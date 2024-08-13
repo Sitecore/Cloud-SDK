@@ -1,4 +1,12 @@
+import { Footer } from '../components/footer';
+import { Header } from '../components/header';
+import { DM_Sans as fontSans } from 'next/font/google';
 import './global.css';
+
+// If loading a variable font, you don't need to specify the font weight
+const font = fontSans({
+  subsets: ['latin']
+});
 
 export const metadata = {
   title: 'Welcome to examples/nextjs',
@@ -7,8 +15,14 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en'>
-      <body>{children}</body>
+    <html
+      className={font.className}
+      lang='en'>
+      <body>
+        <Header />
+        {children}
+        <Footer />
+      </body>
     </html>
   );
 }
