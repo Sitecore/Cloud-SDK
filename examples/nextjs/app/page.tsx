@@ -1,6 +1,6 @@
 import { PersonalizeBanner } from '../components/personalize-banner';
 import { Newsletter } from '../components/newsletter';
-import { Products } from '../components/products';
+import { MemoizedProducts } from '../components/products';
 import products from '../products.json';
 
 export default async function Index() {
@@ -10,7 +10,7 @@ export default async function Index() {
       className='bg-[image:var(--sc-bg)] p-4 flex items-center justify-center flex-col'>
       <div className='container mx-auto'>
         <PersonalizeBanner />
-        <Products products={products} />
+        <MemoizedProducts products={products} />
         <Newsletter />
       </div>
     </div>

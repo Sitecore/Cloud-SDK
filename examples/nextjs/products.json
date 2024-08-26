@@ -3,72 +3,85 @@
     "id": "PSPAMMWSSRCJ-BL-L",
     "title": "Male Moisture-Wicking Short Sleeved Road Cycling Jersey - blue",
     "price": 12.99,
-    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-2.jpg"
+    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-2.jpg",
+    "slug": "male-moisture-wicking-short-sleeved-road-cycling-jersey-blue",
+    "discount": 10
   },
   {
     "id": "PSPAMMWSSRCJ-BK-L",
     "title": "Male Moisture-Wicking Short Sleeved Road Cycling Jersey - black",
     "price": 12.99,
-    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-1.jpg"
+    "imageUrl": "/images/sc-Male-moisture-wicking-short-sleeved-road-cycling-jersey-1.jpg",
+    "slug": "male-moisture-wicking-short-sleeved-road-cycling-jersey-black"
   },
   {
     "id": "PSPCCSB",
     "title": "Saddle Bag",
     "price": 14.99,
-    "imageUrl": "/images/sc-Saddle-Bag.jpg"
+    "imageUrl": "/images/sc-Saddle-Bag.jpg",
+    "slug": "saddle-bag"
   },
   {
     "id": "PSPRRTCB",
     "title": "Camel Back",
     "price": 45,
-    "imageUrl": "/images/sc-Camel-Back.jpg"
+    "imageUrl": "/images/sc-Camel-Back.jpg",
+    "slug": "camel-back"
   },
   {
     "id": "PSPGG",
     "title": "Gym bag",
     "price": 50,
-    "imageUrl": "/images/sc-Gym-bag.jpg"
+    "imageUrl": "/images/sc-Gym-bag.jpg",
+    "slug": "gym-bag"
   },
   {
     "id": "PSPCCBHB",
     "title": "Bike Handlebar Bag",
     "price": 19.99,
-    "imageUrl": "/images/sc-Bike-Handlebar-Bag.jpg"
+    "imageUrl": "/images/sc-Bike-Handlebar-Bag.jpg",
+    "slug": "bike-handlebar-bag"
   },
   {
     "id": "PSPSCP",
     "title": "Pillowbot",
     "price": 650,
-    "imageUrl": "/images/sc-pillow.jpg"
+    "imageUrl": "/images/sc-pillow.jpg",
+    "slug": "pillowbot"
   },
   {
     "id": "PSPSSFT",
     "title": "Smart Fitness Tracker",
     "price": 19.95,
-    "imageUrl": "/images/sc-Fitness-Tracker.jpg"
+    "imageUrl": "/images/sc-Fitness-Tracker.jpg",
+    "slug": "smart-fitness-tracker"
   },
   {
     "id": "PSPSSAB",
     "title": "Smart Audio Band",
     "price": 150,
-    "imageUrl": "/images/sc-Smart-audio-band.jpg"
+    "imageUrl": "/images/sc-Smart-audio-band.jpg",
+    "slug": "smart-audio-band"
   },
   {
     "id": "PSPSSB",
     "title": "Smart Band",
     "price": 45,
-    "imageUrl": "/images/sc-smart-band-1.jpg"
+    "imageUrl": "/images/sc-smart-band-1.jpg",
+    "slug": "smart-band"
   },
   {
     "id": "PSPOUS",
     "title": "Smartwatch",
     "price": 100,
-    "imageUrl": "/images/sc-smart-watch.jpg"
+    "imageUrl": "/images/sc-smart-watch.jpg",
+    "slug": "smartwatch"
   },
   {
     "id": "PSPGSB",
     "title": "Sports Bottle",
     "price": 5,
-    "imageUrl": "/images/sc-water-bottle.jpg"
+    "imageUrl": "/images/sc-water-bottle.jpg",
+    "slug": "sports-bottle"
   }
 ]

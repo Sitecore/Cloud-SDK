@@ -1,23 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import { useRef } from 'react';
+import { useCart } from '../contexts/cart';
 
 export function Header() {
-  const cartDialogRef = useRef<HTMLDialogElement>(null);
+  const cart = useCart();
   const accountDialogRef = useRef<HTMLDialogElement>(null);
   return (
-    <>
-      <dialog
-        ref={cartDialogRef}
-        className='p-14 rounded-xl'>
-        There are no items in your cart.
-        <button
-          onClick={() => cartDialogRef.current?.close()}
-          className='absolute top-3 right-4 text-3xl text-red-500'>
-          &times;
-        </button>
-      </dialog>
+    <div className='shadow-sm'>
       <dialog
         ref={accountDialogRef}
         className='p-14 rounded-xl'>
@@ -30,12 +22,14 @@ export function Header() {
       </dialog>
       <header className='container mx-auto flex justify-between items-center p-4'>
         <div>
-          <Image
-            src='https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore?t=sc42h'
-            alt='Logo'
-            height={100}
-            width={100}
-          />
+          <Link href='/'>
+            <Image
+              src='https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore?t=sc42h'
+              alt='Logo'
+              height={29}
+              width={150}
+            />
+          </Link>
         </div>
         <div className='flex gap-x-4'>
           <div className='relative w-[15rem]'>
@@ -76,7 +70,7 @@ export function Header() {
                     width='25'
                     height='25'
                     viewBox='0 0 24 24'
-                    stroke-width='1.5'
+                    strokeWidth='1.5'
                     stroke='#2c3e50'
                     fill='none'
                     strokeLinecap='round'
@@ -95,14 +89,14 @@ export function Header() {
               <div className='text-slate-200'>/</div>
               <li>
                 <button
-                  onClick={() => cartDialogRef.current?.showModal()}
+                  onClick={() => cart.openSidebar()}
                   className='flex hover:bg-slate-50 rounded-xl px-3 py-2'>
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     width='25'
                     height='25'
                     viewBox='0 0 24 24'
-                    stroke-width='1.5'
+                    strokeWidth='1.5'
                     stroke='#2c3e50'
                     fill='none'
                     strokeLinecap='round'
@@ -124,6 +118,6 @@ export function Header() {
           </nav>
         </div>
       </header>
-    </>
+    </div>
   );
 }
