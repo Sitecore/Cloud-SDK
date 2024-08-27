@@ -91,6 +91,11 @@ export function Header() {
                 <button
                   onClick={() => cart.openSidebar()}
                   className='flex hover:bg-slate-50 rounded-xl px-3 py-2'>
+                  {cart.calculateTotalItems() > 0 && (
+                    <span className='bg-red-600 ml-1 mr-3 text-white text-xs my-auto w-5 h-5 flex items-center justify-center rounded-full'>
+                      {cart.calculateTotalItems()}
+                    </span>
+                  )}
                   <svg
                     xmlns='http://www.w3.org/2000/svg'
                     width='25'

@@ -21,7 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CartProvider>
           <Header />
           <Sidebar />
-          {children}
+          <main className='min-h-[calc(100vh_-_178px)]'>{children}</main>
         </CartProvider>
         <Footer />
       </body>

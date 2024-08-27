@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className='text-slate-500 py-4'>
+    <footer className='text-slate-500 py-6'>
       <nav className='flex justify-center space-x-4'>
         <a
           href='#home'

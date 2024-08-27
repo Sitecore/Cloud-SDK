@@ -1,8 +1,17 @@
+'use client';
+
+import { useCart } from '../../../contexts/cart';
 import products from '../../../products.json';
 import Image from 'next/image';
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find((product) => product.slug === params.slug);
+  const { addProductItem } = useCart();
+
+  if (!product) {
+    return <div>Product not found</div>;
+  }
+
   return (
     <section className='container py-16'>
       <div className='flex flex-col md:flex-row gap-x-12 items-start'>
@@ -29,7 +38,9 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           </p>
           <br />
           <div className='text-xl font-semibold mb-4'>$99.99</div>
-          <button className='text-blue-600 hover:bg-slate-100 px-4 py-2 mt-3 rounded-lg border'>
+          <button
+            onClick={() => addProductItem(product, 1)}
+            className='text-blue-600 hover:bg-slate-100 px-4 py-2 mt-3 rounded-lg border'>
             Add to cart &nbsp;→
           </button>
         </div>
