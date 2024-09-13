@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { ArrayOfAtLeastThree, GeoWithinFilterDTO, GeoWithinFilterData, LocationDTO } from './interfaces';
 import { BaseFilter } from './base-filter';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 import type { LocationData } from '../context/interfaces';
 import { isValidLocation } from '@sitecore-cloudsdk/utils';
 

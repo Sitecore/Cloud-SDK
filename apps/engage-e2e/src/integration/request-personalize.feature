@@ -436,6 +436,7 @@ Scenario: Developer requests personalize from API route with UTM url params only
     {"utm":{"campaign":"campaign2","source":"test2"}}
     """
 
+@RestartServer-Middleware
 Scenario: Developer requests personalize from API route with both UTM params (in url and manually)
     Given the '/personalize' page is loaded
     When personalize parameters are: 
@@ -451,6 +452,7 @@ Scenario: Developer requests personalize from API route with both UTM params (in
     {"utm":{"campaign":"campaign","source":"test"}}
     """
 
+@RestartServer-Middleware
 Scenario: Developer requests personalize from Middleware with UTM params
     Given the '/personalize' page is loaded
     When personalize parameters are: 
@@ -482,14 +484,7 @@ Scenario: Developer requests personalize from Middleware with UTM url params onl
     """
 
 Scenario: Developer requests personalize from Middleware with both UTM params (in url and manually)
-    Given the '/personalize' page is loaded
-    When personalize parameters are: 
-    """
-        { 
-            "friendlyId": "personalizeintegrationtest", 
-            "email": "test"
-        }
-    """
+    Given the '/personalize' page is loaded with 'testID' name and 'requestPersonalizeFromMiddlewareBothUTMParams' value query parameter
     And the 'requestPersonalizeFromMiddlewareWithBothUTMParams' button is clicked
     Then we display the callflow's request params to UI containing: 
     """

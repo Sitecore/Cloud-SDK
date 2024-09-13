@@ -1,8 +1,9 @@
 import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
-import { init } from '@sitecore-cloudsdk/events/browser';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import '@sitecore-cloudsdk/events/browser';
 
 const Events = () => {
   const router = useRouter();
@@ -17,17 +18,17 @@ const Events = () => {
     console.log(`${red('red')} reset ${blue('blue')}`);
 
     if (
-      router.pathname.startsWith('/edge-proxy-settings-events') ||
-      router.pathname.startsWith('/edge-proxy-settings-personalize') ||
+      router.pathname.startsWith('/init-events') ||
+      router.pathname.startsWith('/init-personalize') ||
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
-      router.pathname.startsWith('/async-init-personalize') ||
-      router.pathname.startsWith('/async-init-events')
+      router.pathname.startsWith('/personalize')
     )
       return;
 
     const badSitecoreEdgeContextId = getSettingFromUrlParams('badSitecoreEdgeContextIdBrowser') ?? undefined;
-    init({
+
+    CloudSDK({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie:
@@ -39,7 +40,9 @@ const Events = () => {
       sitecoreEdgeContextId: badSitecoreEdgeContextId || process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined
-    });
+    })
+      .addEvents()
+      .initialize();
   }, [router.pathname]);
 
   return null;

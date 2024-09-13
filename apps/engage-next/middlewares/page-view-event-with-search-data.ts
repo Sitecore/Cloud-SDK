@@ -1,8 +1,11 @@
+import type { NextRequest, NextResponse } from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import type { NextRequest } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { pageView } from '@sitecore-cloudsdk/events/server';
 
-export async function pageViewEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {
+
+export async function pageViewEventWithSearchDataMiddleware(request: NextRequest,
+  response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (
@@ -17,6 +20,11 @@ export async function pageViewEventWithSearchDataMiddleware(request: NextRequest
   decorateAll(testID as string);
   switch (testID) {
     case 'sendPageViewEventFromMiddlewareWithSearchData':
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
+      }).addEvents().initialize();
       await pageView(request, {
         ...baseEventData,
         searchData: { test: 123 }
@@ -24,6 +32,12 @@ export async function pageViewEventWithSearchDataMiddleware(request: NextRequest
 
       break;
     case 'sendPageViewEventFromMiddlewareWithoutSearchData':
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
+      }).addEvents().initialize();
+
       await pageView(request, {
         ...baseEventData
       });

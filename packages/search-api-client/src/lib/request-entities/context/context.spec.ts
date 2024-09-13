@@ -1,6 +1,6 @@
 import * as utils from '@sitecore-cloudsdk/utils';
 import { Context } from './context';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');

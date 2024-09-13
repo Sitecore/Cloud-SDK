@@ -1,9 +1,8 @@
 'use client';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import {
-  type BrowserSettings,
   WidgetRequestData,
   getWidgetData,
-  init,
   WidgetItem,
   ComparisonFilter,
   LogicalFilter,
@@ -15,15 +14,15 @@ import { useEffect, useState } from 'react';
 
 export default function Filters() {
   useEffect(() => {
-    const settings: BrowserSettings = {
-      enableBrowserCookie: true,
-      siteName: 'TestSite',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
-      userId: 'test'
-    };
     async function initSearch() {
-      await init(settings);
+      await CloudSDK({
+        enableBrowserCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
     }
     initSearch();
   }, []);

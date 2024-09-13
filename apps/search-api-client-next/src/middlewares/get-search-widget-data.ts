@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { SearchWidgetItem, WidgetRequestData, getWidgetData, init } from '@sitecore-cloudsdk/search-api-client/server';
+import { SearchWidgetItem, WidgetRequestData, getWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
 import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 
 export async function getSearchWidgetDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -14,12 +15,14 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
   decorateFetch(testID as string);
   switch (testID) {
     case 'getSearchWidgetDataFromMiddlewareWithValidPayload':
-      await init(request, response, {
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7', {
         all: true,
@@ -33,12 +36,14 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
 
       break;
     case 'getSearchWidgetDataFromMiddlewareWithValidPayloadUsingSetter':
-      await init(request, response, {
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7');
       widget.facet = {

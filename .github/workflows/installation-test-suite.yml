@@ -1,4 +1,4 @@
-name: Test Installation of sitecore-cloudsdk release candidate across various frameworks
+name: (OLD) Test Installation of sitecore-cloudsdk release candidate across various frameworks
 
 on:
   workflow_run:
@@ -29,13 +29,13 @@ jobs:
       - name: Create Next app
         run: |
           cd ../          
-          npx create-next-app@14.1 my-next-app --ts --no-eslint --no-tailwind --no-src-dir --no-app --import-alias '@/*'
+          npx create-next-app@14.1 my-next-app-old --ts --no-eslint --no-tailwind --no-src-dir --no-app --import-alias '@/*'
       - name: Install Cypress, dependencies and supporting files
         run: |
-          cd ../my-next-app          
+          cd ../my-next-app-old
           npm install cypress
           cp -r $GITHUB_WORKSPACE/tools/testing_resources/installation-test/cypress-template/*  ./          
-          mv ./cypress/e2e/sanity-test-template.txt ./cypress/e2e/test.cy.js
+          mv ./cypress/e2e/sanity-test-template-old.txt ./cypress/e2e/test.cy.js
           mv ./cypress-config.txt ./cypress.config.js
           npm install --save-dev start-server-and-test
           npm pkg set 'scripts.test'='npx cypress run' 'scripts.start-server'='npx next dev' 'scripts.ci'='npx start-server-and-test start-server 3000 test'
@@ -43,17 +43,17 @@ jobs:
           cp $GITHUB_WORKSPACE/apps/engage-e2e/cypress.env.json  ./
       - name: Install @sitecore libraries using npm link
         run: |
-          cd ../my-next-app
+          cd ../my-next-app-old
           npm link @sitecore-cloudsdk/events --save
           npm link @sitecore-cloudsdk/personalize --save
-          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/page-template.txt ./pages/index.tsx
-          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/middleware-template.txt ./middleware.ts
+          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app-old/page-template.txt ./pages/index.tsx
+          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app-old/middleware-template.txt ./middleware.ts
       - name: Build Next app
         run: |
-          cd ../my-next-app
+          cd ../my-next-app-old
           npm run build
       - name: Run Next App & Cypress Sanity Test
         run: |
-          cd ../my-next-app
+          cd ../my-next-app-old
           npx next --version
           npm run ci

@@ -22,7 +22,10 @@ const config: Config = {
   },
   moduleNameMapper: {
     '@sitecore-cloudsdk/events/browser': join(resolve(), 'packages', 'events', 'src', 'browser.js'),
-    '@sitecore-cloudsdk/events/server': join(resolve(), 'packages', 'events', 'src', 'server.js')
+    '@sitecore-cloudsdk/events/server': join(resolve(), 'packages', 'events', 'src', 'server.js'),
+    '@sitecore-cloudsdk/core/browser': join(resolve(), 'packages', 'core', 'src', 'browser.js'),
+    '@sitecore-cloudsdk/core/server': join(resolve(), 'packages', 'core', 'src', 'server.js'),
+    '@sitecore-cloudsdk/core/internal': join(resolve(), 'packages', 'core', 'src', 'internal.js')
   }
 };
 export default config;

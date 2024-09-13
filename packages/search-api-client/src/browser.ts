@@ -12,12 +12,15 @@ export { Context } from './lib/request-entities/context/context';
 export type { BrowserSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
 
-export { getWidgetData } from './lib/requests/get-widget-data';
-export { getPageWidgetData } from './lib/requests/get-page-widget-data';
-export { sendWidgetNavigationClickEvent } from './lib/requests/send-widget-navigation-click-event';
-export { getSettings, init } from './lib/initializer/browser/initializer';
-export { sendWidgetClickEvent } from './lib/requests/send-widget-click-event';
-export { sendWidgetSuggestionClickEvent } from './lib/requests/send-widget-suggestion-click';
-export { sendWidgetFacetClickEvent } from './lib/requests/send-widget-facet-click-event';
-export { widgetView } from './lib/requests/widget-view';
-export { sendConversionEvent } from './lib/requests/send-conversion-event';
+export { getWidgetData } from './lib/requests/browser/get-widget-data';
+export { getPageWidgetData } from './lib/requests/browser/get-page-widget-data';
+export { sendWidgetNavigationClickEvent } from './lib/requests/browser/send-widget-navigation-click-event';
+export { getSettings, init } from './lib/init/browser/initializer';
+export { sendWidgetClickEvent } from './lib/requests/browser/send-widget-click-event';
+export { sendWidgetSuggestionClickEvent } from './lib/requests/browser/send-widget-suggestion-click';
+export { sendWidgetFacetClickEvent } from './lib/requests/browser/send-widget-facet-click-event';
+export { widgetView } from './lib/requests/browser/widget-view';
+export { sendConversionEvent } from './lib/requests/browser/send-conversion-event';
+
+export { SEARCH_NAMESPACE } from './lib/consts';
+import './lib/initializer/browser/initializer';

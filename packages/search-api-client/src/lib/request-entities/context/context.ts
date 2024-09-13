@@ -10,7 +10,7 @@ import type {
   StoreData
 } from './interfaces';
 import { isValidHttpURL, isValidLocation } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 
 /**
  * Create context object.

@@ -2,7 +2,7 @@
 
 import type { Filter, FilterDTO } from '../filters/interfaces';
 import type { LogicalOperators, WidgetItemDTO, WidgetItemSearch } from './interfaces';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 
 export class WidgetItem {
   protected entity: string;

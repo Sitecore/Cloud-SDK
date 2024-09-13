@@ -1,12 +1,12 @@
-import * as core from '@sitecore-cloudsdk/core';
+import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { EPCallFlowsBody } from './send-call-flows-request';
 import debug from 'debug';
 import { sendCallFlowsRequest } from './send-call-flows-request';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -313,7 +313,7 @@ describe('sendCallFlowsRequest', () => {
       headers: {
         /* eslint-disable @typescript-eslint/naming-convention */
         'Content-Type': 'application/json',
-        'X-Library-Version': LIBRARY_VERSION,
+        'X-Library-Version': PACKAGE_VERSION,
         'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7'
         /* eslint-enable @typescript-eslint/naming-convention */
       },

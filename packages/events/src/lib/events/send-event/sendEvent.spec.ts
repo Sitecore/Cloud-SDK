@@ -1,11 +1,11 @@
-import * as core from '@sitecore-cloudsdk/core';
+import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import debug from 'debug';
 import { sendEvent } from './sendEvent';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -104,7 +104,7 @@ describe('EventApiClient', () => {
       headers: {
         'Content-Type': 'application/json',
         'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-        'X-Library-Version': LIBRARY_VERSION
+        'X-Library-Version': PACKAGE_VERSION
       },
       method: 'POST'
     });
@@ -153,7 +153,7 @@ describe('EventApiClient', () => {
       headers: {
         'Content-Type': 'application/json',
         'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-        'X-Library-Version': LIBRARY_VERSION
+        'X-Library-Version': PACKAGE_VERSION
       },
       method: 'POST'
     });

@@ -1,4 +1,4 @@
-import * as core from '@sitecore-cloudsdk/core';
+import * as core from '@sitecore-cloudsdk/core/internal';
 import * as sendEventModule from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { CustomEvent } from './custom-event';
@@ -14,8 +14,8 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     ...originalModule
   };
 });
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

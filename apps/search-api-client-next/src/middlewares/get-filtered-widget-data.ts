@@ -5,9 +5,9 @@ import {
   ComparisonFilter,
   WidgetItem,
   WidgetRequestData,
-  getWidgetData,
-  init
+  getWidgetData
 } from '@sitecore-cloudsdk/search-api-client/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 
 export async function getFilteredWidgetDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -25,12 +25,14 @@ export async function getFilteredWidgetDataMiddleware(request: NextRequest, resp
   decorateFetch(testID as string);
   switch (testID) {
     case 'getFilteredWidgetDataFromMiddlewareWithValidPayload':
-      await init(request, response, {
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       widget = new WidgetItem('content', 'rfkid_7');
 

@@ -1,9 +1,10 @@
 describe("my-app", () => {
-  it("should initialize cookie and event is sent to CDP", () => {
+  it("should initialize CloudSDK with events, personalize and search and call the related functions ", () => {
        
     cy.intercept("POST", `https://${Cypress.env("HOSTNAME")}/${Cypress.env("EDGE_PROXY_VERSION")}/events/${Cypress.env("API_VERSION")}/events*`).as("eventRequest");
     cy.intercept("POST", `https://${Cypress.env("HOSTNAME")}/${Cypress.env("EDGE_PROXY_VERSION")}/personalize*`).as("personalizeRequest");
-
+    cy.intercept("POST", `https://${Cypress.env("HOSTNAME")}/${Cypress.env("EDGE_PROXY_VERSION")}/search*`).as("searchRequest");
+  
     cy.wait(1000);
     cy.visit("http://localhost:3000");
 
@@ -17,12 +18,30 @@ describe("my-app", () => {
       .should("eq", 201);
 
     cy.wait(1000);
-    cy.get('[data-testid="sendEventBtnPersonalize"]').click();
+    cy.get('[data-testid="sendPersonalizeBtn"]').click();
     cy.wait("@personalizeRequest")
       .then((request) => {        
         expect(request.request.body.friendlyId).to.eq("personalizeintegrationtest");
       })
       .its("response.statusCode")
       .should("eq", 200);
+
+    cy.wait(1000);
+    cy.get('[data-testid="sendSearchBtn"]').click();
+    cy.wait("@searchRequest")
+      .then((request) => {
+        expect(request.request.body.context.page.uri).to.eq("/test");
+      })
+      .its("response.statusCode")
+      .should("eq", 200);
+
+    cy.wait(1000);
+    cy.get('[data-testid="sendConversionEventBtn"]').click();
+    cy.wait("@eventRequest")
+      .then((request) => {
+        expect(request.request.body.sc_search.data.value.context.page.uri).to.eq("https://www.sitecore.com/products/content-cloud");
+      })
+      .its("response.statusCode")
+      .should("eq", 201);
   });
 });

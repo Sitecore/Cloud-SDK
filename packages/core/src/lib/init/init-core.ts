@@ -30,6 +30,7 @@ export function getSettings() {
 
 let createCookiesPromise: Promise<void> | null = null;
 
+/* eslint-disable max-len */
 /**
  * Initializes the core settings for browser-based applications.
  *
@@ -38,7 +39,9 @@ let createCookiesPromise: Promise<void> | null = null;
  *
  * @param settingsInput - The settings input to configure the core settings.
  * @returns A Promise that resolves when initialization is complete.
+ * @deprecated Cloud SDK v0.4 introduces a new initialization logic. If you are upgrading from v0.3, we recommend that you upgrade your initialization code.The v0.3 initialization logic is now deprecated and will be removed in a future Cloud SDK release.
  */
+/* eslint-enable max-len */
 export async function initCore(settingsInput: BrowserSettings): Promise<void> {
   debug(CORE_NAMESPACE)('coreClient library initialized');
 

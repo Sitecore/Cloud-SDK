@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { ConvertionEventParams, SearchEventEntity, SearchEventEntityDTO } from './interfaces';
-import { ErrorMessages } from '../const';
+import type { ConversionEventParams, SearchEventEntity, SearchEventEntityDTO } from './interfaces';
+import { ErrorMessages } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class ConversionEvent {
@@ -18,7 +18,7 @@ export class ConversionEvent {
    * @param pathname - Current uri of the page.
    * @param entity - An object containing entity information.
    */
-  constructor({ page, currency, language, pathname, entity }: ConvertionEventParams) {
+  constructor({ page, currency, language, pathname, entity }: ConversionEventParams) {
     this._validate(currency, language);
 
     this.page = page;

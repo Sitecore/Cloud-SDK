@@ -6,7 +6,7 @@ import type {
   SuggestionFilterDTO,
   WidgetSuggestionClickEventParams
 } from './interfaces';
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class WidgetSuggestionClickEvent {

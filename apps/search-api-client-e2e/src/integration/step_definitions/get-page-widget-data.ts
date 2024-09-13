@@ -4,6 +4,7 @@ import type { CyHttpMessages } from 'cypress/types/net-stubbing';
 import { defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 let statusCode: number;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let searchResponse: CyHttpMessages.IncomingResponse | undefined;
 
 before(() => {

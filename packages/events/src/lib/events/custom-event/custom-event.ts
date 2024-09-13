@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { BasicTypes, FlattenedObject, NestedObject } from '@sitecore-cloudsdk/utils';
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { BaseEvent } from '../base-event';
 import { ErrorMessages } from '../../consts';

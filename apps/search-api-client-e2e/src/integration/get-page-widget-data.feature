@@ -30,7 +30,3 @@ Scenario Outline: Developer requests page widget data with a valid pathname
     | pathname | context                    | status_code |
     | /test    | {"page":{"uri":"/test"}}   | 200         |
     | /search  | {"page":{"uri":"/search"}} | 200         |
-
-
-
-        

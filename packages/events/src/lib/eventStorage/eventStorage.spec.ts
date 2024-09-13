@@ -1,13 +1,13 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
-import * as core from '@sitecore-cloudsdk/core';
+import * as core from '@sitecore-cloudsdk/core/internal';
 import * as eventQueue from './eventStorage';
 import { CustomEvent } from '../events/custom-event/custom-event';
 import type { EventData } from '../events/custom-event/custom-event';
 import { sendEvent } from '../events/send-event/sendEvent';
 
 jest.mock('../events/custom-event/custom-event');
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

@@ -1,77 +1,65 @@
-import * as core from '@sitecore-cloudsdk/core';
-import { getSettings, initServer } from './initializer';
-import { ErrorMessages } from '../../const';
-import type { ServerSettings } from '../../types';
+import { addSearch, sideEffects } from './initializer';
+import { PackageInitializerServer } from '@sitecore-cloudsdk/core/internal';
+import { SEARCH_NAMESPACE } from '../../consts';
+import debug from 'debug';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule
+    ...originalModule,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    PackageInitializerServer: jest.fn()
   };
 });
 
-describe('Initialization and Settings Retrieval on server search-api-client', () => {
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
-
-  const initCoreServerSpy = jest.spyOn(core, 'initCoreServer');
-
-  const serverSettings: ServerSettings = {
-    enableServerCookie: true,
-    siteName: '123',
-    sitecoreEdgeContextId: '456',
-    userId: 'user123'
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn())
   };
+});
 
-  const req = {
-    cookies: {
-      get() {
-        return 'test';
-      },
-      set: () => undefined
-    },
-    headers: {
-      get: () => '',
-      host: ''
-    },
-    ip: undefined,
-    url: ''
-  };
+describe('sideEffects', () => {
+  const debugMock = debug as unknown as jest.Mock;
+  it('should run the side effects and debug the status', async () => {
+    await sideEffects();
 
-  const res = {
-    cookies: {
-      set() {
-        return 'test';
-      }
-    }
-  };
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(SEARCH_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('searchServer library initialized');
+  });
+});
 
+describe('addSearch', () => {
+  const pkgDeps = [{ method: 'addEvents', name: '@sitecore-cloudsdk/events' }];
   afterEach(() => {
     jest.clearAllMocks();
   });
+  it('should run the addSearch function without settings', async () => {
+    const fakeThis = {};
+    const result = addSearch.call(fakeThis as any);
 
-  it('should throw an error when settings are not initialized', () => {
-    expect(getSettings).toThrow(ErrorMessages.IE_0010);
+    expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializerServer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects });
+    expect(result).toEqual(fakeThis);
   });
 
-  it('initializes the search-api-client with provided settings', async () => {
-    await initServer(req, res, serverSettings);
-    expect(initCoreServerSpy).toHaveBeenCalledTimes(1);
-    const retrievedSettings = getSettings();
-    expect(retrievedSettings).toEqual(serverSettings);
-    expect;
-  });
+  it('should run the addSearch function with settings', async () => {
+    const fakeThis = {};
+    const mockSettings = { userId: '123' };
 
-  it('should throw error if settings have not been configured properly', async () => {
-    const incompleteSettings = {
-      siteName: 'TestSite',
-      sitecoreEdgeContextId: 'abc123'
-    };
-    await expect(async () => await initServer(req, res, incompleteSettings as ServerSettings)).rejects.toThrow(
-      ErrorMessages.MV_0005
-    );
+    const result = addSearch.call(fakeThis as any, mockSettings);
+
+    expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializerServer).toHaveBeenCalledWith({
+      dependencies: pkgDeps,
+      settings: mockSettings,
+      sideEffects
+    });
+    expect(result).toEqual(fakeThis);
   });
 });

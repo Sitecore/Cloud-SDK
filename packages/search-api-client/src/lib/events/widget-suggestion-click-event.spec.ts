@@ -1,4 +1,4 @@
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import type { SearchEventRequest } from './interfaces';
 import { WidgetSuggestionClickEvent } from './widget-suggestion-click-event';
 

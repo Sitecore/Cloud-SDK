@@ -1,30 +1,32 @@
 import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
-import { init } from '@sitecore-cloudsdk/personalize/browser';
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import '@sitecore-cloudsdk/personalize/browser';
 
 const Personalize = () => {
   const router = useRouter();
 
   useEffect(() => {
     if (
-      router.pathname.startsWith('/edge-proxy-settings-events') ||
-      router.pathname.startsWith('/edge-proxy-settings-personalize') ||
+      router.pathname.startsWith('/init-events') ||
+      router.pathname.startsWith('/init-personalize') ||
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
-      router.pathname.startsWith('/async-init-personalize') ||
-      router.pathname.startsWith('/async-init-events')
+      router.pathname.startsWith('/viewevent')
     )
       return;
 
-    init({
+    CloudSDK({
       cookieDomain: getSettingFromUrlParams('cookieDomain') ?? 'localhost',
       cookieExpiryDays: 400,
       enableBrowserCookie: true,
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined
-    });
+    })
+      .addPersonalize()
+      .initialize();
   }, [router.pathname]);
 
   return null;

@@ -15,3 +15,7 @@ Cypress.on('test:after:run', (test, runnable) => {
     addContext({ test }, screenshot);
   }
 });
+
+Cypress.on('window:before:load', (win) => {
+  cy.spy(win.console, 'debug').as('consoleLogOutput');
+});

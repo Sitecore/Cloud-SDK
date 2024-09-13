@@ -1,9 +1,19 @@
+'use client';
+
 import { PersonalizeBanner } from '../components/personalize-banner';
 import { Newsletter } from '../components/newsletter';
 import { MemoizedProducts } from '../components/products';
 import products from '../products.json';
+import { useEffect } from 'react';
+import { pageView } from '@sitecore-cloudsdk/events/browser';
 
-export default async function Index() {
+export default function Index() {
+  useEffect(() => {
+    const doEvent = async () => {
+      await pageView();
+    };
+    doEvent();
+  }, []);
   return (
     <div
       style={{ '--sc-bg': `url(https://www.sitecore.com/static/sc_power-gradient-desktop.svg)` } as React.CSSProperties}

@@ -1,13 +1,17 @@
 import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
 import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
-import { event, identity, init as initEvents, pageView } from '@sitecore-cloudsdk/events/server';
-import { init as initPersonalize, personalize } from '@sitecore-cloudsdk/personalize/server';
+import { event, identity, pageView } from '@sitecore-cloudsdk/events/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
 import { customEventWithSearchDataMiddleware } from './middlewares/custom-event-with-search-data';
 import { eventWithSoftwareIDHeaderMiddleware } from './middlewares/event-software-id-header';
+import { initEventsMiddleware } from './middlewares/init-events';
+import { initPersonalizeMiddleware } from './middlewares/init-personalize';
 import { pageViewEventWithSearchDataMiddleware } from './middlewares/page-view-event-with-search-data';
+import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { personalizeUtmParamsMiddleware } from './middlewares/personalize-utm-params-middleware';
 import { requestedAtMiddleware } from './middlewares/requested-at';
 
 // This function can be marked `async` if using `await` inside
@@ -25,14 +29,6 @@ export async function middleware(request: NextRequest) {
   const badSitecoreEdgeContextId = request?.nextUrl?.searchParams?.get('badSitecoreEdgeContextId') ?? undefined;
   const sitecoreEdgeUrl = request?.nextUrl?.searchParams?.get('sitecoreEdgeUrl') ?? undefined;
 
-  await initEvents(request, response, {
-    cookieExpiryDays: 400,
-    enableServerCookie,
-    siteName: process.env.SITE_ID || '',
-    sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
-    sitecoreEdgeUrl
-  });
-
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let basicEventData: any = {
     updateMiddleware
@@ -47,6 +43,16 @@ export async function middleware(request: NextRequest) {
 
   if (request.nextUrl.pathname.startsWith('/middleware-view-event')) {
     if (request.nextUrl.pathname === '/middleware-view-event') {
+      await CloudSDK(request, response, {
+        cookieExpiryDays: 400,
+        enableServerCookie,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+        sitecoreEdgeUrl
+      })
+        .addEvents()
+        .initialize();
+
       basicEventData = { ...basicEventData, page: 'middleware-view' };
 
       const extensionData = {
@@ -64,6 +70,15 @@ export async function middleware(request: NextRequest) {
   }
 
   if (request.nextUrl.pathname.startsWith('/middleware-custom-event')) {
+    await CloudSDK(request, response, {
+      cookieExpiryDays: 400,
+      enableServerCookie,
+      siteName: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+      sitecoreEdgeUrl
+    })
+      .addEvents()
+      .initialize();
     basicEventData = { ...basicEventData, page: 'middleware-custom' };
 
     const extensionData = {
@@ -73,7 +88,27 @@ export async function middleware(request: NextRequest) {
     await event(request, { type: 'MIDDLEWARE-CUSTOM', ...basicEventData, extensionData });
   }
 
-  if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) await identity(request, identityEventData);
+  if (request.nextUrl.pathname.startsWith('/middleware-identity-event')) {
+    await CloudSDK(request, response, {
+      cookieExpiryDays: 400,
+      enableServerCookie,
+      siteName: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+      sitecoreEdgeUrl
+    })
+      .addEvents()
+      .initialize();
+    await identity(request, identityEventData);
+  }
+
+  if (request.nextUrl.pathname.startsWith('/middleware-server-cookie')) 
+    await CloudSDK(request, response, {
+      cookieExpiryDays: 400,
+      enableServerCookie,
+      siteName: process.env.SITE_ID || '',
+      sitecoreEdgeContextId: badSitecoreEdgeContextId ?? (process.env.CONTEXT_ID || ''),
+      sitecoreEdgeUrl
+    }).initialize();
 
   if (request.nextUrl.pathname.startsWith('/middleware-personalize-geo')) {
     const personalizeData: PersonalizeData = {
@@ -107,11 +142,13 @@ export async function middleware(request: NextRequest) {
       }
     }
 
-    await initPersonalize(request, response, {
+    await CloudSDK(request, response, {
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl
-    });
+    })
+      .addPersonalize()
+      .initialize();
 
     const personalizeRes = await personalize(request, personalizeData);
     response.cookies.set('EPRequest', JSON.stringify(personalizeData));
@@ -122,29 +159,34 @@ export async function middleware(request: NextRequest) {
     const testID = request?.nextUrl?.searchParams?.get('testID');
 
     if (testID === 'sendPersonalizeFromMiddlewareWithCorrelationID') {
-      const personalizeData: PersonalizeData = {
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
+      })
+        .addPersonalize()
+        .initialize();
+      decorateAll(testID);
+      await personalize(request, {
         channel: 'WEB',
         currency: 'EUR',
         email: 'test_personalize_callflows@test.com',
         friendlyId: 'personalizeintegrationtest',
         language: 'EN'
-      };
-
-      decorateAll(testID);
-      await personalize(request, personalizeData);
+      });
       resetAllDecorators();
     }
   }
 
-  eventWithSoftwareIDHeaderMiddleware(request);
-
   if (request.nextUrl.pathname.startsWith('/personalize')) {
-    await initPersonalize(request, response, {
+    await CloudSDK(request, response, {
       enableServerCookie: request?.nextUrl?.searchParams?.get('personalizeForEnvironment') === 'middleware',
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl
-    });
+    })
+      .addPersonalize()
+      .initialize();
 
     const personalizeData: PersonalizeData = {
       channel: 'WEB',
@@ -170,8 +212,12 @@ export async function middleware(request: NextRequest) {
   }
 
   await requestedAtMiddleware(request);
-  await customEventWithSearchDataMiddleware(request);
-  await pageViewEventWithSearchDataMiddleware(request);
+  await customEventWithSearchDataMiddleware(request, response);
+  await pageViewEventWithSearchDataMiddleware(request, response);
+  await initEventsMiddleware(request, response);
+  await initPersonalizeMiddleware(request, response);
+  await personalizeUtmParamsMiddleware(request, response);
+  await eventWithSoftwareIDHeaderMiddleware(request, response);
 
   return response;
 }
@@ -194,6 +240,8 @@ export const config = {
     '/software-id',
     '/requested-at',
     '/custom-event-with-search-data',
-    '/page-view-event-with-search-data'
+    '/page-view-event-with-search-data',
+    '/init-events',
+    '/init-personalize'
   ]
 };

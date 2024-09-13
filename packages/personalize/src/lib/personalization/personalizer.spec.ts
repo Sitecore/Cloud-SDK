@@ -1,12 +1,12 @@
 import * as CallFlowsRequest from './send-call-flows-request';
-import * as core from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import * as core from '@sitecore-cloudsdk/core/internal';
+import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import debug from 'debug';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -828,7 +828,7 @@ describe('Test Personalizer Class', () => {
           /* eslint-disable @typescript-eslint/naming-convention */
           headers: {
             'Content-Type': 'application/json',
-            'X-Library-Version': LIBRARY_VERSION,
+            'X-Library-Version': PACKAGE_VERSION,
             'x-sc-correlation-id': 'b10bb699bfb3419bb63f638c62ed1aa7'
           },
           /* eslint-enable @typescript-eslint/naming-convention */

@@ -1,4 +1,5 @@
-import { identity, init } from '@sitecore-cloudsdk/events/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { identity } from '@sitecore-cloudsdk/events/server';
 import type { GetServerSidePropsContext } from 'next';
 
 export default function ServerSidePropsIdenityEvent() {
@@ -17,14 +18,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     identifiers: [{ id: 'testServerSideProps@test.com', provider: 'email' }]
   };
 
-  await init(context.req, context.res, {
+  await CloudSDK(context.req, context.res, {
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
     enableServerCookie: true,
     siteName: process.env.SITE_ID || ''
-  });
+  })
+    .addEvents()
+    .initialize();
 
   let EPResponse;
   try {

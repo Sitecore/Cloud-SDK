@@ -1,62 +1,45 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { EVENTS_NAMESPACE, ErrorMessages, LIBRARY_VERSION } from '../../consts';
-import { debug, getBrowserId, initCore } from '@sitecore-cloudsdk/core';
-import type { BrowserSettings } from '@sitecore-cloudsdk/core';
+import { EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
+import {
+  PackageInitializer,
+  debug,
+  enabledPackagesBrowser as enabledPackages,
+  getCloudSDKSettingsBrowser as getCloudSDKSettings
+} from '@sitecore-cloudsdk/core/internal';
+import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
+import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 
-export let initPromise: Promise<void> | null = null;
-
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    Engage: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [x: string]: any;
-      getBrowserId?: () => string;
-      versions?: {
-        personalize?: string;
-        events?: string;
-      };
-    };
-  }
-}
-
-/**
- * Initiates the Events library using the global settings added by the developer
- * @param settings - Global settings added by the developer
- * @returns A promise that resolves with an object that handles the library functionality
- */
-export async function init(settings: BrowserSettings): Promise<void> {
-  if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
-
-  try {
-    initPromise = initCore(settings);
-
-    await initPromise;
-
-    debug(EVENTS_NAMESPACE)('eventsClient library initialized');
-  } catch (error) {
-    debug(EVENTS_NAMESPACE)('Error on initializing eventsClient library: %o', error);
-
-    initPromise = null;
-
-    throw new Error(error as string);
-  }
-
+export async function sideEffects() {
+  window.Engage ??= {};
   window.Engage = {
     ...window.Engage,
-    getBrowserId: () => getBrowserId(),
+    getBrowserId: () => getCookieValueClientSide(getCloudSDKSettings().cookieSettings.names.browserId),
     versions: {
-      ...window.Engage?.versions,
-      events: LIBRARY_VERSION
+      ...window.Engage.versions,
+      events: PACKAGE_VERSION
     }
   };
+
+  debug(EVENTS_NAMESPACE)('eventsClient library initialized');
 }
 
 /**
- * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ * Makes the functionality of the events package available.
+ *
+ * @returns An instance of {@link CloudSDKBrowserInitializer}
  */
-export async function awaitInit() {
-  if (initPromise === null) throw new Error(ErrorMessages.IE_0004);
+export function addEvents(this: CloudSDKBrowserInitializer): CloudSDKBrowserInitializer {
+  const eventsInitializer = new PackageInitializer({ sideEffects });
 
-  await initPromise;
+  enabledPackages.set(PACKAGE_NAME, eventsInitializer);
+
+  return this;
+}
+
+CloudSDKBrowserInitializer.prototype.addEvents = addEvents;
+
+declare module '@sitecore-cloudsdk/core/browser' {
+  interface CloudSDKBrowserInitializer {
+    addEvents: typeof addEvents;
+  }
 }

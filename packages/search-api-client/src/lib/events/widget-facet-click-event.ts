@@ -8,7 +8,7 @@ import type {
   SearchEventRequestDTO,
   WidgetFacetClickEventParams
 } from './interfaces';
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class WidgetFacetClickEvent {

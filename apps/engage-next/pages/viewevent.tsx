@@ -1,11 +1,13 @@
-import { init, pageView } from '@sitecore-cloudsdk/events/browser';
-import { init as initServer, pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
+import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { pageView as pageViewServer } from '@sitecore-cloudsdk/events/server';
 import { useEffect, useState } from 'react';
 import type { GetServerSidePropsContext } from 'next';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
 import { getCookie } from '@sitecore-cloudsdk/utils';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { CloudSDK as CloudSDKServer } from '@sitecore-cloudsdk/core/server';
 
 interface ViewEventProps {
   res: string | number | readonly string[];
@@ -48,13 +50,15 @@ export default function ViewEvent({ res, debugLogs }: ViewEventProps) {
     if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
     async function initEventsSetting() {
-      await init({
+      await CloudSDK({
         cookieDomain: 'localhost',
         cookieExpiryDays: 400,
         enableBrowserCookie: true,
         sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
         siteName: process.env.SITE_ID || ''
-      });
+      })
+        .addEvents()
+        .initialize();
 
       if (!noExt) eventData.extensionData = extensionData;
 
@@ -176,7 +180,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (Object.keys(extensionDataExt).length) Object.assign(extensionData, extensionDataExt);
 
-  await initServer(context.req, context.res, {
+  await CloudSDKServer(context.req, context.res, {
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
@@ -184,7 +188,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       typeof context.query.enableServerCookie === 'string' && context.query.enableServerCookie.toLowerCase() === 'true',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
     siteName: process.env.SITE_ID || ''
-  });
+  })
+    .addEvents()
+    .initialize();
 
   if (!noExt) eventData.extensionData = extensionData;
 

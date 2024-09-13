@@ -1,5 +1,5 @@
 import type { SearchEventEntity, SearchEventRequest } from './interfaces';
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import { WidgetItemEvent } from './widget-item-event';
 
 describe('widget item event class', () => {

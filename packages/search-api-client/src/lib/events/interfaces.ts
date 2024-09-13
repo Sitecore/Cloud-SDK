@@ -145,7 +145,7 @@ export interface WidgetViewEventParams {
   channel?: string;
 }
 
-export interface ConvertionEventParams {
+export interface ConversionEventParams {
   page: string;
   currency: string;
   language: string;

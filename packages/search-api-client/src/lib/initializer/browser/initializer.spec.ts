@@ -1,112 +1,61 @@
-import * as core from '@sitecore-cloudsdk/core';
-import { awaitInit, getSettings, init } from './initializer';
-import type { BrowserSettings } from '../../types';
-import { ErrorMessages } from '../../const';
+import { addSearch, sideEffects } from './initializer';
+import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
+import { SEARCH_NAMESPACE } from '../../consts';
+import debug from 'debug';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule
+    ...originalModule,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    PackageInitializer: jest.fn()
   };
 });
 
-describe('Browser Initialization and Settings Retrieval', () => {
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
-
-  const { window } = global;
-
-  const initCoreSpy = jest.spyOn(core, 'initCore');
-
-  const browserSettings: BrowserSettings = {
-    enableBrowserCookie: true,
-    siteName: 'TestSite',
-    sitecoreEdgeContextId: 'abc123',
-    userId: 'user123'
+jest.mock('debug', () => {
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    default: jest.fn(() => jest.fn())
   };
+});
 
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
+describe('sideEffects', () => {
+  const debugMock = debug as unknown as jest.Mock;
+  it('should run the side effects for the library', async () => {
+    await sideEffects();
 
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(SEARCH_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('searchClient library initialized');
+  });
+});
+
+describe('addSearch', () => {
+  const pkgDeps = [{ method: 'addEvents', name: '@sitecore-cloudsdk/events' }];
   afterEach(() => {
     jest.clearAllMocks();
-    global.window ??= Object.create(window);
   });
+  it('should run the addSearch function without settings', async () => {
+    const fakeThis = {};
 
-  it('should throw an error when settings are not initialized', () => {
-    expect(getSettings).toThrow(ErrorMessages.IE_0009);
+    const result = addSearch.call(fakeThis as any);
+
+    expect(PackageInitializer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects });
+    expect(result).toEqual(fakeThis);
   });
+  it('should run the addSearch function with settings', async () => {
+    const fakeThis = {};
+    const mockSettings = { userId: '123' };
 
-  it('initializes the search-api-client with provided settings and retrieves them', async () => {
-    await init(browserSettings);
-    expect(initCoreSpy).toHaveBeenCalledTimes(1);
+    const result = addSearch.call(fakeThis as any, mockSettings);
 
-    const retrievedSettings = getSettings();
-    expect(retrievedSettings).toEqual(browserSettings);
-  });
-
-  it('allows re-initialization with new settings', async () => {
-    const initialSettings = {
-      siteName: 'InitialSite',
-      sitecoreEdgeContextId: 'initialID',
-      userId: 'initialUser'
-    };
-    const newSettings = {
-      siteName: 'NewSite',
-      sitecoreEdgeContextId: 'newID',
-      userId: 'newUser'
-    };
-
-    await init(initialSettings);
-    await init(newSettings);
-    expect(initCoreSpy).toHaveBeenCalledTimes(2);
-
-    const updatedSettings = getSettings();
-    expect(updatedSettings).toEqual(newSettings);
-  });
-
-  it('should throw error if settings have not been configured properly', async () => {
-    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
-      throw new Error('error');
-    });
-
-    await expect(async () => {
-      await init({} as BrowserSettings);
-    }).rejects.toThrow('error');
-  });
-
-  it('should throw error if window is undefined', async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    delete global.window;
-
-    await expect(async () => {
-      await init(browserSettings);
-    }).rejects.toThrow(ErrorMessages.IE_0001);
-  });
-});
-
-describe('awaitInit', () => {
-  it('should throw error if initPromise is null', async () => {
-    await expect(async () => {
-      await awaitInit();
-    }).rejects.toThrow(ErrorMessages.IE_0009);
-  });
-  it('should not throw if initPromise is a Promise', async () => {
-    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
-
-    const settingsParams: core.BrowserSettings = {
-      cookieDomain: 'cDomain',
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: 'https://localhost'
-    };
-
-    await init(settingsParams);
-
-    expect(async () => {
-      await awaitInit();
-    }).not.toThrow();
+    expect(PackageInitializer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializer).toHaveBeenCalledWith({ dependencies: pkgDeps, settings: mockSettings, sideEffects });
+    expect(result).toEqual(fakeThis);
   });
 });

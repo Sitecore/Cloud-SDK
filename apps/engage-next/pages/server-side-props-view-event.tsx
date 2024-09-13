@@ -1,4 +1,5 @@
-import { init, pageView } from '@sitecore-cloudsdk/events/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { pageView } from '@sitecore-cloudsdk/events/server';
 import type { GetServerSidePropsContext } from 'next';
 
 export default function serverSidePropsViewEvent() {
@@ -18,8 +19,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const timeout =
     typeof context.query.timeout === 'string' && context.query.timeout ? +context.query.timeout : undefined;
-
-  await init(context.req, context.res, {
+  await CloudSDK(context.req, context.res, {
     cookieDomain:
       typeof context.query.cookieDomain === 'string' ? context.query.cookieDomain.toLowerCase() : 'localhost',
     cookieExpiryDays: 400,
@@ -27,7 +27,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     enableServerCookie: true,
     siteName: process.env.SITE_ID || '',
     timeout: timeout
-  });
+  })
+    .addEvents()
+    .initialize();
 
   let EPResponse;
 

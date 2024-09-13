@@ -1,6 +1,6 @@
 import * as utils from '@sitecore-cloudsdk/utils';
 import { GEO_FILTER_TYPE, GeoWithinFilter } from './geo-within-filter';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
   isValidLocation: jest.fn()

@@ -2,17 +2,21 @@
   "name": "@sitecore-cloudsdk/core",
   "version": "0.3.1",
   "license": "Apache-2.0",
-  "main": "dist/cjs/src/index.js",
-  "module": "dist/esm/src/index.js",
-  "types": "dist/esm/src/index.d.ts",
   "exports": {
-    ".": {
-      "types": {
-        "require": "./dist/cjs/src/index.d.ts",
-        "default": "./dist/esm/src/index.d.ts"
-      },
-      "import": "./dist/esm/src/index.js",
-      "require": "./dist/cjs/src/index.js"
+    "./browser": {
+      "import": "./browser.js",
+      "require": "./browser.cjs",
+      "types": "./browser.d.ts"
+    },
+    "./server": {
+      "import": "./server.js",
+      "require": "./server.cjs",
+      "types": "./server.d.ts"
+    },
+    "./internal": {
+      "types": "./internal.d.ts",
+      "import": "./internal.js",
+      "require": "./internal.js"
     }
   },
   "dependencies": {
@@ -26,7 +30,16 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "browser.js",
+    "browser.cjs",
+    "browser.d.ts",
+    "server.js",
+    "server.cjs",
+    "server.d.ts",
+    "internal.js",
+    "internal.cjs",
+    "internal.d.ts"
   ],
   "engines": {
     "node": ">=18"

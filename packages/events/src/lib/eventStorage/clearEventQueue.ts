@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { awaitInit } from '../initializer/browser/initializer';
+import { awaitInit } from '../init/browser/initializer';
 import { eventQueue } from './eventStorage';
 
 /**

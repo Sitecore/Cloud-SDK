@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable multiline-comment-style */
-import type * as core from '@sitecore-cloudsdk/core';
+import type * as core from '@sitecore-cloudsdk/core/internal';
 import * as sendEvent from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';
@@ -18,8 +18,8 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     ...originalModule
   };
 });
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

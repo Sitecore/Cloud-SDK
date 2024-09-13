@@ -1,5 +1,5 @@
 import type { SearchEventRequest, WidgetFacetClickEventParams } from './interfaces';
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import { WidgetFacetClickEvent } from './widget-facet-click-event';
 
 describe('widget item event class', () => {

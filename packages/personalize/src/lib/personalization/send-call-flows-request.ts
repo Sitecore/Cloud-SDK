@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { DebugResponse, Settings } from '@sitecore-cloudsdk/core';
-import { LIBRARY_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
-import { debug, generateCorrelationId, processDebugResponse } from '@sitecore-cloudsdk/core';
+import type { DebugResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { debug, generateCorrelationId, processDebugResponse } from '@sitecore-cloudsdk/core/internal';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
 
@@ -28,7 +28,7 @@ export async function sendCallFlowsRequest(
     headers: {
       /* eslint-disable @typescript-eslint/naming-convention */
       'Content-Type': 'application/json',
-      'X-Library-Version': LIBRARY_VERSION,
+      'X-Library-Version': PACKAGE_VERSION,
       'x-sc-correlation-id': generateCorrelationId()
       /* eslint-enable @typescript-eslint/naming-convention */
     },

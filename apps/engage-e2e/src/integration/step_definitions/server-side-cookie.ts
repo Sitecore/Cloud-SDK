@@ -13,11 +13,11 @@ beforeEach(() => {
   cy.clearCookies();
 });
 
-Before({ tags: '@Middleware-Server-Side-Cookie' }, () => {
+Before({ tags: '@RestartServer-Middleware' }, () => {
   cy.replace(middlewarePath, /###\d+###/, `###${Date.now()}###`);
 });
 
-Before({ tags: '@Server-Side-Props-Server-Cookie' }, () => {
+Before({ tags: '@RestartServer-Server-Side-Props' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, `###${Date.now()}###`);
 });
 
@@ -171,10 +171,10 @@ defineStep(
   }
 );
 
-After({ tags: '@Middleware-Server-Side-Cookie' }, () => {
+After({ tags: '@RestartServer-Middleware' }, () => {
   cy.replace(middlewarePath, /###\d+###/, '###1###');
 });
 
-After({ tags: '@Server-Side-Props-Server-Cookie' }, () => {
+After({ tags: '@RestartServer-Server-Side-Props' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, '###1###');
 });

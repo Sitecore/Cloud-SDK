@@ -2,8 +2,8 @@
 import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { ErrorMessages, UTM_PREFIX } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import type { Settings } from '@sitecore-cloudsdk/core';
-import { language } from '@sitecore-cloudsdk/core';
+import type { Settings } from '@sitecore-cloudsdk/core/internal';
+import { language } from '@sitecore-cloudsdk/core/internal';
 import { sendCallFlowsRequest } from './send-call-flows-request';
 
 export class Personalizer {

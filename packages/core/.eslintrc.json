@@ -1,6 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "ignorePatterns": ["!**/*", "browser.cjs", "browser.js", "server.cjs", "server.js", "internal.cjs", "internal.js"],
   "overrides": [
     {
       "files": ["*.ts"],

@@ -11,15 +11,18 @@ export { Context } from './lib/request-entities/context/context';
 export type { ServerSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
 
-export { getSettings, initServer as init } from './lib/initializer/server/initializer';
-export { getWidgetDataServer as getWidgetData } from './lib/requests/get-widget-data-server';
-export { getPageWidgetDataServer as getPageWidgetData } from './lib/requests/get-page-widget-data-server';
-export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/requests/send-widget-click-event-server';
-export { widgetViewServer as widgetView } from './lib/requests/widget-view-server';
+export { getSettings, initServer as init } from './lib/init/server/initializer';
+export { getWidgetDataServer as getWidgetData } from './lib/requests/server/get-widget-data-server';
+export { getPageWidgetDataServer as getPageWidgetData } from './lib/requests/server/get-page-widget-data-server';
+export { widgetViewServer as widgetView } from './lib/requests/server/widget-view-server';
 
 /* eslint-disable max-len */
-export { sendWidgetNavigationClickEventServer as sendWidgetNavigationClickEvent } from './lib/requests/send-widget-navigation-click-event-server';
-export { sendWidgetFacetClickEventServer as sendWidgetFacetClickEvent } from './lib/requests/send-widget-facet-click-event-server';
-export { sendWidgetSuggestionClickEventServer as sendWidgetSuggestionClickEvent } from './lib/requests/send-widget-suggestion-click-server';
+export { sendWidgetNavigationClickEventServer as sendWidgetNavigationClickEvent } from './lib/requests/server/send-widget-navigation-click-event-server';
+export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/requests/server/send-widget-click-event-server';
+export { sendWidgetFacetClickEventServer as sendWidgetFacetClickEvent } from './lib/requests/server/send-widget-facet-click-event-server';
+export { sendWidgetSuggestionClickEventServer as sendWidgetSuggestionClickEvent } from './lib/requests/server/send-widget-suggestion-click-server';
 /* eslint-enable max-len */
-export { sendConversionEventServer as sendConversionEvent } from './lib/requests/send-conversion-event-server';
+export { sendConversionEventServer as sendConversionEvent } from './lib/requests/server/send-conversion-event-server';
+
+export { SEARCH_NAMESPACE } from './lib/consts';
+import './lib/initializer/server/initializer';

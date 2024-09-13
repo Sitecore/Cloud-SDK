@@ -1,5 +1,5 @@
 import { ConversionEvent } from './conversion-event';
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import type { SearchEventEntity } from './interfaces';
 
 describe('conversion event class', () => {

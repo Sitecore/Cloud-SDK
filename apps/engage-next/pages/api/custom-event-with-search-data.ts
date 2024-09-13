@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
-import { event, init } from '@sitecore-cloudsdk/events/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { event } from '@sitecore-cloudsdk/events/server';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -10,11 +11,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     language: 'EN'
   };
 
-  await init(req, res, {
+  await CloudSDK(req, res, {
     cookieExpiryDays: 400,
     siteName: process.env.SITE_ID || '',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
-  });
+  })
+    .addEvents()
+    .initialize();
 
   const testID = requestUrl.searchParams?.get('testID');
 

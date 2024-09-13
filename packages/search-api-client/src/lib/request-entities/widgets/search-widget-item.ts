@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { Facet, FacetSort, SearchWidgetItemDTO } from './interfaces';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 import { WidgetItem } from './widget-item';
 
 export class SearchWidgetItem extends WidgetItem {

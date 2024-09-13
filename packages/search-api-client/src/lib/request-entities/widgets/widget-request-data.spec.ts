@@ -1,4 +1,4 @@
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 import { WidgetItem } from './widget-item';
 import { WidgetRequestData } from './widget-request-data';
 

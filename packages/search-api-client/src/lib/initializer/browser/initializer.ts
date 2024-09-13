@@ -1,44 +1,46 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings } from '../../types';
-import { ErrorMessages } from '../../const';
-import { initCore } from '@sitecore-cloudsdk/core';
+import {
+  PACKAGE_NAME as EVENTS_PACKAGE_NAME,
+  PACKAGE_INITIALIZER_METHOD_NAME
+} from '@sitecore-cloudsdk/events/browser';
+import { PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
+import { PackageInitializer, debug, enabledPackagesBrowser as enabledPackages } from '@sitecore-cloudsdk/core/internal';
+import type { BrowserSettings } from './interfaces';
+import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 
-let searchSettings: BrowserSettings | null = null;
-let initPromise: Promise<void> | null = null;
-
-/**
- * Retrieves the current settings of the search-api-client.
- * @returns The current settings or throws error.
- */
-export function getSettings(): BrowserSettings {
-  if (!searchSettings) throw Error(ErrorMessages.IE_0009);
-
-  return searchSettings;
+// eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
+export async function sideEffects() {
+  debug(SEARCH_NAMESPACE)('searchClient library initialized');
 }
 
 /**
- * Initializes the search-api-client with the provided settings.
- * @param settings - The settings to initialize the search-api-client with.
+ * Makes the functionality of the search-api-client package available.
+ *  This functionality also requires the events package.
+ *
+ * @param settings - The optional settings to initialize the search-api-client
+ * @returns An instance of {@link CloudSDKBrowserInitializer}
+ *
+ * @example
+ * ```
+ * CloudSDK().addEvents().addSearch().initialize()
+ * ```
  */
-export async function init(settings: BrowserSettings): Promise<void> {
-  if (typeof window === 'undefined') throw new Error(ErrorMessages.IE_0001);
+export function addSearch(this: CloudSDKBrowserInitializer, settings?: BrowserSettings): CloudSDKBrowserInitializer {
+  const searchInitializer = new PackageInitializer({
+    dependencies: [{ method: PACKAGE_INITIALIZER_METHOD_NAME, name: EVENTS_PACKAGE_NAME }],
+    settings,
+    sideEffects
+  });
 
-  try {
-    initPromise = initCore(settings);
-    searchSettings = settings;
-    await initPromise;
-  } catch (error) {
-    initPromise = null;
+  enabledPackages.set(PACKAGE_NAME, searchInitializer);
 
-    throw new Error(error as string);
+  return this;
+}
+
+CloudSDKBrowserInitializer.prototype.addSearch = addSearch;
+
+declare module '@sitecore-cloudsdk/core/browser' {
+  interface CloudSDKBrowserInitializer {
+    addSearch: typeof addSearch;
   }
-}
-
-/**
- * A function that handles the async browser init logic. Throws an error or awaits the promise.
- */
-export async function awaitInit() {
-  if (initPromise === null) throw new Error(ErrorMessages.IE_0009);
-
-  await initPromise;
 }

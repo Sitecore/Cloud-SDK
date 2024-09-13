@@ -41,16 +41,6 @@ const links = [
     testId: 'personalizePage'
   },
   {
-    text: 'Async events',
-    path: '/async-init-events',
-    testId: 'asyncInitEvents'
-  },
-  {
-    text: 'Async personalize',
-    path: '/async-init-personalize',
-    testId: 'asyncInitPersonalize'
-  },
-  {
     text: 'Middleware personalize geo',
     path: '/middleware-personalize-geo',
     testId: 'middlewarePersonalizeGeo'

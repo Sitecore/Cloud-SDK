@@ -75,7 +75,7 @@ describe('createCookies', () => {
     );
   });
 
-  it(`should not not create a browserId cookie if cookieName exists 
+  it(`should not create a browserId cookie if cookieName exists 
   and should create a guestId cookie instead if does not exist`, async () => {
     const expectedGuestIdCookieName = `${COOKIE_NAME_PREFIX}123_personalize`;
     const expectedGuestIdValue = 'gid_value';

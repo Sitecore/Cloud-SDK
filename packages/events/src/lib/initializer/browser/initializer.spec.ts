@@ -1,11 +1,9 @@
-import * as core from '@sitecore-cloudsdk/core';
-import * as utils from '@sitecore-cloudsdk/utils';
-import { EVENTS_NAMESPACE, ErrorMessages, LIBRARY_VERSION } from '../../consts';
-import { awaitInit, init } from './initializer';
+import * as core from '@sitecore-cloudsdk/core/internal';
+import * as utilsModule from '@sitecore-cloudsdk/utils';
+import { EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
+import { addEvents, sideEffects } from './initializer';
+import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
 import debug from 'debug';
-import packageJson from '../../../../package.json';
-
-jest.mock('../../eventStorage/eventStorage');
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -14,16 +12,18 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
     ...originalModule
+    // eslint-disable-next-line @typescript-eslint/naming-convention
   };
 });
-
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule
+    ...originalModule,
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    PackageInitializer: jest.fn()
   };
 });
 
@@ -35,164 +35,41 @@ jest.mock('debug', () => {
   };
 });
 
-const settingsParams: core.BrowserSettings = {
-  cookieDomain: 'cDomain',
-  siteName: '456',
-  sitecoreEdgeContextId: '123',
-  sitecoreEdgeUrl: 'https://localhost'
-};
-
-describe('initializer', () => {
-  const { window } = global;
-
-  const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
-
-  global.fetch = jest.fn().mockImplementation(() => mockFetch);
-  jest.spyOn(core, 'getBrowserId');
-
-  afterEach(() => {
-    jest.clearAllMocks();
-    global.window ??= Object.create(window);
-  });
-
-  jest.spyOn(core, 'createCookies').mock;
-  jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-  jest.spyOn(core, 'getGuestId').mockResolvedValueOnce('test');
-  jest.spyOn(core, 'initCore');
-
-  it('should be initialized properly if all settings are configured', () => {
-    expect(async () => {
-      await init(settingsParams);
-
-      expect(core.initCore).toHaveBeenCalledTimes(1);
-    }).not.toThrow(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
-  });
-
-  it('should return an object with available functionality', async () => {
-    await init(settingsParams);
-
-    expect(typeof LIBRARY_VERSION).toBe('string');
-    expect(LIBRARY_VERSION).toBe(packageJson.version);
-    expect(LIBRARY_VERSION).toBe(packageJson.version);
-  });
-
-  it('adds method to get ID to window Engage property when engage is on window', async () => {
-    await init(settingsParams);
-    expect(global.window.Engage).toBeDefined();
-    /* eslint-disable @typescript-eslint/no-explicit-any */
-    global.window.Engage = { test: 'test' } as any;
-    expect((global.window.Engage as any).test).toEqual('test');
-    /* eslint-enable @typescript-eslint/no-explicit-any */
-    expect(global.window.Engage?.getBrowserId).toBeDefined;
-  });
-
-  it('should return the browser id when calling the getBrowserId method from the window Engage property', async () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
-
-    global.window.Engage = { test: 'test' } as any;
-    expect(global.window.Engage).toBeDefined();
-    await init(settingsParams);
-    if (global.window.Engage?.getBrowserId) global.window.Engage.getBrowserId();
-    expect(core.getBrowserId).toHaveBeenCalledTimes(1);
-  });
-
-  it('should throw error if window is undefined', async () => {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    delete global.window;
-
-    await expect(async () => {
-      await init(settingsParams);
-    }).rejects.toThrow(
-      // eslint-disable-next-line max-len
-      `[IE-0001] The "window" object is not available on the server side. Use the "window" object only on the client side, and in the correct execution context.`
-    );
-  });
-
-  it('should add the library version to window.Engage object', async () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
+describe('sideEffects', () => {
+  const debugMock = debug as unknown as jest.Mock;
+  it('should add the library properties to window.Engage object', async () => {
+    jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue('test');
+    jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockImplementation(() => {
+      return { cookieSettings: { names: { browserId: 'bid' } } } as any;
+    });
 
     global.window.Engage = undefined as any;
-
     expect(global.window.Engage).toBeUndefined();
-    await init(settingsParams);
-    expect(global.window.Engage.versions).toBeDefined();
-    expect(global.window.Engage.versions).toEqual({ events: LIBRARY_VERSION });
-  });
-  it('should expand the window.Engage object', async () => {
-    jest.spyOn(utils, 'cookieExists').mockReturnValue(true);
 
-    global.window.Engage = { test: 'test', versions: { testV: '1.0.0' } } as any;
-    await init(settingsParams);
+    await sideEffects();
 
     expect(global.window.Engage.versions).toBeDefined();
-    expect(global.window.Engage.versions).toEqual({
-      events: LIBRARY_VERSION,
-      testV: '1.0.0'
-    });
-  });
-  it('should reset the initPromise if initCore fails', async () => {
-    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
-      throw new Error('error');
-    });
+    expect(global.window.Engage.versions).toEqual({ events: PACKAGE_VERSION });
+    expect(global.window.Engage.getBrowserId).toEqual(expect.any(Function));
 
-    await expect(async () => {
-      await init(settingsParams);
-    }).rejects.toThrow('error');
-  });
-});
+    const bid = (global.window.Engage as any).getBrowserId();
 
-describe('awaitInit', () => {
-  it('should throw error if initPromise is null', async () => {
-    await expect(async () => {
-      await awaitInit();
-    }).rejects.toThrow(ErrorMessages.IE_0004);
-  });
-  it('should not throw if initPromise is a Promise', async () => {
-    jest.spyOn(core, 'initCore').mockImplementationOnce(() => Promise.resolve());
-
-    const settingsParams: core.BrowserSettings = {
-      cookieDomain: 'cDomain',
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: 'https://localhost'
-    };
-
-    await init(settingsParams);
-
-    expect(async () => {
-      await awaitInit();
-    }).not.toThrow();
-  });
-});
-
-describe('debug library in events', () => {
-  const debugMock = debug as unknown as jest.Mock;
-
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events' as a namespace`, async () => {
-    await init(settingsParams);
+    expect(bid).toBe('test');
 
     expect(debugMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
     expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('eventsClient library initialized');
   });
+});
 
-  it(`should call 'debug' third-party lib with 'sitecore-cloudsdk:events'
-   as a namespace when error occur`, async () => {
-    jest.spyOn(core, 'initCore').mockImplementationOnce(async () => {
-      throw new Error('error');
-    });
+describe('addPersonalize', () => {
+  it('should run the addPersonalize function', async () => {
+    const fakeThis = {};
 
-    try {
-      await init(settingsParams);
-    } catch (error) {
-      expect(debugMock).toHaveBeenCalled();
-      expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);
-      expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe(`Error on initializing eventsClient library: %o`);
-    }
+    const result = addEvents.call(fakeThis as any);
+
+    expect(PackageInitializer).toHaveBeenCalledTimes(1);
+    expect(PackageInitializer).toHaveBeenCalledWith({ sideEffects });
+    expect(result).toEqual(fakeThis);
   });
 });

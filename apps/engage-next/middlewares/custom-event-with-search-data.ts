@@ -1,8 +1,9 @@
+import type { NextRequest, NextResponse} from 'next/server';
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import type { NextRequest } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 
-export async function customEventWithSearchDataMiddleware(request: NextRequest): Promise<void> {
+export async function customEventWithSearchDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (
@@ -17,6 +18,14 @@ export async function customEventWithSearchDataMiddleware(request: NextRequest):
   decorateAll(testID as string);
   switch (testID) {
     case 'sendCustomEventFromMiddlewareWithSearchData':
+      await CloudSDK(request, response, {
+        cookieExpiryDays: 400,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
+      })
+        .addEvents()
+        .initialize();
+
       await event(request, {
         ...baseEventData,
         searchData: { test: 123 },
@@ -25,6 +34,14 @@ export async function customEventWithSearchDataMiddleware(request: NextRequest):
 
       break;
     case 'sendCustomEventFromMiddlewareWithoutSearchData':
+      await CloudSDK(request, response, {
+        cookieExpiryDays: 400,
+        siteName: process.env.SITE_ID || '',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
+      })
+        .addEvents()
+        .initialize();
+
       await event(request, {
         ...baseEventData,
         type: 'CUSTOM_EVENT'

@@ -1,7 +1,8 @@
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import { event as eventServer, init } from '@sitecore-cloudsdk/events/server';
+import { event as eventServer } from '@sitecore-cloudsdk/events/server';
 import type { GetServerSidePropsContext } from 'next';
 import { event } from '@sitecore-cloudsdk/events/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 
@@ -74,10 +75,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (!testID || !testID.includes('FromServerSideProps')) return { props: {} };
 
-  await init(context.req, context.res, {
-    sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-    siteName: process.env.SITE_ID || ''
-  });
+  await CloudSDK(context.req, context.res, {
+    sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+    siteName: process.env.SITE_ID as string
+  })
+    .addEvents()
+    .initialize();
 
   decorateAll(testID as string);
   switch (testID) {

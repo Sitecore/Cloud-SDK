@@ -1,5 +1,7 @@
-import { init, pageView } from "@sitecore-cloudsdk/events/browser";
-import { personalize as personalizeAction, init as initPersonalize } from "@sitecore-cloudsdk/personalize/browser";
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { pageView } from "@sitecore-cloudsdk/events/browser";
+import { personalize } from "@sitecore-cloudsdk/personalize/browser";
+import { getPageWidgetData, sendConversionEvent } from '@sitecore-cloudsdk/search-api-client/browser';
 import React, { useEffect, useState, useCallback } from "react";
 
 function Home() {
@@ -11,49 +13,70 @@ function Home() {
   };
 
   const personalizeData = { ...eventData, friendlyId: "personalizeintegrationtest" };
+  const searchData = {
+    currency: "EUR",
+    language: "EN",
+    page: "test",
+    pathname: "https://www.sitecore.com/products/content-cloud",
+    entity: {
+      attributes: {
+        author: "ABC"
+      },
+      entity: "category",
+      entityType: "subcat",
+      id: "123",
+      sourceId: "534",
+      uri: "https://www.sitecore.com/products/content-cloud"
+    }
+  };
 
-  const loadEvents = useCallback(async () => {
-    const temp: any = init({
-      enableBrowserCookie: true,
-      sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
-      siteName: "spinair.com",
-    });
+  const initCloudSDK = useCallback(async () => {
+     await CloudSDK({
+        enableBrowserCookie: true,
+        siteName: "spinair.com",
+        sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1"
+      })
+        .addEvents()
+        .addPersonalize()
+        .addSearch({ userId: 'test' })
+        .initialize();
   }, []);
 
   useEffect(() => {
-    loadEvents();
-  }, [loadEvents]);
+    initCloudSDK();
+  }, [initCloudSDK]);
 
-  const loadPersonalize = useCallback(async () => {
-    const temp: any = initPersonalize({
-      enableBrowserCookie: true,
-      sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
-      siteName: "spinair.com",
-    });
-  }, []);
-
-  useEffect(() => {
-    loadPersonalize();
-  }, [loadPersonalize]);
-
-  const handleClick = async () => {
+  const handleSendEvent = async () => {
     await pageView(eventData);
   };
 
-  const handleClickPersonalize = async () => {
-    await personalizeAction(personalizeData);
+  const handleSendPersonalize = async () => {
+    await personalize(personalizeData);
+  };
+
+  const handleSendConversionEvent = async () => {
+    await sendConversionEvent(searchData);
+  };
+
+  const handleSendSearch = async () => {
+    await getPageWidgetData('/test');
   };
 
   return (
     <div className="Home">
       <header className="Home-header">
         <p>Create-next-app installation test</p>
-
-        <button data-testid="sendEventBtn" onClick={handleClick}>
-          Click me new
+        <button data-testid="sendEventBtn" onClick={handleSendEvent}>
+          Send event
         </button>
-        <button data-testid="sendEventBtnPersonalize" onClick={handleClickPersonalize}>
-          Click Personalize
+        <button data-testid="sendPersonalizeBtn" onClick={handleSendPersonalize}>
+          Send personalize
+        </button>
+        <button data-testid="sendSearchBtn" onClick={handleSendSearch}>
+          Send search
+        </button>
+        <button data-testid="sendConversionEventBtn" onClick={handleSendConversionEvent}>
+          Send conversionEvent
         </button>
       </header>
     </div>

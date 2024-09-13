@@ -1,4 +1,4 @@
-import { ErrorMessages } from '../const';
+import { ErrorMessages } from '../consts';
 import { WidgetNavigationEvent } from './widget-navigation-event';
 
 describe('widget navigaiton event class', () => {

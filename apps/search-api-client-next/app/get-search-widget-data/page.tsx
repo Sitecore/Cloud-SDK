@@ -1,11 +1,6 @@
 'use client';
-import {
-  type BrowserSettings,
-  WidgetRequestData,
-  getWidgetData,
-  init,
-  SearchWidgetItem
-} from '@sitecore-cloudsdk/search-api-client/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { WidgetRequestData, getWidgetData, SearchWidgetItem } from '@sitecore-cloudsdk/search-api-client/browser';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -13,15 +8,15 @@ export default function GetSearchWidgetData() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    const settings: BrowserSettings = {
-      enableBrowserCookie: true,
-      siteName: 'TestSite',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
-      userId: 'test'
-    };
     async function initSearch() {
-      await init(settings);
+      await CloudSDK({
+        enableBrowserCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
     }
     initSearch();
   }, []);

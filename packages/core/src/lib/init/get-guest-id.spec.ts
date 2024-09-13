@@ -3,16 +3,6 @@ import { API_VERSION, ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '
 import type { GetGuestRefResponse, GetGuestRefResponseError } from './get-guest-id';
 import { getGuestId } from './get-guest-id';
 
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
-
-  return {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    __esModule: true,
-    ...originalModule
-  };
-});
-
 describe('getGuestId', () => {
   const bid = 'bid';
   const sitecoreEdgeContextId = 'contextId';

@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
 import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
-import { init, sendConversionEvent } from '@sitecore-cloudsdk/search-api-client/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { sendConversionEvent } from '@sitecore-cloudsdk/search-api-client/server';
 
 export async function sendConversionEventMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -30,12 +31,14 @@ export async function sendConversionEventMiddleware(request: NextRequest, respon
 
   switch (testID) {
     case 'sendConversionEventFromMiddleware':
-      await init(request, response, {
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       await sendConversionEvent(request, conversionEventData);
       break;

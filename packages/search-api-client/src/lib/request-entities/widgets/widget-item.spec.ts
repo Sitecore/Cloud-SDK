@@ -1,5 +1,5 @@
 import { ComparisonFilter } from '../filters/comparison-filter';
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 import { WidgetItem } from './widget-item';
 
 describe('widget item class', () => {

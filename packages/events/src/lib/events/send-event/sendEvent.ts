@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 
-import { API_VERSION, debug, processDebugResponse } from '@sitecore-cloudsdk/core';
+import { API_VERSION, debug, processDebugResponse } from '@sitecore-cloudsdk/core/internal';
 import type { BasePayload, CustomEventPayload, IdentityEventPayload, PageViewEventPayload } from '..';
-import type { DebugResponse, EPResponse, Settings } from '@sitecore-cloudsdk/core';
-import { EVENTS_NAMESPACE, LIBRARY_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import type { DebugResponse, EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 
 /**
  * This factory function sends an event to Edge Proxy
@@ -22,7 +22,7 @@ export async function sendEvent(body: EPFetchBody & BasePayload, settings: Setti
       /* eslint-disable @typescript-eslint/naming-convention */
       'Content-Type': 'application/json',
       'X-Client-Software-ID': X_CLIENT_SOFTWARE_ID,
-      'X-Library-Version': LIBRARY_VERSION
+      'X-Library-Version': PACKAGE_VERSION
       /* eslint-enable @typescript-eslint/naming-convention */
     },
     method: 'POST'

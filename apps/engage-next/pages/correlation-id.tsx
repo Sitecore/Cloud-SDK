@@ -1,7 +1,8 @@
 import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import { init, personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
+import { personalize as personalizeServer } from '@sitecore-cloudsdk/personalize/server';
 import type { GetServerSidePropsContext } from 'next';
 import { personalize } from '@sitecore-cloudsdk/personalize/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 
 export default function CorrelationID() {
   const sendPersonalizeFromAPIWithCorrelationID = async () => {
@@ -49,10 +50,12 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   const testID = context.query.testID;
 
   if (testID === 'sendPersonalizeFromServerSidePropsWithCorrelationID') {
-    await init(context.req, context.res, {
-      sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
-      siteName: process.env.SITE_ID || ''
-    });
+    await CloudSDK(context.req, context.res, {
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+      siteName: process.env.SITE_ID as string
+    })
+      .addPersonalize()
+      .initialize();
 
     decorateAll(testID as string);
     await personalizeServer(context.req, {

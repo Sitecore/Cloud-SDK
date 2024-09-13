@@ -1,9 +1,16 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import { getCookieValueFromRequest, getSettingsServer, handleGetSettingsError } from '@sitecore-cloudsdk/core';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import {
+  builderInstanceServer,
+  getCloudSDKSettingsServer,
+  getCookieValueFromRequest,
+  getEnabledPackageServer as getEnabledPackage,
+  getSettingsServer,
+  handleGetSettingsError
+} from '@sitecore-cloudsdk/core/internal';
+import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import { CustomEvent } from './custom-event';
-import type { EPResponse } from '@sitecore-cloudsdk/core';
-import { ErrorMessages } from '../../consts';
 import type { EventData } from './custom-event';
 import type { Request } from '@sitecore-cloudsdk/utils';
 import { sendEvent } from '../send-event/sendEvent';
@@ -16,13 +23,23 @@ import { sendEvent } from '../send-event/sendEvent';
  * @returns The response object that Sitecore EP returns
  */
 export function eventServer<T extends Request>(request: T, eventData: EventData): Promise<EPResponse | null> {
-  const settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0005);
-  const id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
+  let settings: Settings | CloudSDKSettings;
+  let browserId: string;
+
+  if (builderInstanceServer) {
+    if (!getEnabledPackage(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0015);
+
+    settings = getCloudSDKSettingsServer();
+    browserId = getCookieValueFromRequest(request, settings.cookieSettings.names.browserId);
+  } else {
+    settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0015);
+    browserId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
+  }
 
   return new CustomEvent({
     eventData,
-    id,
+    id: browserId,
     sendEvent,
-    settings
+    settings: settings as Settings
   }).send();
 }

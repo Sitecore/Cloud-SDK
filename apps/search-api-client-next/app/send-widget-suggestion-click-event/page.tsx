@@ -1,19 +1,20 @@
 'use client';
 
-import { BrowserSettings, init, sendWidgetSuggestionClickEvent } from '@sitecore-cloudsdk/search-api-client/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { sendWidgetSuggestionClickEvent } from '@sitecore-cloudsdk/search-api-client/browser';
 import { useEffect, useState } from 'react';
 
 export default function SendWidgetSuggestionClickEvent() {
   useEffect(() => {
-    const settings: BrowserSettings = {
-      enableBrowserCookie: true,
-      siteName: 'TestSite',
-      sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
-      userId: 'test'
-    };
     async function initSearch() {
-      await init(settings);
+      await CloudSDK({
+        enableBrowserCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
     }
     initSearch();
   }, []);

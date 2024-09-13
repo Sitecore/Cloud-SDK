@@ -149,6 +149,11 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
 defineStep(
   'the {string} page is loaded with {string} name and {string} value query parameter',
   (page: string, paramName: string, paramValue: string) => {
+    cy.on('uncaught:exception', (error) => {
+      errorMessage = error.message;
+      return false;
+    });
+
     // eslint-disable-next-line max-len
     cy.intercept('POST', `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/personalize*`).as(
       'personalizeRequest'
@@ -164,11 +169,13 @@ defineStep(
     const path = `${page}?${paramName}=${paramValue}`;
 
     cy.visit(path, {
+      failOnStatusCode: false,
       onBeforeLoad(win) {
         cy.stub(win.console, 'warn').as('consoleWarn');
       }
-    });
-    cy.wait('@initialCall');
+    }).then(() => cy.writeLocal(`error.txt`, errorMessage));
+
+    // cy.wait('@initialCall');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get('body')
@@ -420,6 +427,8 @@ defineStep('the request with id {string} will not contain {string} log', (testID
 defineStep(
   'the request with id {string} will contain the {string} in the body',
   (testID: string, bodyAttribute: string) => {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1500);
     cy.assertRequestBody(testID, bodyAttribute);
   }
 );

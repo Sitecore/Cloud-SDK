@@ -1,0 +1,63 @@
+import { init, pageView } from "@sitecore-cloudsdk/events/browser";
+import { personalize as personalizeAction, init as initPersonalize } from "@sitecore-cloudsdk/personalize/browser";
+import React, { useEffect, useState, useCallback } from "react";
+
+function Home() {
+  const eventData = {
+    channel: "WEB",
+    currency: "EUR",
+    language: "EN",
+    page: "async-init-events",
+  };
+
+  const personalizeData = { ...eventData, friendlyId: "personalizeintegrationtest" };
+
+  const loadEvents = useCallback(async () => {
+    const temp: any = init({
+      enableBrowserCookie: true,
+      sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
+      siteName: "spinair.com",
+    });
+  }, []);
+
+  useEffect(() => {
+    loadEvents();
+  }, [loadEvents]);
+
+  const loadPersonalize = useCallback(async () => {
+    const temp: any = initPersonalize({
+      enableBrowserCookie: true,
+      sitecoreEdgeContextId: "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
+      siteName: "spinair.com",
+    });
+  }, []);
+
+  useEffect(() => {
+    loadPersonalize();
+  }, [loadPersonalize]);
+
+  const handleClick = async () => {
+    await pageView(eventData);
+  };
+
+  const handleClickPersonalize = async () => {
+    await personalizeAction(personalizeData);
+  };
+
+  return (
+    <div className="Home">
+      <header className="Home-header">
+        <p>Create-next-app installation test</p>
+
+        <button data-testid="sendEventBtn" onClick={handleClick}>
+          Click me new
+        </button>
+        <button data-testid="sendEventBtnPersonalize" onClick={handleClickPersonalize}>
+          Click Personalize
+        </button>
+      </header>
+    </div>
+  );
+}
+
+export default Home;

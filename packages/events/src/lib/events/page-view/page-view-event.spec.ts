@@ -1,7 +1,7 @@
-import * as core from '@sitecore-cloudsdk/core';
+import * as core from '@sitecore-cloudsdk/core/internal';
 import * as sendEventModule from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
@@ -15,8 +15,8 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
     ...originalModule
   };
 });
-jest.mock('@sitecore-cloudsdk/core', () => {
-  const originalModule = jest.requireActual('@sitecore-cloudsdk/core');
+jest.mock('@sitecore-cloudsdk/core/internal', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention

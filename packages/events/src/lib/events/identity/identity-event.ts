@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core';
+import type { EPResponse, Infer, Settings } from '@sitecore-cloudsdk/core/internal';
 import type { EventAttributesInput, ExtensionData } from '../common-interfaces';
 import { flattenObject, isShortISODateString, isValidEmail } from '@sitecore-cloudsdk/utils';
 import { BaseEvent } from '../base-event';

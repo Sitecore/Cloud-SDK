@@ -1,5 +1,6 @@
-import { SearchWidgetItem, WidgetRequestData, getWidgetData, init } from '@sitecore-cloudsdk/search-api-client/server';
+import { SearchWidgetItem, WidgetRequestData, getWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
 import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 
@@ -17,12 +18,14 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   switch (testID) {
     case 'getSearchWidgetDataFromAPIWithValidPayload':
-      await init(req, res, {
+      await CloudSDK(req, res, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7', {
         all: true,
@@ -35,12 +38,14 @@ export async function GET(req: NextRequest, res: NextResponse) {
       await getWidgetData(widgetRequestData);
       break;
     case 'getSearchWidgetDataFromAPIWithValidPayloadUsingSetter':
-      await init(req, res, {
+      await CloudSDK(req, res, {
+        enableServerCookie: true,
         siteName: 'TestSite',
-        sitecoreEdgeContextId: '83d8199c-2837-4c29-a8ab-1bf234fea2d1',
-        sitecoreEdgeUrl: 'https://edge-platform.sitecorecloud.io',
-        userId: 'test'
-      });
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7');
       widget.facet = {

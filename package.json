@@ -16,7 +16,8 @@
     "mutation-local": "nx run-many --target=stryker",
     "mutation-tests": "nx affected --target=stryker",
     "prepare": "husky install",
-    "unit-tests": "nx affected --target=test"
+    "unit-tests": "nx affected --target=test",
+    "test": "nx affected --target=test"
   },
   "dependencies": {
     "@swc/helpers": "~0.5.0",

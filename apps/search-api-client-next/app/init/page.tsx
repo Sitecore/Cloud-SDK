@@ -1,24 +1,47 @@
 'use client';
-import { type BrowserSettings, init } from '@sitecore-cloudsdk/search-api-client/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { getPageWidgetData } from '@sitecore-cloudsdk/search-api-client/browser';
+import '@sitecore-cloudsdk/events/browser';
 
 export default async function Page() {
   async function initSearchWithEnableBrowserCookieTrue() {
-    const settings: BrowserSettings = {
-      enableBrowserCookie: true,
+    CloudSDK({
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
       siteName: 'TestSite',
-      userId: 'user123',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID as string
-    };
-    await init(settings);
+      enableBrowserCookie: true
+    })
+      .addSearch({ userId: 'user123' })
+      .addEvents()
+      .initialize();
   }
   async function initSearchWithEnableBrowserCookieFalse() {
-    const settings: BrowserSettings = {
-      enableBrowserCookie: false,
+    CloudSDK({
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
       siteName: 'TestSite',
-      userId: 'user123',
-      sitecoreEdgeContextId: process.env.CONTEXT_ID as string
-    };
-    await init(settings);
+      enableBrowserCookie: false
+    })
+      .addSearch({ userId: 'user123' })
+      .addEvents()
+      .initialize();
+  }
+
+  function initSearchWithoutEvents() {
+    CloudSDK({
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+      siteName: 'TestSite',
+      enableBrowserCookie: true
+    })
+      .addSearch({ userId: 'user123' })
+      .initialize();
+  }
+
+  async function initCloudSDKWithoutAddSearch() {
+    CloudSDK({
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+      siteName: 'TestSite',
+      enableBrowserCookie: true
+    }).initialize();
+    await getPageWidgetData('/test');
   }
   return (
     <div>
@@ -35,6 +58,19 @@ export default async function Page() {
         data-testid='initSearchWithEnableBrowserCookieFalse'
         onClick={initSearchWithEnableBrowserCookieFalse}>
         init Search with <code>enableBrowserCookie=false</code>
+      </button>
+      <br />
+      <button
+        type='button'
+        data-testid='initSearchWithoutEvents'
+        onClick={initSearchWithoutEvents}>
+        initSearchWithoutEvents
+      </button>
+      <button
+        type='button'
+        data-testid='initCloudSDKWithoutAddSearch'
+        onClick={initCloudSDKWithoutAddSearch}>
+        initCloudSDKWithoutAddSearch
       </button>
     </div>
   );

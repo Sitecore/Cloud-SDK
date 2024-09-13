@@ -1,7 +1,7 @@
-import { LIBRARY_VERSION as eventVersion, getBrowserId, pageView } from '@sitecore-cloudsdk/events/browser';
+import { PACKAGE_VERSION as eventVersion, getBrowserId, pageView } from '@sitecore-cloudsdk/events/browser';
 import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
-import { LIBRARY_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
+import { PACKAGE_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
 import { useState } from 'react';
 
 export function Index() {

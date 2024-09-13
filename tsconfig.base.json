@@ -15,7 +15,9 @@
     "baseUrl": ".",
     "types": ["jest", "node"],
     "paths": {
-      "@sitecore-cloudsdk/core": ["packages/core/src/index.ts"],
+      "@sitecore-cloudsdk/core/internal": ["packages/core/src/internal.ts"],
+      "@sitecore-cloudsdk/core/browser": ["packages/core/src/browser.ts"],
+      "@sitecore-cloudsdk/core/server": ["packages/core/src/server.ts"],
       "@sitecore-cloudsdk/events/browser": ["packages/events/src/browser.ts"],
       "@sitecore-cloudsdk/events/server": ["packages/events/src/server.ts"],
       "@sitecore-cloudsdk/personalize/browser": ["packages/personalize/src/browser.ts"],

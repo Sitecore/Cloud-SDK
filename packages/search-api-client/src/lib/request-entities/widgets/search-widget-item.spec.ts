@@ -1,4 +1,4 @@
-import { ErrorMessages } from '../../const';
+import { ErrorMessages } from '../../consts';
 import type { Facet } from './interfaces';
 import { SearchWidgetItem } from './search-widget-item';
 

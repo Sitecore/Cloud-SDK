@@ -1,24 +1,33 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Request, Response } from '@sitecore-cloudsdk/utils';
-import { debug, initCoreServer } from '@sitecore-cloudsdk/core';
-import { EVENTS_NAMESPACE } from '../../consts';
-import type { ServerSettings } from '@sitecore-cloudsdk/core';
+import { EVENTS_NAMESPACE, PACKAGE_NAME } from '../../consts';
+import {
+  PackageInitializerServer,
+  debug,
+  enabledPackagesServer as enabledPackages
+} from '@sitecore-cloudsdk/core/internal';
+import { CloudSDKServerInitializer } from '@sitecore-cloudsdk/core/server';
+
+export async function sideEffects() {
+  debug(EVENTS_NAMESPACE)('eventsServer library initialized');
+}
 
 /**
- * Initiates the server Events library using the global settings added by the developer
- * @param request - The request object, either a Middleware Request or an HTTP Request
- * @param response - The response object, either a Middleware Next Response or an HTTP Response
- * @param settings - Global settings added by the developer
- * @returns A promise that resolves with an object that handles the library functionality
+ * Makes the functionality of the events package available.
+ *
+ * @returns An instance of {@link CloudSDKServerInitializer}
  */
-export async function initServer(request: Request, response: Response, settings: ServerSettings): Promise<void> {
-  try {
-    await initCoreServer(settings, request, response);
+export function addEvents(this: CloudSDKServerInitializer): CloudSDKServerInitializer {
+  const eventsInitializer = new PackageInitializerServer({ sideEffects });
 
-    debug(EVENTS_NAMESPACE)('eventsServer library initialized');
-  } catch (error) {
-    debug(EVENTS_NAMESPACE)('Error on initializing eventsServer library with error: %o', error);
+  enabledPackages.set(PACKAGE_NAME, eventsInitializer);
 
-    throw new Error(error as string);
+  return this;
+}
+
+CloudSDKServerInitializer.prototype.addEvents = addEvents;
+
+declare module '@sitecore-cloudsdk/core/server' {
+  interface CloudSDKServerInitializer {
+    addEvents: typeof addEvents;
   }
 }

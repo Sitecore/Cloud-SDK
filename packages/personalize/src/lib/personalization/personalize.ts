@@ -1,10 +1,16 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getBrowserId, getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core';
-import { ErrorMessages } from '../consts';
+import { ErrorMessages, PACKAGE_NAME } from '../consts';
+import {
+  getBrowserId,
+  getCloudSDKSettingsBrowser as getCloudSDKSettings,
+  getEnabledPackageBrowser as getEnabledPackage
+} from '@sitecore-cloudsdk/core/internal';
+import { getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core/internal';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
-import { awaitInit } from '../initializer/client/initializer';
+import type { Settings } from '@sitecore-cloudsdk/core/internal';
+import { awaitInit } from '../init/client/initializer';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 
 /**
@@ -19,11 +25,31 @@ export async function personalize(
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
   await awaitInit();
 
-  const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0006);
-  const id = getBrowserId();
-  const guestId = getCookieValueClientSide(settings.cookieSettings.cookieNames.guestId);
+  if (getEnabledPackage(PACKAGE_NAME)?.initState) {
+    const cloudSDKSettings = getCloudSDKSettings();
+    const browserId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.names.browserId);
+    const guestId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.names.guestId);
 
-  return new Personalizer(id, guestId).getInteractiveExperienceData(personalizeData, settings, window.location.search, {
-    timeout: opts?.timeout
-  });
+    return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+      personalizeData,
+      cloudSDKSettings as unknown as Settings,
+      window.location.search,
+      {
+        timeout: opts?.timeout
+      }
+    );
+  } else {
+    const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0016);
+    const browserId = getBrowserId();
+    const guestId = getCookieValueClientSide(settings.cookieSettings.cookieNames.guestId);
+
+    return new Personalizer(browserId, guestId).getInteractiveExperienceData(
+      personalizeData,
+      settings,
+      window.location.search,
+      {
+        timeout: opts?.timeout
+      }
+    );
+  }
 }

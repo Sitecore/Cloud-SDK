@@ -34,7 +34,7 @@ Scenario: Developer creates a clear cart event
     Then the event is sent with 'CLEAR_CART' type
 ```
 
-> Note: Remember to add the proper tags like ‘@Middleware-Server-Side-Cookie’ and ‘@Smoke-Test-Events tags to your features, scenarios or example tables to link them with the respective suites. You can find more info [here](https://stylelabs.atlassian.net/wiki/spaces/MAP/pages/4089282837/Cucumber+guide#Tags)
+> Note: Remember to add the proper tags like ‘@RestartServer-Middleware and ‘@Smoke-Test-Events tags to your features, scenarios or example tables to link them with the respective suites. You can find more info [here](https://stylelabs.atlassian.net/wiki/spaces/MAP/pages/4089282837/Cucumber+guide#Tags)
 
 ### Reuse steps and make steps reusable
 

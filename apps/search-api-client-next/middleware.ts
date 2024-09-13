@@ -15,10 +15,14 @@ import { widgetViewMiddleware } from './src/middlewares/widget-view';
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
 
+  /* eslint-disable @typescript-eslint/no-unused-vars, @typescript-eslint/ban-ts-comment */
+  // @ts-ignore
+  const updateMiddleware = '###1###';
+  /* eslint-enable @typescript-eslint/no-unused-vars, @typescript-eslint/ban-ts-comment */
+
   await getWidgetDataMiddleware(request, response);
   await getFilteredWidgetDataMiddleware(request, response);
   await getSearchWidgetDataMiddleware(request, response);
-  await initMiddleware(request, response);
   await getPageWidgetDataMiddleware(request, response);
   await sendWidgetClickEventMiddleware(request, response);
   await sendWidgetSuggestionClickEventMiddleware(request, response);
@@ -26,6 +30,7 @@ export async function middleware(request: NextRequest) {
   await sendWidgetNavigationClickEventMiddleware(request, response);
   await widgetViewMiddleware(request, response);
   await sendConversionEventMiddleware(request, response);
+  await initMiddleware(request, response);
 
   return response;
 }
