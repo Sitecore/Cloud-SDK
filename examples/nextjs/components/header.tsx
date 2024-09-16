@@ -1,13 +1,23 @@
 'use client';
 
+import { useCart } from '../contexts/cart';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRef } from 'react';
-import { useCart } from '../contexts/cart';
 
 export function Header() {
   const cart = useCart();
+  const router = useRouter();
   const accountDialogRef = useRef<HTMLDialogElement>(null);
+  const [query, setQuery] = useState('');
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      router.push(`/search?q=${query}`);
+    }
+  };
+
   return (
     <div className='shadow-sm'>
       <dialog
@@ -34,6 +44,9 @@ export function Header() {
         <div className='flex gap-x-4'>
           <div className='relative w-[15rem]'>
             <input
+              id='search'
+              onKeyDown={handleKeyDown}
+              onChange={(e) => setQuery(e.target.value)}
               type='text'
               className='border border-gray-300 rounded-xl px-3 py-2 w-full'
               placeholder='Search'
