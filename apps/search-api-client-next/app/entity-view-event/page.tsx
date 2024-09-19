@@ -1,10 +1,10 @@
 'use client';
 
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { sendConversionEvent } from '@sitecore-cloudsdk/search-api-client/browser';
+import { entityView } from '@sitecore-cloudsdk/search-api-client/browser';
 import { useEffect, useState } from 'react';
 
-export default function SendConversionEvent() {
+export default function EntityViewEvent() {
   useEffect(() => {
     async function initSearch() {
       await CloudSDK({
@@ -19,7 +19,7 @@ export default function SendConversionEvent() {
     initSearch();
   }, []);
 
-  const [sendConversionEventData, setSendConversionEventData] = useState(
+  const [entityViewEventData, setEntityViewEventData] = useState(
     '{"currency":"EUR","language":"EN","page":"test","entity":{"attributes":{"author":"ABC"},"entity":"category","entityType":"subcat","id":"123","sourceId":"534","uri":"https://www.sitecore.com/products/content-cloud3333333"},"pathname":"https://www.sitecore.com/products/content-cloud"}'
   );
 
@@ -29,8 +29,8 @@ export default function SendConversionEvent() {
       Conversion event data:
       <textarea
         style={{ width: '1000px' }}
-        value={sendConversionEventData}
-        onChange={(e) => setSendConversionEventData(e.target.value)}
+        value={entityViewEventData}
+        onChange={(e) => setEntityViewEventData(e.target.value)}
         data-testid='eventInputData'
         rows={4}
         cols={40}
@@ -38,9 +38,9 @@ export default function SendConversionEvent() {
       <br />
       <button
         type='button'
-        data-testid='sendConversionEvent'
-        onClick={() => sendConversionEvent(JSON.parse(sendConversionEventData))}>
-        Send conversion event
+        data-testid='entityView'
+        onClick={() => entityView(JSON.parse(entityViewEventData))}>
+        Send entity view event
       </button>
       <br />
     </div>

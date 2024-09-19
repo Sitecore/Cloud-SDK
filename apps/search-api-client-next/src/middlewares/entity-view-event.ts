@@ -1,12 +1,12 @@
 import type { NextRequest, NextResponse } from 'next/server';
 import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { sendConversionEvent } from '@sitecore-cloudsdk/search-api-client/server';
+import { entityView } from '@sitecore-cloudsdk/search-api-client/server';
 
-export async function sendConversionEventMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
+export async function entityViewMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
-  if (!request.nextUrl.pathname.startsWith('/send-conversion-event') || !testID) return;
+  if (!request.nextUrl.pathname.startsWith('/entity-view-event') || !testID) return;
 
   decorateFetch(testID as string);
 
@@ -21,7 +21,7 @@ export async function sendConversionEventMiddleware(request: NextRequest, respon
     uri: 'https://www.sitecore.com/products/content-cloud3333333'
   };
 
-  const conversionEventData = {
+  const entityViewEventData = {
     currency: 'EUR',
     entity: eventEntityData,
     language: 'EN',
@@ -30,7 +30,7 @@ export async function sendConversionEventMiddleware(request: NextRequest, respon
   };
 
   switch (testID) {
-    case 'sendConversionEventFromMiddleware':
+    case 'entityViewFromMiddleware':
       await CloudSDK(request, response, {
         enableServerCookie: true,
         siteName: 'TestSite',
@@ -40,7 +40,7 @@ export async function sendConversionEventMiddleware(request: NextRequest, respon
         .addSearch({ userId: 'test' })
         .initialize();
 
-      await sendConversionEvent(request, conversionEventData);
+      await entityView(request, entityViewEventData);
       break;
   }
   resetFetch();

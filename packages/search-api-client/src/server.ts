@@ -22,7 +22,7 @@ export { sendWidgetClickEventServer as sendWidgetClickEvent } from './lib/reques
 export { sendWidgetFacetClickEventServer as sendWidgetFacetClickEvent } from './lib/requests/server/send-widget-facet-click-event-server';
 export { sendWidgetSuggestionClickEventServer as sendWidgetSuggestionClickEvent } from './lib/requests/server/send-widget-suggestion-click-server';
 /* eslint-enable max-len */
-export { sendConversionEventServer as sendConversionEvent } from './lib/requests/server/send-conversion-event-server';
+export { entityViewServer as entityView } from './lib/requests/server/entity-view-event-server';
 
 export { SEARCH_NAMESPACE } from './lib/consts';
 import './lib/initializer/server/initializer';

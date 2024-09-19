@@ -16,7 +16,7 @@ import {
 import {
   getPageWidgetData,
   getWidgetData,
-  sendConversionEvent,
+  entityView,
   sendWidgetClickEvent,
   sendWidgetFacetClickEvent,
   sendWidgetNavigationClickEvent,
@@ -222,7 +222,7 @@ export default function Index() {
                 widgetIdentifier: '12345'
               });
 
-              sendConversionEvent({
+              entityView({
                 currency: 'EUR',
                 entity: {
                   attributes: {

@@ -2,8 +2,9 @@ import * as core from '@sitecore-cloudsdk/core/internal';
 import * as eventsBrowserModule from '@sitecore-cloudsdk/events/browser';
 import * as initializerModule from '../../init/browser/initializer';
 import type { SearchEventEntity } from '../../events/interfaces';
+import { entityView } from './entity-view-event';
 import { event } from '@sitecore-cloudsdk/events/browser';
-import { sendConversionEvent } from './send-conversion-event';
+
 
 jest.mock('@sitecore-cloudsdk/events/browser', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/events/browser');
@@ -28,7 +29,7 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
   };
 });
 
-describe('sendConversionEvent', () => {
+describe('entityView', () => {
   jest.spyOn(core, 'getBrowserId').mockReturnValue('test_id');
 
   const eventEntityData: SearchEventEntity = {
@@ -42,7 +43,7 @@ describe('sendConversionEvent', () => {
     uri: 'https://www.sitecore.com/products/content-cloud3333333'
   };
 
-  const conversionEventData = {
+  const entityViewEventData = {
     currency: 'EUR',
     entity: eventEntityData,
     language: 'EN',
@@ -68,7 +69,7 @@ describe('sendConversionEvent', () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue(undefined);
 
-    const response = await sendConversionEvent(conversionEventData);
+    const response = await entityView(entityViewEventData);
 
     expect(initEventsSpy).toHaveBeenCalledTimes(1);
     expect(response).toBeNull();
@@ -78,21 +79,20 @@ describe('sendConversionEvent', () => {
       language: 'EN',
       page: 'test',
       searchData: {
-        action_sub_type: 'conversion',
         value: {
           context: {
             page: {
-              uri: conversionEventData.pathname
+              uri: entityViewEventData.pathname
             }
           },
           entities: [
             {
-              attributes: conversionEventData.entity.attributes,
-              entity_subtype: conversionEventData.entity.entityType,
-              entity_type: conversionEventData.entity.entity,
-              id: conversionEventData.entity.id,
-              source_id: conversionEventData.entity.sourceId,
-              uri: conversionEventData.entity.uri
+              attributes: entityViewEventData.entity.attributes,
+              entity_subtype: entityViewEventData.entity.entityType,
+              entity_type: entityViewEventData.entity.entity,
+              id: entityViewEventData.entity.id,
+              source_id: entityViewEventData.entity.sourceId,
+              uri: entityViewEventData.entity.uri
             }
           ]
         }
@@ -104,7 +104,7 @@ describe('sendConversionEvent', () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
 
-    const response = await sendConversionEvent(conversionEventData);
+    const response = await entityView(entityViewEventData);
 
     expect(initEventsSpy).not.toHaveBeenCalled();
     expect(response).toBeNull();
@@ -114,21 +114,20 @@ describe('sendConversionEvent', () => {
       language: 'EN',
       page: 'test',
       searchData: {
-        action_sub_type: 'conversion',
         value: {
           context: {
             page: {
-              uri: conversionEventData.pathname
+              uri: entityViewEventData.pathname
             }
           },
           entities: [
             {
-              attributes: conversionEventData.entity.attributes,
-              entity_subtype: conversionEventData.entity.entityType,
-              entity_type: conversionEventData.entity.entity,
-              id: conversionEventData.entity.id,
-              source_id: conversionEventData.entity.sourceId,
-              uri: conversionEventData.entity.uri
+              attributes: entityViewEventData.entity.attributes,
+              entity_subtype: entityViewEventData.entity.entityType,
+              entity_type: entityViewEventData.entity.entity,
+              id: entityViewEventData.entity.id,
+              source_id: entityViewEventData.entity.sourceId,
+              uri: entityViewEventData.entity.uri
             }
           ]
         }

@@ -1,7 +1,8 @@
-Feature: Send conversion click event
+Feature: Send entity view event
 
-Scenario Outline: Developer sends conversion event from browser with a valid payload
-    Given the '/send-conversion-event' page is loaded
+Scenario Outline: Developer sends entity view event from browser with a valid payload
+    Given the '/entity-view-event' page is loaded
+    Given the '/entity-view-event' page is loaded
     When the event request parameters are:
     """
         {
@@ -21,14 +22,13 @@ Scenario Outline: Developer sends conversion event from browser with a valid pay
             "pathname": "https://www.sitecore.com/products/content-cloud"
         }
      """
-    And the 'sendConversionEvent' button is clicked
+    And the 'entityView' button is clicked
     Then the event request is sent with parameters:
     """
         {
             "type": "VIEW",
             "sc_search": {
                 "data": {
-                    "action_sub_type": "conversion",
                     "value": {
                         "context": {
                             "page": {
@@ -61,10 +61,9 @@ Scenario Outline: Developer sends conversion event from browser with a valid pay
         }
     """
 
-Scenario: Developer sends conversion event from Middleware with a valid payload
-    Given the '/send-conversion-event' page is loaded with 'testID' name and 'sendConversionEventFromMiddleware' value query parameter
-    Then the request with id 'sendConversionEventFromMiddleware' will contain:
+Scenario: Developer sends entity view event from Middleware with a valid payload
+    Given the '/entity-view-event' page is loaded with 'testID' name and 'entityViewFromMiddleware' value query parameter
+    Then the request with id 'entityViewFromMiddleware' will contain:
     """
-        "sc_search":{"data":{"action_sub_type":"conversion","value":{"context":{"page":{"uri":"https://www.sitecore.com/products/content-cloud"}},"entities":[{"attributes":{"author":"ABC"},"entity_subtype":"subcat","entity_type":"category","id":"123","source_id":"534","uri":"https://www.sitecore.com/products/content-cloud3333333"}]}},"metadata":{"ut_api_version":"1.0"}
+        "sc_search":{"data":{"value":{"context":{"page":{"uri":"https://www.sitecore.com/products/content-cloud"}},"entities":[{"attributes":{"author":"ABC"},"entity_subtype":"subcat","entity_type":"category","id":"123","source_id":"534","uri":"https://www.sitecore.com/products/content-cloud3333333"}]}},"metadata":{"ut_api_version":"1.0"}
     """
-    

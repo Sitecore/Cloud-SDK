@@ -20,7 +20,7 @@ export { sendWidgetClickEvent } from './lib/requests/browser/send-widget-click-e
 export { sendWidgetSuggestionClickEvent } from './lib/requests/browser/send-widget-suggestion-click';
 export { sendWidgetFacetClickEvent } from './lib/requests/browser/send-widget-facet-click-event';
 export { widgetView } from './lib/requests/browser/widget-view';
-export { sendConversionEvent } from './lib/requests/browser/send-conversion-event';
+export { entityView } from './lib/requests/browser/entity-view-event';
 
 export { SEARCH_NAMESPACE } from './lib/consts';
 import './lib/initializer/browser/initializer';

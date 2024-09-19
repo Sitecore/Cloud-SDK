@@ -1,4 +1,4 @@
-import { ConversionEvent } from './conversion-event';
+import { EntityViewEvent } from './entity-view-event';
 import { ErrorMessages } from '../consts';
 import type { SearchEventEntity } from './interfaces';
 
@@ -14,7 +14,7 @@ describe('conversion event class', () => {
     uri: 'https://www.sitecore.com/products/content-cloud3333333'
   };
 
-  const conversionEventData = {
+  const entityViewEventData = {
     currency: 'EUR',
     entity: eventEntityData,
     language: 'EN',
@@ -28,21 +28,20 @@ describe('conversion event class', () => {
       language: 'EN',
       page: 'test',
       searchData: {
-        action_sub_type: 'conversion',
         value: {
           context: {
             page: {
-              uri: conversionEventData.pathname
+              uri: entityViewEventData.pathname
             }
           },
           entities: [
             {
-              attributes: conversionEventData.entity.attributes,
-              entity_subtype: conversionEventData.entity.entityType,
-              entity_type: conversionEventData.entity.entity,
-              id: conversionEventData.entity.id,
-              source_id: conversionEventData.entity.sourceId,
-              uri: conversionEventData.entity.uri
+              attributes: entityViewEventData.entity.attributes,
+              entity_subtype: entityViewEventData.entity.entityType,
+              entity_type: entityViewEventData.entity.entity,
+              id: entityViewEventData.entity.id,
+              source_id: entityViewEventData.entity.sourceId,
+              uri: entityViewEventData.entity.uri
             }
           ]
         }
@@ -50,26 +49,26 @@ describe('conversion event class', () => {
       type: 'VIEW'
     };
 
-    const conversionEventDTO = new ConversionEvent(conversionEventData).toDTO();
+    const conversionEventDTO = new EntityViewEvent(entityViewEventData).toDTO();
 
     expect(conversionEventDTO).toEqual(expected);
   });
 
   it(`should throw an error if 'language' provided is invalid`, () => {
     const invalidConversionEventData = {
-      ...conversionEventData,
+      ...entityViewEventData,
       language: 'TEST'
     };
 
-    expect(() => new ConversionEvent(invalidConversionEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new EntityViewEvent(invalidConversionEventData)).toThrow(ErrorMessages.MV_0007);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {
     const invalidConversionEventData = {
-      ...conversionEventData,
+      ...entityViewEventData,
       currency: 'TEST'
     };
 
-    expect(() => new ConversionEvent(invalidConversionEventData)).toThrow(ErrorMessages.IV_0015);
+    expect(() => new EntityViewEvent(invalidConversionEventData)).toThrow(ErrorMessages.IV_0015);
   });
 });
