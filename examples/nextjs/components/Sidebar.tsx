@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useCart } from '../contexts/cart';
+import { useCart } from '../context/Cart';
 
 export function Sidebar() {
   const { isSidebarOpen, productItems, closeSidebar, removeProductItem, calculateDiscountPrice, calculateTotalCost } =

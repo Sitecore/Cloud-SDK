@@ -1,10 +1,11 @@
 'use client';
 
-import { useCart } from '../../../contexts/cart';
+import { withAuthGuard } from '../../../components/AuthGuard';
+import { useCart } from '../../../context/Cart';
 import products from '../../../products.json';
 import Image from 'next/image';
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+function ProductPage({ params }: { params: { slug: string } }) {
   const product = products.find((product) => product.slug === params.slug);
   const { addProductItem } = useCart();
 
@@ -48,3 +49,5 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
     </section>
   );
 }
+
+export default withAuthGuard(ProductPage);

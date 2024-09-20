@@ -1,6 +1,9 @@
+'use client';
+
 import products from '../../products.json';
 import { Suspense } from 'react';
 import Image from 'next/image';
+import { withAuthGuard } from '../../components/AuthGuard';
 
 async function getSearchResults(query: string) {
   // Simulate an API call
@@ -71,7 +74,7 @@ function SearchSkeleton() {
   );
 }
 
-export default function SearchResultsPage({ searchParams }: { searchParams: { q: string } }) {
+function SearchResultsPage({ searchParams }: { searchParams: { q: string } }) {
   const query = searchParams.q || '';
 
   return (
@@ -84,3 +87,5 @@ export default function SearchResultsPage({ searchParams }: { searchParams: { q:
     </div>
   );
 }
+
+export default withAuthGuard(SearchResultsPage);

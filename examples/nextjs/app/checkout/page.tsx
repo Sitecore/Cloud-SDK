@@ -1,8 +1,9 @@
 'use client';
 
-import { useCart } from '../../contexts/cart';
+import { withAuthGuard } from '../../components/AuthGuard';
+import { useCart } from '../../context/Cart';
 
-export default function CheckoutPage() {
+function CheckoutPage() {
   const { productItems, calculateDiscountPrice, removeProductItem, calculateTotalCost } = useCart();
 
   if (productItems.length === 0) {
@@ -85,7 +86,7 @@ export default function CheckoutPage() {
                 <label className='mr-2'>Card Number:</label>
                 <input
                   type='text'
-                  value={'4242 4242 4242 4242'}
+                  placeholder='4242 4242 4242 4242'
                   className='border border-gray-300 rounded-lg p-2 w-full'
                 />
               </div>
@@ -140,3 +141,5 @@ export default function CheckoutPage() {
     </section>
   );
 }
+
+export default withAuthGuard(CheckoutPage);

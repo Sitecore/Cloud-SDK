@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useCart } from '../contexts/cart';
+import { useCart } from '../context/Cart';
 import React from 'react';
 
 export type Product = {

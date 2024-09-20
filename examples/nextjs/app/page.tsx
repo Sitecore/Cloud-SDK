@@ -1,13 +1,14 @@
 'use client';
 
-import { PersonalizeBanner } from '../components/personalize-banner';
-import { Newsletter } from '../components/newsletter';
-import { MemoizedProducts } from '../components/products';
+import { PersonalizeBanner } from '../components/PersonalizeBanner';
+import { Newsletter } from '../components/Newsletter';
+import { MemoizedProducts } from '../components/Products';
 import products from '../products.json';
 import { useEffect } from 'react';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
+import { withAuthGuard } from '../components/AuthGuard';
 
-export default function Index() {
+function Index() {
   useEffect(() => {
     const doEvent = async () => {
       await pageView();
@@ -26,3 +27,5 @@ export default function Index() {
     </div>
   );
 }
+
+export default withAuthGuard(Index);
