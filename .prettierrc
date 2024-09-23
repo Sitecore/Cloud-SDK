@@ -10,5 +10,9 @@
   "bracketSameLine": true,
   "endOfLine": "lf",
   "singleAttributePerLine": true,
-  "semi": true
+  "semi": true,
+  "importOrder": ["<THIRD_PARTY_TS_TYPES>", "^@sitecore-(.*)$", "^[./]", "<TS_TYPES>^[./]"],
+  "importOrderSeparation": false,
+  "importOrderSortSpecifiers": true,
+  "importOrderCaseInsensitive": true
 }

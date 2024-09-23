@@ -98,8 +98,7 @@
         ],
         "@typescript-eslint/consistent-type-exports": "error",
         "@typescript-eslint/no-import-type-side-effects": "error",
-        "@stylistic/js/comma-dangle": ["error", "never"],
-        "sort-imports": "error"
+        "@stylistic/js/comma-dangle": ["error", "never"]
       }
     },
     {
