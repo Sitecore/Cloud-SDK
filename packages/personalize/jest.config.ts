@@ -23,6 +23,7 @@ const config: Config.InitialOptions = {
   },
   testPathIgnorePatterns: ['web-personalization.spec.ts'],
   moduleNameMapper: {
+    '@sitecore-cloudsdk/events/browser': join(resolve(), 'packages', 'events', 'src', 'browser.js'),
     '@sitecore-cloudsdk/core/browser': join(resolve(), 'packages', 'core', 'src', 'browser.js'),
     '@sitecore-cloudsdk/core/server': join(resolve(), 'packages', 'core', 'src', 'server.js'),
     '@sitecore-cloudsdk/core/internal': join(resolve(), 'packages', 'core', 'src', 'internal.js')

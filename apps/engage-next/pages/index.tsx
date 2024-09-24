@@ -1,4 +1,5 @@
-import { PACKAGE_VERSION as eventVersion, getBrowserId, pageView } from '@sitecore-cloudsdk/events/browser';
+import { PACKAGE_VERSION as eventVersion, pageView } from '@sitecore-cloudsdk/events/browser';
+import { getBrowserId } from '@sitecore-cloudsdk/core/browser';
 import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
 import { PACKAGE_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
@@ -137,7 +138,8 @@ export function Index() {
           <button
             data-testid='getVersionLibFromPersonalize'
             onClick={() => {
-              if (window.Engage.versions?.personalize !== undefined) setVersion(window.Engage.versions.personalize);
+              if (window.scCloudSDK.personalize?.version !== undefined)
+                setVersion(window.scCloudSDK.personalize.version);
             }}>
             Get Personalize version from window
           </button>

@@ -1,10 +1,16 @@
-import * as fetchBrowserIdFromEdgeProxy from '../../init/fetch-browser-id-from-edge-proxy';
+import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
-import * as getGuestIdModule from '../../init/get-guest-id';
+import * as getGuestIdModule from '../../guest-id/get-guest-id';
 import * as initializerModule from './initializer';
 import * as utils from '@sitecore-cloudsdk/utils';
 import type { BrowserSettings, Settings } from './interfaces';
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
+import {
+  COOKIE_NAME_PREFIX,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  ErrorMessages,
+  LIBRARY_VERSION,
+  SITECORE_EDGE_URL
+} from '../../consts';
 import { cloudSDKSettings, enabledPackages, getCloudSDKSettings } from './initializer';
 import { CORE_NAMESPACE } from '../../debug/namespaces';
 import debug from 'debug';
@@ -404,6 +410,24 @@ describe('initializer browser', () => {
 
       expect(mockPackage1.exec).toHaveBeenCalled();
       expect(mockPackage2.exec).toHaveBeenCalled();
+    });
+
+    it('should run the side effects', async () => {
+      mockSettingsParamsPublic.enableBrowserCookie = false;
+      global.window.scCloudSDK = undefined as any;
+
+      expect(global.window.scCloudSDK).toBeUndefined();
+
+      initializerModule.CloudSDK(mockSettingsParamsPublic).initialize();
+
+      expect(global.window.scCloudSDK.core).toBeDefined();
+      expect(global.window.scCloudSDK.core.getBrowserId).toBeDefined();
+      expect(global.window.scCloudSDK.core.getGuestId).toBeDefined();
+      expect(global.window.scCloudSDK.core.version).toEqual(LIBRARY_VERSION);
+      expect(global.window.scCloudSDK.core.settings).toEqual({
+        sitecoreEdgeContextId: '123',
+        sitecoreEdgeUrl: SITECORE_EDGE_URL
+      });
     });
   });
 });

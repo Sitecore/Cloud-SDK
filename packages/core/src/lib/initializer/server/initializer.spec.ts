@@ -1,4 +1,4 @@
-import * as fetchBrowserIdFromEdgeProxy from '../../init/fetch-browser-id-from-edge-proxy';
+import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import * as getCookieValueFromMiddlewareRequestModule from '../../cookie/get-cookie-value-from-middleware-request';
 import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
 import * as getGuestIdModule from '../../init/get-guest-id';

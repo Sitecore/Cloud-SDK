@@ -1,12 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { PackageContext, PackageContextDependency } from './interfaces';
+import type { PackageContext, PackageContextDependency, SideEffectsFn } from './interfaces';
 import { getEnabledPackage, initCoreState } from './initializer';
 
 export class PackageInitializer {
   /* eslint-disable @typescript-eslint/naming-convention */
   private _initState: Promise<void> | null = null;
-  private _settings: unknown;
-  private _sideEffects: () => Promise<void>;
+  private _settings?: unknown;
+  private _sideEffects: SideEffectsFn;
   private _dependencies: PackageContextDependency[];
 
   /* eslint-enable @typescript-eslint/naming-convention */
@@ -45,7 +45,7 @@ export class PackageInitializer {
 
     await Promise.all(validatedPackages.map((pkg) => pkg.initState));
 
-    this._sideEffects();
+    this._sideEffects(this._settings);
   }
 
   get initState() {

@@ -9,15 +9,6 @@ declare module '*.svg' {
 declare global {
   /* eslint-disable @typescript-eslint/naming-convention */
   interface Window {
-    Engage: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [x: string]: any;
-      getBrowserId?: () => string;
-      versions?: {
-        events?: string;
-        personalize?: string;
-      };
-    };
     includeUTMParameters: boolean;
     get: unknown;
   }

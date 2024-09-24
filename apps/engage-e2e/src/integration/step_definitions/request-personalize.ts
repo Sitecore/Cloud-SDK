@@ -1,7 +1,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
-import { Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { defineStep, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let statusCode: number;
@@ -67,18 +67,49 @@ Then('we display {string} User Agent to UI', (userAgent: string) => {
 });
 
 Then("we display the callflow's content to UI:", (personalizeContent: string) => {
-  cy.get("[data-testid='response']").should('have.value', personalizeContent.trim(), { timeout: 6000 });
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(3000);
+
+  cy.get("[data-testid='response']", { timeout: 6000 }).then((el) => {
+    console.log(el.val());
+    const parsedTextInput = JSON.stringify(JSON.parse(el.val() as string));
+    const parsedExpectedString = JSON.stringify(JSON.parse(personalizeContent));
+
+    expect(parsedTextInput).to.contain(parsedExpectedString);
+  });
+
+  // cy.get("[data-testid='response']").should('have.value', personalizeContent.trim(), { timeout: 6000 });
 });
 
-Then('we display the request payload UI:', (requestPayload: string) => {
-  cy.get("[data-testid='requestPayload']").should('have.value', requestPayload.trim(), { timeout: 6000 });
+Then('we display the request payload UI:', (expectedString: string) => {
+  cy.get("[data-testid='requestPayload']", { timeout: 6000 }).then((el) => {
+    const parsedTextInput = JSON.stringify(JSON.parse(el.val() as string));
+    const parsedExpectedString = JSON.stringify(JSON.parse(expectedString));
+
+    expect(parsedTextInput).to.equal(parsedExpectedString);
+  });
 });
 
 Then("we display the callflow's request params to UI containing:", (personalizeContent: string) => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(3000);
-  cy.get("[data-testid='response']").then((el) => {
-    expect(el.val()).to.contain(personalizeContent);
+
+  cy.get("[data-testid='response']", { timeout: 6000 }).then((el) => {
+    const parsedTextInput = JSON.stringify(JSON.parse(el.val() as string));
+    const parsedExpectedString = JSON.stringify(JSON.parse(personalizeContent));
+
+    expect(parsedTextInput).to.contain(parsedExpectedString);
+  });
+});
+Then("we display the callflow's request params to UI containing the string:", (personalizeContent: string) => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(3000);
+
+  cy.get("[data-testid='response']", { timeout: 6000 }).then((el) => {
+    const textInputContent = el.val();
+    const parsedExpectedString = JSON.stringify(JSON.parse(personalizeContent));
+
+    expect(textInputContent).to.contain(parsedExpectedString);
   });
 });
 

@@ -5,7 +5,6 @@ import type { SearchEventEntity } from '../../events/interfaces';
 import { entityView } from './entity-view-event';
 import { event } from '@sitecore-cloudsdk/events/browser';
 
-
 jest.mock('@sitecore-cloudsdk/events/browser', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/events/browser');
 

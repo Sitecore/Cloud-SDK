@@ -32,7 +32,7 @@ export function addSearch(this: CloudSDKBrowserInitializer, settings?: BrowserSe
     sideEffects
   });
 
-  enabledPackages.set(PACKAGE_NAME, searchInitializer);
+  enabledPackages.set(PACKAGE_NAME, searchInitializer as PackageInitializer);
 
   return this;
 }

@@ -1,4 +1,4 @@
-import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import * as fetchBrowserIdFromEdgeProxy from '../browser-id/fetch-browser-id-from-edge-proxy';
 import * as getDefaultCookieAttributes from './get-default-cookie-attributes';
 import * as getGuestId from '../init/get-guest-id';
 import * as utils from '@sitecore-cloudsdk/utils';

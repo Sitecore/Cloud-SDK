@@ -13,7 +13,8 @@ const Personalize = () => {
       router.pathname.startsWith('/init-personalize') ||
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
-      router.pathname.startsWith('/viewevent')
+      router.pathname.startsWith('/viewevent') ||
+      router.pathname.startsWith('/web-personalization')
     )
       return;
 

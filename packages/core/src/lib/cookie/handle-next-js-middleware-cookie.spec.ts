@@ -1,5 +1,5 @@
 import * as CookieValueFromMiddlewareRequest from './get-cookie-value-from-middleware-request';
-import * as fetchBrowserIdFromEdgeProxy from '../init/fetch-browser-id-from-edge-proxy';
+import * as fetchBrowserIdFromEdgeProxy from '../browser-id/fetch-browser-id-from-edge-proxy';
 import type { MiddlewareNextResponse, MiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { COOKIE_NAME_PREFIX } from '../consts';
 import type { Settings } from '../settings/interfaces';

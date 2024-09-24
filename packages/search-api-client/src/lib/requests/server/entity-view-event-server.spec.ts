@@ -4,7 +4,6 @@ import type { SearchEventEntity } from '../../events/interfaces';
 import { entityViewServer } from './entity-view-event-server';
 import { event } from '@sitecore-cloudsdk/events/server';
 
-
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
 

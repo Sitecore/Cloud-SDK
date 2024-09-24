@@ -35,11 +35,15 @@ export { getCloudSDKSettings as getCloudSDKSettingsBrowser } from './lib/initial
 export { getEnabledPackage as getEnabledPackageBrowser } from './lib/initializer/browser/initializer';
 export { enabledPackages as enabledPackagesBrowser } from './lib/initializer/browser/initializer';
 export { builderInstance as builderInstanceBrowser } from './lib/initializer/browser/initializer';
-export { fetchBrowserIdFromEdgeProxy } from './lib/init/fetch-browser-id-from-edge-proxy';
+export type {
+  PackageContextDependency as PackageContextDependencyBrowser,
+  SideEffectsFn
+} from './lib/initializer/browser/interfaces';
+export { fetchBrowserIdFromEdgeProxy } from './lib/browser-id/fetch-browser-id-from-edge-proxy';
 export { PackageInitializer } from './lib/initializer/browser/package-initializer';
 export { initCoreState } from './lib/initializer/browser/initializer';
 export type { BrowserSettings } from './lib/settings/interfaces';
-export { getBrowserId } from './lib/cookie/get-browser-id';
+export { getBrowserId } from './lib/browser-id/get-browser-id';
 
 // Server
 export { getCloudSDKSettings as getCloudSDKSettingsServer } from './lib/initializer/server/initializer';

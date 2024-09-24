@@ -62,3 +62,22 @@ export function setCoreSettings(settings: Settings) {
 export function setCookiePromise(promise: Promise<void>) {
   createCookiesPromise = promise;
 }
+
+interface Engage {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  [key: string]: any;
+  getBrowserId?: () => string;
+  versions?: {
+    personalize?: string | undefined;
+    events?: string | undefined;
+  };
+}
+
+/* eslint-disable @typescript-eslint/naming-convention*/
+declare global {
+  // eslint-disable-next-line no-unused-vars
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Engage: Engage;
+  }
+}

@@ -10,21 +10,6 @@ import type { BrowserSettings } from '@sitecore-cloudsdk/core/internal';
 
 export let initPromise: Promise<void> | null = null;
 
-declare global {
-  interface Window {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    Engage: {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [x: string]: any;
-      getBrowserId?: () => string;
-      versions?: {
-        personalize?: string;
-        events?: string;
-      };
-    };
-  }
-}
-
 /* eslint-disable max-len */
 /**
  * Initiates the Events library using the global settings added by the developer

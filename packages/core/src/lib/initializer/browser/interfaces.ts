@@ -30,8 +30,20 @@ export interface PackageContextDependency {
   method: string;
 }
 
+export type SideEffectsFn = (settings?: unknown) => Promise<void>;
+
 export interface PackageContext {
-  sideEffects: () => Promise<void>;
+  sideEffects: SideEffectsFn;
   settings?: unknown;
   dependencies?: PackageContextDependency[];
+}
+
+export interface Core {
+  getBrowserId: () => string;
+  getGuestId: () => Promise<string>;
+  settings: {
+    sitecoreEdgeContextId: string;
+    sitecoreEdgeUrl: string;
+  };
+  version: string;
 }

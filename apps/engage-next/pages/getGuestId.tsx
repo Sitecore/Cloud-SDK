@@ -1,4 +1,4 @@
-import { getGuestId } from '@sitecore-cloudsdk/events/browser';
+import { getGuestId } from '@sitecore-cloudsdk/core/browser';
 import { useState } from 'react';
 
 export default function Index() {

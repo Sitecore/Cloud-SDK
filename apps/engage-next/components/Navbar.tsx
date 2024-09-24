@@ -67,6 +67,16 @@ const links = [
     text: 'PageView Event With Search Data',
     path: '/page-view-event-with-search-data',
     testId: 'pageViewEventWithSearchDataPage'
+  },
+  {
+    text: 'Web Personalization',
+    path: '/web-personalization',
+    testId: 'webPersonalizationPage'
+  },
+  {
+    text: 'Init Core',
+    path: '/init-core',
+    testId: 'initCorePage'
   }
 ];
 

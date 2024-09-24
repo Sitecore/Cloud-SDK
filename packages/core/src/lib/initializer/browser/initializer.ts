@@ -1,13 +1,20 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings, Settings } from './interfaces';
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
+import type { BrowserSettings, Core, Settings } from './interfaces';
+import {
+  COOKIE_NAME_PREFIX,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  ErrorMessages,
+  LIBRARY_VERSION,
+  SITECORE_EDGE_URL
+} from '../../consts';
 import { createCookieString, getCookie } from '@sitecore-cloudsdk/utils';
 import { CORE_NAMESPACE } from '../../debug/namespaces';
 import type { PackageInitializer } from './package-initializer';
 import { debug } from '../../debug/debug';
-import { fetchBrowserIdFromEdgeProxy } from '../../init/fetch-browser-id-from-edge-proxy';
+import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
+import { getBrowserId } from '../../browser-id/get-browser-id';
 import { getDefaultCookieAttributes } from '../../cookie/get-default-cookie-attributes';
-import { getGuestId } from '../../init/get-guest-id';
+import { getGuestId } from '../../guest-id/get-guest-id';
 
 export let cloudSDKSettings: Settings;
 export const enabledPackages = new Map<string, PackageInitializer>();
@@ -39,9 +46,29 @@ export class CloudSDKBrowserInitializer {
     if (cloudSDKSettings.cookieSettings.enableBrowserCookie) initCoreState = this.createCookies();
     else initCoreState = Promise.resolve();
 
+    this.sideEffects();
+
     enabledPackages.forEach((pkg) => {
       pkg.exec();
     });
+  }
+
+  /**
+   * Runs any necessary side effects.
+   */
+  private sideEffects() {
+    window.scCloudSDK = {
+      ...window.scCloudSDK,
+      core: {
+        getBrowserId,
+        getGuestId,
+        settings: {
+          sitecoreEdgeContextId: cloudSDKSettings.sitecoreEdgeContextId,
+          sitecoreEdgeUrl: cloudSDKSettings.sitecoreEdgeUrl
+        },
+        version: LIBRARY_VERSION
+      }
+    };
   }
 
   /**
@@ -107,11 +134,7 @@ export class CloudSDKBrowserInitializer {
 
       if (guestIdCookie) return;
 
-      const guestId = await getGuestId(
-        browserIdCookie.value,
-        cloudSDKSettings.sitecoreEdgeContextId,
-        cloudSDKSettings.sitecoreEdgeUrl
-      );
+      const guestId = await getGuestId();
 
       document.cookie = createCookieString(cloudSDKSettings.cookieSettings.names.guestId, guestId, attributes);
 
@@ -152,4 +175,18 @@ export let builderInstance: null | CloudSDKBrowserInitializer = null;
 export function CloudSDK(settings: BrowserSettings): CloudSDKBrowserInitializer {
   builderInstance = new CloudSDKBrowserInitializer(settings);
   return builderInstance;
+}
+
+/* eslint-disable @typescript-eslint/naming-convention*/
+declare global {
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Personalize {}
+  // eslint-disable-next-line no-unused-vars
+  interface Window {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    scCloudSDK: {
+      core: Core;
+      personalize: Personalize;
+    };
+  }
 }

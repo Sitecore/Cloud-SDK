@@ -22,7 +22,8 @@ const Events = () => {
       router.pathname.startsWith('/init-personalize') ||
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
-      router.pathname.startsWith('/personalize')
+      router.pathname.startsWith('/personalize') ||
+      router.pathname.startsWith('/web-personalization')
     )
       return;
 

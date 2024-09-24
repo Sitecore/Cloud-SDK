@@ -20,6 +20,7 @@ export { normalizeHeaders } from './lib/converters/normalizeHeaders';
 export { ErrorMessages } from './lib/consts';
 export { isValidHttpURL } from './lib/validators/is-valid-http-url';
 export { isValidLocation } from './lib/validators/is-valid-location';
+export { appendScriptWithAttributes } from './lib/browser/appendScriptWithAttributes';
 
 export type {
   Request,

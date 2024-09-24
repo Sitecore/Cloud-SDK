@@ -20,7 +20,7 @@ import {
 import { CORE_NAMESPACE } from '../../debug/namespaces';
 import type { PackageInitializerServer } from './package-initializer';
 import { debug } from '../../debug/debug';
-import { fetchBrowserIdFromEdgeProxy } from '../../init/fetch-browser-id-from-edge-proxy';
+import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import { getCookieValueFromMiddlewareRequest } from '../../cookie/get-cookie-value-from-middleware-request';
 import { getDefaultCookieAttributes } from '../../cookie/get-default-cookie-attributes';
 import { getGuestId } from '../../init/get-guest-id';

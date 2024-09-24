@@ -2,7 +2,7 @@
 
 import { createCookieString, getCookie } from '@sitecore-cloudsdk/utils';
 import type { Settings } from '../settings/interfaces';
-import { fetchBrowserIdFromEdgeProxy } from '../init/fetch-browser-id-from-edge-proxy';
+import { fetchBrowserIdFromEdgeProxy } from '../browser-id/fetch-browser-id-from-edge-proxy';
 import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { getGuestId } from '../init/get-guest-id';
 
