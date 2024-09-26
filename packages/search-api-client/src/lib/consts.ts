@@ -18,6 +18,7 @@ export enum ErrorMessages {
   IV_0013 = '[IV-0013] Incorrect value for longitude. Set the value to an integer or decimal between -90.000000 and 90.000000 inclusive.',
   IV_0014 = '[IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.',
   IV_0015 = '[IV-0015] Incorrect value for "currency". Format the value according to ISO 4217.',
+  IV_0016 = '[IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces.',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
   MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',

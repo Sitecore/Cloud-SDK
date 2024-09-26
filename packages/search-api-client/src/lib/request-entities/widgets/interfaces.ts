@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import type { Filter, FilterDTO } from '../filters/interfaces';
+import type { ArrayOfAtLeastOne, Filter, FilterDTO } from '../filters/interfaces';
 
 /**
  * Represents a widget item object that holds all possible members in its DTO format.
@@ -46,11 +45,16 @@ export interface FacetSort {
   order: FacetSortOrder;
 }
 
+export interface FacetType {
+  name: string;
+}
+
 export interface Facet {
   all?: boolean;
   max?: number;
   coverage?: boolean;
   sort?: FacetSort;
+  types?: ArrayOfAtLeastOne<FacetType>;
 }
 
 export interface FacetDTO {
@@ -58,6 +62,7 @@ export interface FacetDTO {
   max?: number;
   coverage?: boolean;
   sort?: FacetSort;
+  types?: ArrayOfAtLeastOne<FacetType>;
 }
 
 /**

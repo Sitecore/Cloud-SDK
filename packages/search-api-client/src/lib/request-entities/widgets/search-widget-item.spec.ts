@@ -14,8 +14,17 @@ describe('search widget item class', () => {
 
     it('should set the facet when given only all value', () => {
       const expected = { all: true };
-
       const widgetItem = new SearchWidgetItem('content', 'rfkid_7', expected);
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
+
+    it('should set the facet when given only types value', () => {
+      const expected = { types: [{ name: 'test' }] };
+
+      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', { types: [{ name: 'test' }] });
 
       const result = widgetItem.toDTO();
 
@@ -53,7 +62,8 @@ describe('search widget item class', () => {
         sort: {
           name: 'count',
           order: 'asc'
-        }
+        },
+        types: [{ name: 'test' }]
       };
       const widgetItem = new SearchWidgetItem('content', 'rfkid_7', expected);
       const result = widgetItem.toDTO();
@@ -86,6 +96,25 @@ describe('search widget item class', () => {
         sort: {
           name: 'text',
           order: 'asc'
+        },
+        types: [{ name: 'test' }]
+      };
+
+      widgetItem.facet = expected;
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
+
+    it('should set the facet when given a partial valid value', () => {
+      const expected: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'text',
+          order: 'asc'
         }
       };
 
@@ -94,6 +123,27 @@ describe('search widget item class', () => {
       const result = widgetItem.toDTO();
 
       expect(result.search?.facet).toEqual(expected);
+    });
+  });
+
+  describe('facet types validator', () => {
+    it('should ignore if bypassed by typescript as null', () => {
+      expect(() => {
+        const widgetItem = new SearchWidgetItem('test', 'test');
+        widgetItem.facet = { types: null as any };
+      }).not.toThrow(ErrorMessages.IV_0016);
+    });
+
+    it('should throw error if name is empty string', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ name: '' }] });
+      }).toThrow(ErrorMessages.IV_0016);
+    });
+
+    it('should throw error if name contains spaces', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ name: 'test test' }] });
+      }).toThrow(ErrorMessages.IV_0016);
     });
   });
 

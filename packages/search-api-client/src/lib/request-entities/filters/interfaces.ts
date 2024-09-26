@@ -1,10 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { LocationData } from '../context/interfaces';
 import type { BaseFilter } from './base-filter';
 import type { ComparisonFilter } from './comparison-filter';
 import type { GeoFilter } from './geo-filter';
 import type { GeoWithinFilter } from './geo-within-filter';
 import type { ListFilter } from './list-filter';
-import type { LocationData } from '../context/interfaces';
 import type { LogicalFilter } from './logical-filter';
 
 export type Filter =
@@ -82,6 +82,7 @@ export interface LogicalFilterValues {
   and: ArrayOfAtLeastTwo<BaseFilter>;
 }
 
+export type ArrayOfAtLeastOne<T> = [T, ...T[]];
 export type ArrayOfAtLeastTwo<T> = [T, T, ...T[]];
 export type ArrayOfAtLeastThree<T> = [T, T, T, ...T[]];
 export type PickLogicalDTO<T extends keyof LogicalFilterValues> = T extends 'not' ? NotFilterDTO : LogicalFilterDTO;

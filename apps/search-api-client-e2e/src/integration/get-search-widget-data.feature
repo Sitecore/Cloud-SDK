@@ -4,7 +4,7 @@ Scenario: Developer requests search widget data from Middleware with a valid pay
     Given the '/get-search-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
     Then the request with id '<testID>' will contain:
     """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"}}}}]}
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"name":"type"}]}}}]}
     """
 
     Examples:
@@ -17,7 +17,7 @@ Scenario: Developer search requests widget data from API with a valid payload
     And the 'getSearchWidgetDataFromAPIWithValidPayload' button is clicked
     Then the request with id '<testID>' will contain:
     """
-        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"}}}}]}
+        "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"name":"type"}]}}}]}
     """
 
     Examples:
@@ -55,8 +55,9 @@ Scenario Outline: Developer requests search widget data from browser with a vali
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | 200         |  
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | 200         |  
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | 200         |  
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type"}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type"}]}}}] | 200         |  
 
-Scenario Outline: Developer requests search widget data from browser with invalid max attribute
+Scenario Outline: Developer requests search widget data from browser with invalid attributes
   Given the '/get-search-widget-data' page is loaded
   When the widget item parameters are:
   """
@@ -71,6 +72,8 @@ Scenario Outline: Developer requests search widget data from browser with invali
     | items                                                                   | error_code                                                                                    | 
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":150}}}] | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"max":0}}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":""}]}}}]   | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t t"}]}}}]   | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. | 
     
 Scenario Outline: Developer requests search widget data from browser with a valid payload using setter method
   Given the '/get-search-widget-data' page is loaded
@@ -102,8 +105,9 @@ Scenario Outline: Developer requests search widget data from browser with a vali
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"sort":{"name":"text","order":"asc"}}}}]                              | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"text","order":"asc"}}}}]                              | 200         |  
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"sort":{"name":"count","order":"desc"}}}}]                            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"sort":{"name":"count","order":"desc"}}}}]                            | 200         |  
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"coverage":true,"sort":{"name":"count","order":"desc"}}}}] | 200         |    
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"types":[{"name":"type"}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"type"}]}}}] | 200         |    
 
-Scenario Outline: Developer requests search widget data from browser with invalid max attribute using setter method
+Scenario Outline: Developer requests search widget data from browser with invalid attributes using setter method
   Given the '/get-search-widget-data' page is loaded
   When the widget item parameters are:
   """
@@ -118,3 +122,5 @@ Scenario Outline: Developer requests search widget data from browser with invali
     | items                                                                         | error_code                                                                                    | 
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"max":150}}}] | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
     | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"max":0}}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive. | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":""}]}}}]   | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. | 
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t t"}]}}}]   | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. | 

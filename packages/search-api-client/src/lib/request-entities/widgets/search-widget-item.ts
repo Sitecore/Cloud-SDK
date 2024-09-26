@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Facet, FacetSort, SearchWidgetItemDTO } from './interfaces';
 import { ErrorMessages } from '../../consts';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
+import type { Facet, FacetSort, FacetType, SearchWidgetItemDTO } from './interfaces';
 import { WidgetItem } from './widget-item';
 
 export class SearchWidgetItem extends WidgetItem {
@@ -8,6 +9,7 @@ export class SearchWidgetItem extends WidgetItem {
   private _max?: number;
   private _coverage?: boolean;
   private _sort?: FacetSort;
+  private _types?: ArrayOfAtLeastOne<FacetType>;
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
@@ -24,6 +26,12 @@ export class SearchWidgetItem extends WidgetItem {
       this._validateMax(facet.max);
       this._max = facet.max;
     }
+
+    if (facet.types) {
+      this._validateFacetTypesNames(facet.types);
+      this._types = facet.types;
+    }
+
     this._all = facet.all;
     this._coverage = facet.coverage;
     this._sort = facet.sort;
@@ -43,10 +51,24 @@ export class SearchWidgetItem extends WidgetItem {
   set facet(facet: Facet) {
     if (typeof facet.max === 'number') this._validateMax(facet.max);
 
+    if (facet.types) {
+      this._validateFacetTypesNames(facet.types);
+      this._types = facet.types;
+    }
+
     this._all = facet.all;
     this._max = facet.max;
     this._coverage = facet.coverage;
     this._sort = facet.sort;
+  }
+
+  /**
+   * Validates the facet types names. Throws an error if the name is empty or contains spaces.
+   */
+  private _validateFacetTypesNames(types: ArrayOfAtLeastOne<FacetType>) {
+    types.forEach((type) => {
+      if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
+    });
   }
 
   /**
@@ -57,6 +79,7 @@ export class SearchWidgetItem extends WidgetItem {
     this._max = undefined;
     this._coverage = undefined;
     this._sort = undefined;
+    this._types = undefined;
   }
 
   /**
@@ -68,7 +91,8 @@ export class SearchWidgetItem extends WidgetItem {
       all: this._all,
       coverage: this._coverage,
       max: this._max,
-      sort: this._sort
+      sort: this._sort,
+      types: this._types
     };
 
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;

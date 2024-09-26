@@ -1,8 +1,8 @@
-import { SearchWidgetItem, WidgetRequestData, getWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
-import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const searchParams = req.nextUrl.searchParams;
@@ -31,7 +31,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
         all: true,
         coverage: true,
         max: 50,
-        sort: { name: 'count', order: 'asc' }
+        sort: { name: 'count', order: 'asc' },
+        types: [{ name: 'type' }]
       });
       widgetRequestData = new WidgetRequestData([widget]);
 
@@ -52,7 +53,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
         all: true,
         coverage: true,
         max: 50,
-        sort: { name: 'count', order: 'asc' }
+        sort: { name: 'count', order: 'asc' },
+        types: [{ name: 'type' }]
       };
       widgetRequestData = new WidgetRequestData([widget]);
 
