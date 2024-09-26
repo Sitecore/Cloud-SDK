@@ -1,4 +1,5 @@
 'use client';
+
 import { useEffect } from 'react';
 //import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import {
@@ -12,25 +13,22 @@ import {
   pageView,
   processEventQueue
 } from '@sitecore-cloudsdk/events/browser';
-
-import {
-  getPageWidgetData,
-  getWidgetData,
-  entityView,
-  sendWidgetClickEvent,
-  sendWidgetFacetClickEvent,
-  sendWidgetNavigationClickEvent,
-  sendWidgetSuggestionClickEvent,
-  WidgetItem,
-  WidgetRequestData,
-  widgetView
-  // init as initSearch
-} from '@sitecore-cloudsdk/search-api-client/browser';
-
 import {
   //  init as initPersonalize,
   personalize
 } from '@sitecore-cloudsdk/personalize/browser';
+import {
+  entityView,
+  getPageWidgetData,
+  getWidgetData,
+  widgetFacetClick,
+  WidgetItem,
+  widgetItemClick,
+  widgetNavigationClick,
+  WidgetRequestData,
+  widgetSuggestionClick,
+  widgetView // init as initSearch
+} from '@sitecore-cloudsdk/search-api-client/browser';
 
 export default function Index() {
   //const runNewInit = async () => {
@@ -110,7 +108,7 @@ export default function Index() {
         <li>
           <button
             onClick={() => {
-              sendWidgetSuggestionClickEvent({
+              widgetSuggestionClick({
                 channel: 'WEB',
                 currency: 'EUR',
                 filters: [
@@ -183,7 +181,7 @@ export default function Index() {
               const widget = new WidgetItem('test', 'test');
               const widgetRequestData = new WidgetRequestData([widget]);
               getWidgetData(widgetRequestData);
-              sendWidgetFacetClickEvent({
+              widgetFacetClick({
                 channel: 'WEB',
                 currency: 'EUR',
                 filters: [
@@ -238,7 +236,7 @@ export default function Index() {
                 page: 'test',
                 pathname: 'https://www.sitecore.com/products/content-cloud'
               });
-              sendWidgetClickEvent({
+              widgetItemClick({
                 channel: 'WEB',
                 currency: 'EUR',
                 entity: {
@@ -268,7 +266,7 @@ export default function Index() {
                 },
                 widgetIdentifier: '12345'
               });
-              sendWidgetFacetClickEvent({
+              widgetFacetClick({
                 channel: 'WEB',
                 currency: 'EUR',
                 filters: [
@@ -306,7 +304,7 @@ export default function Index() {
                 },
                 widgetIdentifier: '12345'
               });
-              sendWidgetNavigationClickEvent({
+              widgetNavigationClick({
                 channel: 'WEB',
                 currency: 'EUR',
                 itemPosition: 1,

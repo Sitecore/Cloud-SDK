@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import './lib/initializer/browser/initializer';
+
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
@@ -14,13 +16,14 @@ export type { GeoData } from './lib/request-entities/context/interfaces';
 
 export { getWidgetData } from './lib/requests/browser/get-widget-data';
 export { getPageWidgetData } from './lib/requests/browser/get-page-widget-data';
-export { sendWidgetNavigationClickEvent } from './lib/requests/browser/send-widget-navigation-click-event';
+/* eslint-disable max-len */
+export { widgetNavigationClick } from './lib/requests/browser/widget-navigation-click-event';
 export { getSettings, init } from './lib/init/browser/initializer';
-export { sendWidgetClickEvent } from './lib/requests/browser/send-widget-click-event';
-export { sendWidgetSuggestionClickEvent } from './lib/requests/browser/send-widget-suggestion-click';
-export { sendWidgetFacetClickEvent } from './lib/requests/browser/send-widget-facet-click-event';
-export { widgetView } from './lib/requests/browser/widget-view';
+export { widgetItemClick } from './lib/requests/browser/widget-item-click-event';
+/* eslint-disable max-len */
+export { widgetSuggestionClick } from './lib/requests/browser/widget-suggestion-click-event';
+export { widgetFacetClick } from './lib/requests/browser/widget-facet-click-event';
+export { widgetView } from './lib/requests/browser/widget-view-event';
 export { entityView } from './lib/requests/browser/entity-view-event';
 
 export { SEARCH_NAMESPACE } from './lib/consts';
-import './lib/initializer/browser/initializer';

@@ -6,10 +6,10 @@ import { getPageWidgetDataMiddleware } from './src/middlewares/get-page-widget-d
 import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
 import { getWidgetDataMiddleware } from './src/middlewares/get-widget-data';
 import { initMiddleware } from './src/middlewares/init';
-import { sendWidgetClickEventMiddleware } from './src/middlewares/send-widget-click-event';
-import { sendWidgetFacetClickEventMiddleware } from './src/middlewares/send-widget-facet-click-event';
-import { sendWidgetNavigationClickEventMiddleware } from './src/middlewares/send-widget-navigation-click-event';
-import { sendWidgetSuggestionClickEventMiddleware } from './src/middlewares/send-widget-suggestion-click-event';
+import { widgetFacetClickMiddleware } from './src/middlewares/widget-facet-click-event';
+import { widgetItemClickMiddleware } from './src/middlewares/widget-item-click-event';
+import { widgetNavigationClickMiddleware } from './src/middlewares/widget-navigation-click-event';
+import { widgetSuggestionClickMiddleware } from './src/middlewares/widget-suggestion-click-event';
 import { widgetViewMiddleware } from './src/middlewares/widget-view';
 
 export async function middleware(request: NextRequest) {
@@ -24,10 +24,10 @@ export async function middleware(request: NextRequest) {
   await getFilteredWidgetDataMiddleware(request, response);
   await getSearchWidgetDataMiddleware(request, response);
   await getPageWidgetDataMiddleware(request, response);
-  await sendWidgetClickEventMiddleware(request, response);
-  await sendWidgetSuggestionClickEventMiddleware(request, response);
-  await sendWidgetFacetClickEventMiddleware(request, response);
-  await sendWidgetNavigationClickEventMiddleware(request, response);
+  await widgetItemClickMiddleware(request, response);
+  await widgetSuggestionClickMiddleware(request, response);
+  await widgetFacetClickMiddleware(request, response);
+  await widgetNavigationClickMiddleware(request, response);
   await widgetViewMiddleware(request, response);
   await entityViewMiddleware(request, response);
   await initMiddleware(request, response);

@@ -100,7 +100,7 @@ export interface WidgetNavigationEventParams {
   widgetIdentifier: string;
 }
 
-export interface WidgetClickEventParams {
+export interface WidgetItemClickEventParams {
   request: SearchEventRequest;
   entity: SearchEventEntity;
   itemPosition: number;
