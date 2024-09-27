@@ -124,6 +124,25 @@ describe('search widget item class', () => {
 
       expect(result.search?.facet).toEqual(expected);
     });
+
+    it('should set the facet with a valid types name and exclude property', () => {
+      const expected: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ exclude: ['test'], name: 'test' }]
+      };
+
+      widgetItem.facet = expected;
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
   });
 
   describe('facet types validator', () => {
