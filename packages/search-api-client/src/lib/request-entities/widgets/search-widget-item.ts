@@ -28,7 +28,7 @@ export class SearchWidgetItem extends WidgetItem {
     }
 
     if (facet.types) {
-      this._validateFacetTypesNames(facet.types);
+      this._validateFacetTypes(facet.types);
       this._types = facet.types;
     }
 
@@ -52,7 +52,7 @@ export class SearchWidgetItem extends WidgetItem {
     if (typeof facet.max === 'number') this._validateMax(facet.max);
 
     if (facet.types) {
-      this._validateFacetTypesNames(facet.types);
+      this._validateFacetTypes(facet.types);
       this._types = facet.types;
     }
 
@@ -63,11 +63,13 @@ export class SearchWidgetItem extends WidgetItem {
   }
 
   /**
-   * Validates the facet types names. Throws an error if the name is empty or contains spaces.
+   * Validates the facet type fields. Throws an errors if incorrect values are provided.
    */
-  private _validateFacetTypesNames(types: ArrayOfAtLeastOne<FacetType>) {
+  private _validateFacetTypes(types: ArrayOfAtLeastOne<FacetType>) {
     types.forEach((type) => {
       if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
+
+      if (typeof type.max === 'number' && (type.max < 1 || type.max > 100)) throw new Error(ErrorMessages.IV_0017);
     });
   }
 

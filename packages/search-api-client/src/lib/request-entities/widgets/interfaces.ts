@@ -48,6 +48,7 @@ export interface FacetSort {
 export interface FacetType {
   name: string;
   exclude?: ArrayOfAtLeastOne<string>;
+  max?: number;
 }
 
 export interface Facet {

@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         coverage: true,
         max: 50,
         sort: { name: 'count', order: 'asc' },
-        types: [{ exclude: ['type'], name: 'type' }]
+        types: [{ exclude: ['type'], max: 1, name: 'type' }]
       });
       widgetRequestData = new WidgetRequestData([widget]);
 
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         coverage: true,
         max: 50,
         sort: { name: 'count', order: 'asc' },
-        types: [{ exclude: ['type'], name: 'type' }]
+        types: [{ exclude: ['type'], max: 1, name: 'type' }]
       };
       widgetRequestData = new WidgetRequestData([widget]);
 

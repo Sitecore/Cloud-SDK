@@ -143,6 +143,22 @@ describe('search widget item class', () => {
 
       expect(result.search?.facet).toEqual(expected);
     });
+
+    it('should set the facet with a valid types name and max property in types array', () => {
+      const expected: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ max: 1, name: 'test' }]
+      };
+
+      widgetItem.facet = expected;
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
   });
 
   describe('facet types validator', () => {
@@ -163,6 +179,41 @@ describe('search widget item class', () => {
       expect(() => {
         new SearchWidgetItem('test', 'test', { types: [{ name: 'test test' }] });
       }).toThrow(ErrorMessages.IV_0016);
+    });
+
+    it('should not throw error if typescript bypassed ', () => {
+      expect(() => {
+        /**
+         *  This is a way to pass a stryker mutant when it replaces the comparison to "true"
+         *  if(typeof a === 'number')
+         *  to
+         *  if(true)
+         *  */
+        new SearchWidgetItem('test', 'test', { types: [{ max: null as unknown as number, name: 'test' }] });
+      }).not.toThrow();
+    });
+
+    it('should not throw error if max is 100', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ max: 100, name: 'test' }] });
+      }).not.toThrow(ErrorMessages.IV_0017);
+    });
+
+    it('should not throw error if max is 1', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ max: 1, name: 'test' }] });
+      }).not.toThrow(ErrorMessages.IV_0017);
+    });
+
+    it('should throw error if max is an invalid number less than 1', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ max: 0, name: 'test' }] });
+      }).toThrow(ErrorMessages.IV_0017);
+    });
+    it('should throw error if max is an invalid number greater than 100', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ max: 101, name: 'test' }] });
+      }).toThrow(ErrorMessages.IV_0017);
     });
   });
 
