@@ -1,12 +1,6 @@
 # personalize
 
-This package provides browser- and server-side functions to run personalization in your app. Personalization is for showing the most relevant content to your users.
-
-## Prerequisites
-
-To use the Sitecore Cloud SDK, you need an XM Cloud project. This project has to be created from the [XM Cloud foundation template](https://github.com/sitecorelabs/xmcloud-foundation-head) and deployed on XM Cloud.
-
-The foundation template contains an XM Cloud JSS Next.js app. You use the Sitecore Cloud SDK in this app. To be able to use the Sitecore Cloud SDK, you need JSS version 21.6.0 or newer.
+This package provides browser- and server-side functions to run personalizations in your app. Personalization is for showing the most relevant content to your users.
 
 ## Installation
 
@@ -16,86 +10,76 @@ npm install @sitecore-cloudsdk/personalize
 
 ## Usage
 
-1. Initialize the package using the `init()` function.
-2. Run personalization using the `personalize()` function.
+1. Initialize the package using the `CloudSDK` function, available in the `core` package.
+2. To run web personalization (browser-side only):
+   1. Initialize the `events` package.
+   2. Enable web personalization during initialization.
+3. To run interactive personalization, use the `personalize` function.
 
 ## Code examples
 
----
-
-**NOTE**
-
-These code examples illustrate how the Sitecore Cloud SDK works in a standalone Next.js app. In production, you implement Sitecore Cloud SDK functionality differently, in a JSS Next.js app. See code examples for that environment in the official documentation.
-
----
-
-Run personalization from the browser side:
+Run personalizations from the browser side:
 
 ```ts
 'use client';
+
 import { useEffect } from 'react';
-import { init, personalize } from '@sitecore-cloudsdk/personalize/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { personalize } from '@sitecore-cloudsdk/personalize/browser';
 
 export default function Home() {
-  useEffect(() => {
-    initPersonalize();
-  }, []);
-
-  const initPersonalize = async () => {
-    await init({
-      sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
-      siteName: process.env.NEXT_PUBLIC_SITENAME || '',
-      enableBrowserCookie: true,
+  const getPersonalizeData = async () => {
+    // Run interactive personalization:
+    const data = await personalize({
+      channel: 'WEB',
+      currency: 'EUR',
+      friendlyId: '<YOUR_EXPERIENCE_FRIENDLY_ID>'
     });
 
-    console.log(`Initialized "@sitecore-cloudsdk/personalize/browser".`);
+    console.log(data);
   };
 
-  const runPersonalization = async () => {
-    const personalizationData = {
-      friendlyId: 'personalize_test',
-    };
+  useEffect(() => {
+    CloudSDK({
+      /* Initialization settings. See `core` package code examples. */
+    })
+      .addEvents() // Initialize the `events` package to enable web personalization
+      .addPersonalize({ enablePersonalizeCookie: true, webPersonalization: true }) // Enable web personalization
+      .initialize();
 
-    await personalize(personalizationData);
+    getPersonalizeData();
+  }, []);
 
-    console.log('Ran personalization.');
-  };
-
-  return (
-    <div>
-      <button onClick={runPersonalization}>run personalization</button>
-    </div>
-  );
+  return <></>;
 }
 ```
 
-Run personalization from the server side:
+Run personalizations from the server side:
 
 ```ts
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
-import { init, personalize } from '@sitecore-cloudsdk/personalize/server';
+import type { NextRequest, NextResponse } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { personalize } from '@sitecore-cloudsdk/personalize/server';
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
 
-  await init(req, res, {
-    sitecoreEdgeContextId: process.env.NEXT_PUBLIC_SITECORE_EDGE_CONTEXT_ID || '',
-    siteName: process.env.NEXT_PUBLIC_SITENAME || '',
-    enableServerCookie: true,
+  await CloudSDK(request, response, {
+    /* Initialization settings. See `core` package code examples. */
+  })
+    .addPersonalize({ enablePersonalizeCookie: true })
+    .initialize();
+
+  // Run interactive personalization:
+  const data = await personalize(request, {
+    channel: 'WEB',
+    currency: 'EUR',
+    friendlyId: '<YOUR_EXPERIENCE_FRIENDLY_ID>'
   });
 
-  console.log(`Initialized "@sitecore-cloudsdk/personalize/server".`);
+  console.log(data);
 
-  const personalizationData = {
-    friendlyId: 'personalize_test',
-  };
-
-  await personalize(req, personalizationData);
-
-  console.log('Ran personalization.');
-
-  return res;
+  return response;
 }
 ```
 
