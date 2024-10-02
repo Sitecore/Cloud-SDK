@@ -49,6 +49,7 @@ export interface FacetType {
   name: string;
   exclude?: ArrayOfAtLeastOne<string>;
   max?: number;
+  keyphrase?: string;
 }
 
 export interface Facet {

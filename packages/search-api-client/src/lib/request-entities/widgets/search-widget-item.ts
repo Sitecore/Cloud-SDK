@@ -70,6 +70,8 @@ export class SearchWidgetItem extends WidgetItem {
       if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
 
       if (typeof type.max === 'number' && (type.max < 1 || type.max > 100)) throw new Error(ErrorMessages.IV_0017);
+
+      if (typeof type.keyphrase === 'string' && !type.keyphrase) throw new Error(ErrorMessages.IV_0018);
     });
   }
 

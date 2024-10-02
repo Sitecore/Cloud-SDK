@@ -159,6 +159,22 @@ describe('search widget item class', () => {
 
       expect(result.search?.facet).toEqual(expected);
     });
+
+    it('should set the facet with a valid types name and keyphrase property in types array', () => {
+      const expected: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ keyphrase: 'test', name: 'test' }]
+      };
+
+      widgetItem.facet = expected;
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
   });
 
   describe('facet types validator', () => {
@@ -214,6 +230,18 @@ describe('search widget item class', () => {
       expect(() => {
         new SearchWidgetItem('test', 'test', { types: [{ max: 101, name: 'test' }] });
       }).toThrow(ErrorMessages.IV_0017);
+    });
+
+    it('it should not throw error if keyphrase is not empty string', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ keyphrase: 'test', name: 'test' }] });
+      }).not.toThrow(ErrorMessages.IV_0018);
+    });
+
+    it('should throw error if keyphrase is empty string', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ keyphrase: '', name: 'test' }] });
+      }).toThrow(ErrorMessages.IV_0018);
     });
   });
 
