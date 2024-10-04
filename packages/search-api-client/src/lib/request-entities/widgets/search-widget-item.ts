@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { ArrayOfAtLeastOne } from '../filters/interfaces';
-import type { Facet, FacetSort, FacetType, SearchWidgetItemDTO } from './interfaces';
+import type { Facet, FacetDTO, FacetSort, FacetType, FacetTypeDTO, SearchWidgetItemDTO } from './interfaces';
 import { WidgetItem } from './widget-item';
 
 export class SearchWidgetItem extends WidgetItem {
@@ -22,23 +22,17 @@ export class SearchWidgetItem extends WidgetItem {
 
     if (!facet || !Object.keys(facet).length) return;
 
-    if (typeof facet.max === 'number') {
-      this._validateMax(facet.max);
-      this._max = facet.max;
-    }
+    this._validateNumberInRange1To100(ErrorMessages.IV_0014, facet.max);
 
     if (facet.types) {
       this._validateFacetTypes(facet.types);
       this._types = facet.types;
     }
 
+    this._max = facet.max;
     this._all = facet.all;
     this._coverage = facet.coverage;
     this._sort = facet.sort;
-  }
-
-  private _validateMax(max: number) {
-    if (max < 1 || max > 100) throw new Error(ErrorMessages.IV_0014);
   }
 
   /**
@@ -49,7 +43,7 @@ export class SearchWidgetItem extends WidgetItem {
    * @throws Error If the max is less than 1 or greater than 100, indicating an invalid range.
    */
   set facet(facet: Facet) {
-    if (typeof facet.max === 'number') this._validateMax(facet.max);
+    this._validateNumberInRange1To100(ErrorMessages.IV_0014, facet.max);
 
     if (facet.types) {
       this._validateFacetTypes(facet.types);
@@ -69,10 +63,15 @@ export class SearchWidgetItem extends WidgetItem {
     types.forEach((type) => {
       if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
 
-      if (typeof type.max === 'number' && (type.max < 1 || type.max > 100)) throw new Error(ErrorMessages.IV_0017);
-
       if (typeof type.keyphrase === 'string' && !type.keyphrase) throw new Error(ErrorMessages.IV_0018);
+
+      this._validateNumberInRange1To100(ErrorMessages.IV_0017, type.max);
+      this._validateNumberInRange1To100(ErrorMessages.IV_0019, type.minCount);
     });
+  }
+
+  private _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number) {
+    if (typeof num === 'number' && (num < 1 || num > 100)) throw new Error(errorMessage);
   }
 
   /**
@@ -91,13 +90,21 @@ export class SearchWidgetItem extends WidgetItem {
    */
   toDTO(): SearchWidgetItemDTO {
     const superDTO = super.toDTO();
-    const facet = {
+    const facet: FacetDTO = {
       all: this._all,
       coverage: this._coverage,
       max: this._max,
-      sort: this._sort,
-      types: this._types
+      sort: this._sort
     };
+
+    if (this._types)
+      facet.types = this._types.map((type) => ({
+        exclude: type.exclude,
+        keyphrase: type.keyphrase,
+        max: type.max,
+        min_count: type.minCount,
+        name: type.name
+      })) as ArrayOfAtLeastOne<FacetTypeDTO>;
 
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;
 

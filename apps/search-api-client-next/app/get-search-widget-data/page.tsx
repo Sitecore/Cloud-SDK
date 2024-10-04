@@ -1,24 +1,22 @@
 'use client';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { WidgetRequestData, getWidgetData, SearchWidgetItem } from '@sitecore-cloudsdk/search-api-client/browser';
+
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/browser';
 
 export default function GetSearchWidgetData() {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    async function initSearch() {
-      await CloudSDK({
-        enableBrowserCookie: true,
-        siteName: 'TestSite',
-        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
-      })
-        .addEvents()
-        .addSearch({ userId: 'test' })
-        .initialize();
-    }
-    initSearch();
+    CloudSDK({
+      enableBrowserCookie: true,
+      siteName: 'TestSite',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+    })
+      .addEvents()
+      .addSearch({ userId: 'test' })
+      .initialize();
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(

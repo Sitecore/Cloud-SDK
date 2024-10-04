@@ -29,7 +29,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         coverage: true,
         max: 50,
         sort: { name: 'count', order: 'asc' },
-        types: [{ exclude: ['type'], keyphrase: 'test', max: 1, name: 'type' }]
+        types: [{ exclude: ['type'], keyphrase: 'test', max: 1, minCount: 1, name: 'type' }]
       });
       widgetRequestData = new WidgetRequestData([widget]);
 
@@ -52,7 +52,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         coverage: true,
         max: 50,
         sort: { name: 'count', order: 'asc' },
-        types: [{ exclude: ['type'], keyphrase: 'test', max: 1, name: 'type' }]
+        types: [{ exclude: ['type'], keyphrase: 'test', max: 1, minCount: 1, name: 'type' }]
       };
       widgetRequestData = new WidgetRequestData([widget]);
 

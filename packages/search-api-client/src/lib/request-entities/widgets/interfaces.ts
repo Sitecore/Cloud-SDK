@@ -50,6 +50,15 @@ export interface FacetType {
   exclude?: ArrayOfAtLeastOne<string>;
   max?: number;
   keyphrase?: string;
+  minCount?: number;
+}
+
+export interface FacetTypeDTO {
+  name: string;
+  exclude?: ArrayOfAtLeastOne<string>;
+  max?: number;
+  keyphrase?: string;
+  min_count?: number;
 }
 
 export interface Facet {
@@ -65,7 +74,7 @@ export interface FacetDTO {
   max?: number;
   coverage?: boolean;
   sort?: FacetSort;
-  types?: ArrayOfAtLeastOne<FacetType>;
+  types?: ArrayOfAtLeastOne<FacetTypeDTO>;
 }
 
 /**

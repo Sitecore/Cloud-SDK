@@ -1,5 +1,5 @@
 import { ErrorMessages } from '../../consts';
-import type { Facet } from './interfaces';
+import type { Facet, FacetDTO } from './interfaces';
 import { SearchWidgetItem } from './search-widget-item';
 
 describe('search widget item class', () => {
@@ -55,7 +55,7 @@ describe('search widget item class', () => {
     });
 
     it('should remove the facet', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         all: true,
         coverage: true,
         max: 50,
@@ -89,7 +89,7 @@ describe('search widget item class', () => {
     });
 
     it('should set the facet when given a full valid value', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         all: true,
         coverage: true,
         max: 50,
@@ -108,7 +108,7 @@ describe('search widget item class', () => {
     });
 
     it('should set the facet when given a partial valid value', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         all: true,
         coverage: true,
         max: 50,
@@ -126,7 +126,7 @@ describe('search widget item class', () => {
     });
 
     it('should set the facet with a valid types name and exclude property', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         all: true,
         coverage: true,
         max: 50,
@@ -145,7 +145,7 @@ describe('search widget item class', () => {
     });
 
     it('should set the facet with a valid types name and max property in types array', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         sort: {
           name: 'text',
           order: 'asc'
@@ -161,7 +161,7 @@ describe('search widget item class', () => {
     });
 
     it('should set the facet with a valid types name and keyphrase property in types array', () => {
-      const expected: Facet = {
+      const expected: FacetDTO = {
         sort: {
           name: 'text',
           order: 'asc'
@@ -170,6 +170,30 @@ describe('search widget item class', () => {
       };
 
       widgetItem.facet = expected;
+
+      const result = widgetItem.toDTO();
+
+      expect(result.search?.facet).toEqual(expected);
+    });
+
+    it('should set the facet with a valid types name and minCOunt property in types array', () => {
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ minCount: 1, name: 'test' }]
+      };
+
+      const expected: FacetDTO = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ min_count: 1, name: 'test' }]
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
 
@@ -197,7 +221,7 @@ describe('search widget item class', () => {
       }).toThrow(ErrorMessages.IV_0016);
     });
 
-    it('should not throw error if typescript bypassed ', () => {
+    it('should not throw error if typescript bypassed for max ', () => {
       expect(() => {
         /**
          *  This is a way to pass a stryker mutant when it replaces the comparison to "true"
@@ -242,6 +266,35 @@ describe('search widget item class', () => {
       expect(() => {
         new SearchWidgetItem('test', 'test', { types: [{ keyphrase: '', name: 'test' }] });
       }).toThrow(ErrorMessages.IV_0018);
+    });
+
+    it('should not throw error if typescript bypassed for minCount ', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ minCount: null as unknown as number, name: 'test' }] });
+      }).not.toThrow();
+    });
+
+    it('should not throw error if minCount is 100', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ minCount: 100, name: 'test' }] });
+      }).not.toThrow(ErrorMessages.IV_0019);
+    });
+
+    it('should not throw error if minCount is 1', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ minCount: 1, name: 'test' }] });
+      }).not.toThrow(ErrorMessages.IV_0019);
+    });
+
+    it('should throw error if minCount is an invalid number less than 1', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ minCount: 0, name: 'test' }] });
+      }).toThrow(ErrorMessages.IV_0019);
+    });
+    it('should throw error if minCount is an invalid number greater than 100', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { types: [{ minCount: 101, name: 'test' }] });
+      }).toThrow(ErrorMessages.IV_0019);
     });
   });
 
