@@ -51,6 +51,7 @@ export interface FacetType {
   max?: number;
   keyphrase?: string;
   minCount?: number;
+  sort?: FacetSort;
 }
 
 export interface FacetTypeDTO {
@@ -59,6 +60,7 @@ export interface FacetTypeDTO {
   max?: number;
   keyphrase?: string;
   min_count?: number;
+  sort?: FacetSort;
 }
 
 export interface Facet {

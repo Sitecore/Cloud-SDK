@@ -140,7 +140,6 @@ describe('search widget item class', () => {
       widgetItem.facet = expected;
 
       const result = widgetItem.toDTO();
-
       expect(result.search?.facet).toEqual(expected);
     });
 
@@ -176,7 +175,7 @@ describe('search widget item class', () => {
       expect(result.search?.facet).toEqual(expected);
     });
 
-    it('should set the facet with a valid types name and minCOunt property in types array', () => {
+    it('should set the facet with a valid types name and minCount property in types array', () => {
       const data: Facet = {
         sort: {
           name: 'text',
@@ -194,9 +193,29 @@ describe('search widget item class', () => {
       };
 
       widgetItem.facet = data;
-
       const result = widgetItem.toDTO();
+      expect(result.search?.facet).toEqual(expected);
+    });
 
+    it('should set the facet with a valid types name and sort property', () => {
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ name: 'test', sort: { name: 'text', order: 'asc' } }]
+      };
+
+      const expected: FacetDTO = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ name: 'test', sort: { name: 'text', order: 'asc' } }]
+      };
+
+      widgetItem.facet = data;
+      const result = widgetItem.toDTO();
       expect(result.search?.facet).toEqual(expected);
     });
   });

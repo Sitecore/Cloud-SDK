@@ -103,7 +103,8 @@ export class SearchWidgetItem extends WidgetItem {
         keyphrase: type.keyphrase,
         max: type.max,
         min_count: type.minCount,
-        name: type.name
+        name: type.name,
+        sort: type.sort
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
 
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;
