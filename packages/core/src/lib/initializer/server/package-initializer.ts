@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { PackageContext, PackageContextDependencyServer } from './interfaces';
 import { getEnabledPackage } from './initializer';
+import type { PackageContext, PackageContextDependencyServer } from './interfaces';
 
 export class PackageInitializerServer {
   /* eslint-disable @typescript-eslint/naming-convention */

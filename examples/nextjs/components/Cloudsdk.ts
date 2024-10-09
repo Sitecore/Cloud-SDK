@@ -1,8 +1,9 @@
 'use client';
 
-import '@sitecore-cloudsdk/events/browser';
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import { useEffect } from 'react';
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import '@sitecore-cloudsdk/events/browser';
+import '@sitecore-cloudsdk/personalize/browser';
 
 export function CloudSDKComponent() {
   useEffect(() => {

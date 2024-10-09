@@ -1,7 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 
 export async function personalizeUtmParamsMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -13,9 +13,11 @@ export async function personalizeUtmParamsMiddleware(request: NextRequest, respo
     case 'requestPersonalizeFromMiddlewareBothUTMParams':
       await CloudSDK(request, response, {
         enableServerCookie: false,
-        siteName: 'TestSite',
+        siteName: 'spinair.com',
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
-      }).initialize();
+      })
+        .addPersonalize({ enablePersonalizeCookie: true })
+        .initialize();
       await personalize(request, {
         channel: 'WEB',
         currency: 'EUR',

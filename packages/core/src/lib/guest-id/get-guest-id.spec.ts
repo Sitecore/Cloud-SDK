@@ -1,6 +1,6 @@
-import * as fetchGuestIdFromEdgeProxyModule from './fetch-guest-id-from-edge-proxy';
-import * as initializerModule from '../initializer/browser/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import * as initializerModule from '../initializer/browser/initializer';
+import * as fetchGuestIdFromEdgeProxyModule from './fetch-guest-id-from-edge-proxy';
 import { getGuestId } from './get-guest-id';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -26,7 +26,7 @@ describe('getGuestId', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',

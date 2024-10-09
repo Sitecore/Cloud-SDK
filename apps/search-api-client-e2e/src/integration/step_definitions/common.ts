@@ -1,4 +1,4 @@
-import { After, Before, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { After, Before, defineStep, Then } from '@badeball/cypress-cucumber-preprocessor';
 
 let errorMessage: string;
 const middlewarePath = '../search-api-client-next/middleware.ts';

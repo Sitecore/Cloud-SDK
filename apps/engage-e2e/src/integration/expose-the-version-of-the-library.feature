@@ -13,12 +13,12 @@ Feature: User retrieves the version of the library
 
     @Smoke-Test-Events
     Scenario: Developer retrieves Personalize version from the window object
-        Given the '/' page is loaded
+        Given the '/create-personalize-cookie' page is loaded without init function
         When the "getVersionLibFromWindowPersonalize" button is clicked
         Then the expected 'personalize' version is returned
 
     Scenario: Developer retrieves Personalize version by calling engage.version
-        Given the '/' page is loaded
+        Given the '/create-personalize-cookie' page is loaded without init function
         When the "getVersionLibFromPersonalize" button is clicked
         Then the expected 'personalize' version is returned
 

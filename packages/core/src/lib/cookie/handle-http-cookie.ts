@@ -1,11 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import type { HttpRequest, HttpResponse } from '@sitecore-cloudsdk/utils';
 import { createCookieString, getCookieServerSide } from '@sitecore-cloudsdk/utils';
-import type { Settings } from '../settings/interfaces';
 import { fetchBrowserIdFromEdgeProxy } from '../browser-id/fetch-browser-id-from-edge-proxy';
-import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 import { getGuestId } from '../init/get-guest-id';
+import type { Settings } from '../settings/interfaces';
+import { getDefaultCookieAttributes } from './get-default-cookie-attributes';
 
 /**
  * Handles HTTP Cookie operations for setting the browser ID cookie in the request and response.
@@ -27,9 +26,9 @@ export async function handleHttpCookie(
   const { browserId, guestId } = options.cookieSettings.cookieNames;
 
   const browserIdCookie = getCookieServerSide(request.headers.cookie, browserId);
-  let browserIdCookieValue;
+  let browserIdCookieValue: string;
   const guestIdCookie = getCookieServerSide(request.headers.cookie, guestId);
-  let guestIdCookieValue;
+  let guestIdCookieValue: string;
 
   const defaultCookieAttributes = getDefaultCookieAttributes(
     options.cookieSettings.cookieExpiryDays,

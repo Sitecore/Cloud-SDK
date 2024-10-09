@@ -1,6 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ErrorMessages, PACKAGE_NAME } from '../consts';
-import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
 import {
   builderInstanceServer,
   getCloudSDKSettingsServer,
@@ -9,12 +7,15 @@ import {
   getSettingsServer,
   handleGetSettingsError
 } from '@sitecore-cloudsdk/core/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
-import type { FailedCalledFlowsResponse } from './send-call-flows-request';
-import { Personalizer } from './personalizer';
-import type { Request } from '@sitecore-cloudsdk/utils';
 import type { Settings } from '@sitecore-cloudsdk/core/internal';
+import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import { isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../consts';
+import type { PersonalizeSettings } from '../initializer/browser/interfaces';
+import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
+import { Personalizer } from './personalizer';
+import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -38,13 +39,14 @@ export function personalizeServer<T extends Request>(
     personalizeData.geo = request.geo as PersonalizeGeolocation;
 
   let settings: Settings | CloudSDKSettings, id: string, guestId: string;
+  const personalizeSettings = getEnabledPackageServer(PACKAGE_NAME)?.settings as PersonalizeSettings;
 
   if (builderInstanceServer) {
     if (!getEnabledPackageServer(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0017);
 
     settings = getCloudSDKSettingsServer();
-    id = getCookieValueFromRequest(request, settings.cookieSettings.names.browserId);
-    guestId = getCookieValueFromRequest(request, settings.cookieSettings.names.guestId);
+    id = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
+    guestId = getCookieValueFromRequest(request, personalizeSettings.cookieSettings.name.guestId);
   } else {
     settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0017);
     id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);

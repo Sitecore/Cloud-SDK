@@ -1,10 +1,10 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import * as getSettingsModule from '../../init/server/initializer';
-import * as sendPostRequestModule from '../post-request';
+import { initServer } from '../../init/server/initializer';
 import { WidgetItem } from '../../request-entities/widgets/widget-item';
 import { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
+import * as sendPostRequestModule from '../post-request';
 import { getWidgetDataServer } from './get-widget-data-server';
-import { initServer } from '../../init/server/initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -81,7 +81,7 @@ describe('getWidgetDataServer', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',

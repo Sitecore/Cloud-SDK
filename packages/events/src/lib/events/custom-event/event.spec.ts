@@ -1,10 +1,10 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as initializerModule from '../../init/browser/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import * as initializerModule from '../../init/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
 import { event } from './event';
-import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../initializer/browser/initializer');
 jest.mock('./custom-event');
@@ -138,7 +138,7 @@ describe('event', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',
@@ -156,7 +156,7 @@ describe('event', () => {
           cookieSettings: {
             domain: 'cDomain',
             expiryDays: 730,
-            names: { browserId: 'bid_name', guestId: 'gid_name' },
+            name: { browserId: 'bid_name' },
             path: '/'
           },
           siteName: '456',

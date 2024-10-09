@@ -61,7 +61,9 @@ Then('the api server personalize request responds with status code {string}', (e
 });
 
 Then('we display {string} User Agent to UI', (userAgent: string) => {
-  cy.get("[data-testid='response']").then((el) => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(3000);
+  cy.get("[data-testid='response']", { timeout: 6000 }).then((el) => {
     expect(el.val()).to.contain(userAgent);
   });
 });

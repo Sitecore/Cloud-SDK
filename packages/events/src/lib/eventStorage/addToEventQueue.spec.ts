@@ -1,9 +1,9 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as eventQueue from './eventStorage';
-import * as initializerModule from '../init/browser/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
 import type { EventData } from '../events/custom-event/custom-event';
+import * as initializerModule from '../init/browser/initializer';
 import { addToEventQueue } from './addToEventQueue';
+import * as eventQueue from './eventStorage';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -97,7 +97,7 @@ describe('addToEventQueue', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',

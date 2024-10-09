@@ -9,14 +9,14 @@ Feature: Developer is setting for the creation of a server-set cookie
     @Smoke-Test-Events @RestartServer-Middleware
     Scenario: create a server site cookie when no cookie exists on a page
         Given no cookie is created on the '/middleware-server-cookie' page
-        When server cookies are created on the '/middleware-server-cookie' page
-        Then the server cookies contain the browserID and guestID cookies returned from the API call
+        When server browser id cookie is created on the '/middleware-server-cookie' page
+        Then the server cookies contain the browserID cookie returned from the API call
 
     @RestartServer-Middleware
     Scenario: A cookie already exists on the page, enableServerCookie doesn't create a new cookie but updates TTL
-        Given server cookies are created on the '/middleware-server-cookie' page
+        Given server browser id cookie is created on the '/middleware-server-cookie' page
         When '/middleware-server-cookie' page is loaded again with enableServerCookie parameter
-        Then the server updates the TTL of the server cookies according to the settings
+        Then the server updates the TTL of the browser id cookie according to the settings
 
     @RestartServer-Server-Side-Props
     Scenario Outline: Cookies are not created when an invalid cookieDomain is given
@@ -34,7 +34,7 @@ Feature: Developer is setting for the creation of a server-set cookie
     @RestartServer-Server-Side-Props
     Scenario Outline: Cookies are created when a valid cookieDomain is given
         Given server cookies are requested to be created at '/server-side-props-server-cookie' page with '<domain>' domain
-        Then server cookies are created with '<expected_domain>' domain
+        Then server cookie are created with '<expected_domain>' domain
 
         Examples:
             | domain    | expected_domain |
@@ -43,9 +43,9 @@ Feature: Developer is setting for the creation of a server-set cookie
 
     @RestartServer-Server-Side-Props
     Scenario: a cookie exists on the page another cookie won't be set when page is visited directly
-        Given server cookies are created on the '/server-side-props-server-cookie' page
+        Given server browser id cookie is created on the '/server-side-props-server-cookie' page
         When page is reloaded
-        Then the server updates the TTL of the server cookies according to the settings
+        Then the server updates the TTL of the browser id cookie according to the settings
 
     @Smoke-Test-Events @RestartServer-Server-Side-Props
     Scenario: Developer requests cookie from server using initServer with timeOut and EP fails to respond

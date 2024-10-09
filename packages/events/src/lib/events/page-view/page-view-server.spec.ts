@@ -1,8 +1,8 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { pageViewServer } from './page-view-server';
-import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../init/server/initializer');
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -131,7 +131,7 @@ describe('pageViewServer', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',

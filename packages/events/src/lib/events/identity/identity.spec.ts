@@ -1,9 +1,9 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
+import * as utilsModule from '@sitecore-cloudsdk/utils';
 import * as initializerModule from '../../init/browser/initializer';
 import * as sendEventModule from '../send-event/sendEvent';
-import * as utilsModule from '@sitecore-cloudsdk/utils';
-import { IdentityEvent } from './identity-event';
 import { identity } from './identity';
+import { IdentityEvent } from './identity-event';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -144,7 +144,7 @@ describe('identity', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',

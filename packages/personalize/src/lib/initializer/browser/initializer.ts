@@ -1,32 +1,37 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings, PersonalizeSettings, WebPersonalizationSettings } from './interfaces';
+import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 import {
-  PACKAGE_NAME as EVENTS_PACKAGE_NAME,
-  PACKAGE_INITIALIZER_METHOD_NAME,
+  COOKIE_NAME_PREFIX,
+  debug,
+  enabledPackagesBrowser as enabledPackages,
+  type EPResponse,
+  getCloudSDKSettingsBrowser as getCloudSDKSettings,
+  getEnabledPackageBrowser,
+  type PackageContextDependencyBrowser,
+  PackageInitializer
+} from '@sitecore-cloudsdk/core/internal';
+import {
   addToEventQueue,
   clearEventQueue,
   event,
+  PACKAGE_NAME as EVENTS_PACKAGE_NAME,
   form,
   identity,
+  PACKAGE_INITIALIZER_METHOD_NAME,
   pageView,
   processEventQueue
 } from '@sitecore-cloudsdk/events/browser';
 import type { EventData, IdentityData } from '@sitecore-cloudsdk/events/browser';
-import { PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
-import {
-  type PackageContextDependencyBrowser,
-  PackageInitializer,
-  type SideEffectsFn,
-  type EPResponse,
-  debug,
-  enabledPackagesBrowser as enabledPackages,
-  getCloudSDKSettingsBrowser as getCloudSDKSettings
-} from '@sitecore-cloudsdk/core/internal';
-import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 import { appendScriptWithAttributes } from '@sitecore-cloudsdk/utils';
+import { PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import { getCdnUrl } from '../../web-personalization/get-cdn-url';
+import { createPersonalizeCookie } from './createPersonalizeCookie';
+import type { BrowserSettings, PersonalizeSettings, WebPersonalizationSettings } from './interfaces';
 
-export async function sideEffects(settings: PersonalizeSettings) {
+export async function sideEffects() {
+  const personalizeSettings = getEnabledPackageBrowser(PACKAGE_NAME)?.settings as PersonalizeSettings;
+  const cloudSDKSettings = getCloudSDKSettings();
+
   window.scCloudSDK = {
     ...window.scCloudSDK,
     personalize: {
@@ -34,9 +39,9 @@ export async function sideEffects(settings: PersonalizeSettings) {
     }
   };
 
-  if (settings.webPersonalization) {
+  if (personalizeSettings.webPersonalization) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-    window.scCloudSDK.personalize.settings = settings.webPersonalization;
+    window.scCloudSDK.personalize.settings = personalizeSettings.webPersonalization;
     window.scCloudSDK.personalize = {
       ...window.scCloudSDK.personalize,
       addToEventQueue,
@@ -48,12 +53,13 @@ export async function sideEffects(settings: PersonalizeSettings) {
       processEventQueue
     };
 
-    const cloudSDKSettings = getCloudSDKSettings();
     const cdnUrl = await getCdnUrl(cloudSDKSettings.sitecoreEdgeContextId, cloudSDKSettings.sitecoreEdgeUrl);
-    if (cdnUrl) appendScriptWithAttributes({ async: settings.webPersonalization.async, src: cdnUrl });
+    if (cdnUrl) appendScriptWithAttributes({ async: personalizeSettings.webPersonalization.async, src: cdnUrl });
   }
-
   debug(PERSONALIZE_NAMESPACE)('personalizeClient library initialized');
+
+  if (!cloudSDKSettings.cookieSettings.enableBrowserCookie || !personalizeSettings.enablePersonalizeCookie) return;
+  await createPersonalizeCookie(personalizeSettings, cloudSDKSettings);
 }
 
 /**
@@ -63,13 +69,19 @@ export async function sideEffects(settings: PersonalizeSettings) {
  */
 export function addPersonalize(
   this: CloudSDKBrowserInitializer,
-  settings?: BrowserSettings
+  settings: BrowserSettings = { enablePersonalizeCookie: false }
 ): CloudSDKBrowserInitializer {
   const dependencies: PackageContextDependencyBrowser[] = [];
 
-  let webPersonalization: boolean | WebPersonalizationSettings;
-  if (!settings?.webPersonalization) webPersonalization = false;
-  else {
+  const cookieSettings = {
+    name: {
+      guestId: `${COOKIE_NAME_PREFIX}${getCloudSDKSettings().sitecoreEdgeContextId}_personalize`
+    }
+  };
+
+  let webPersonalization: boolean | WebPersonalizationSettings = false;
+
+  if (settings.webPersonalization) {
     dependencies.push({ method: PACKAGE_INITIALIZER_METHOD_NAME, name: EVENTS_PACKAGE_NAME });
 
     webPersonalization = {
@@ -80,8 +92,8 @@ export function addPersonalize(
 
   const personalizeInitializer = new PackageInitializer({
     dependencies,
-    settings: settings ? { ...settings, webPersonalization } : { webPersonalization },
-    sideEffects: sideEffects as SideEffectsFn
+    settings: { ...settings, cookieSettings, webPersonalization },
+    sideEffects
   });
 
   enabledPackages.set(PACKAGE_NAME, personalizeInitializer);

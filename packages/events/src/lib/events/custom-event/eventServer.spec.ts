@@ -1,8 +1,8 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
 import { eventServer } from './eventServer';
-import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('../../init/server/initializer');
 jest.mock('./custom-event');
@@ -134,7 +134,7 @@ describe('eventServer', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',

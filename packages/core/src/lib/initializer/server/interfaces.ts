@@ -16,9 +16,8 @@ export interface Settings {
   sitecoreEdgeUrl: string;
   timeout?: number;
   cookieSettings: {
-    names: {
+    name: {
       browserId: string;
-      guestId: string;
     };
     domain?: string;
     expiryDays: number;

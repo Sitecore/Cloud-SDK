@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { ErrorMessages, LIBRARY_VERSION, SITECORE_EDGE_URL } from '../consts';
 import type { EPResponse } from '../interfaces';
+import * as constructGetBrowserIdUrl from './construct-get-browser-id-url';
 import { fetchBrowserIdFromEdgeProxy } from './fetch-browser-id-from-edge-proxy';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {

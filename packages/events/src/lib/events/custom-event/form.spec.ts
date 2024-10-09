@@ -1,10 +1,10 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as initializerModule from '../../init/browser/initializer';
-import * as utils from '@sitecore-cloudsdk/utils';
 import type { BrowserSettings, EPResponse } from '@sitecore-cloudsdk/core/internal';
+import * as utils from '@sitecore-cloudsdk/utils';
 import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import { form } from './form';
+import * as initializerModule from '../../init/browser/initializer';
 import { init } from '../../init/browser/initializer';
+import { form } from './form';
 
 jest.mock('@sitecore-cloudsdk/core/browser', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/browser');
@@ -125,7 +125,7 @@ describe('form function', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',

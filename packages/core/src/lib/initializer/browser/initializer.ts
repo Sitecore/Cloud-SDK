@@ -1,5 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings, Core, Settings } from './interfaces';
+import { createCookieString, getCookie } from '@sitecore-cloudsdk/utils';
+import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
+import { getBrowserId } from '../../browser-id/get-browser-id';
 import {
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
@@ -7,18 +9,18 @@ import {
   LIBRARY_VERSION,
   SITECORE_EDGE_URL
 } from '../../consts';
-import { createCookieString, getCookie } from '@sitecore-cloudsdk/utils';
-import { CORE_NAMESPACE } from '../../debug/namespaces';
-import type { PackageInitializer } from './package-initializer';
-import { debug } from '../../debug/debug';
-import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
-import { getBrowserId } from '../../browser-id/get-browser-id';
 import { getDefaultCookieAttributes } from '../../cookie/get-default-cookie-attributes';
+import { debug } from '../../debug/debug';
+import { CORE_NAMESPACE } from '../../debug/namespaces';
 import { getGuestId } from '../../guest-id/get-guest-id';
+import type { ProxySettings } from '../../interfaces';
+import type { BrowserSettings, Core, Settings } from './interfaces';
+import type { PackageInitializer } from './package-initializer';
 
 export let cloudSDKSettings: Settings;
 export const enabledPackages = new Map<string, PackageInitializer>();
 export let initCoreState: Promise<void> | null = null;
+export let cookiesValuesFromEdge: ProxySettings;
 
 export class CloudSDKBrowserInitializer {
   /**
@@ -109,9 +111,8 @@ export class CloudSDKBrowserInitializer {
         domain: cookieDomain,
         enableBrowserCookie: enableBrowserCookie ?? false,
         expiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-        names: {
-          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
-          guestId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}_personalize`
+        name: {
+          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`
         },
         path: cookiePath || '/'
       },
@@ -127,27 +128,22 @@ export class CloudSDKBrowserInitializer {
       cloudSDKSettings.cookieSettings.domain
     );
 
-    const browserIdCookie = getCookie(window.document.cookie, cloudSDKSettings.cookieSettings.names.browserId);
+    const browserIdCookie = getCookie(window.document.cookie, cloudSDKSettings.cookieSettings.name.browserId);
 
-    if (browserIdCookie) {
-      const guestIdCookie = getCookie(window.document.cookie, cloudSDKSettings.cookieSettings.names.guestId);
+    if (browserIdCookie) return;
 
-      if (guestIdCookie) return;
-
-      const guestId = await getGuestId();
-
-      document.cookie = createCookieString(cloudSDKSettings.cookieSettings.names.guestId, guestId, attributes);
-
-      return;
-    }
-
-    const { browserId, guestId } = await fetchBrowserIdFromEdgeProxy(
+    const cookiesValues = await fetchBrowserIdFromEdgeProxy(
       cloudSDKSettings.sitecoreEdgeUrl,
       cloudSDKSettings.sitecoreEdgeContextId
     );
 
-    document.cookie = createCookieString(cloudSDKSettings.cookieSettings.names.browserId, browserId, attributes);
-    document.cookie = createCookieString(cloudSDKSettings.cookieSettings.names.guestId, guestId, attributes);
+    document.cookie = createCookieString(
+      cloudSDKSettings.cookieSettings.name.browserId,
+      cookiesValues.browserId,
+      attributes
+    );
+
+    cookiesValuesFromEdge = cookiesValues;
   }
 }
 
@@ -161,6 +157,10 @@ export function getEnabledPackage(packageName: string) {
 }
 
 export let builderInstance: null | CloudSDKBrowserInitializer = null;
+
+export function getCookiesValuesFromEdge() {
+  return cookiesValuesFromEdge;
+}
 
 /**
  * Runs the initialization logic. Enables packages and create cookies for CloudSDK.

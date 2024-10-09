@@ -1,14 +1,13 @@
+import debug from 'debug';
+import * as utils from '@sitecore-cloudsdk/utils';
 import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
+import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
 import * as getCookieValueFromMiddlewareRequestModule from '../../cookie/get-cookie-value-from-middleware-request';
 import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
-import * as getGuestIdModule from '../../init/get-guest-id';
-import * as initializerModule from './initializer';
-import * as utils from '@sitecore-cloudsdk/utils';
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
-import type { ServerSettings, Settings } from './interfaces';
-import { cloudSDKSettings, enabledPackages, getCloudSDKSettings } from './initializer';
 import { CORE_NAMESPACE } from '../../debug/namespaces';
-import debug from 'debug';
+import * as initializerModule from './initializer';
+import { cloudSDKSettings, enabledPackages, getCloudSDKSettings } from './initializer';
+import type { ServerSettings, Settings } from './interfaces';
 
 jest.mock('debug', () => {
   return {
@@ -45,7 +44,7 @@ describe('initializer server', () => {
       domain: 'cDomain',
       enableServerCookie: true,
       expiryDays: 730,
-      names: { browserId: `${COOKIE_NAME_PREFIX}123`, guestId: `${COOKIE_NAME_PREFIX}123_personalize` },
+      name: { browserId: `${COOKIE_NAME_PREFIX}123` },
       path: '/'
     },
     siteName: '456',
@@ -78,8 +77,7 @@ describe('initializer server', () => {
       expect(result.cookieSettings.enableServerCookie).toBe(false);
       expect(result.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       expect(result.cookieSettings.path).toBe('/');
-      expect(result.cookieSettings.names.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
-      expect(result.cookieSettings.names.guestId).toBe(`${COOKIE_NAME_PREFIX}123_personalize`);
+      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
       expect(result.sitecoreEdgeUrl).toBe(SITECORE_EDGE_URL);
     });
   });
@@ -180,12 +178,7 @@ describe('initializer server', () => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       customer_ref: 'guest_id_from_proxy'
     };
-    const mockGuestIdResponse = {
-      ...commonPayloadResponse,
-      customer: {
-        ref: 'guest_id_from_proxy'
-      }
-    };
+
     let request = {} as any;
     let response = {} as any;
     const isNextJsMiddlewareRequestSpy = jest.spyOn(utils, 'isNextJsMiddlewareRequest');
@@ -238,50 +231,20 @@ describe('initializer server', () => {
         jest.clearAllMocks();
       });
 
-      it(`should handle the browser ID and guest ID cookies in the request and response 
-    when the cookies are present`, async () => {
+      it(`should handle the browser ID cookie in the request and response when the cookie is present`, async () => {
         mockSettingsParamsPublic.enableServerCookie = true;
         const browserIdCookieName = 'sc_123';
-        const guestIdCookieName = 'sc_123_personalize';
-
-        getCookieValueFromMiddlewareRequestSpy
-          .mockReturnValueOnce('browser_id_from_proxy')
-          .mockReturnValueOnce('guest_id_from_proxy');
-        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
-        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
-
-        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
-
-        expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, 'browser_id_from_proxy', { test: true });
-        expect(setSpy).toHaveBeenCalledWith(guestIdCookieName, 'guest_id_from_proxy', { test: true });
-      });
-
-      it('should set the guest ID when browser ID cookie is available', async () => {
-        const mockFetch = Promise.resolve({
-          json: () => Promise.resolve(mockGuestIdResponse),
-          ok: 'ok'
-        });
-
-        global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
         getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce('browser_id_from_proxy');
         isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
         isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
 
-        const browserIdCookieName = 'sc_123';
-        const guestIdCookieName = 'sc_123_personalize';
-
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
-        expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, browserIdCookieName);
-        expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledWith(request, guestIdCookieName);
-        expect(getCookieValueFromMiddlewareRequestSpy).toHaveBeenCalledTimes(2);
         expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, 'browser_id_from_proxy', { test: true });
-        expect(setSpy).toHaveBeenCalledWith(guestIdCookieName, 'guest_id_from_proxy', { test: true });
       });
 
-      it(`should set the browser ID and guest ID cookies in the request and response
-      when the cookies are not present`, async () => {
+      it(`should set the browser ID cookie in the request and response when the cookie is not present`, async () => {
         isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
         isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
         const mockFetch = Promise.resolve({
@@ -293,7 +256,6 @@ describe('initializer server', () => {
         global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
         const mockBrowserIdCookie = { name: 'sc_123', value: 'browser_id_from_proxy' };
-        const mockGuestIdCookie = { name: 'sc_123_personalize', value: 'guest_id_from_proxy' };
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
@@ -303,16 +265,15 @@ describe('initializer server', () => {
           undefined
         );
 
-        expect(setSpy).toHaveBeenCalledTimes(2);
+        expect(setSpy).toHaveBeenCalledTimes(1);
         expect(setSpy).toHaveBeenCalledWith(mockBrowserIdCookie.name, mockBrowserIdCookie.value, { test: true });
-        expect(setSpy).toHaveBeenCalledWith(mockGuestIdCookie.name, mockGuestIdCookie.value, { test: true });
       });
     });
 
     describe('httpCookieHandler', () => {
       let request = {
         headers: {
-          cookie: 'sc_123=123456789; sc_123_personalize=987654321'
+          cookie: 'sc_123=123456789'
         }
       };
 
@@ -326,38 +287,26 @@ describe('initializer server', () => {
         jest.clearAllMocks();
       });
 
-      it(`should handle the browser ID and guest ID cookies in the request and response 
-    when the cookies are present`, async () => {
+      it(`should handle the browser ID cookie in the request and response when the cookie is present`, async () => {
         const mockBrowserIdCookie = { name: 'sc_123', value: '123456789' };
-        const mockGuestIdCookie = { name: 'sc_123_personalize', value: '987654321' };
+
         isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
         isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
         isHttpRequestSpy.mockReturnValueOnce(true);
         isHttpResponseSpy.mockReturnValueOnce(true);
 
-        jest
-          .spyOn(utils, 'getCookieServerSide')
-          .mockReturnValueOnce(mockBrowserIdCookie)
-          .mockReturnValueOnce(mockGuestIdCookie);
-        const createCookieStringSpy = jest
-          .spyOn(utils, 'createCookieString')
-          .mockReturnValueOnce('sc_123=123456789')
-          .mockReturnValueOnce('sc_123_personalize=987654321');
+        jest.spyOn(utils, 'getCookieServerSide').mockReturnValueOnce(mockBrowserIdCookie);
+        const createCookieStringSpy = jest.spyOn(utils, 'createCookieString').mockReturnValueOnce('sc_123=123456789');
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
         expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', '123456789', { test: true });
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', '987654321', { test: true });
 
-        expect(request.headers.cookie).toBe('sc_123=123456789; sc_123_personalize=987654321');
-        expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
-          'sc_123=123456789',
-          'sc_123_personalize=987654321'
-        ]);
+        expect(request.headers.cookie).toBe('sc_123=123456789');
+        expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_123=123456789');
       });
 
-      it(`should set the browser ID and guest ID cookies in the request and response
-      when the cookies are not present`, async () => {
+      it(`should set the browser ID in the request and response when the cookie is not present`, async () => {
         const mockFetch = Promise.resolve({
           json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
         });
@@ -369,7 +318,9 @@ describe('initializer server', () => {
         isHttpResponseSpy.mockReturnValueOnce(true);
 
         request = {
-          headers: {} as any
+          headers: {
+            cookie: 'random=123456789'
+          }
         };
 
         response = {
@@ -379,142 +330,16 @@ describe('initializer server', () => {
         jest.spyOn(utils, 'getCookieServerSide').mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
         const createCookieStringSpy = jest
           .spyOn(utils, 'createCookieString')
-          .mockReturnValueOnce('sc_123=browser_id_from_proxy')
-          .mockReturnValueOnce('sc_123_personalize=guest_id_from_proxy');
+          .mockReturnValueOnce('sc_123=browser_id_from_proxy');
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
         expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', 'browser_id_from_proxy', { test: true });
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', 'guest_id_from_proxy', {
-          test: true
+        expect(initializerModule.getCookiesValuesFromEdge()).toEqual({
+          browserId: 'browser_id_from_proxy',
+          guestId: 'guest_id_from_proxy'
         });
-
-        expect(request.headers.cookie).toBe('sc_123=browser_id_from_proxy; sc_123_personalize=guest_id_from_proxy');
-      });
-
-      it(`should set the guest ID cookie when browser ID cookie is present`, async () => {
-        const mockFetch = Promise.resolve({
-          json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
-        });
-
-        global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
-        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
-        isHttpRequestSpy.mockReturnValueOnce(true);
-        isHttpResponseSpy.mockReturnValueOnce(true);
-
-        request = {
-          headers: { cookie: 'sc_123=123456789' }
-        };
-
-        response = {
-          setHeader: jest.fn()
-        };
-
-        jest.spyOn(getGuestIdModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
-        jest
-          .spyOn(utils, 'getCookieServerSide')
-          .mockReturnValueOnce({ name: 'sc_123', value: '123456789' })
-          .mockReturnValueOnce(undefined);
-        const createCookieStringSpy = jest
-          .spyOn(utils, 'createCookieString')
-          .mockReturnValueOnce('sc_123=123456789')
-          .mockReturnValueOnce('sc_123_personalize=guest_id_from_proxy');
-
-        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', '123456789', {
-          test: true
-        });
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', 'guest_id_from_proxy', {
-          test: true
-        });
-
-        expect(request.headers.cookie).toBe('sc_123=123456789; sc_123_personalize=guest_id_from_proxy');
-      });
-
-      it(`should set the guest ID cookie when guest ID cookie is not present and header is empty`, async () => {
-        const mockFetch = Promise.resolve({
-          json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
-        });
-
-        global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
-        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
-        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
-        isHttpRequestSpy.mockReturnValueOnce(true);
-        isHttpResponseSpy.mockReturnValueOnce(true);
-
-        request = {
-          headers: { cookie: '' }
-        };
-
-        response = {
-          setHeader: jest.fn()
-        };
-
-        jest.spyOn(getGuestIdModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
-        jest
-          .spyOn(utils, 'getCookieServerSide')
-          .mockReturnValueOnce({ name: 'sc_123', value: '123456789' })
-          .mockReturnValueOnce(undefined);
-        const createCookieStringSpy = jest
-          .spyOn(utils, 'createCookieString')
-          .mockReturnValueOnce('sc_123=123456789')
-          .mockReturnValueOnce('sc_123_personalize=guest_id_from_proxy');
-
-        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', '123456789', {
-          test: true
-        });
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', 'guest_id_from_proxy', {
-          test: true
-        });
-
-        expect(request.headers.cookie).toBe('sc_123_personalize=guest_id_from_proxy');
-      });
-
-      it(`should set the browser ID cookie when guest ID cookie is present`, async () => {
-        jest
-          .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
-          .mockResolvedValueOnce({ browserId: 'browser_id_from_proxy', guestId: 'guest_id_from_proxy' });
-
-        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
-        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
-        isHttpRequestSpy.mockReturnValueOnce(true);
-        isHttpResponseSpy.mockReturnValueOnce(true);
-
-        request = {
-          headers: { cookie: 'sc_123_personalize=987654321' }
-        };
-
-        response = {
-          setHeader: jest.fn()
-        };
-
-        jest
-          .spyOn(utils, 'getCookieServerSide')
-          .mockReturnValueOnce(undefined)
-          .mockReturnValueOnce({ name: 'sc_123_personalize', value: '987654321' });
-        const createCookieStringSpy = jest
-          .spyOn(utils, 'createCookieString')
-          .mockReturnValueOnce('sc_123=browser_id_from_proxy')
-          .mockReturnValueOnce('sc_123_personalize=guest_id_from_proxy');
-
-        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', 'browser_id_from_proxy', {
-          test: true
-        });
-
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', 'guest_id_from_proxy', {
-          test: true
-        });
-
-        expect(request.headers.cookie).toBe('sc_123_personalize=987654321; sc_123=browser_id_from_proxy');
+        expect(request.headers.cookie).toBe('random=123456789; sc_123=browser_id_from_proxy');
       });
     });
 
@@ -610,6 +435,13 @@ describe('initializer server', () => {
       expect(mockPackage1.exec).toHaveBeenCalled();
       expect(mockPackage2.exec).toHaveBeenCalled();
     });
+
+    it('should set cloudSDKRequest and cloudSDKResponse upon CloudSDK call', async () => {
+      await initializerModule.CloudSDK(request, response, mockSettingsParamsPublic).initialize();
+
+      expect(initializerModule.getCloudSDKRequest()).toEqual(request);
+      expect(initializerModule.getCloudSDKResponse()).toEqual(response);
+    });
   });
 });
 
@@ -631,7 +463,7 @@ describe('getCloudSDKSettings', () => {
       domain: 'cDomain',
       enableServerCookie: true,
       expiryDays: 730,
-      names: { browserId: `${COOKIE_NAME_PREFIX}123`, guestId: `${COOKIE_NAME_PREFIX}123_personalize` },
+      name: { browserId: `${COOKIE_NAME_PREFIX}123` },
       path: '/'
     },
     siteName: '456',

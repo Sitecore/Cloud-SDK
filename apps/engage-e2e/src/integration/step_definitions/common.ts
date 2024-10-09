@@ -1,8 +1,9 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 /// <reference types="cypress" />
 // Above line needed as indicator for Cypress
-import { Given, Then, When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { defineStep, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 import { Utils } from '../../support/utils';
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let statusCode: number;
 let errorMessage: string;
@@ -278,7 +279,7 @@ defineStep('the {string} button is clicked', (event: string) => {
   cy.wait(1000);
   cy.get(selector)
     .should('be.visible')
-    .click()
+    .click({ force: true })
     .then(() => cy.writeLocal(`error.txt`, errorMessage));
 });
 

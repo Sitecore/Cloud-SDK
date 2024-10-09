@@ -16,7 +16,7 @@ Feature: Create client side cookie when the page is loaded
     Scenario: Init engage library when no cookie exists
         Given no cookie is created on the '/' page
         When the '/' page is loaded
-        Then the cookie is automatically set with the correct bid and gid value for the user
+        Then the cookie is automatically set with the correct bid value for the user
 
     @Smoke-Test-Events
     Scenario: Init engage library when cookie exists

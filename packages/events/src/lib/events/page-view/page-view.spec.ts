@@ -1,10 +1,10 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as initializerModule from '../../init/browser/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import * as initializerModule from '../../init/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
+import { pageView } from './page-view';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
-import { pageView } from './page-view';
-import { sendEvent } from '../send-event/sendEvent';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -171,7 +171,7 @@ describe('pageView', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',

@@ -1,6 +1,6 @@
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
-import { Given, Then, When, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import { defineStep, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
 
 declare global {
   /* eslint-disable @typescript-eslint/naming-convention */
@@ -14,7 +14,7 @@ declare global {
 
 let errorMessage: string;
 
-Then('the cookie is automatically set with the correct bid and gid value for the user', () => {
+Then('the cookie is automatically set with the correct bid value for the user', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME')), {
@@ -22,11 +22,22 @@ Then('the cookie is automatically set with the correct bid and gid value for the
     interval: 100,
     timeout: 10000
   });
+});
+
+Then('the cookie is automatically set with the correct guestId value for the user', () => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')), {
     errorMsg: 'Cookie not found',
     interval: 100,
     timeout: 10000
   });
+});
+
+Then('the personalization cookie should not exist', () => {
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
+  cy.wait(500);
+  cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')).should('not.exist');
 });
 
 Given('a client cookie exists on the {string} page', (page: string) => {
@@ -48,8 +59,7 @@ Then('only one cookie is set', () => {
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(700);
   cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => cookie?.value == '1234');
-  cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')).then((cookie) => cookie?.value == '5678');
-  cy.getCookies().should('have.length', 2);
+  cy.getCookies().should('have.length', 1);
 });
 
 defineStep('a client cookie is created at {string} page with {string} domain', (page: string, domain: string) => {
@@ -83,6 +93,7 @@ defineStep('the {string} domain cookie is not created', () => {
   //Cypress checks for cookies faster than cookies need to be created, to avoid false positives, we add cy.wait
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(1500);
+  cy.getCookies().then((items) => console.log(items));
   cy.getCookies().should('have.length', 0);
 });
 

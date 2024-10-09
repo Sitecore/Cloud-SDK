@@ -1,8 +1,8 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as initializerModule from '../init/client/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
-import { Personalizer } from './personalizer';
+import * as initializerModule from '../init/client/initializer';
 import { personalize } from './personalize';
+import { Personalizer } from './personalizer';
 
 jest.mock('./personalizer');
 
@@ -199,12 +199,20 @@ describe('personalize', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
       sitecoreEdgeUrl: ''
+    };
+
+    const personalizeSettings = {
+      initState: true,
+      settings: {
+        cookieSettings: { name: { guestId: '123456' } },
+        enablePersonalizeCookie: false
+      }
     };
 
     let windowSpy: jest.SpyInstance;
@@ -221,7 +229,7 @@ describe('personalize', () => {
       windowSpy = jest.spyOn(globalThis, 'window', 'get');
     });
     it('should return an object with available functionality', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue(personalizeSettings as any);
       jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
       const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
@@ -236,7 +244,9 @@ describe('personalize', () => {
       expect(getSettingsSpy).toHaveBeenCalledTimes(1);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
       expect(Personalizer).toHaveBeenCalledTimes(1);
-      expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(settings.cookieSettings.names.guestId);
+      expect(utilsModule.getCookieValueClientSide).toHaveBeenCalledWith(
+        personalizeSettings.settings.cookieSettings.name.guestId
+      );
     });
 
     it('should throw error if settings have not been configured properly', async () => {
@@ -253,6 +263,7 @@ describe('personalize', () => {
     });
 
     it('should call getInteractiveExperience with timeout in opts object', async () => {
+      jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue(personalizeSettings as any);
       jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
       const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
 

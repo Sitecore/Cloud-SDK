@@ -1,17 +1,19 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ErrorMessages, PACKAGE_NAME } from '../consts';
 import {
   getBrowserId,
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage
+  getEnabledPackageBrowser as getEnabledPackage,
+  getSettings,
+  handleGetSettingsError
 } from '@sitecore-cloudsdk/core/internal';
-import { getSettings, handleGetSettingsError } from '@sitecore-cloudsdk/core/internal';
-import type { FailedCalledFlowsResponse } from './send-call-flows-request';
+import type { Settings } from '@sitecore-cloudsdk/core/internal';
+import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../consts';
+import { awaitInit } from '../init/client/initializer';
+import type { PersonalizeSettings } from '../initializer/browser/interfaces';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
-import type { Settings } from '@sitecore-cloudsdk/core/internal';
-import { awaitInit } from '../init/client/initializer';
-import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 
 /**
  * A function that executes an interactive experiment or web experiment over any web-based or mobile application.
@@ -27,8 +29,9 @@ export async function personalize(
 
   if (getEnabledPackage(PACKAGE_NAME)?.initState) {
     const cloudSDKSettings = getCloudSDKSettings();
-    const browserId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.names.browserId);
-    const guestId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.names.guestId);
+    const personalizeSettings = getEnabledPackage(PACKAGE_NAME)?.settings as PersonalizeSettings;
+    const browserId = getCookieValueClientSide(cloudSDKSettings.cookieSettings.name.browserId);
+    const guestId = getCookieValueClientSide(personalizeSettings.cookieSettings.name.guestId);
 
     return new Personalizer(browserId, guestId).getInteractiveExperienceData(
       personalizeData,

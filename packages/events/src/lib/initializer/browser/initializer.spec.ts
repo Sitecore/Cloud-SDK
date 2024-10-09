@@ -1,9 +1,9 @@
+import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
+import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
 import { EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
 import { addEvents, sideEffects } from './initializer';
-import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
-import debug from 'debug';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -40,7 +40,7 @@ describe('sideEffects', () => {
   it('should add the library properties to window.Engage object', async () => {
     jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue('test');
     jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockImplementation(() => {
-      return { cookieSettings: { names: { browserId: 'bid' } } } as any;
+      return { cookieSettings: { name: { browserId: 'bid' } } } as any;
     });
 
     global.window.Engage = undefined as any;

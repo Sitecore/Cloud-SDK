@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { DebugResponse, Settings } from '@sitecore-cloudsdk/core/internal';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import { debug, generateCorrelationId, processDebugResponse } from '@sitecore-cloudsdk/core/internal';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 import { fetchWithTimeout } from '@sitecore-cloudsdk/utils';
+import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 
 /**
  * A function that sends a CallFlow request to Sitecore EP
@@ -125,7 +125,7 @@ export interface EPCallFlowsBody {
   language: string | undefined;
   params?: EPCallFlowsParams;
   pointOfSale: string;
-  guestRef: string;
+  guestRef?: string;
   variants?: string[];
 }
 

@@ -1,9 +1,9 @@
-import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
-import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
+import { blue, cyan, green, red, yellow } from '@sitecore-cloudsdk/utils';
+import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 
 const Events = () => {
   const router = useRouter();
@@ -23,7 +23,8 @@ const Events = () => {
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
       router.pathname.startsWith('/personalize') ||
-      router.pathname.startsWith('/web-personalization')
+      router.pathname.startsWith('/web-personalization') ||
+      router.pathname.startsWith('/create-personalize-cookie')
     )
       return;
 

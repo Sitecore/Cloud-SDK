@@ -1,7 +1,7 @@
-import type { NextRequest, NextResponse} from 'next/server';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
+import type { NextRequest, NextResponse } from 'next/server';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { event } from '@sitecore-cloudsdk/events/server';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 
 export async function customEventWithSearchDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');

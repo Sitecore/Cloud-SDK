@@ -1,7 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
 import {
   getBrowserId,
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
@@ -9,11 +7,12 @@ import {
   getSettings,
   handleGetSettingsError
 } from '@sitecore-cloudsdk/core/internal';
+import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { awaitInit } from '../../init/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
-import { awaitInit } from '../../init/browser/initializer';
-import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
-import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an event to SitecoreCloud API with the specified type
@@ -26,7 +25,7 @@ export async function event(eventData: EventData): Promise<EPResponse | null> {
 
   if (getEnabledPackage(PACKAGE_NAME)?.initState) {
     const settings = getCloudSDKSettings();
-    const id = getCookieValueClientSide(settings.cookieSettings.names.browserId);
+    const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
 
     return new CustomEvent({
       eventData,

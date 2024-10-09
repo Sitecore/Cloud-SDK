@@ -1,22 +1,22 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  type EPResponse,
-  type Settings,
   builderInstanceServer,
+  type EPResponse,
   getCookieValueFromRequest,
-  handleGetSettingsError
+  handleGetSettingsError,
+  type Settings
 } from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
 import {
   getCloudSDKSettingsServer as getCloudSDKSettings,
   getEnabledPackageServer as getEnabledPackage,
   getSettingsServer
 } from '@sitecore-cloudsdk/core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
-import type { Request } from '@sitecore-cloudsdk/utils';
-import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends an IDENTITY event to SitecoreCloud API
@@ -33,7 +33,7 @@ export function identityServer(request: Request, identityData: IdentityData): Pr
     if (!getEnabledPackage(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0015);
 
     settings = getCloudSDKSettings();
-    browserId = getCookieValueFromRequest(request, settings.cookieSettings.names.browserId);
+    browserId = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
   } else {
     settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0015);
     browserId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);

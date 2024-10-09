@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { type EPResponse, type Settings, handleGetSettingsError } from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { type EPResponse, handleGetSettingsError, type Settings } from '@sitecore-cloudsdk/core/internal';
 import {
   builderInstanceServer,
   getCloudSDKSettingsServer,
@@ -9,10 +8,11 @@ import {
   getSettingsServer
 } from '@sitecore-cloudsdk/core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
-import type { Request } from '@sitecore-cloudsdk/utils';
-import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -32,7 +32,7 @@ export function pageViewServer<T extends Request>(request: T, pageViewData?: Pag
     if (!getEnabledPackage(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0015);
 
     settings = getCloudSDKSettingsServer();
-    browserId = getCookieValueFromRequest(request, settings.cookieSettings.names.browserId);
+    browserId = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
   } else {
     settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0015);
     browserId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);

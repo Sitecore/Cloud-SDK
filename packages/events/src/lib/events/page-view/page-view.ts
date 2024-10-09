@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
 import {
   getBrowserId,
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
@@ -8,11 +7,12 @@ import {
   getSettings,
   handleGetSettingsError
 } from '@sitecore-cloudsdk/core/internal';
+import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { awaitInit } from '../../init/browser/initializer';
+import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
-import { awaitInit } from '../../init/browser/initializer';
-import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
-import { sendEvent } from '../send-event/sendEvent';
 
 /**
  * A function that sends a VIEW event to SitecoreCloud API
@@ -26,7 +26,7 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
 
   if (getEnabledPackage(PACKAGE_NAME)?.initState) {
     const settings = getCloudSDKSettings();
-    const id = getCookieValueClientSide(settings.cookieSettings.names.browserId);
+    const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
 
     return new PageViewEvent({
       id,

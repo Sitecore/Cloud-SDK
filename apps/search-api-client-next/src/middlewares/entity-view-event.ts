@@ -1,7 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { entityView } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 
 export async function entityViewMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');

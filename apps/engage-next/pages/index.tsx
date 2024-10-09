@@ -1,9 +1,8 @@
-import { PACKAGE_VERSION as eventVersion, pageView } from '@sitecore-cloudsdk/events/browser';
+import { useState } from 'react';
 import { getBrowserId } from '@sitecore-cloudsdk/core/browser';
+import { PACKAGE_VERSION as eventVersion, pageView } from '@sitecore-cloudsdk/events/browser';
 import type { PageViewData } from '@sitecore-cloudsdk/events/browser';
 import { capturedDebugLogs } from '../utils/debugLogs';
-import { PACKAGE_VERSION as personalizeVersion } from '@sitecore-cloudsdk/personalize/browser';
-import { useState } from 'react';
 
 export function Index() {
   const [eventData, seteventData] = useState<PageViewData>({
@@ -128,20 +127,6 @@ export function Index() {
               if (window.Engage.versions?.events !== undefined) setVersion(window.Engage.versions.events);
             }}>
             Get Events version from window
-          </button>
-          <legend>Retrieve Personalize Library Version</legend>
-          <button
-            data-testid='getVersionLibFromWindowPersonalize'
-            onClick={() => personalizeVersion && setVersion(personalizeVersion)}>
-            Get Personalize version from lib function
-          </button>
-          <button
-            data-testid='getVersionLibFromPersonalize'
-            onClick={() => {
-              if (window.scCloudSDK.personalize?.version !== undefined)
-                setVersion(window.scCloudSDK.personalize.version);
-            }}>
-            Get Personalize version from window
           </button>
           <h3>Version id is</h3>
           <span

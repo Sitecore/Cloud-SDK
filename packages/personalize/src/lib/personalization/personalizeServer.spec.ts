@@ -233,7 +233,7 @@ describe('personalizeServer', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',
@@ -278,7 +278,14 @@ describe('personalizeServer', () => {
     });
 
     it('should return an object with available functionality', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       req.headers.get = () => null;
       const getCookieValueFromRequestSpy = jest.spyOn(coreInternalModule, 'getCookieValueFromRequest');
 
@@ -287,8 +294,7 @@ describe('personalizeServer', () => {
       await personalizeServer(req, personalizeData);
 
       expect(getCookieValueFromRequestSpy).toHaveBeenCalledTimes(2);
-      expect(getCookieValueFromRequestSpy).toHaveBeenNthCalledWith(1, req, newSettings.cookieSettings.names.browserId);
-      expect(getCookieValueFromRequestSpy).toHaveBeenLastCalledWith(req, newSettings.cookieSettings.names.guestId);
+      expect(getCookieValueFromRequestSpy).toHaveBeenNthCalledWith(1, req, newSettings.cookieSettings.name.browserId);
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledTimes(1);
 
       expect(getInteractiveExperienceDataSpy).toHaveBeenCalledWith(personalizeData, newSettings, '', {
@@ -298,7 +304,14 @@ describe('personalizeServer', () => {
     });
 
     it('should include the user agent header and timeout in the opts object', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       const httpReq = {
         headers: {
           // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -314,7 +327,14 @@ describe('personalizeServer', () => {
     });
 
     it('should include the user agent header if in middleware request', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       const getMock = jest.fn().mockReturnValue('test_ua');
       req.headers.get = getMock;
 
@@ -328,7 +348,14 @@ describe('personalizeServer', () => {
     });
 
     it('should throw error if settings have not been configured properly', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockImplementationOnce(() => {
         throw new Error(`Test error`);
       });
@@ -338,7 +365,14 @@ describe('personalizeServer', () => {
 
     it(`should use the request.geo if personalizeData.geo is empty
    and request is a valid MiddlewareRequest`, async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       req.geo = {
         city: 'Tarnów',
         country: 'PL',
@@ -364,7 +398,14 @@ describe('personalizeServer', () => {
     });
 
     it('should omit the request.geo if personalizeData.geo has values', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       req.geo = {
         city: 'Tarnów',
         country: 'PL',
@@ -395,7 +436,14 @@ describe('personalizeServer', () => {
     });
 
     it('should omit the request.geo if request.geo is empty', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       personalizeData.geo = undefined;
       req.geo = {};
 
@@ -409,7 +457,14 @@ describe('personalizeServer', () => {
     });
 
     it("should omit the request.geo if request.geo doesn't exist in the MiddlewareRequest", async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue({
+        exec: jest.fn(),
+        settings: {
+          cookieSettings: {
+            name: { guestId: '1234567' }
+          }
+        }
+      } as any);
       personalizeData.geo = undefined;
       req.geo = undefined;
 
@@ -423,7 +478,10 @@ describe('personalizeServer', () => {
     });
 
     it('should throw error new init used but personalize not initialized', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
+      jest
+        .spyOn(coreInternalModule, 'getEnabledPackageServer')
+        .mockReturnValueOnce(undefined)
+        .mockReturnValueOnce(undefined);
 
       await expect(async () => await personalizeServer(req, personalizeData)).rejects.toThrow(
         // eslint-disable-next-line max-len

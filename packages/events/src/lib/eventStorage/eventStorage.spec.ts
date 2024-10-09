@@ -1,9 +1,9 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as eventQueue from './eventStorage';
 import { CustomEvent } from '../events/custom-event/custom-event';
 import type { EventData } from '../events/custom-event/custom-event';
 import { sendEvent } from '../events/send-event/sendEvent';
+import * as eventQueue from './eventStorage';
 
 jest.mock('../events/custom-event/custom-event');
 jest.mock('@sitecore-cloudsdk/core/internal', () => {

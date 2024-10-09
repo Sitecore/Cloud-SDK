@@ -1,6 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as initializerModule from '../init/browser/initializer';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import * as initializerModule from '../init/browser/initializer';
 import { getGuestId } from './getGuestId';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
@@ -103,7 +103,7 @@ describe('getGuestId', () => {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
-          names: { browserId: 'bid_name', guestId: 'gid_name' },
+          name: { browserId: 'bid_name' },
           path: '/'
         },
         siteName: '456',

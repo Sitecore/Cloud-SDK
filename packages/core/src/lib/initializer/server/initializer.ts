@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
 import type {
   HttpRequest,
   HttpResponse,
@@ -8,7 +7,6 @@ import type {
   Request,
   Response
 } from '@sitecore-cloudsdk/utils';
-import type { ServerSettings, Settings } from './interfaces';
 import {
   createCookieString,
   getCookieServerSide,
@@ -17,16 +15,21 @@ import {
   isNextJsMiddlewareRequest,
   isNextJsMiddlewareResponse
 } from '@sitecore-cloudsdk/utils';
-import { CORE_NAMESPACE } from '../../debug/namespaces';
-import type { PackageInitializerServer } from './package-initializer';
-import { debug } from '../../debug/debug';
 import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
+import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
 import { getCookieValueFromMiddlewareRequest } from '../../cookie/get-cookie-value-from-middleware-request';
 import { getDefaultCookieAttributes } from '../../cookie/get-default-cookie-attributes';
-import { getGuestId } from '../../init/get-guest-id';
+import { debug } from '../../debug/debug';
+import { CORE_NAMESPACE } from '../../debug/namespaces';
+import type { ProxySettings } from '../../interfaces';
+import type { ServerSettings, Settings } from './interfaces';
+import type { PackageInitializerServer } from './package-initializer';
 
 export let cloudSDKSettings: Settings;
 export const enabledPackages = new Map<string, PackageInitializerServer>();
+let cookiesValuesFromEdge: ProxySettings;
+export let cloudSKDRequest: Request;
+export let cloudSKDResponse: Response;
 
 export class CloudSDKServerInitializer {
   private request: Request;
@@ -102,9 +105,8 @@ export class CloudSDKServerInitializer {
         domain: cookieDomain,
         enableServerCookie: enableServerCookie ?? false,
         expiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
-        names: {
-          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`,
-          guestId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}_personalize`
+        name: {
+          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`
         },
         path: cookiePath || '/'
       },
@@ -125,10 +127,9 @@ export class CloudSDKServerInitializer {
     const request = this.request as MiddlewareRequest;
     const response = this.response as MiddlewareNextResponse;
 
-    const { browserId, guestId } = cloudSDKSettings.cookieSettings.names;
+    const { browserId: browserIdName } = cloudSDKSettings.cookieSettings.name;
 
-    let browserIdCookieValue = getCookieValueFromMiddlewareRequest(request, browserId);
-    let guestIdCookieValue = getCookieValueFromMiddlewareRequest(request, guestId);
+    let browserIdCookieValue = getCookieValueFromMiddlewareRequest(request, browserIdName);
 
     if (!browserIdCookieValue) {
       const cookieValues = await fetchBrowserIdFromEdgeProxy(
@@ -138,36 +139,25 @@ export class CloudSDKServerInitializer {
       );
 
       browserIdCookieValue = cookieValues.browserId;
-      guestIdCookieValue = cookieValues.guestId;
-    } else if (!guestIdCookieValue)
-      guestIdCookieValue = await getGuestId(
-        browserIdCookieValue,
-        cloudSDKSettings.sitecoreEdgeContextId,
-        cloudSDKSettings.sitecoreEdgeUrl
-      );
-
+      cookiesValuesFromEdge = cookieValues;
+    }
     const defaultCookieAttributes = getDefaultCookieAttributes(
       cloudSDKSettings.cookieSettings.expiryDays,
       cloudSDKSettings.cookieSettings.domain
     );
 
-    request.cookies.set(browserId, browserIdCookieValue, defaultCookieAttributes);
-    request.cookies.set(guestId, guestIdCookieValue, defaultCookieAttributes);
-
-    response.cookies.set(browserId, browserIdCookieValue, defaultCookieAttributes);
-    response.cookies.set(guestId, guestIdCookieValue, defaultCookieAttributes);
+    request.cookies.set(browserIdName, browserIdCookieValue, defaultCookieAttributes);
+    response.cookies.set(browserIdName, browserIdCookieValue, defaultCookieAttributes);
   }
 
   private async handleHttpCookie() {
     const request = this.request as HttpRequest;
     const response = this.response as HttpResponse;
 
-    const { browserId, guestId } = cloudSDKSettings.cookieSettings.names;
+    const browserIdName = cloudSDKSettings.cookieSettings.name.browserId;
 
-    const browserIdCookie = getCookieServerSide(request.headers.cookie, browserId);
+    const browserIdCookie = getCookieServerSide(request.headers.cookie, browserIdName);
     let browserIdCookieValue;
-    const guestIdCookie = getCookieServerSide(request.headers.cookie, guestId);
-    let guestIdCookieValue;
 
     const defaultCookieAttributes = getDefaultCookieAttributes(
       cloudSDKSettings.cookieSettings.expiryDays,
@@ -182,32 +172,17 @@ export class CloudSDKServerInitializer {
       );
 
       browserIdCookieValue = cookieValues.browserId;
-      guestIdCookieValue = cookieValues.guestId;
-    } else {
-      browserIdCookieValue = browserIdCookie.value;
-      if (!guestIdCookie)
-        guestIdCookieValue = await getGuestId(
-          browserIdCookie.value,
-          cloudSDKSettings.sitecoreEdgeContextId,
-          cloudSDKSettings.sitecoreEdgeUrl
-        );
-      else guestIdCookieValue = guestIdCookie.value;
-    }
+      cookiesValuesFromEdge = cookieValues;
+    } else browserIdCookieValue = browserIdCookie.value;
 
-    const browserIdCookieString = createCookieString(browserId, browserIdCookieValue, defaultCookieAttributes);
-    const guestIdCookieString = createCookieString(guestId, guestIdCookieValue, defaultCookieAttributes);
+    const browserIdCookieString = createCookieString(browserIdName, browserIdCookieValue, defaultCookieAttributes);
 
     if (!browserIdCookie)
       request.headers.cookie = request.headers.cookie
         ? request.headers.cookie + '; ' + browserIdCookieString
         : browserIdCookieString;
 
-    if (!guestIdCookie)
-      request.headers.cookie = request.headers.cookie
-        ? request.headers.cookie + '; ' + guestIdCookieString
-        : guestIdCookieString;
-
-    response.setHeader('Set-Cookie', [browserIdCookieString, guestIdCookieString]);
+    response.setHeader('Set-Cookie', browserIdCookieString);
   }
 }
 
@@ -219,6 +194,18 @@ export function getCloudSDKSettings() {
 
 export function getEnabledPackage(packageName: string) {
   return enabledPackages.get(packageName);
+}
+
+export function getCloudSDKRequest() {
+  return cloudSKDRequest;
+}
+
+export function getCloudSDKResponse() {
+  return cloudSKDResponse;
+}
+
+export function getCookiesValuesFromEdge() {
+  return cookiesValuesFromEdge;
 }
 
 export let builderInstance: null | CloudSDKServerInitializer = null;
@@ -235,6 +222,10 @@ export let builderInstance: null | CloudSDKServerInitializer = null;
  * {@link ErrorMessages.IV_0001}
  */
 export function CloudSDK(request: Request, response: Response, settings: ServerSettings): CloudSDKServerInitializer {
+  cloudSKDRequest = request;
+  cloudSKDResponse = response;
+
   builderInstance = new CloudSDKServerInitializer(request, response, settings);
+
   return builderInstance;
 }

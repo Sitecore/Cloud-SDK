@@ -1,20 +1,22 @@
-import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
-import { useEffect } from 'react';
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/personalize/browser';
+import { getSettingFromUrlParams } from '../utils/getSettingFromUrlParams';
 
 const Personalize = () => {
   const router = useRouter();
 
   useEffect(() => {
     if (
+      router.pathname === '/' ||
       router.pathname.startsWith('/init-events') ||
       router.pathname.startsWith('/init-personalize') ||
       router.pathname.startsWith('/middleware-server-cookie') ||
       router.pathname.startsWith('/server-side-props-server-cookie') ||
       router.pathname.startsWith('/viewevent') ||
-      router.pathname.startsWith('/web-personalization')
+      router.pathname.startsWith('/web-personalization') ||
+      router.pathname.startsWith('/create-personalize-cookie')
     )
       return;
 
@@ -26,7 +28,7 @@ const Personalize = () => {
       siteName: process.env.SITE_ID || '',
       sitecoreEdgeUrl: getSettingFromUrlParams('sitecoreEdgeUrl') ?? undefined
     })
-      .addPersonalize()
+      .addPersonalize({ enablePersonalizeCookie: true })
       .initialize();
   }, [router.pathname]);
 

@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
-import { ErrorMessages, UTM_PREFIX } from '../consts';
-import type { NestedObject } from '@sitecore-cloudsdk/utils';
 import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import { language } from '@sitecore-cloudsdk/core/internal';
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, UTM_PREFIX } from '../consts';
+import type { EPCallFlowsBody, FailedCalledFlowsResponse } from './send-call-flows-request';
 import { sendCallFlowsRequest } from './send-call-flows-request';
 
 export class Personalizer {
@@ -12,7 +12,7 @@ export class Personalizer {
    * @param browserId - The browser id of the user
    * @param guestId - The guestRef of the user
    */
-  constructor(private browserId: string, private guestId: string) {}
+  constructor(private browserId: string, private guestId?: string) {}
 
   /**
    * A function to make a request to the Sitecore EP /callFlows API endpoint

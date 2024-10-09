@@ -1,18 +1,19 @@
-import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
-import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
-import { event, identity, pageView } from '@sitecore-cloudsdk/events/server';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { event, identity, pageView } from '@sitecore-cloudsdk/events/server';
 import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
+import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { customEventWithSearchDataMiddleware } from './middlewares/custom-event-with-search-data';
 import { eventWithSoftwareIDHeaderMiddleware } from './middlewares/event-software-id-header';
 import { initEventsMiddleware } from './middlewares/init-events';
 import { initPersonalizeMiddleware } from './middlewares/init-personalize';
 import { pageViewEventWithSearchDataMiddleware } from './middlewares/page-view-event-with-search-data';
-import { personalize } from '@sitecore-cloudsdk/personalize/server';
 import { personalizeUtmParamsMiddleware } from './middlewares/personalize-utm-params-middleware';
 import { requestedAtMiddleware } from './middlewares/requested-at';
+import { capturedFetch, capturedRequestBody } from './utils/fetch-wrapper';
+import { decorateAll, resetAllDecorators } from './utils/e2e-decorators/decorate-all';
+import { createPersonalizeCookie } from './middlewares/create-personalize-cookie';
 
 // This function can be marked `async` if using `await` inside
 export async function middleware(request: NextRequest) {
@@ -101,7 +102,7 @@ export async function middleware(request: NextRequest) {
     await identity(request, identityEventData);
   }
 
-  if (request.nextUrl.pathname.startsWith('/middleware-server-cookie')) 
+  if (request.nextUrl.pathname.startsWith('/middleware-server-cookie'))
     await CloudSDK(request, response, {
       cookieExpiryDays: 400,
       enableServerCookie,
@@ -185,7 +186,7 @@ export async function middleware(request: NextRequest) {
       sitecoreEdgeContextId: process.env.CONTEXT_ID || '',
       sitecoreEdgeUrl
     })
-      .addPersonalize()
+      .addPersonalize({ enablePersonalizeCookie: true })
       .initialize();
 
     const personalizeData: PersonalizeData = {
@@ -218,6 +219,7 @@ export async function middleware(request: NextRequest) {
   await initPersonalizeMiddleware(request, response);
   await personalizeUtmParamsMiddleware(request, response);
   await eventWithSoftwareIDHeaderMiddleware(request, response);
+  await createPersonalizeCookie(request, response)
 
   return response;
 }
@@ -242,6 +244,7 @@ export const config = {
     '/custom-event-with-search-data',
     '/page-view-event-with-search-data',
     '/init-events',
-    '/init-personalize'
+    '/init-personalize',
+    '/create-personalize-cookie'
   ]
 };

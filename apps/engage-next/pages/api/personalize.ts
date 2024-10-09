@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { PersonalizeData } from '@sitecore-cloudsdk/personalize/server';
-import { capturedDebugLogs } from '../../utils/debugLogs';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { capturedDebugLogs } from '../../utils/debugLogs';
+import { decorateAll, resetAllDecorators } from '../../utils/e2e-decorators/decorate-all';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const requestUrl = new URL(req.url as string, `https://${req.headers.host}`);
@@ -29,7 +29,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     siteName: process.env.SITE_ID || '',
     sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
   })
-    .addPersonalize()
+    .addPersonalize({ enablePersonalizeCookie: true })
     .initialize();
 
   const timeoutParam = requestUrl.searchParams.get('timeout');

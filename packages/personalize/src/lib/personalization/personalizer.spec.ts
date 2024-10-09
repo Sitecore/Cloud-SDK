@@ -1,9 +1,9 @@
-import * as CallFlowsRequest from './send-call-flows-request';
+import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
-import debug from 'debug';
+import * as CallFlowsRequest from './send-call-flows-request';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');

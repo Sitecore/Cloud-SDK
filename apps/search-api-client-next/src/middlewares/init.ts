@@ -1,7 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { decorateAll, resetAll } from '../e2e-decorators/decorate-all';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { getPageWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateAll, resetAll } from '../e2e-decorators/decorate-all';
 
 export async function initMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');

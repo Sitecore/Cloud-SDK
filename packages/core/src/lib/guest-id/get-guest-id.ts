@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { fetchGuestIdFromEdgeProxy } from './fetch-guest-id-from-edge-proxy';
-import { getCloudSDKSettings } from '../initializer/browser/initializer';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import { getCloudSDKSettings } from '../initializer/browser/initializer';
+import { fetchGuestIdFromEdgeProxy } from './fetch-guest-id-from-edge-proxy';
 
 /**
  * A function that returns the guest ID.
@@ -10,7 +10,7 @@ import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
  */
 export async function getGuestId() {
   const settings = getCloudSDKSettings();
-  const id = getCookieValueClientSide(settings.cookieSettings.names.browserId);
+  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
 
   return fetchGuestIdFromEdgeProxy(id, settings.sitecoreEdgeContextId, settings.sitecoreEdgeUrl);
 }

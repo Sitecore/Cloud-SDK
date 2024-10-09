@@ -1,19 +1,19 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
+import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 import {
-  PackageInitializer,
   debug,
   enabledPackagesBrowser as enabledPackages,
-  getCloudSDKSettingsBrowser as getCloudSDKSettings
+  getCloudSDKSettingsBrowser as getCloudSDKSettings,
+  PackageInitializer
 } from '@sitecore-cloudsdk/core/internal';
-import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
+import { EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
 
 export async function sideEffects() {
   window.Engage ??= {};
   window.Engage = {
     ...window.Engage,
-    getBrowserId: () => getCookieValueClientSide(getCloudSDKSettings().cookieSettings.names.browserId),
+    getBrowserId: () => getCookieValueClientSide(getCloudSDKSettings().cookieSettings.name.browserId),
     versions: {
       ...window.Engage.versions,
       events: PACKAGE_VERSION

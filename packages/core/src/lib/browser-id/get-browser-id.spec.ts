@@ -1,5 +1,5 @@
-import * as coreBrowserModule from '../initializer/browser/initializer';
 import * as initCoreModule from '../init/init-core';
+import * as coreBrowserModule from '../initializer/browser/initializer';
 import { getBrowserId } from './get-browser-id';
 
 jest.mock('../initializer/browser/initializer', () => ({
@@ -30,7 +30,7 @@ describe('getBrowserId', () => {
     cookieSettings: {
       domain: 'cDomain',
       expiryDays: 730,
-      names: { browserId: 'bid_name', guestId: 'gid_name' },
+      name: { browserId: 'bid_name' },
       path: '/'
     },
     siteName: '456',

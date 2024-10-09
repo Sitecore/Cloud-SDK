@@ -1,8 +1,8 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { CloudSDK as CloudSDKBrowser } from '@sitecore-cloudsdk/core/browser';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/server';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 
 export async function initPersonalizeMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');

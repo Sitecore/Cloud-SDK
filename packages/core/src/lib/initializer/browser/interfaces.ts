@@ -14,9 +14,8 @@ export interface Settings {
   siteName: string;
   sitecoreEdgeUrl: string;
   cookieSettings: {
-    names: {
+    name: {
       browserId: string;
-      guestId: string;
     };
     domain?: string;
     expiryDays: number;
@@ -30,10 +29,8 @@ export interface PackageContextDependency {
   method: string;
 }
 
-export type SideEffectsFn = (settings?: unknown) => Promise<void>;
-
 export interface PackageContext {
-  sideEffects: SideEffectsFn;
+  sideEffects: () => Promise<void>;
   settings?: unknown;
   dependencies?: PackageContextDependency[];
 }

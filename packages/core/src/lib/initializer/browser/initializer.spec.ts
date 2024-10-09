@@ -1,9 +1,6 @@
-import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
-import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
-import * as getGuestIdModule from '../../guest-id/get-guest-id';
-import * as initializerModule from './initializer';
+import debug from 'debug';
 import * as utils from '@sitecore-cloudsdk/utils';
-import type { BrowserSettings, Settings } from './interfaces';
+import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
 import {
   COOKIE_NAME_PREFIX,
   DEFAULT_COOKIE_EXPIRY_DAYS,
@@ -11,9 +8,11 @@ import {
   LIBRARY_VERSION,
   SITECORE_EDGE_URL
 } from '../../consts';
-import { cloudSDKSettings, enabledPackages, getCloudSDKSettings } from './initializer';
+import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
 import { CORE_NAMESPACE } from '../../debug/namespaces';
-import debug from 'debug';
+import * as initializerModule from './initializer';
+import { cloudSDKSettings, enabledPackages, getCloudSDKSettings } from './initializer';
+import type { BrowserSettings, Settings } from './interfaces';
 
 let windowSpy: jest.SpyInstance;
 
@@ -46,7 +45,7 @@ const mockSettingsParamsInternal: Settings = {
     domain: 'cDomain',
     enableBrowserCookie: true,
     expiryDays: 730,
-    names: { browserId: `${COOKIE_NAME_PREFIX}123`, guestId: `${COOKIE_NAME_PREFIX}123_personalize` },
+    name: { browserId: `${COOKIE_NAME_PREFIX}123` },
     path: '/'
   },
   siteName: '456',
@@ -135,8 +134,7 @@ describe('initializer browser', () => {
       expect(result.cookieSettings.enableBrowserCookie).toBe(false);
       expect(result.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       expect(result.cookieSettings.path).toBe('/');
-      expect(result.cookieSettings.names.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
-      expect(result.cookieSettings.names.guestId).toBe(`${COOKIE_NAME_PREFIX}123_personalize`);
+      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
       expect(result.sitecoreEdgeUrl).toBe(SITECORE_EDGE_URL);
     });
   });
@@ -251,17 +249,14 @@ describe('initializer browser', () => {
 
       const debugMock = debug as unknown as jest.Mock;
       const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
-      const expectedGuestIdCookieName = `${COOKIE_NAME_PREFIX}123_personalize`;
       const expectedBrowserIdValue = 'bid_value';
-      const expectedGuestIdValue = 'gid_value';
 
       jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes').mockReturnValueOnce(mockCookieAttributes);
 
       jest.spyOn(utils, 'getCookie').mockReturnValueOnce(undefined);
       jest
         .spyOn(utils, 'createCookieString')
-        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`)
-        .mockReturnValueOnce(`${expectedGuestIdCookieName}=${expectedGuestIdValue}`);
+        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`);
 
       jest
         .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
@@ -280,9 +275,7 @@ describe('initializer browser', () => {
       when there are enabledPackages`, async () => {
       const debugMock = debug as unknown as jest.Mock;
       const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
-      const expectedGuestIdCookieName = `${COOKIE_NAME_PREFIX}123_personalize`;
       const expectedBrowserIdValue = 'bid_value';
-      const expectedGuestIdValue = 'gid_value';
 
       const getDefaultCookieAttributesSpy = jest
         .spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes')
@@ -291,8 +284,7 @@ describe('initializer browser', () => {
       jest.spyOn(utils, 'getCookie').mockReturnValueOnce(undefined);
       jest
         .spyOn(utils, 'createCookieString')
-        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`)
-        .mockReturnValueOnce(`${expectedGuestIdCookieName}=${expectedGuestIdValue}`);
+        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`);
 
       jest
         .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
@@ -313,11 +305,9 @@ describe('initializer browser', () => {
       expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
     });
 
-    it('should create the cookies and add the cookies to document.cookie', async () => {
+    it('should create the cookie and add it to document.cookie', async () => {
       const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
-      const expectedGuestIdCookieName = `${COOKIE_NAME_PREFIX}123_personalize`;
       const expectedBrowserIdValue = 'bid_value';
-      const expectedGuestIdValue = 'gid_value';
 
       const getDefaultCookieAttributesSpy = jest
         .spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes')
@@ -326,8 +316,7 @@ describe('initializer browser', () => {
       const getBrowserIdCookieSpy = jest.spyOn(utils, 'getCookie').mockReturnValueOnce(undefined);
       const createCookieStringSpy = jest
         .spyOn(utils, 'createCookieString')
-        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`)
-        .mockReturnValueOnce(`${expectedGuestIdCookieName}=${expectedGuestIdValue}`);
+        .mockReturnValueOnce(`${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`);
 
       jest
         .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
@@ -341,31 +330,22 @@ describe('initializer browser', () => {
       expect(instance['createCookies']).toHaveBeenCalled();
       expect(getBrowserIdCookieSpy).toHaveBeenCalledTimes(1);
       expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
-      expect(createCookieStringSpy).toHaveBeenCalledTimes(2);
+      expect(createCookieStringSpy).toHaveBeenCalledTimes(1);
       expect(document.cookie).toBe(
         // eslint-disable-next-line max-len
-        `${expectedBrowserIdCookieName}=${expectedBrowserIdValue}; ${expectedGuestIdCookieName}=${expectedGuestIdValue}`
+        `${expectedBrowserIdCookieName}=${expectedBrowserIdValue}`
       );
+      expect(initializerModule.getCookiesValuesFromEdge()).toEqual({ browserId: 'bid_value', guestId: 'gid_value' });
     });
 
-    it(`should not create a browserId cookie if cookieName exists 
-      and should create a guestId cookie instead if does not exist`, async () => {
-      const expectedGuestIdCookieName = `${COOKIE_NAME_PREFIX}123_personalize`;
-      const expectedGuestIdValue = 'gid_value';
-
+    it(`should not create a browserId cookie if cookieName exists`, async () => {
       const getCookieSpy = jest
         .spyOn(utils, 'getCookie')
         .mockReturnValueOnce({ name: `${COOKIE_NAME_PREFIX}123`, value: 'bid_value' });
 
-      const getGuestIdSpy = jest.spyOn(getGuestIdModule, 'getGuestId').mockResolvedValueOnce('value2');
-
       const fetchBrowserIdFromEdgeProxySpy = jest
         .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')
         .mockResolvedValueOnce({ browserId: 'value', guestId: 'value2' });
-
-      const createCookieStringSpy = jest
-        .spyOn(utils, 'createCookieString')
-        .mockReturnValueOnce(`${expectedGuestIdCookieName}=${expectedGuestIdValue}`);
 
       const instance = new initializerModule.CloudSDKBrowserInitializer(mockSettingsParamsPublic);
       instance.initialize();
@@ -373,29 +353,8 @@ describe('initializer browser', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(instance['createCookies']).toHaveBeenCalled();
-      expect(getCookieSpy).toHaveBeenCalledTimes(2);
-      expect(getGuestIdSpy).toHaveBeenCalledTimes(1);
-      expect(createCookieStringSpy).toHaveBeenCalledTimes(1);
+      expect(getCookieSpy).toHaveBeenCalledTimes(1);
       expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
-    });
-
-    it(`should neither create a browserId nor a guestId cookie if both exists`, async () => {
-      const createCookieStringSpy = jest.spyOn(utils, 'createCookieString');
-      const getGuestIdSpy = jest.spyOn(getGuestIdModule, 'getGuestId').mockResolvedValueOnce('value2');
-
-      const getCookieSpy = jest
-        .spyOn(utils, 'getCookie')
-        .mockReturnValueOnce({ name: `${COOKIE_NAME_PREFIX}123`, value: 'bid_value' })
-        .mockReturnValueOnce({ name: `${COOKIE_NAME_PREFIX}123_personalize`, value: 'gid_value' });
-
-      const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
-
-      const instance = new initializerModule.CloudSDKBrowserInitializer(mockSettingsParamsPublic);
-      instance.initialize();
-
-      expect(getCookieSpy).toHaveBeenCalledTimes(2);
-      expect(getGuestIdSpy).not.toHaveBeenCalled();
-      expect(createCookieStringSpy).not.toHaveBeenCalled();
       expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
     });
 

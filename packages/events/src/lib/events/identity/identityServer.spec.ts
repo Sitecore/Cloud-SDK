@@ -1,8 +1,9 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+// Import the function to be tested
+import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
-import { identityServer } from './identityServer'; // Import the function to be tested
-import { sendEvent } from '../send-event/sendEvent';
+import { identityServer } from './identityServer';
 
 jest.mock('../../init/server/initializer');
 jest.mock('./identity-event');
@@ -137,7 +138,7 @@ describe('identityServer', () => {
       cookieSettings: {
         domain: 'cDomain',
         expiryDays: 730,
-        names: { browserId: 'bid_name', guestId: 'gid_name' },
+        name: { browserId: 'bid_name' },
         path: '/'
       },
       siteName: '456',

@@ -1,9 +1,9 @@
-import type { ServerSettings, BrowserSettings } from '@sitecore-cloudsdk/core/internal';
 import type { GetServerSidePropsContext } from 'next';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import type { BrowserSettings, ServerSettings } from '@sitecore-cloudsdk/core/internal';
 import { CloudSDK as CloudSDKServer } from '@sitecore-cloudsdk/core/server';
-import '@sitecore-cloudsdk/personalize/server';
 import { personalize } from '@sitecore-cloudsdk/personalize/browser';
+import '@sitecore-cloudsdk/personalize/server';
 
 export default function InitPersonalize({ serverResponse }: { serverResponse: string }) {
   function handleInvalidContextId() {

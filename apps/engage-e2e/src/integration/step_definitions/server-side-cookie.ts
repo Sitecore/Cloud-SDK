@@ -1,9 +1,11 @@
+import { After, Before, defineStep, Given, Then } from '@badeball/cypress-cucumber-preprocessor';
+
 /* eslint-disable sort-keys */
 /// <reference types='cypress' />
 // Above line needed as indicator for Cypress
 
 let errorMessage: string;
-import { After, Before, Given, Then, defineStep } from '@badeball/cypress-cucumber-preprocessor';
+
 const middlewarePath = '../engage-next/middleware.ts';
 const serverSidePropsPath = '../engage-next/pages/server-side-props-server-cookie.tsx';
 
@@ -21,7 +23,7 @@ Before({ tags: '@RestartServer-Server-Side-Props' }, () => {
   cy.replace(serverSidePropsPath, /###\d+###/, `###${Date.now()}###`);
 });
 
-defineStep('server cookies are created on the {string} page', (page) => {
+defineStep('server browser id cookie is created on the {string} page', (page) => {
   cy.intercept(`${Cypress.config('baseUrl')}${page}*`).as('callToServer');
   cy.visit(`${page}?enableServerCookie=true`);
 
@@ -33,6 +35,19 @@ defineStep('server cookies are created on the {string} page', (page) => {
     interval: 500
   });
 
+  cy.getCookies().then((cookies) => {
+    const serverBrowserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
+
+    const serverCookies = {
+      browserId: serverBrowserIdCookie
+    };
+    cy.writeLocal('initialCookies.json', serverCookies);
+  });
+});
+
+defineStep('server guest id cookie is created on the {string} page', () => {
+  //We waitUntil with a chained assertion since commands might be executed before cookie is set
+  // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.waitUntil(() => cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')), {
     errorMsg: 'Cookie not found',
     timeout: 10000,
@@ -40,12 +55,10 @@ defineStep('server cookies are created on the {string} page', (page) => {
   });
 
   cy.getCookies().then((cookies) => {
-    const serverBrowserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-    const serverGuestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
+    const serverGuetIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
 
     const serverCookies = {
-      browserId: serverBrowserIdCookie,
-      guestId: serverGuestIdCookie
+      guestId: serverGuetIdCookie
     };
     cy.writeLocal('initialCookies.json', serverCookies);
   });
@@ -74,25 +87,34 @@ Given(
   }
 );
 
-Then('the server updates the TTL of the server cookies according to the settings', () => {
+Then('the server updates the TTL of the browser id cookie according to the settings', () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cy.readLocal('initialCookies.json').then((initialCookies: any) => {
     cy.wait('@callToServer').then((res) => {
       expect(res?.response?.headers).to.have.property('set-cookie');
       expect(res?.response?.headers['set-cookie'][0]).to.include(Cypress.env('COOKIE_NAME'));
-      expect(res?.response?.headers['set-cookie'][1]).to.include(Cypress.env('COOKIE_NAME_PERSONALIZE'));
     });
     cy.getCookies()
-      .should('have.length', 2)
+      .should('have.length', 1)
       .then((cookies) => {
         const browserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-        const guestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
 
         expect(browserIdCookie).to.have.property('name', initialCookies.browserId.name);
         expect(browserIdCookie).to.have.property('value', initialCookies.browserId.value);
         expect(browserIdCookie?.expiry).to.not.equal(initialCookies.browserId.expiry);
         expect(browserIdCookie?.secure).to.be.true;
         expect(browserIdCookie?.sameSite).to.equal('no_restriction');
+      });
+  });
+});
+
+Then('the server updates the TTL of the guest id cookie according to the settings', () => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  cy.readLocal('initialCookies.json').then((initialCookies: any) => {
+    cy.getCookies()
+      .should('have.length', 2)
+      .then((cookies) => {
+        const guestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
 
         expect(guestIdCookie).to.have.property('name', initialCookies.guestId.name);
         expect(guestIdCookie).to.have.property('value', initialCookies.guestId.value);
@@ -103,21 +125,18 @@ Then('the server updates the TTL of the server cookies according to the settings
   });
 });
 
-Then('the server cookies contain the browserID and guestID cookies returned from the API call', () => {
+Then('the server cookies contain the browserID cookie returned from the API call', () => {
   cy.wait('@callToServer').then((res) => {
     expect(res?.response?.headers).to.have.property('set-cookie');
     expect(res?.response?.headers['set-cookie'][0]).to.include(Cypress.env('COOKIE_NAME'));
-    expect(res?.response?.headers['set-cookie'][1]).to.include(Cypress.env('COOKIE_NAME_PERSONALIZE'));
   });
 
   cy.getCookies()
-    .should('have.length', 2)
+    .should('have.length', 1)
     .then((cookies) => {
       const browserIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME'));
-      const guestIdCookie = cookies.find((cookie) => cookie.name === Cypress.env('COOKIE_NAME_PERSONALIZE'));
 
       expect(browserIdCookie).to.have.property('value');
-      expect(guestIdCookie).to.have.property('value');
     });
 });
 
@@ -128,22 +147,10 @@ defineStep(
   }
 );
 
-defineStep('server cookies are created with {string} domain', (domain: string) => {
+defineStep('server cookie are created with {string} domain', (domain: string) => {
   cy.waitUntil(
     () =>
       cy.getCookie(Cypress.env('COOKIE_NAME')).then((cookie) => {
-        expect(cookie?.domain).to.eq(domain);
-      }),
-    {
-      errorMsg: 'Cookie not found',
-      timeout: 10000,
-      interval: 100
-    }
-  );
-
-  cy.waitUntil(
-    () =>
-      cy.getCookie(Cypress.env('COOKIE_NAME_PERSONALIZE')).then((cookie) => {
         expect(cookie?.domain).to.eq(domain);
       }),
     {
