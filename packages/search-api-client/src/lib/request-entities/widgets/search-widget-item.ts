@@ -10,6 +10,19 @@ export class SearchWidgetItem extends WidgetItem {
   private _coverage?: boolean;
   private _sort?: FacetSort;
   private _types?: ArrayOfAtLeastOne<FacetType>;
+
+  /**
+   * Builds the sort piece of the DTO.
+   */
+  private _sortToDTO(type: FacetType) {
+    if (type.sort)
+      return {
+        after: type.sort.after,
+        sort: { name: type.sort.name, order: type.sort.order }
+      };
+    return {};
+  }
+
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
@@ -67,6 +80,10 @@ export class SearchWidgetItem extends WidgetItem {
 
       this._validateNumberInRange1To100(ErrorMessages.IV_0017, type.max);
       this._validateNumberInRange1To100(ErrorMessages.IV_0019, type.minCount);
+      if (typeof type.sort === 'object' && typeof type.sort.after === 'string') {
+        if (!type.sort.after || type.sort.after.includes(' ')) throw new Error(ErrorMessages.IV_0020);
+        if (type.sort.name !== 'text') throw new Error(ErrorMessages.IV_0021);
+      }
     });
   }
 
@@ -104,9 +121,8 @@ export class SearchWidgetItem extends WidgetItem {
         max: type.max,
         min_count: type.minCount,
         name: type.name,
-        sort: type.sort
+        ...this._sortToDTO(type)
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
-
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;
 
     return { ...superDTO, search: { ...superDTO.search, facet } };

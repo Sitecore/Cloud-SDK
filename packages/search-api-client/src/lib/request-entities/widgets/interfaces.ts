@@ -43,7 +43,10 @@ type FacetSortOrder = 'asc' | 'desc';
 export interface FacetSort {
   name: FacetSortName;
   order: FacetSortOrder;
+  after?: string;
 }
+
+export type FacetSortDTO = Omit<FacetSort, 'after'>;
 
 export interface FacetType {
   name: string;
@@ -60,7 +63,8 @@ export interface FacetTypeDTO {
   max?: number;
   keyphrase?: string;
   min_count?: number;
-  sort?: FacetSort;
+  sort?: FacetSortDTO;
+  after?: string;
 }
 
 export interface Facet {

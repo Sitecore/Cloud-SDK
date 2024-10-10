@@ -315,6 +315,38 @@ describe('search widget item class', () => {
         new SearchWidgetItem('test', 'test', { types: [{ minCount: 101, name: 'test' }] });
       }).toThrow(ErrorMessages.IV_0019);
     });
+
+    it('should throw error if sort.after property is empty string', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', {
+          types: [{ name: 'test', sort: { after: '', name: 'text', order: 'asc' } }]
+        });
+      }).toThrow(ErrorMessages.IV_0020);
+    });
+
+    it('should throw error if sort.after property is not empty string but it has spaces', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', {
+          types: [{ name: 'test', sort: { after: '  ', name: 'text', order: 'asc' } }]
+        });
+      }).toThrow(ErrorMessages.IV_0020);
+    });
+
+    it('should throw error if sort.after property is valid but sort.name is not "text"', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', {
+          types: [{ name: 'test', sort: { after: 'valid', name: 'count', order: 'asc' } }]
+        });
+      }).toThrow(ErrorMessages.IV_0021);
+    });
+
+    it('should not throw error if sort.after is valid and sort.name is text', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', {
+          types: [{ name: 'test', sort: { after: 'valid', name: 'text', order: 'asc' } }]
+        });
+      }).not.toThrow();
+    });
   });
 
   describe('max validator', () => {

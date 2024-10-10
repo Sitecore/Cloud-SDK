@@ -39,7 +39,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
             max: 1,
             minCount: 1,
             name: 'type',
-            sort: { name: 'count', order: 'asc' }
+            sort: {
+              after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
+              name: 'text',
+              order: 'asc'
+            }
           }
         ]
       });
@@ -70,7 +74,11 @@ export async function GET(req: NextRequest, res: NextResponse) {
             max: 1,
             minCount: 1,
             name: 'type',
-            sort: { name: 'count', order: 'asc' }
+            sort: {
+              after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
+              name: 'text',
+              order: 'asc'
+            }
           }
         ]
       };

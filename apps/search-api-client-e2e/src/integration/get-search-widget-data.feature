@@ -4,7 +4,7 @@ Feature: Request search widget data from Search REST API
         Given the '/get-search-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
         Then the request with id '<testID>' will contain:
             """
-            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"keyphrase":"test","max":1,"min_count":1,"name":"type","sort":{"name":"count","order":"asc"}}]}}}]}
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}]}
             """
 
         Examples:
@@ -17,7 +17,7 @@ Feature: Request search widget data from Search REST API
         And the 'getSearchWidgetDataFromAPIWithValidPayload' button is clicked
         Then the request with id '<testID>' will contain:
             """
-            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"keyphrase":"test","max":1,"min_count":1,"name":"type","sort":{"name":"count","order":"asc"}}]}}}]}
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}]}
             """
 
         Examples:
@@ -61,7 +61,8 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"max":1,"name":"type"}]}}}]                               | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"max":1,"name":"type"}]}}}]                               | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"keyphrase": "test","name":"type"}]}}}]                   | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"keyphrase": "test","name":"type"}]}}}]                   | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"minCount": 1,"name":"type"}]}}}]                         | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"min_count": 1,"name":"type"}]}}}]                        | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"count","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"count","order":"asc"}}]}}}] | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"text","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"text","order":"asc"}}]}}}] | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","name":"text","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}] | 200         |
 
     Scenario Outline: Developer requests search widget data from browser with invalid attributes
         Given the '/get-search-widget-data' page is loaded
@@ -85,6 +86,9 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"keyphrase":"","name":"t"}]}}}] | [IV-0018] Incorrect value for "keyphrase" in "facet.types". Set the value to a string between 1 and 100 inclusive.  |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"minCount":0,"name":"t"}]}}}]   | [IV-0019] Incorrect value for "minCount" in "facet.types". Set the value to an integer between 1 and 100 inclusive. |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"minCount":101,"name":"t"}]}}}] | [IV-0019] Incorrect value for "minCount" in "facet.types". Set the value to an integer between 1 and 100 inclusive. |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":"","name":"text","order":"asc"}}]}}}] | [IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":" ","name":"text","order":"asc"}}]}}}] | [IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":"id1234","name":"count","order":"asc"}}]}}}] | [IV-0021] You must set ​"sort.name"​​ to ​"text"​​ if you use "​after"​​. |
 
     Scenario Outline: Developer requests search widget data from browser with a valid payload using setter method
         Given the '/get-search-widget-data' page is loaded
@@ -122,7 +126,8 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"max":1,"name":"type"}]}}}]                               | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"max":1,"name":"type"}]}}}]                               | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"keyphrase":"test","name":"type"}]}}}]                    | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"keyphrase":"test","name":"type"}]}}}]                    | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"minCount":1,"name":"type"}]}}}]                          | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"min_count":1,"name":"type"}]}}}]                         | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"name":"type","sort":{"name":"count","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"count","order":"asc"}}]}}}] | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"name":"type","sort":{"name":"text","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","sort":{"name":"text","order":"asc"}}]}}}] | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facetSetter":{"all":true,"types":[{"name":"type","sort":{"after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","name":"text","order":"asc"}}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"all":true,"types":[{"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}] | 200         |
 
     Scenario Outline: Developer requests search widget data from browser with invalid attributes using setter method
         Given the '/get-search-widget-data' page is loaded
@@ -145,3 +150,5 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"keyphrase":"","name":"t"}]}}}] | [IV-0018] Incorrect value for "keyphrase" in "facet.types". Set the value to a string between 1 and 100 inclusive.  |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"minCount":0,"name":"t"}]}}}]   | [IV-0019] Incorrect value for "minCount" in "facet.types". Set the value to an integer between 1 and 100 inclusive. |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"minCount":101,"name":"t"}]}}}] | [IV-0019] Incorrect value for "minCount" in "facet.types". Set the value to an integer between 1 and 100 inclusive. |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":" ","name":"text","order":"asc"}}]}}}] | [IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":"id1234","name":"count","order":"asc"}}]}}}] | [IV-0021] You must set ​"sort.name"​​ to ​"text"​​ if you use "​after"​​. |

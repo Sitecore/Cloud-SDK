@@ -22,6 +22,8 @@ export enum ErrorMessages {
   IV_0017 = '[IV-0017] Incorrect value for "max" in "facet.types". Set the value to an integer between 1 and 100 inclusive.',
   IV_0018 = '[IV-0018] Incorrect value for "keyphrase" in "facet.types". Set the value to a string between 1 and 100 inclusive.',
   IV_0019 = '[IV-0019] Incorrect value for "minCount" in "facet.types". Set the value to an integer between 1 and 100 inclusive.',
+  IV_0020 = '[IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces.',
+  IV_0021 = '[IV-0021] You must set ​"sort.name"​​ to ​"text"​​ if you use "​after"​​. ',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
   MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',
