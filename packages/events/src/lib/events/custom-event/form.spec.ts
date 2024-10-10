@@ -67,12 +67,12 @@ describe('form function', () => {
       global.fetch = jest.fn().mockImplementation(() => mockFetch);
 
       await init(settingsParams);
-      await form('1234', 'SUBMITTED');
+      await form('1234', 'SUBMITTED', 'test');
 
       const expectedBody = JSON.stringify({
         /* eslint-disable sort-keys, @typescript-eslint/naming-convention */
         type: 'FORM',
-        ext: { formId: '1234', interactionType: 'SUBMITTED' },
+        ext: { componentInstanceId: 'test', formId: '1234', interactionType: 'SUBMITTED' },
         browser_id: 'test_id',
         client_key: '',
         pos: '',
@@ -105,7 +105,7 @@ describe('form function', () => {
         throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
       });
 
-      await expect(async () => await form('1234', 'SUBMITTED')).rejects.toThrow(
+      await expect(async () => await form('1234', 'SUBMITTED', 'test')).rejects.toThrow(
         // eslint-disable-next-line max-len
         `[IE-0014] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/events/browser". Then, run "CloudSDK().addEvents().initialize()".`
       );
@@ -135,7 +135,7 @@ describe('form function', () => {
       const expectedBody = JSON.stringify({
         /* eslint-disable sort-keys, @typescript-eslint/naming-convention */
         type: 'FORM',
-        ext: { formId: '1234', interactionType: 'SUBMITTED' },
+        ext: { componentInstanceId: 'test', formId: '1234', interactionType: 'SUBMITTED' },
         browser_id: 'test_id',
         client_key: '',
         pos: '',
@@ -143,7 +143,7 @@ describe('form function', () => {
         /* eslint-enable sort-keys, @typescript-eslint/naming-convention */
       });
 
-      await form('1234', 'SUBMITTED');
+      await form('1234', 'SUBMITTED', 'test');
 
       expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
       expect(getSettingsSpy).toHaveBeenCalledTimes(1);

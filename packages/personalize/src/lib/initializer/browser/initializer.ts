@@ -120,7 +120,11 @@ declare global {
     version: string;
     pageView?: () => Promise<EPResponse | null>;
     identity?: (identityData: IdentityData) => Promise<EPResponse | null>;
-    form?: (formId: string, interactionType: 'VIEWED' | 'SUBMITTED') => Promise<EPResponse | null>;
+    form?: (
+      formId: string,
+      interactionType: 'VIEWED' | 'SUBMITTED',
+      componentInstanceId: string
+    ) => Promise<EPResponse | null>;
     event?: (eventData: EventData) => Promise<EPResponse | null>;
     addToEventQueue?: (eventData: EventData) => Promise<void>;
     processEventQueue?: () => Promise<void>;

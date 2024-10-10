@@ -18,10 +18,14 @@ import { CustomEvent } from './custom-event';
  *
  * @param formId - The required form ID string
  * @param interactionType - The required interaction type string. Possible values: "VIEWED", "SUBMITTED"
- *  settings object, you must specify it here
+ * @param componentInstanceId - The required component instance ID string
  * @returns The response object that Sitecore EP returns or null
  */
-export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTED'): Promise<EPResponse | null> {
+export async function form(
+  formId: string,
+  interactionType: 'VIEWED' | 'SUBMITTED',
+  componentInstanceId: string
+): Promise<EPResponse | null> {
   await awaitInit();
 
   if (getEnabledPackage(PACKAGE_NAME)?.initState) {
@@ -30,6 +34,7 @@ export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTE
     const formEvent = new CustomEvent({
       eventData: {
         extensionData: {
+          componentInstanceId,
           formId,
           interactionType: interactionType.toUpperCase()
         },
@@ -49,6 +54,7 @@ export async function form(formId: string, interactionType: 'VIEWED' | 'SUBMITTE
     const formEvent = new CustomEvent({
       eventData: {
         extensionData: {
+          componentInstanceId,
           formId,
           interactionType: interactionType.toUpperCase()
         },

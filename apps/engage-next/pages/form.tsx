@@ -7,9 +7,10 @@ export default function FormEvent() {
 
   const sendEvent = async () => {
     const formId = getParamsFromUrl('formId') ?? '';
+    const componentInstanceId = getParamsFromUrl('componentInstanceId') ?? '';
     const interactionType = getParamsFromUrl('interactionType') as unknown as 'VIEWED' | 'SUBMITTED';
 
-    await form(formId, interactionType);
+    await form(formId, interactionType, componentInstanceId);
   };
 
   return (

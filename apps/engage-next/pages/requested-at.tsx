@@ -1,12 +1,12 @@
+import type { GetServerSidePropsContext } from 'next';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 import { event, form, identity, pageView } from '@sitecore-cloudsdk/events/browser';
 import {
   event as eventServer,
   identity as identityServer,
   pageView as pageViewServer
 } from '@sitecore-cloudsdk/events/server';
-import type { GetServerSidePropsContext } from 'next';
+import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorate-all';
 
 const baseEventData = { channel: 'WEB', currency: 'EUR', language: 'EN' };
 
@@ -54,7 +54,7 @@ export default function RequestedAt() {
     const testID = 'sendFormEventFromBrowserWithRequestedAt';
 
     decorateAll(testID);
-    await form('test_id', 'VIEWED');
+    await form('test_id', 'VIEWED', 'test');
     resetAllDecorators();
   };
 
