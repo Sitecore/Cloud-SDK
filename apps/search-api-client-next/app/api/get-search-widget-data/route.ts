@@ -35,6 +35,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
         types: [
           {
             exclude: ['type'],
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
             keyphrase: 'test',
             max: 1,
             minCount: 1,
@@ -70,6 +77,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
         types: [
           {
             exclude: ['type'],
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
             keyphrase: 'test',
             max: 1,
             minCount: 1,

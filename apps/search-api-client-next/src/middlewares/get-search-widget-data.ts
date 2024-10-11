@@ -32,6 +32,13 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         types: [
           {
             exclude: ['type'],
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
             keyphrase: 'test',
             max: 1,
             minCount: 1,
@@ -68,6 +75,13 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         types: [
           {
             exclude: ['type'],
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
             keyphrase: 'test',
             max: 1,
             minCount: 1,

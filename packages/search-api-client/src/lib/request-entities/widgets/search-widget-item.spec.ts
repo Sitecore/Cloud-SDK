@@ -218,6 +218,48 @@ describe('search widget item class', () => {
       const result = widgetItem.toDTO();
       expect(result.search?.facet).toEqual(expected);
     });
+
+    it('should set the facet with a valid types name and filter property', () => {
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [
+          {
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
+            name: 'type'
+          }
+        ]
+      };
+      const expected: FacetDTO = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [
+          {
+            filter: {
+              type: 'and',
+              values: [
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0',
+                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+              ]
+            },
+            name: 'type'
+          }
+        ]
+      };
+      widgetItem.facet = data;
+      const result = widgetItem.toDTO();
+      expect(result.search?.facet).toEqual(expected);
+    });
   });
 
   describe('facet types validator', () => {

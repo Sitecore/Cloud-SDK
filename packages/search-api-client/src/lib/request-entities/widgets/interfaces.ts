@@ -46,6 +46,13 @@ export interface FacetSort {
   after?: string;
 }
 
+type FacetFilter = unknown;
+
+export type FacetTypeFilter = {
+  type: 'and' | 'or';
+  values: ArrayOfAtLeastOne<string> | ArrayOfAtLeastOne<FacetFilter>;
+};
+
 export type FacetSortDTO = Omit<FacetSort, 'after'>;
 
 export interface FacetType {
@@ -55,6 +62,7 @@ export interface FacetType {
   keyphrase?: string;
   minCount?: number;
   sort?: FacetSort;
+  filter?: FacetTypeFilter;
 }
 
 export interface FacetTypeDTO {
@@ -65,6 +73,7 @@ export interface FacetTypeDTO {
   min_count?: number;
   sort?: FacetSortDTO;
   after?: string;
+  filter?: FacetTypeFilter;
 }
 
 export interface Facet {

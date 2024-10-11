@@ -117,6 +117,7 @@ export class SearchWidgetItem extends WidgetItem {
     if (this._types)
       facet.types = this._types.map((type) => ({
         exclude: type.exclude,
+        filter: type.filter,
         keyphrase: type.keyphrase,
         max: type.max,
         min_count: type.minCount,
