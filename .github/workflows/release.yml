@@ -59,16 +59,16 @@ jobs:
           done
 
       - name: Bump version Utils
-        run: npx nx utils:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run utils:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Bump version Core
-        run: npx nx core:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run core:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Bump version Events
-        run: npx nx events:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run events:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Bump version Personalize
-        run: npx nx personalize:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run personalize:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
         if: ${{ github.event.inputs.dryRun == 'false' }}
