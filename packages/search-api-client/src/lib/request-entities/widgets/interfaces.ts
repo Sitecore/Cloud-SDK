@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { ComparisonFacetFilter } from '../filters/facet/comparison-facet-filter';
+import type { ComparisonFacetFilterDTO } from '../filters/facet/interfaces';
 import type { ArrayOfAtLeastOne, Filter, FilterDTO } from '../filters/interfaces';
 
 /**
@@ -46,11 +48,17 @@ export interface FacetSort {
   after?: string;
 }
 
-type FacetFilter = unknown;
+export type FacetFilter = ComparisonFacetFilter;
+type FacetFilterDTO = ComparisonFacetFilterDTO;
 
 export type FacetTypeFilter = {
   type: 'and' | 'or';
   values: ArrayOfAtLeastOne<string> | ArrayOfAtLeastOne<FacetFilter>;
+};
+
+export type FacetTypeFilterDTO = {
+  type: 'and' | 'or';
+  values: ArrayOfAtLeastOne<string> | ArrayOfAtLeastOne<FacetFilterDTO>;
 };
 
 export type FacetSortDTO = Omit<FacetSort, 'after'>;
@@ -73,7 +81,7 @@ export interface FacetTypeDTO {
   min_count?: number;
   sort?: FacetSortDTO;
   after?: string;
-  filter?: FacetTypeFilter;
+  filter?: FacetTypeFilterDTO;
 }
 
 export interface Facet {

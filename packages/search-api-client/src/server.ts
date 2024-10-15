@@ -6,6 +6,7 @@ export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
+export { ComparisonFacetFilter } from './lib/request-entities/filters/facet/comparison-facet-filter';
 export { GeoFilter } from './lib/request-entities/filters/geo-filter';
 export { ListFilter } from './lib/request-entities/filters/list-filter';
 export { GeoWithinFilter } from './lib/request-entities/filters/geo-within-filter';

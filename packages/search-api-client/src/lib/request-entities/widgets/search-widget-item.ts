@@ -2,6 +2,7 @@
 import { ErrorMessages } from '../../consts';
 import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import type { Facet, FacetDTO, FacetSort, FacetType, FacetTypeDTO, SearchWidgetItemDTO } from './interfaces';
+import { isFacetFilter } from './utils';
 import { WidgetItem } from './widget-item';
 
 export class SearchWidgetItem extends WidgetItem {
@@ -102,6 +103,14 @@ export class SearchWidgetItem extends WidgetItem {
     this._types = undefined;
   }
 
+  private _filterToDTO(type: FacetType) {
+    if (!type.filter) return undefined;
+
+    if (!isFacetFilter(type.filter.values)) return type.filter;
+
+    return { type: type.filter.type, values: type.filter.values.map((filter) => filter.toDTO()) };
+  }
+
   /**
    * Maps the search widget item to its DTO format.
    */
@@ -117,13 +126,14 @@ export class SearchWidgetItem extends WidgetItem {
     if (this._types)
       facet.types = this._types.map((type) => ({
         exclude: type.exclude,
-        filter: type.filter,
+        filter: this._filterToDTO(type),
         keyphrase: type.keyphrase,
         max: type.max,
         min_count: type.minCount,
         name: type.name,
         ...this._sortToDTO(type)
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
+
     if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;
 
     return { ...superDTO, search: { ...superDTO.search, facet } };

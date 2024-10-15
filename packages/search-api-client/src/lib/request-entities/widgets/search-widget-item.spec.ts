@@ -1,6 +1,8 @@
 import { ErrorMessages } from '../../consts';
+import { ComparisonFacetFilter } from '../filters/facet/comparison-facet-filter';
 import type { Facet, FacetDTO } from './interfaces';
 import { SearchWidgetItem } from './search-widget-item';
+import * as utilsModule from './utils';
 
 describe('search widget item class', () => {
   describe('constructor', () => {
@@ -65,7 +67,19 @@ describe('search widget item class', () => {
         },
         types: [{ name: 'test' }]
       };
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', expected);
+
+      const data: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'count',
+          order: 'asc'
+        },
+        types: [{ name: 'test' }]
+      };
+
+      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', data);
       const result = widgetItem.toDTO();
 
       expect(result.search?.facet).toEqual(expected);
@@ -88,6 +102,10 @@ describe('search widget item class', () => {
       widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
     });
 
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
     it('should set the facet when given a full valid value', () => {
       const expected: FacetDTO = {
         all: true,
@@ -100,7 +118,18 @@ describe('search widget item class', () => {
         types: [{ name: 'test' }]
       };
 
-      widgetItem.facet = expected;
+      const data: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ name: 'test' }]
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
 
@@ -118,7 +147,17 @@ describe('search widget item class', () => {
         }
       };
 
-      widgetItem.facet = expected;
+      const data: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'text',
+          order: 'asc'
+        }
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
 
@@ -137,7 +176,18 @@ describe('search widget item class', () => {
         types: [{ exclude: ['test'], name: 'test' }]
       };
 
-      widgetItem.facet = expected;
+      const data: Facet = {
+        all: true,
+        coverage: true,
+        max: 50,
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ exclude: ['test'], name: 'test' }]
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
       expect(result.search?.facet).toEqual(expected);
@@ -152,7 +202,15 @@ describe('search widget item class', () => {
         types: [{ max: 1, name: 'test' }]
       };
 
-      widgetItem.facet = expected;
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ max: 1, name: 'test' }]
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
 
@@ -168,7 +226,15 @@ describe('search widget item class', () => {
         types: [{ keyphrase: 'test', name: 'test' }]
       };
 
-      widgetItem.facet = expected;
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [{ keyphrase: 'test', name: 'test' }]
+      };
+
+      widgetItem.facet = data;
 
       const result = widgetItem.toDTO();
 
@@ -219,7 +285,7 @@ describe('search widget item class', () => {
       expect(result.search?.facet).toEqual(expected);
     });
 
-    it('should set the facet with a valid types name and filter property', () => {
+    it('should set the facet with a valid types name and filter property when array contains filters', () => {
       const data: Facet = {
         sort: {
           name: 'text',
@@ -229,10 +295,7 @@ describe('search widget item class', () => {
           {
             filter: {
               type: 'and',
-              values: [
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0',
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
-              ]
+              values: [new ComparisonFacetFilter('eq', 'test1'), new ComparisonFacetFilter('lt', 'test2')]
             },
             name: 'type'
           }
@@ -248,17 +311,62 @@ describe('search widget item class', () => {
             filter: {
               type: 'and',
               values: [
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0',
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+                { type: 'eq', value: 'test1' },
+                { type: 'lt', value: 'test2' }
               ]
             },
             name: 'type'
           }
         ]
       };
+
+      const isFacetFilterSpy = jest.spyOn(utilsModule, 'isFacetFilter').mockReturnValueOnce(true);
+
       widgetItem.facet = data;
       const result = widgetItem.toDTO();
       expect(result.search?.facet).toEqual(expected);
+      expect(isFacetFilterSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should set the facet with a valid types name and filter property when array contains strings', () => {
+      const data: Facet = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [
+          {
+            filter: {
+              type: 'and',
+              values: ['test1', 'test2']
+            },
+            name: 'type'
+          }
+        ]
+      };
+      const expected: FacetDTO = {
+        sort: {
+          name: 'text',
+          order: 'asc'
+        },
+        types: [
+          {
+            filter: {
+              type: 'and',
+              values: ['test1', 'test2']
+            },
+            name: 'type'
+          }
+        ]
+      };
+
+      const isFacetFilterSpy = jest.spyOn(utilsModule, 'isFacetFilter').mockReturnValueOnce(false);
+
+      widgetItem.facet = data;
+      const result = widgetItem.toDTO();
+      expect(result.search?.facet).toEqual(expected);
+      expect(isFacetFilterSpy).toHaveBeenCalledTimes(1);
+      expect(isFacetFilterSpy).toHaveBeenCalledWith(['test1', 'test2']);
     });
   });
 
