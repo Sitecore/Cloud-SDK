@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import type {
   SearchEventEntity,
   SearchEventEntityDTO,
@@ -6,8 +8,6 @@ import type {
   SearchEventRequestDTO,
   WidgetViewEventParams
 } from './interfaces';
-import { ErrorMessages } from '../consts';
-import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class WidgetViewEvent {
   protected request: SearchEventRequest;
@@ -21,32 +21,16 @@ export class WidgetViewEvent {
 
   /**
    * Creates a search widget view event.
-   * @param request - A  request object.
-   * @param entities - An array of {@link SearchEventEntity} objects.
-   * @param pathname - Current uri of the page.
-   * @param widgetIdentifier - Unique ID of a widget.
-   * @param page - A string that identifies the page.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param channel - The touchpoint where the user interacts.
+   * @param widgetViewEventParams - An object with the widget view events params {@link WidgetViewEventParams}
    */
-  constructor({
-    request,
-    entities,
-    pathname,
-    widgetIdentifier,
-    page,
-    currency,
-    language,
-    channel
-  }: WidgetViewEventParams) {
+  constructor({ request, entities, pathname, widgetId, page, currency, language, channel }: WidgetViewEventParams) {
     this._validate(currency, language);
 
     this.entities = entities;
     this.page = page;
     this.request = request;
     this.pathname = pathname;
-    this.widgetIdentifier = widgetIdentifier;
+    this.widgetIdentifier = widgetId;
     this.currency = currency;
     this.language = language;
     this.channel = channel;

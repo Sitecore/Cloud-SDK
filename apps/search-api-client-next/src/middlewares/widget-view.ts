@@ -4,9 +4,9 @@ import type {
   SearchEventRequest,
   WidgetViewEventParams
 } from 'packages/search-api-client/src/lib/events/interfaces';
-import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { widgetView } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 
 export async function widgetViewMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -58,7 +58,7 @@ export async function widgetViewMiddleware(request: NextRequest, response: NextR
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   switch (testID) {

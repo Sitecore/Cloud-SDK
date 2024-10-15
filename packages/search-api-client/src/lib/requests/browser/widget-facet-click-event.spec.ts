@@ -57,7 +57,7 @@ describe('widgetFacetClick', () => {
       page: 'test',
       pathname: 'https://www.sitecore.com/products/content-cloud',
       request: widgetItemRequest,
-      widgetIdentifier: '12345'
+      widgetId: '12345'
     });
 
     expect(initEventsSpy).toHaveBeenCalledTimes(1);
@@ -118,7 +118,7 @@ describe('widgetFacetClick', () => {
       page: 'test',
       pathname: 'https://www.sitecore.com/products/content-cloud',
       request: widgetItemRequest,
-      widgetIdentifier: '12345'
+      widgetId: '12345'
     });
 
     expect(initEventsSpy).not.toHaveBeenCalled();

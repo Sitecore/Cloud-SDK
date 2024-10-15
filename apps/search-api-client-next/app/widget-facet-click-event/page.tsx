@@ -20,7 +20,7 @@ export default function WidgetFacetClickEvent() {
   }, []);
 
   const [widgetFacetClickEventData, setWidgetFacetClickEventData] = useState(
-    '{"channel":"WEB","currency":"EUR","language":"EN","page":"test","pathname":"https://www.sitecore.com/products/content-cloud","filters":[{"displayName":"test","facetPosition":1,"name":"test","title":"test","value":"test","valuePosition":1},{"displayName": "test","endValue": "1","name": "test","startValue":"1","title":"test","value":"test","valuePosition":1}],"request":{"advancedQueryText":"test1","keyword":"test_keyword","modifiedKeyword":"test2","numRequested":20,"numResults":10,"pageNumber":2,"pageSize":1,"redirectUrl":"test3","totalResults":10},"widgetIdentifier":"12345"}'
+    '{"channel":"WEB","currency":"EUR","language":"EN","page":"test","pathname":"https://www.sitecore.com/products/content-cloud","filters":[{"displayName":"test","facetPosition":1,"name":"test","title":"test","value":"test","valuePosition":1},{"displayName": "test","endValue": "1","name": "test","startValue":"1","title":"test","value":"test","valuePosition":1}],"request":{"advancedQueryText":"test1","keyword":"test_keyword","modifiedKeyword":"test2","numRequested":20,"numResults":10,"pageNumber":2,"pageSize":1,"redirectUrl":"test3","totalResults":10},"widgetId":"12345"}'
   );
 
   return (

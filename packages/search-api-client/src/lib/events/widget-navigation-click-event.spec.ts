@@ -1,15 +1,15 @@
 import { ErrorMessages } from '../consts';
-import { WidgetNavigationEvent } from './widget-navigation-event';
+import { WidgetNavigationClickEvent } from './widget-navigation-click-event';
 
-describe('widget navigaiton event class', () => {
-  const widgeNavigationEventData = {
+describe('widget navigation event class', () => {
+  const widgetNavigationEventData = {
     channel: 'WEB',
     currency: 'EUR',
     itemPosition: 1,
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   it('should return a widgetItemEvent object mapped to its DTO', () => {
@@ -23,54 +23,54 @@ describe('widget navigaiton event class', () => {
         value: {
           context: {
             page: {
-              uri: widgeNavigationEventData.pathname
+              uri: widgetNavigationEventData.pathname
             }
           },
-          index: widgeNavigationEventData.itemPosition,
-          rfk_id: widgeNavigationEventData.widgetIdentifier
+          index: widgetNavigationEventData.itemPosition,
+          rfk_id: widgetNavigationEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_NAVIGATION_CLICK'
     };
 
-    const widgetNavigationEventDTO = new WidgetNavigationEvent(widgeNavigationEventData).toDTO();
+    const widgetNavigationEventDTO = new WidgetNavigationClickEvent(widgetNavigationEventData).toDTO();
 
     expect(widgetNavigationEventDTO).toEqual(expected);
   });
 
   it(`should throw an error if 'language' provided is invalid`, () => {
     const invalidWidgetNavigationEventData = {
-      ...widgeNavigationEventData,
+      ...widgetNavigationEventData,
       language: 'TEST'
     };
 
-    expect(() => new WidgetNavigationEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.MV_0007);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {
     const invalidWidgetNavigationEventData = {
-      ...widgeNavigationEventData,
+      ...widgetNavigationEventData,
       currency: 'TEST'
     };
 
-    expect(() => new WidgetNavigationEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.IV_0015);
+    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.IV_0015);
   });
 
   it(`should not throw an error if 'language' is undefined`, () => {
     const invalidWidgetNavigationEventData = {
-      ...widgeNavigationEventData,
+      ...widgetNavigationEventData,
       language: undefined
     };
 
-    expect(() => new WidgetNavigationEvent(invalidWidgetNavigationEventData)).not.toThrow();
+    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).not.toThrow();
   });
 
   it(`should not throw an error if 'currency' is undefined`, () => {
     const invalidWidgetNavigationEventData = {
-      ...widgeNavigationEventData,
+      ...widgetNavigationEventData,
       currency: undefined
     };
 
-    expect(() => new WidgetNavigationEvent(invalidWidgetNavigationEventData)).not.toThrow();
+    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).not.toThrow();
   });
 });

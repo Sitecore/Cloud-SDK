@@ -31,7 +31,7 @@ describe('widget suggestion click event class', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   it('should return a widgetSuggestionClickEvent object mapped to its DTO', () => {
@@ -68,7 +68,7 @@ describe('widget suggestion click event class', () => {
             redirect_url: widgetSuggestionClickEventData.request.redirectUrl,
             total_results: widgetSuggestionClickEventData.request.totalResults
           },
-          rfk_id: widgetSuggestionClickEventData.widgetIdentifier
+          rfk_id: widgetSuggestionClickEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_CLICK'

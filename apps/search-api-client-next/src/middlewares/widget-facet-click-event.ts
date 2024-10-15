@@ -57,7 +57,7 @@ export async function widgetFacetClickMiddleware(request: NextRequest, response:
           redirectUrl: 'test3',
           totalResults: 10
         },
-        widgetIdentifier: '12345'
+        widgetId: '12345'
       });
       break;
   }

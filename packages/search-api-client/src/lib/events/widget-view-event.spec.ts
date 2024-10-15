@@ -1,5 +1,5 @@
-import type { SearchEventEntity, SearchEventRequest, WidgetViewEventParams } from './interfaces';
 import { ErrorMessages } from '../consts';
+import type { SearchEventEntity, SearchEventRequest, WidgetViewEventParams } from './interfaces';
 import { WidgetViewEvent } from './widget-view-event';
 
 describe('widget view event class', () => {
@@ -46,7 +46,7 @@ describe('widget view event class', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   it('should return a widgetViewEvent object mapped to its DTO', () => {
@@ -92,7 +92,7 @@ describe('widget view event class', () => {
             redirect_url: widgetViewEventData.request.redirectUrl,
             total_results: widgetViewEventData.request.totalResults
           },
-          rfk_id: widgetViewEventData.widgetIdentifier
+          rfk_id: widgetViewEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_VIEW'

@@ -1,9 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { ErrorMessages } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import type { WidgetNavigationEventParams } from './interfaces';
+import { ErrorMessages } from '../consts';
+import type { WidgetNavigationClickEventParams } from './interfaces';
 
-export class WidgetNavigationEvent {
+export class WidgetNavigationClickEvent {
   protected itemPosition: number;
   protected pathname: string;
   protected widgetIdentifier: string;
@@ -13,28 +13,23 @@ export class WidgetNavigationEvent {
   protected channel?: string;
   /**
    * Creates a search widget navigation event.
-   * @param itemPosition - Position of the item that was clicked.
-   * @param pathname - Current uri of the page.
-   * @param widgetIdentifier - Unique ID of a widget.
-   * @param page - A string that identifies the page.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param channel - The touchpoint where the user interacts.
+   * @param widgetNavigationClickEventParams - an object containing navigation click params
+   *   {@link WidgetNavigationClickEventParams}
    */
   constructor({
     itemPosition,
     pathname,
-    widgetIdentifier,
+    widgetId,
     page,
     currency,
     language,
     channel
-  }: WidgetNavigationEventParams) {
+  }: WidgetNavigationClickEventParams) {
     this._validate(currency, language);
     this.itemPosition = itemPosition;
     this.page = page;
     this.pathname = pathname;
-    this.widgetIdentifier = widgetIdentifier;
+    this.widgetIdentifier = widgetId;
     this.currency = currency;
     this.language = language;
     this.channel = channel;

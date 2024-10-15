@@ -38,7 +38,7 @@ export async function widgetSuggestionClickMiddleware(request: NextRequest, resp
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   switch (testID) {

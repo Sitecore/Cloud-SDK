@@ -37,7 +37,7 @@ describe('widgetNavigationClick', () => {
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
   const initEventsSpy = jest.spyOn(eventsBrowserModule, 'init');
 
@@ -77,7 +77,7 @@ describe('widgetNavigationClick', () => {
             }
           },
           index: widgetNavigationEventData.itemPosition,
-          rfk_id: widgetNavigationEventData.widgetIdentifier
+          rfk_id: widgetNavigationEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_NAVIGATION_CLICK'
@@ -106,7 +106,7 @@ describe('widgetNavigationClick', () => {
             }
           },
           index: widgetNavigationEventData.itemPosition,
-          rfk_id: widgetNavigationEventData.widgetIdentifier
+          rfk_id: widgetNavigationEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_NAVIGATION_CLICK'

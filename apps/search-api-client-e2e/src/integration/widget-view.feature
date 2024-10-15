@@ -40,7 +40,7 @@ Scenario Outline: Developer sends search widget view event from browser with a v
                 "redirectUrl": "test3",
                 "totalResults": 10
             },
-            "widgetIdentifier": "12345"
+            "widgetId": "12345"
         }
      """
     And the 'widgetView' button is clicked

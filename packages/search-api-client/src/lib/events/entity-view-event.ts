@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EntityViewEventParams, SearchEventEntity, SearchEventEntityDTO } from './interfaces';
-import { ErrorMessages } from '../consts';
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
+import type { EntityViewEventParams, SearchEventEntity, SearchEventEntityDTO } from './interfaces';
 
 export class EntityViewEvent {
   protected page: string;
@@ -12,11 +12,7 @@ export class EntityViewEvent {
 
   /**
    * Creates an entity view event.
-   * @param page - A string that identifies the page.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param pathname - Current uri of the page.
-   * @param entity - An object containing entity information.
+   * @param entityViewEventParams - An object with the entity view event params {@link EntityViewEventParams}
    */
   constructor({ page, currency, language, pathname, entity }: EntityViewEventParams) {
     this._validate(currency, language);

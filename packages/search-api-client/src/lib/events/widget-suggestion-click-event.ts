@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import type {
   SearchEventRequest,
   SearchEventRequestDTO,
@@ -6,8 +8,6 @@ import type {
   SuggestionFilterDTO,
   WidgetSuggestionClickEventParams
 } from './interfaces';
-import { ErrorMessages } from '../consts';
-import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class WidgetSuggestionClickEvent {
   protected request: SearchEventRequest;
@@ -21,21 +21,15 @@ export class WidgetSuggestionClickEvent {
 
   /**
    * Creates a widget suggestion click event.
-   * @param request - A  request object.
-   * @param filters - An array of {@link SuggestionFilter} filters.
-   * @param pathname - Current uri of the page.
-   * @param widgetIdentifier - Unique ID of a widget.
-   * @param page - A string that identifies the page.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param channel - The touchpoint where the user interacts.
+   * @param widgetSuggestionClickEventParams - An object with the widget suggestion click event params
+   *  {@link WidgetSuggestionClickEventParams}
    */
   constructor({
     request,
     filters,
     pathname,
     page,
-    widgetIdentifier,
+    widgetId,
     currency,
     language,
     channel
@@ -46,7 +40,7 @@ export class WidgetSuggestionClickEvent {
     this.filters = filters;
     this.pathname = pathname;
     this.page = page;
-    this.widgetIdentifier = widgetIdentifier;
+    this.widgetIdentifier = widgetId;
     this.currency = currency;
     this.language = language;
     this.channel = channel;

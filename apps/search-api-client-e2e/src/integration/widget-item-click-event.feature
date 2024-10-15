@@ -32,7 +32,7 @@ Scenario Outline: Developer sends search widget item click event from browser wi
                 "redirectUrl": "test3",
                 "totalResults": 10
             },
-            "widgetIdentifier": "12345"
+            "widgetId": "12345"
         }
      """
     And the 'widgetItemClickEvent' button is clicked

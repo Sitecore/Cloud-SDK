@@ -14,7 +14,7 @@ export class WidgetItemClickEvent {
   protected entity: SearchEventEntity;
   protected itemPosition: number;
   protected pathname: string;
-  protected widgetIdentifier: string;
+  protected widgetId: string;
   protected page?: string;
   protected currency?: string;
   protected language?: string;
@@ -22,22 +22,15 @@ export class WidgetItemClickEvent {
 
   /**
    * Creates a search widget item event.
-   * @param request - A  request object.
-   * @param entity - An object containing entity information.
-   * @param itemPosition - Position of the item that was clicked.
-   * @param pathname - Current uri of the page.
-   * @param widgetIdentifier - Unique ID of a widget.
-   * @param page - A string that identifies the page.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param channel - The touchpoint where the user interacts.
+   * @param widgetItemClickEventParams - An object with the widget item click params
+   * {@link WidgetItemClickEventParams}
    */
   constructor({
     request,
     entity,
     itemPosition,
     pathname,
-    widgetIdentifier,
+    widgetId,
     page,
     currency,
     language,
@@ -50,7 +43,7 @@ export class WidgetItemClickEvent {
     this.page = page;
     this.request = request;
     this.pathname = pathname;
-    this.widgetIdentifier = widgetIdentifier;
+    this.widgetId = widgetId;
     this.currency = currency;
     this.language = language;
     this.channel = channel;
@@ -99,7 +92,7 @@ export class WidgetItemClickEvent {
           entities: [eventEntityDTO],
           index: this.itemPosition,
           request: eventRequestDTO,
-          rfk_id: this.widgetIdentifier
+          rfk_id: this.widgetId
         }
       } as unknown as NestedObject,
       type: 'SC_SEARCH_WIDGET_CLICK'

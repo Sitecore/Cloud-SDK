@@ -1,4 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { NestedObject } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import type {
   FacetFilter,
   FacetFilterDTO,
@@ -8,13 +10,11 @@ import type {
   SearchEventRequestDTO,
   WidgetFacetClickEventParams
 } from './interfaces';
-import { ErrorMessages } from '../consts';
-import type { NestedObject } from '@sitecore-cloudsdk/utils';
 
 export class WidgetFacetClickEvent {
   protected request: SearchEventRequest;
   protected pathname: string;
-  protected widgetIdentifier: string;
+  protected widgetId: string;
   protected page?: string;
   protected currency?: string;
   protected language?: string;
@@ -23,19 +23,13 @@ export class WidgetFacetClickEvent {
 
   /**
    * Creates a search widget facet click event.
-   * @param channel - The touchpoint where the user interacts.
-   * @param currency - Three-letter currency code of the location-specific website in the ISO 42178 format.
-   * @param filters - An array of {@link FacetFilter} or {@link RangeFacetFilter} filters.
-   * @param language - Two-letter language code in the ISO 639-1 format.
-   * @param page - A string that identifies the page.
-   * @param pathname - Current uri of the page.
-   * @param request - A  request object.
-   * @param widgetIdentifier - Unique ID of a widget.
+   * @param widgetFacetClickEventParams - An object with the widget facet click params
+   *   {@link WidgetFacetClickEventParams}
    */
   constructor({
     request,
     pathname,
-    widgetIdentifier,
+    widgetId,
     page,
     currency,
     language,
@@ -51,7 +45,7 @@ export class WidgetFacetClickEvent {
     this.filters = filters;
     this.page = page;
     this.pathname = pathname;
-    this.widgetIdentifier = widgetIdentifier;
+    this.widgetId = widgetId;
   }
 
   private _validate(currency?: string, language?: string) {
@@ -121,7 +115,7 @@ export class WidgetFacetClickEvent {
           },
           filters: filtersDTO,
           request: requestDTO,
-          rfk_id: this.widgetIdentifier
+          rfk_id: this.widgetId
         }
       } as unknown as NestedObject,
       type: 'SC_SEARCH_WIDGET_CLICK'

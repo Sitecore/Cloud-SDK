@@ -11,7 +11,7 @@ Scenario Outline: Developer sends search widget navigation click event from brow
             "language": "EN",
             "page": "test",
             "pathname": "https://www.sitecore.com/products/content-cloud",
-            "widgetIdentifier": "12345"
+            "widgetId": "12345"
         }
      """
     And the 'widgetNavigationClickEvent' button is clicked

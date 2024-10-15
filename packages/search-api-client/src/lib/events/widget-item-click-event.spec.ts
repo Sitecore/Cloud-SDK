@@ -35,7 +35,7 @@ describe('widget item event class', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
 
   it('should return a widgetItemEvent object mapped to its DTO', () => {
@@ -74,7 +74,7 @@ describe('widget item event class', () => {
             redirect_url: widgetItemEventData.request.redirectUrl,
             total_results: widgetItemEventData.request.totalResults
           },
-          rfk_id: widgetItemEventData.widgetIdentifier
+          rfk_id: widgetItemEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_CLICK'

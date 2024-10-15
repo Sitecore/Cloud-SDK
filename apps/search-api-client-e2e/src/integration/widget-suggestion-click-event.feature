@@ -30,7 +30,7 @@ Scenario Outline: Developer sends search widget suggestion click event from brow
                 "redirectUrl": "test3",
                 "totalResults": 10
             },
-            "widgetIdentifier": "12345"
+            "widgetId": "12345"
         }
      """
     And the 'widgetSuggestionClickEvent' button is clicked

@@ -68,7 +68,7 @@ describe('widgetItemClickServer', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
   const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
@@ -127,7 +127,7 @@ describe('widgetItemClickServer', () => {
             redirect_url: widgetItemClickEventData.request.redirectUrl,
             total_results: widgetItemClickEventData.request.totalResults
           },
-          rfk_id: widgetItemClickEventData.widgetIdentifier
+          rfk_id: widgetItemClickEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_CLICK'
@@ -176,7 +176,7 @@ describe('widgetItemClickServer', () => {
             redirect_url: widgetItemClickEventData.request.redirectUrl,
             total_results: widgetItemClickEventData.request.totalResults
           },
-          rfk_id: widgetItemClickEventData.widgetIdentifier
+          rfk_id: widgetItemClickEventData.widgetId
         }
       },
       type: 'SC_SEARCH_WIDGET_CLICK'

@@ -33,7 +33,7 @@ export async function widgetNavigationClickMiddleware(request: NextRequest, resp
         language: 'EN',
         page: 'test',
         pathname: 'https://www.sitecore.com/products/content-cloud',
-        widgetIdentifier: '12345'
+        widgetId: '12345'
       };
 
       await widgetNavigationClick(request, payload);

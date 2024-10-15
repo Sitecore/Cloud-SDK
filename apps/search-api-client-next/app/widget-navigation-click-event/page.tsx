@@ -20,7 +20,7 @@ export default function WidgetNavigationClickEvent() {
   }, []);
 
   const [widgetNavigationClickEventData, setWidgetNavigationClickEventData] = useState(
-    '{"channel":"WEB","currency":"EUR","itemPosition":1,"language":"EN","page":"test","pathname":"https://www.sitecore.com/products/content-cloud","widgetIdentifier":"12345"}'
+    '{"channel":"WEB","currency":"EUR","itemPosition":1,"language":"EN","page":"test","pathname":"https://www.sitecore.com/products/content-cloud","widgetId":"12345"}'
   );
 
   return (

@@ -55,7 +55,7 @@ describe('widgetFacetClickServer', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
     request: widgetItemRequest,
-    widgetIdentifier: '12345'
+    widgetId: '12345'
   };
   const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 

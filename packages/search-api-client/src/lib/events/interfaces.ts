@@ -90,14 +90,14 @@ export interface RangeFacetFilterDTO extends SuggestionFilterDTO {
 
 export type EventFilter = SuggestionFilter | FacetFilter | RangeFacetFilter;
 
-export interface WidgetNavigationEventParams {
+export interface WidgetNavigationClickEventParams {
   pathname: string;
   page?: string;
   itemPosition: number;
   currency?: string;
   language?: string;
   channel?: string;
-  widgetIdentifier: string;
+  widgetId: string;
 }
 
 export interface WidgetItemClickEventParams {
@@ -105,7 +105,7 @@ export interface WidgetItemClickEventParams {
   entity: SearchEventEntity;
   itemPosition: number;
   pathname: string;
-  widgetIdentifier: string;
+  widgetId: string;
   page?: string;
   currency?: string;
   language?: string;
@@ -116,7 +116,7 @@ export interface WidgetSuggestionClickEventParams {
   request: SearchEventRequest;
   filters: Array<SuggestionFilter>;
   pathname: string;
-  widgetIdentifier: string;
+  widgetId: string;
   page: string;
   currency?: string;
   language?: string;
@@ -127,7 +127,7 @@ export interface WidgetFacetClickEventParams {
   request: SearchEventRequest;
   filters: Array<FacetFilter | RangeFacetFilter>;
   pathname: string;
-  widgetIdentifier: string;
+  widgetId: string;
   page?: string;
   currency?: string;
   language?: string;
@@ -138,7 +138,7 @@ export interface WidgetViewEventParams {
   request: SearchEventRequest;
   entities: Array<SearchEventEntity>;
   pathname: string;
-  widgetIdentifier: string;
+  widgetId: string;
   page?: string;
   currency?: string;
   language?: string;

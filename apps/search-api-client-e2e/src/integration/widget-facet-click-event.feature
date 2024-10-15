@@ -41,7 +41,7 @@ Scenario Outline: Developer sends search widget facet click event from browser w
                 "redirectUrl": "test3",
                 "totalResults": 10
             },
-            "widgetIdentifier": "12345"
+            "widgetId": "12345"
         }
      """
     And the 'widgetFacetClickEvent' button is clicked

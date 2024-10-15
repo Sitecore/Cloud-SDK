@@ -1,8 +1,8 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import { widgetView } from '@sitecore-cloudsdk/search-api-client/browser';
-import { useEffect, useState } from 'react';
 
 export default function WidgetView() {
   useEffect(() => {
@@ -56,7 +56,7 @@ export default function WidgetView() {
             "redirectUrl": "test3",
             "totalResults": 10
         },
-        "widgetIdentifier": "12345"
+        "widgetId": "12345"
     }`
   );
 
