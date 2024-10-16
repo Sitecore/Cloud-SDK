@@ -11,6 +11,7 @@ export { GeoFilter } from './lib/request-entities/filters/geo-filter';
 export { ListFilter } from './lib/request-entities/filters/list-filter';
 export { GeoWithinFilter } from './lib/request-entities/filters/geo-within-filter';
 export { Context } from './lib/request-entities/context/context';
+export { LogicalFacetFilter } from './lib/request-entities/filters/facet/logical-facet-filter';
 
 export type { BrowserSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';

@@ -5,6 +5,7 @@ import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import {
   ComparisonFacetFilter,
   getWidgetData,
+  LogicalFacetFilter,
   SearchWidgetItem,
   WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/browser';
@@ -28,6 +29,13 @@ export default function SearchFilters() {
   const createFilter = (filterOperator: any, filterValue: any): any => {
     if (['eq', 'gt', 'gte', 'lt', 'lte'].includes(filterOperator))
       return new ComparisonFacetFilter(filterOperator, filterValue);
+
+    if (['or', 'and'].includes(filterOperator)) {
+      return new LogicalFacetFilter(
+        filterOperator,
+        filterValue.map((filter: any) => createFilter(filter.type, filter.value))
+      );
+    }
 
     return undefined;
   };

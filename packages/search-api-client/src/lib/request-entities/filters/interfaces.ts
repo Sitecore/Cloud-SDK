@@ -68,7 +68,7 @@ export interface NotFilterDTO {
 }
 
 export type ComparisonOperators = 'eq' | 'gt' | 'gte' | 'lt' | 'lte';
-type LogicalOperators = 'and' | 'or' | 'not';
+export type LogicalOperators = 'and' | 'or' | 'not';
 export type ListOperators = 'allOf' | 'anyOf';
 
 export type GeoOperator = 'geoDistance';

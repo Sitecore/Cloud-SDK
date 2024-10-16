@@ -3,6 +3,7 @@
 import { defineStep } from '@badeball/cypress-cucumber-preprocessor';
 import type { CyHttpMessages } from 'cypress/types/net-stubbing';
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 let statusCode: number;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let searchResponse: CyHttpMessages.IncomingResponse | undefined;

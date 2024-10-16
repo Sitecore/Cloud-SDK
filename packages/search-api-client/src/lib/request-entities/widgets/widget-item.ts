@@ -1,8 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-import type { Filter, FilterDTO } from '../filters/interfaces';
-import type { LogicalOperators, WidgetItemDTO, WidgetItemSearch } from './interfaces';
 import { ErrorMessages } from '../../consts';
+import type { Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
+import type { WidgetItemDTO, WidgetItemSearch } from './interfaces';
 
 export class WidgetItem {
   protected entity: string;
@@ -94,7 +93,7 @@ export class WidgetItem {
    * The operator is used to define specific search criteria.
    * @param operator - The operator that specifies the search criteria.
    */
-  set operator(operator: LogicalOperators) {
+  set operator(operator: Omit<LogicalOperators, 'not'>) {
     this._search = {
       ...this._search,
       query: {

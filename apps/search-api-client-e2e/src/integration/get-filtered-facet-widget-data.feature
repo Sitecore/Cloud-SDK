@@ -12,14 +12,15 @@ Scenario Outline: Developer requests search filtered widget data from browser wi
   Then the widget data request is sent with filters:
   """
       {
-          "items": <items_payload>
+          "items": <expected_payload>
       }
   """
 
   Examples:
-    | items_payload                                                                                 |
-    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gt","value":"test1"}]}}]}  |  
-    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lt","value":"test1"}]}}]}  |  
-    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"eq","value":"test1"}]}}]}  |  
-    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gte","value":"test1"}]}}]} |  
-    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lte","value":"test1"}]}}]} |  
+    | items_payload                                                                                  | expected_payload |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gt","value":"test1"}]}}]}  | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gt","value":"test1"}]}}]} |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lt","value":"test1"}]}}]}  | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lt","value":"test1"}]}}]} |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"eq","value":"test1"}]}}]}  | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"eq","value":"test1"}]}}]} |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gte","value":"test1"}]}}]} | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"gte","value":"test1"}]}}]} |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lte","value":"test1"}]}}]} | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"lte","value":"test1"}]}}]} |
+    | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"or","value":[{"type":"eq","value":"test1"}]}]}}]} | {"types":[{"name":"type", "filter": {"type":"or","values":[{"type":"or","filters":[{"type":"eq","value":"test1"}]}]}}]} |
