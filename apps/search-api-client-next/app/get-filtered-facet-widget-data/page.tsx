@@ -6,6 +6,7 @@ import {
   ComparisonFacetFilter,
   getWidgetData,
   LogicalFacetFilter,
+  NotFacetFilter,
   SearchWidgetItem,
   WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/browser';
@@ -34,6 +35,13 @@ export default function SearchFilters() {
       return new LogicalFacetFilter(
         filterOperator,
         filterValue.map((filter: any) => createFilter(filter.type, filter.value))
+      );
+    }
+
+    if (filterOperator === 'not') {
+      return new NotFacetFilter(
+        filterOperator,
+        typeof filterValue === 'string' ? filterValue : createFilter(filterValue.type, filterValue.value)
       );
     }
 

@@ -1,6 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { ComparisonFacetFilter } from '../filters/facet/comparison-facet-filter';
-import type { ComparisonFacetFilterDTO, LogicalFacetFilterDTO } from '../filters/facet/interfaces';
+import type { ComparisonFacetFilterDTO, NotFacetFilterDTO, LogicalFacetFilterDTO } from '../filters/facet/interfaces';
+import type { NotFacetFilter } from '../filters/facet/not-facet-filter';
 import type { LogicalFacetFilter } from '../filters/facet/logical-facet-filter';
 import type { ArrayOfAtLeastOne, Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
 
@@ -47,8 +48,8 @@ export interface FacetSort {
   after?: string;
 }
 
-export type FacetFilter = ComparisonFacetFilter | LogicalFacetFilter;
-export type FacetFilterDTO = ComparisonFacetFilterDTO | LogicalFacetFilterDTO;
+export type FacetFilter = ComparisonFacetFilter | NotFacetFilter | LogicalFacetFilter;
+export type FacetFilterDTO = ComparisonFacetFilterDTO | NotFacetFilterDTO | LogicalFacetFilterDTO;
 
 export type FacetTypeFilter = {
   type: 'and' | 'or';
