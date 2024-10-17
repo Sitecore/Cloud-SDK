@@ -14,9 +14,9 @@
       "types": "./server.d.ts"
     },
     "./internal": {
-      "types": "./internal.d.ts",
       "import": "./internal.js",
-      "require": "./internal.js"
+      "require": "./internal.cjs",
+      "types": "./internal.d.ts"
     }
   },
   "dependencies": {

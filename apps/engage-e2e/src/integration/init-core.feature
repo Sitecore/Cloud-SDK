@@ -6,6 +6,6 @@ Scenario: Developer initializes CloudSDK core
     Then the core settings are injected to the window object
      """
      { 
-         "scCloudSDK": { "core": {"version": "0.3.1","settings": {"sitecoreEdgeContextId": "83d8199c-2837-4c29-a8ab-1bf234fea2d1", "sitecoreEdgeUrl": "https://edge-platform.sitecorecloud.io"}}}
+         "scCloudSDK": { "core": {"version": "0.4.0-rc.0","settings": {"sitecoreEdgeContextId": "83d8199c-2837-4c29-a8ab-1bf234fea2d1", "sitecoreEdgeUrl": "https://edge-platform.sitecorecloud.io"}}}
      }
     """
