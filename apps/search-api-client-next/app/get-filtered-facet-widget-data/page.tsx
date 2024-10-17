@@ -5,6 +5,7 @@ import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import {
   ComparisonFacetFilter,
   getWidgetData,
+  ListFacetFilter,
   LogicalFacetFilter,
   NotFacetFilter,
   SearchWidgetItem,
@@ -31,6 +32,7 @@ export default function SearchFilters() {
     if (['eq', 'gt', 'gte', 'lt', 'lte'].includes(filterOperator))
       return new ComparisonFacetFilter(filterOperator, filterValue);
 
+    if (['allOf', 'anyOf'].includes(filterOperator)) return new ListFacetFilter(filterOperator, filterValue);
     if (['or', 'and'].includes(filterOperator)) {
       return new LogicalFacetFilter(
         filterOperator,
