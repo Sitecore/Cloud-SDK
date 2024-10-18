@@ -2,10 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-## [0.4.0-rc.0](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.3.1...core-0.4.0-rc.0) (2024-10-14)
+## [0.4.0-rc.1](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.4.0-rc.0...core-0.4.0-rc.1) (2024-10-17)
 
-### Features
+### Bug Fixes
 
-- CDK-372 Personalize Cookie should only be enabled when using Personalize packages. ([#282](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/282)) ([2714fff](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/2714fff3f6a06198310afc4c04f9cdc87e7c2f13))
-- CDK-379 Web Personalization in Cloud SDK ([#274](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/274)) ([ce05c0c](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/ce05c0c43553abd057b809ac782eb9593091f994)), closes [#264](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/264)
-- CDK-390 Common Initialization For Cloud SDK ([#246](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/246)) ([cb754db](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/cb754db09977006d7cc1f47822276c08262e11d3)), closes [#242](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/242) [#241](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/241) [#245](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/245) [#247](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/247) [#244](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/244) [#249](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/249) [#251](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/251) [#252](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/252) [#253](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/253) [#256](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/256) [#257](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/257) [#258](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/258) [#260](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/260) [#263](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/263) [#259](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/259) [#265](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/265)
+- CDK-517 Fix the exports field of Core package for internal module ([#299](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/299)) ([e4eee38](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/e4eee3872d4e8a00bbde7fb066d7c4fa78668bf5))
