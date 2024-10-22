@@ -1,4 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import corePackageJson from '../../../../packages/core/package.json';
 import eventsPackageJson from '../../../../packages/events/package.json';
 import personalizePackageJson from '../../../../packages/personalize/package.json';
 
@@ -25,6 +26,7 @@ declare global {
       visit(url: string, options: string): void;
       requestGuestContext(): any;
       replace(filePath: string, regex: any, text: string): void;
+      getCorePackageVersion(): any;
     }
   }
 
@@ -238,4 +240,8 @@ Cypress.Commands.add('getLogOutput', () => {
       });
     })
     .then(() => logs);
+});
+
+Cypress.Commands.add('getCorePackageVersion', () => {
+  return corePackageJson.version;
 });

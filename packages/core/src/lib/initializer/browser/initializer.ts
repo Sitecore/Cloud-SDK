@@ -181,12 +181,15 @@ export function CloudSDK(settings: BrowserSettings): CloudSDKBrowserInitializer 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Personalize {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Events {}
   // eslint-disable-next-line no-unused-vars
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     scCloudSDK: {
       core: Core;
       personalize: Personalize;
+      events: Events;
     };
   }
 }

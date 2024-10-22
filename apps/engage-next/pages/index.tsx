@@ -103,7 +103,7 @@ export function Index() {
           <button
             data-testid='getBrowserIdFromEngage'
             onClick={() => {
-              if (window.Engage.getBrowserId !== undefined) setBID(window.Engage.getBrowserId());
+              if (window.scCloudSDK.core.getBrowserId) setBID(window.scCloudSDK.core.getBrowserId());
             }}>
             Get ID invoking method from Engage library
           </button>
@@ -124,7 +124,7 @@ export function Index() {
           <button
             data-testid='getVersionLibFromEvents'
             onClick={() => {
-              if (window.Engage.versions?.events !== undefined) setVersion(window.Engage.versions.events);
+              if (window.scCloudSDK.events.version) setVersion(window.scCloudSDK.events.version);
             }}>
             Get Events version from window
           </button>

@@ -14,6 +14,8 @@ defineStep('the init core page is loaded', () => {
 
 defineStep('the core settings are injected to the window object', (table: string) => {
   const data = JSON.parse(table);
+  let corePackageVersion: string;
+  cy.getCorePackageVersion().then((version: string) => (corePackageVersion = version));
 
   cy.window().then((win: any) => {
     expect(win).to.have.property('scCloudSDK');
@@ -22,7 +24,7 @@ defineStep('the core settings are injected to the window object', (table: string
     expect(win.scCloudSDK.core).to.have.property('version');
     expect(win.scCloudSDK.core.settings).to.have.property('sitecoreEdgeContextId');
     expect(win.scCloudSDK.core.settings).to.have.property('sitecoreEdgeUrl');
-    expect(win.scCloudSDK.core.version).to.equal(data.scCloudSDK.core.version);
+    expect(win.scCloudSDK.core.version).to.equal(corePackageVersion);
     expect(win.scCloudSDK.core.settings.sitecoreEdgeContextId).to.equal(
       data.scCloudSDK.core.settings.sitecoreEdgeContextId
     );
