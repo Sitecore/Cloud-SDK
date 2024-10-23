@@ -2,8 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-## [0.4.0-rc.1](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.4.0-rc.0...core-0.4.0-rc.1) (2024-10-17)
+## [0.4.0](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.4.0-rc.1...core-0.4.0) (2024-10-23)
 
-### Bug Fixes
+### Features
 
-- CDK-517 Fix the exports field of Core package for internal module ([#299](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/299)) ([e4eee38](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/e4eee3872d4e8a00bbde7fb066d7c4fa78668bf5))
+- CDK-518 Update what the events package add to the window object ([#301](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/301)) ([c6458af](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/c6458af24bb7d576ca73c19f1dfc9ee508ddea03))
