@@ -4,6 +4,7 @@ import './lib/initializer/server/initializer';
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
+export { RecommendationWidgetItem } from './lib/request-entities/widgets/recommendation-widget-item';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 export { ComparisonFacetFilter } from './lib/request-entities/filters/facet/comparison-facet-filter';

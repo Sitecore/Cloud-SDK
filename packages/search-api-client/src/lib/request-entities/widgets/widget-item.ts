@@ -1,12 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
-import type { WidgetItemDTO, WidgetItemSearch } from './interfaces';
+import type { WidgetItemDTO, WidgetItemRecommendation, WidgetItemSearch } from './interfaces';
 
 export class WidgetItem {
   protected entity: string;
   protected rfkId: string;
   protected _search?: WidgetItemSearch;
+  protected _recommendations?: WidgetItemRecommendation;
 
   /**
    * Creates and holds the functionality of a widget item.
@@ -158,6 +159,8 @@ export class WidgetItem {
 
     if (this._search && JSON.stringify(this._search) !== '{}')
       dto.search = { ...this._search, filter: this._search?.filter?.toDTO() as FilterDTO };
+
+    if (this._recommendations) dto.recommendations = { ...this._recommendations };
 
     return dto;
   }

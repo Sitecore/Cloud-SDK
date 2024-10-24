@@ -17,6 +17,7 @@ import type { ArrayOfAtLeastOne, Filter, FilterDTO, LogicalOperators } from '../
 export interface WidgetItemDTO {
   entity: string;
   search?: WidgetItemSearchDTO;
+  recommendations?: WidgetItemRecommendationDTO;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
 }
@@ -44,6 +45,12 @@ export interface WidgetItemSearch {
     operator?: Omit<LogicalOperators, 'not'>;
   };
 }
+
+/**
+ * Represents a widget item recommendation object.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface WidgetItemRecommendation {}
 
 type FacetSortName = 'text' | 'count';
 type FacetSortOrder = 'asc' | 'desc';
@@ -116,3 +123,9 @@ export interface SearchWidgetItemDTO extends WidgetItemDTO {
 export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
   filter?: FilterDTO;
 };
+
+export interface RecommendationWidgetItemDTO extends WidgetItemDTO {
+  recommendations?: WidgetItemRecommendationDTO;
+}
+
+export type WidgetItemRecommendationDTO = WidgetItemRecommendation;
