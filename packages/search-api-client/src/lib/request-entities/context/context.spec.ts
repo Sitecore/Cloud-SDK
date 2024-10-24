@@ -1,6 +1,6 @@
 import * as utils from '@sitecore-cloudsdk/utils';
-import { Context } from './context';
 import { ErrorMessages } from '../../consts';
+import { Context } from './context';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -240,6 +240,42 @@ describe('context request data creation', () => {
     });
   });
 
+  describe('browser', () => {
+    it('Should be undefined if not set', () => {
+      expect(contextInstance.browser).toBeUndefined();
+    });
+
+    it(`should be present in dto if at least one attribute is set`, () => {
+      contextInstance.browser = { userAgent: 'Browser 1234' };
+
+      expect(contextInstance.toDTO().context.browser).toBeDefined();
+    });
+
+    it(`should include all set attributes in the dto`, () => {
+      const expectedDTO = {
+        app_type: 'test-app-type',
+        device: 'test-device',
+        user_agent: 'browser1234'
+      };
+
+      contextInstance.browser = {
+        appType: 'test-app-type',
+        device: 'test-device',
+        userAgent: 'browser1234'
+      };
+
+      const result = contextInstance.toDTO().context.browser;
+
+      expect(result).toStrictEqual(expectedDTO);
+    });
+
+    it('Should be set to undefined if removeBrowser is called', () => {
+      contextInstance.browser = { userAgent: 'Browser 1234' };
+      contextInstance.removeBrowser();
+      const result = contextInstance.toDTO().context.browser;
+      expect(result).toBeUndefined();
+    });
+  });
   describe('store', () => {
     it(`should be undefined if not set`, () => {
       expect(contextInstance.store).toBeUndefined();

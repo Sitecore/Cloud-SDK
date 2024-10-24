@@ -1,16 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { isValidHttpURL, isValidLocation } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../../consts';
 import type {
+  BrowserData,
   CampaignData,
-  ContextDTO,
   ContextData,
+  ContextDTO,
   GeoData,
   LocaleData,
   LocationData,
   PageData,
   StoreData
 } from './interfaces';
-import { isValidHttpURL, isValidLocation } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../../consts';
 
 /**
  * Create context object.
@@ -23,6 +24,7 @@ export class Context {
   private _page?: PageData;
   private _store?: StoreData;
   private _geo?: GeoData;
+  private _browser?: BrowserData;
 
   /**
    * @param context - The context object.
@@ -36,6 +38,7 @@ export class Context {
     this._page = context.page;
     this._store = context.store;
     this._geo = context.geo;
+    this._browser = context.browser;
   }
 
   /**
@@ -54,6 +57,12 @@ export class Context {
    */
   removeLocale() {
     this._locale = undefined;
+  }
+  /**
+   * Sets the browser data
+   */
+  set browser(browser: BrowserData) {
+    this._browser = browser;
   }
 
   /**
@@ -74,6 +83,12 @@ export class Context {
    */
   set campaign(campaign: CampaignData) {
     this._campaign = campaign;
+  }
+  /**
+   * Sets the browser dta to undefined.
+   */
+  removeBrowser() {
+    this._browser = undefined;
   }
 
   /**
@@ -155,6 +170,13 @@ export class Context {
         page: this._page
       }
     };
+
+    if (this._browser)
+      dto.context.browser = {
+        app_type: this._browser.appType,
+        device: this._browser.device,
+        user_agent: this._browser.userAgent
+      };
 
     if (this._locale)
       dto.context.locale = {

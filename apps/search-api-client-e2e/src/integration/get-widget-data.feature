@@ -96,7 +96,7 @@ Scenario Outline: Developer requests widget data with context object from browse
   And the context parameters are:
     """
       { 
-          "context": <context>
+          "context": <context_params>
       }
   """
   And the 'getWidgetData' button is clicked
@@ -104,12 +104,37 @@ Scenario Outline: Developer requests widget data with context object from browse
   """
       {
           "items": <items>,
-          "context": <context>
+          "context": <context_payload>
       }
   """
   And Search REST API responds with status code '<status_code>'
   Examples:
-    | items                                                                           | context                                       | status_code |
-    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"}}   | 200         |
+    | items                                                                           | context_params                                                                                                                    | context_payload                                                                                                                     | status_code |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"}}                                                                                       | {"locale":{"country":"us","language":"en"}}                                                                                         | 200         |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"browser":{"appType":"testAppType","device":"testDevice","userAgent":"testUserAgent"},"locale":{"country":"us","language":"en"}} | {"browser":{"app_type":"testAppType","device":"testDevice","user_agent":"testUserAgent"},"locale":{"country":"us","language":"en"}} | 200         |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"},"page":{"uri":"/test"}}                                                                | {"locale":{"country":"us","language":"en"},"page":{"url":"/test"}}                                                                  | 200         |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"geo":{"ip":"123.456.0.1","location":{"latitude":3,"longitude":40}},"locale":{"country":"us","language":"en"}}                   | {"geo":{"ip":"123.456.0.1","location":{"lat":3,"lon":40}},"locale":{"country":"us","language":"en"}}                                | 200         |
 
-        
+Scenario Outline: Developer requests widget data with context object from browser with an invalid context
+  Given the '/get-widget-data' page is loaded
+  When the widget item parameters are:
+  """
+      { 
+          "items": <items>
+      }
+  """
+  And the context parameters are:
+    """
+      { 
+          "context": <context>
+      }
+  """
+  And the 'getWidgetData' button is clicked
+  Then an error is thrown: '<error_code>'
+  Examples:
+    | items                                                                           | context                                                                                                                            | error_code                                                                                                                   |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"usa","language":"en"}}                                                                                       | [MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.                                   |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"english"}}                                                                                   | [MV-0007] Incorrect value for "language". Format the value according to ISO 639.                                             |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"locale":{"country":"us","language":"en"},"store":{"id":"123"}}                                                                   | [MV-0009] if one of the "groupId" and "id" is set then the other one should not be empty.                                    |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"geo":{"ip":"123.456.0.1","location":{"latitude":91,"longitude":40}},"locale":{"country":"us","language":"en"}}                   | [IV-0012] Incorrect value for latitude. Set the value to an integer or decimal between -90.000000 and 90.000000 inclusive.   |
+    | [{"rfkId":"rfkid_7","entity":"content","search":{"limit":20,"offset":1}}]       | {"geo":{"ip":"123.456.0.1","location":{"latitude":40,"longitude":181}},"locale":{"country":"us","language":"en"}}                  | [IV-0013] Incorrect value for longitude. Set the value to an integer or decimal between -180.000000 and 180.000000 inclusive.|
