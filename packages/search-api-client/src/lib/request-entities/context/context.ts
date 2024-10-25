@@ -10,7 +10,8 @@ import type {
   LocaleData,
   LocationData,
   PageData,
-  StoreData
+  StoreData,
+  UserData
 } from './interfaces';
 
 /**
@@ -24,6 +25,7 @@ export class Context {
   private _page?: PageData;
   private _store?: StoreData;
   private _geo?: GeoData;
+  private _user?: UserData;
   private _browser?: BrowserData;
 
   /**
@@ -39,6 +41,29 @@ export class Context {
     this._store = context.store;
     this._geo = context.geo;
     this._browser = context.browser;
+    this._user = context.user;
+  }
+
+  /**
+   * Gets the user data.
+   * @returns The user data.
+   */
+  get user(): UserData | undefined {
+    return this._user;
+  }
+
+  /**
+   * Sets the user data.
+   * @param user - The new value to set.
+   */
+  set user(user: UserData | undefined) {
+    this._validateUser(user);
+    this._user = user;
+  }
+
+  /** Simply removes the user data from the context */
+  removeUser() {
+    this._user = undefined;
   }
 
   /**
@@ -132,10 +157,20 @@ export class Context {
   }
 
   /**
+   * Validate user object, which is part of the context object.
+   * We need to ensure that the user object has `userId` or `uuid`, but not neither.
+   * @param user - The user object to validate.
+   */
+  private _validateUser(user?: UserData): void {
+    if (typeof user !== 'undefined' && !user.userId && !user.uuid) throw new Error(ErrorMessages.MV_0013);
+  }
+
+  /**
    * Validate context object.
    */
   private _validateContext(context: ContextData): void {
     this._validateContextLocale(context.locale);
+    this._validateUser(context.user);
 
     if (
       context.page &&
@@ -193,6 +228,14 @@ export class Context {
     if (this._geo?.ip)
       dto.context.geo = {
         ip: this._geo.ip
+      };
+
+    if (this._user?.userId || this._user?.uuid)
+      dto.context.user = {
+        custom: this._user.custom,
+        groups: this._user.groups,
+        user_id: this._user.userId,
+        uuid: this._user.uuid
       };
 
     if (this._geo?.location)

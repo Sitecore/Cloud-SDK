@@ -16,6 +16,13 @@ export interface PageData {
   uri?: string;
 }
 
+export interface UserData {
+  custom?: { [key: string]: unknown };
+  groups?: string[];
+  userId?: string;
+  uuid?: string;
+}
+
 export interface StoreData {
   groupId: string;
   id: string;
@@ -24,6 +31,7 @@ export interface StoreData {
 export interface ContextData {
   locale?: LocaleData;
   page?: PageData;
+  user?: UserData;
   store?: StoreData;
   campaign?: CampaignData;
   geo?: GeoData;
@@ -52,6 +60,13 @@ export interface StoreDTO {
   id?: string;
 }
 
+export interface UserDTO {
+  custom?: { [key: string]: unknown };
+  groups?: string[];
+  user_id?: string;
+  uuid?: string;
+}
+
 export interface ContextDTO {
   context: {
     locale?: LocaleDTO;
@@ -59,6 +74,7 @@ export interface ContextDTO {
     store?: StoreDTO;
     campaign?: CampaignDTO;
     geo?: GeoDTO;
+    user?: UserDTO;
     browser?: BrowserDTO;
   };
 }

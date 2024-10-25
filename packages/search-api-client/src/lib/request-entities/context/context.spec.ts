@@ -479,4 +479,65 @@ describe('context request data creation', () => {
       expect(result).toEqual(expected);
     });
   });
+
+  describe('user', () => {
+    it('should be totally ok when user is not set', () => {
+      expect(contextInstance.user).toBeUndefined();
+    });
+
+    it('should throw an error if neither userId nor uuid are provided', () => {
+      const user = { custom: { key: 'value' } };
+      expect(() => {
+        new Context({ user });
+      }).toThrow(ErrorMessages.MV_0013);
+    });
+
+    it('should throw an error when user is an empty object', () => {
+      expect(() => {
+        new Context({ user: {} });
+      }).toThrow(ErrorMessages.MV_0013);
+    });
+
+    it('should be totally ok when user has both userId and uuid, but userId gets precedence', () => {
+      const expected = { custom: { key: 'value' }, user_id: 'user123', uuid: 'uuid123' };
+      const user = { custom: { key: 'value' }, userId: 'user123', uuid: 'uuid123' };
+      const ctx = new Context({ user });
+      expect(ctx.toDTO().context.user).toEqual(expected);
+    });
+
+    it('should set and get user data correctly with only userId', () => {
+      const user = { custom: { key: 'value' }, userId: 'user123' };
+      const expected = { custom: { key: 'value' }, user_id: 'user123' };
+      const ctx = new Context({ user });
+      expect(ctx.toDTO().context.user).toEqual(expected);
+    });
+
+    it('should set and get user data correctly with only uuid', () => {
+      const user = { custom: { key: 'value' }, uuid: 'user123' };
+      const expected = { custom: { key: 'value' }, uuid: 'user123' };
+      const ctx = new Context({ user });
+      expect(ctx.toDTO().context.user).toEqual(expected);
+    });
+
+    it('should set user data via setter', () => {
+      const user = { custom: { key: 'value' }, userId: 'user123' };
+      const expected = { custom: { key: 'value' }, user_id: 'user123' };
+      const ctx = new Context({});
+      ctx.user = user;
+      expect(ctx.toDTO().context.user).toEqual(expected);
+    });
+
+    it('should get user data via getter', () => {
+      const ctx = new Context({ user: { custom: { key: 'value' }, userId: 'user123' } });
+      const expected = { custom: { key: 'value' }, userId: 'user123' };
+      expect(ctx.user).toEqual(expected);
+    });
+
+    it('should set user to undefined when user is removed', () => {
+      const user = { userId: 'user123' };
+      const ctx = new Context({ user });
+      ctx.removeUser();
+      expect(ctx.user).toBeUndefined();
+    });
+  });
 });

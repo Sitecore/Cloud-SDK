@@ -31,6 +31,7 @@ export enum ErrorMessages {
   MV_0009 = '[MV-0009] if one of the "groupId" and "id" is set then the other one should not be empty.',
   MV_0010 = '[MV-0010] "entity" is required',
   MV_0011 = '[MV-0011] "rfkId" is required',
-  MV_0012 = '[MV-0012] "widgetItems" array should not be empty'
+  MV_0012 = '[MV-0012] "widgetItems" array should not be empty',
+  MV_0013 = '[MV-0013] You must set a value for userId or uuid.'
 }
 /* eslint-enable max-len */
