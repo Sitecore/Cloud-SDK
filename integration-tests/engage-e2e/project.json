@@ -1,14 +1,14 @@
 {
-  "name": "apps/engage-e2e",
+  "name": "integration-tests/engage-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/engage-e2e/src",
+  "sourceRoot": "integration-tests/engage-e2e/src",
   "projectType": "application",
   "targets": {
     "engage-next-events": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/engage-e2e/cypress.config.ts",
-        "devServerTarget": "apps/engage-next:serve:development",
+        "cypressConfig": "integration-tests/engage-e2e/cypress.config.ts",
+        "devServerTarget": "integration-tests/engage-next:serve:development",
         "baseUrl": "http://localhost:4200",
         "customServerPath": "server.js",
         "testingType": "e2e",
@@ -18,15 +18,15 @@
       },
       "configurations": {
         "production": {
-          "devServerTarget": "apps/engage-next:serve:production"
+          "devServerTarget": "integration-tests/engage-next:serve:production"
         }
       }
     },
     "engage-next-personalize": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/engage-e2e/cypress.config.ts",
-        "devServerTarget": "apps/engage-next:serve:development",
+        "cypressConfig": "integration-tests/engage-e2e/cypress.config.ts",
+        "devServerTarget": "integration-tests/engage-next:serve:development",
         "baseUrl": "http://localhost:4200",
         "customServerPath": "server.js",
         "testingType": "e2e",
@@ -36,15 +36,15 @@
       },
       "configurations": {
         "production": {
-          "devServerTarget": "apps/engage-next:serve:production"
+          "devServerTarget": "integration-tests/engage-next:serve:production"
         }
       }
     },
     "engage-events-smoke-test": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/engage-e2e/cypress.config.ts",
-        "devServerTarget": "apps/engage-next:serve:development",
+        "cypressConfig": "integration-tests/engage-e2e/cypress.config.ts",
+        "devServerTarget": "integration-tests/engage-next:serve:development",
         "baseUrl": "http://localhost:4200",
         "customServerPath": "server.js",
         "testingType": "e2e",
@@ -54,7 +54,7 @@
       },
       "configurations": {
         "production": {
-          "devServerTarget": "apps/engage-next:serve:production"
+          "devServerTarget": "integration-tests/engage-next:serve:production"
         }
       }
     },
@@ -62,11 +62,11 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run apps/engage-e2e:engage-events-smoke-test --browser=firefox",
-          "nx run apps/engage-e2e:engage-events-smoke-test --browser=chrome",
-          "nx run apps/engage-e2e:engage-events-smoke-test --browser=edge",
-          "nx run apps/engage-e2e:engage-events-smoke-test --browser=webkit",
-          "nx run apps/engage-e2e:engage-events-smoke-test --browser=electron"
+          "nx run integration-tests/engage-e2e:engage-events-smoke-test --browser=firefox",
+          "nx run integration-tests/engage-e2e:engage-events-smoke-test --browser=chrome",
+          "nx run integration-tests/engage-e2e:engage-events-smoke-test --browser=edge",
+          "nx run integration-tests/engage-e2e:engage-events-smoke-test --browser=webkit",
+          "nx run integration-tests/engage-e2e:engage-events-smoke-test --browser=electron"
         ],
         "parallel": false
       }
@@ -74,8 +74,8 @@
     "engage-personalize-smoke-test": {
       "executor": "@nrwl/cypress:cypress",
       "options": {
-        "cypressConfig": "apps/engage-e2e/cypress.config.ts",
-        "devServerTarget": "apps/engage-next:serve:development",
+        "cypressConfig": "integration-tests/engage-e2e/cypress.config.ts",
+        "devServerTarget": "integration-tests/engage-next:serve:development",
         "baseUrl": "http://localhost:4200",
         "customServerPath": "server.js",
         "testingType": "e2e",
@@ -85,7 +85,7 @@
       },
       "configurations": {
         "production": {
-          "devServerTarget": "apps/engage-next:serve:production"
+          "devServerTarget": "integration-tests/engage-next:serve:production"
         }
       }
     },
@@ -93,10 +93,10 @@
       "executor": "nx:run-commands",
       "options": {
         "commands": [
-          "nx run apps/engage-e2e:engage-personalize-smoke-test --browser=firefox",
-          "nx run apps/engage-e2e:engage-personalize-smoke-test --browser=chrome",
-          "nx run apps/engage-e2e:engage-personalize-smoke-test --browser=edge",
-          "nx run apps/engage-e2e:engage-personalize-smoke-test --browser=webkit"
+          "nx run integration-tests/engage-e2e:engage-personalize-smoke-test --browser=firefox",
+          "nx run integration-tests/engage-e2e:engage-personalize-smoke-test --browser=chrome",
+          "nx run integration-tests/engage-e2e:engage-personalize-smoke-test --browser=edge",
+          "nx run integration-tests/engage-e2e:engage-personalize-smoke-test --browser=webkit"
         ],
         "parallel": false
       }
@@ -105,7 +105,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/engage-e2e/**/*.{js,ts}"],
+        "lintFilePatterns": ["integration-tests/engage-e2e/**/*.{js,ts}"],
         "quiet": false
       }
     },
@@ -117,5 +117,5 @@
     }
   },
   "tags": ["apps"],
-  "implicitDependencies": ["apps/engage-next"]
+  "implicitDependencies": ["integration-tests/engage-next"]
 }

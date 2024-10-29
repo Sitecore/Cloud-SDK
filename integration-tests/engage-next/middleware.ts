@@ -219,7 +219,7 @@ export async function middleware(request: NextRequest) {
   await initPersonalizeMiddleware(request, response);
   await personalizeUtmParamsMiddleware(request, response);
   await eventWithSoftwareIDHeaderMiddleware(request, response);
-  await createPersonalizeCookie(request, response)
+  await createPersonalizeCookie(request, response);
 
   return response;
 }

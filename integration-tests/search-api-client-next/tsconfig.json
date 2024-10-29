@@ -16,15 +16,8 @@
         "name": "next"
       }
     ],
-    "types": [
-      "jest",
-      "node"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "types": ["jest", "node"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "skipLibCheck": true
   },
   "include": [
@@ -32,14 +25,9 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "../../apps/search-api-client-next/.next/types/**/*.ts",
-    "../../dist/apps/search-api-client-next/.next/types/**/*.ts",
+    "../../integration-tests/search-api-client-next/.next/types/**/*.ts",
+    "../../dist/integration-tests/search-api-client-next/.next/types/**/*.ts",
     "next-env.d.ts"
   ],
-  "exclude": [
-    "node_modules",
-    "jest.config.ts",
-    "src/**/*.spec.ts",
-    "src/**/*.test.ts"
-  ]
+  "exclude": ["node_modules", "jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

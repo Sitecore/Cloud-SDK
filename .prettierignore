@@ -2,4 +2,4 @@
 /dist
 /coverage
 # REMOVE this line when old fetch decorator replaced with decorateFetch
-/apps/engage-next/middleware.ts
+/integration-tests/engage-next/middleware.ts

@@ -1,7 +1,7 @@
 {
-  "name": "apps/engage-next",
+  "name": "integration-tests/engage-next",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/engage-next",
+  "sourceRoot": "integration-tests/engage-next",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,11 +9,11 @@
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
-        "outputPath": "dist/apps/engage-next"
+        "outputPath": "dist/integration-tests/engage-next"
       },
       "configurations": {
         "development": {
-          "outputPath": "apps/engage-next"
+          "outputPath": "integration-tests/engage-next"
         },
         "production": {}
       }
@@ -22,16 +22,16 @@
       "executor": "@nx/next:server",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "apps/engage-next:build",
+        "buildTarget": "integration-tests/engage-next:build",
         "dev": true
       },
       "configurations": {
         "development": {
-          "buildTarget": "apps/engage-next:build:development",
+          "buildTarget": "integration-tests/engage-next:build:development",
           "dev": true
         },
         "production": {
-          "buildTarget": "apps/engage-next:build:production",
+          "buildTarget": "integration-tests/engage-next:build:production",
           "dev": false
         }
       }
@@ -39,14 +39,14 @@
     "export": {
       "executor": "@nx/next:export",
       "options": {
-        "buildTarget": "apps/engage-next:build:production"
+        "buildTarget": "integration-tests/engage-next:build:production"
       }
     },
     "lint": {
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/engage-next/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["integration-tests/engage-next/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "version": {
@@ -56,5 +56,5 @@
       }
     }
   },
-  "tags": ["apps"]
+  "tags": ["integration-tests"]
 }

@@ -3,9 +3,10 @@ import { decorateAll, resetAllDecorators } from '../utils/e2e-decorators/decorat
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import { pageView } from '@sitecore-cloudsdk/events/server';
 
-
-export async function pageViewEventWithSearchDataMiddleware(request: NextRequest,
-  response: NextResponse): Promise<void> {
+export async function pageViewEventWithSearchDataMiddleware(
+  request: NextRequest,
+  response: NextResponse
+): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (
@@ -24,7 +25,9 @@ export async function pageViewEventWithSearchDataMiddleware(request: NextRequest
         enableServerCookie: true,
         siteName: process.env.SITE_ID || '',
         sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
-      }).addEvents().initialize();
+      })
+        .addEvents()
+        .initialize();
       await pageView(request, {
         ...baseEventData,
         searchData: { test: 123 }
@@ -36,7 +39,9 @@ export async function pageViewEventWithSearchDataMiddleware(request: NextRequest
         enableServerCookie: true,
         siteName: process.env.SITE_ID || '',
         sitecoreEdgeContextId: process.env.CONTEXT_ID || ''
-      }).addEvents().initialize();
+      })
+        .addEvents()
+        .initialize();
 
       await pageView(request, {
         ...baseEventData
