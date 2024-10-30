@@ -1,0 +1,55 @@
+{
+  "name": "integration-tests/core-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "integration-tests/core-next",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/integration-tests/core-next"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "integration-tests/core-next"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "integration-tests/core-next:build",
+        "dev": true,
+        "port": 4600
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "integration-tests/core-next:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "integration-tests/core-next:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "integration-tests/core-next:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["integration-tests/core-next/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}

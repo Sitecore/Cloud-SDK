@@ -1,0 +1,31 @@
+{
+  "name": "integration-tests/personalize-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "integration-tests/personalize-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "personalize-e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "integration-tests/personalize-e2e/cypress.config.ts",
+        "devServerTarget": "integration-tests/personalize-next:serve:development",
+        "testingType": "e2e",
+        "baseUrl": "http://localhost:4400"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "integration-tests/personalize-next:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["integration-tests/personalize-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["integration-tests/personalize-next"]
+}

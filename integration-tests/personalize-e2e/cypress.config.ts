@@ -24,7 +24,7 @@ const cypressJsonConfig = {
     runMode: 2
   },
   screenshotOnRunFailure: true,
-  screenshotsFolder: '../search-api-client-e2e/cypress/results/screenshots/',
+  screenshotsFolder: '../personalize-e2e/cypress/results/screenshots/',
   async setupNodeEvents(
     on: Cypress.PluginEvents,
     config: Cypress.PluginConfigOptions
@@ -52,7 +52,7 @@ const cypressJsonConfig = {
   specPattern: '**/*.{feature,features}',
   supportFile: 'src/support/e2e.ts',
   video: false,
-  videosFolder: '../search-api-client-e2e/cypress/results/videos'
+  videosFolder: '../personalize-e2e/cypress/results/videos'
 };
 export default defineConfig({
   e2e: {

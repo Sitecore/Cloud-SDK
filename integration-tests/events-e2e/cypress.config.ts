@@ -1,3 +1,4 @@
+// © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { addCucumberPreprocessorPlugin } from '@badeball/cypress-cucumber-preprocessor';
 import createEsbuildPlugin from '@badeball/cypress-cucumber-preprocessor/esbuild';
 import createBundler from '@bahmutov/cypress-esbuild-preprocessor';
@@ -24,7 +25,7 @@ const cypressJsonConfig = {
     runMode: 2
   },
   screenshotOnRunFailure: true,
-  screenshotsFolder: '../search-api-client-e2e/cypress/results/screenshots/',
+  screenshotsFolder: '../events-e2e/cypress/results/screenshots/',
   async setupNodeEvents(
     on: Cypress.PluginEvents,
     config: Cypress.PluginConfigOptions
@@ -52,7 +53,7 @@ const cypressJsonConfig = {
   specPattern: '**/*.{feature,features}',
   supportFile: 'src/support/e2e.ts',
   video: false,
-  videosFolder: '../search-api-client-e2e/cypress/results/videos'
+  videosFolder: '../events-e2e/cypress/results/videos'
 };
 export default defineConfig({
   e2e: {

@@ -1,0 +1,55 @@
+{
+  "name": "integration-tests/personalize-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "integration-tests/personalize-next",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/integration-tests/personalize-next"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "integration-tests/personalize-next"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "integration-tests/personalize-next:build",
+        "dev": true,
+        "port": 4400
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "integration-tests/personalize-next:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "integration-tests/personalize-next:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "integration-tests/personalize-next:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["integration-tests/personalize-next/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}
