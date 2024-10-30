@@ -2,15 +2,14 @@
 /// <reference types="cypress" />
 // Above line needed as indicator for Cypress
 import { defineStep, Given, Then, When } from '@badeball/cypress-cucumber-preprocessor';
+import { loadSteps } from '@sitecore-cloudsdk/cypress-utils';
 import { Utils } from '../../support/utils';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let statusCode: number;
-let errorMessage: string;
+(globalThis as any).errorMessage = '';
 beforeEach(() => {
-  errorMessage = '';
+  (globalThis as any).errorMessage = '';
   cy.on('uncaught:exception', (error) => {
-    errorMessage = error.message;
+    (globalThis as any).errorMessage = error.message;
     return false;
   });
   cy.window().then((win) => {
@@ -36,6 +35,9 @@ beforeEach(() => {
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/identity-event*`).as('sendTriggerEvent');
   cy.intercept('GET', `${Cypress.config('baseUrl')}/api/custom-event*`).as('sendTriggerEvent');
 });
+
+// Load steps from cypress-utils
+loadSteps(['the_S_ButtonIsClicked']);
 
 // Class Common describes common step definitions
 
@@ -143,7 +145,7 @@ defineStep('the {string} page is loaded with query parameters:', (page: string, 
   cy.wait(1000);
   cy.get('body')
     .should('be.visible')
-    .then(() => cy.writeLocal(`error.txt`, errorMessage));
+    .then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage));
   cy.get('body').should('be.visible');
 });
 
@@ -151,7 +153,7 @@ defineStep(
   'the {string} page is loaded with {string} name and {string} value query parameter',
   (page: string, paramName: string, paramValue: string) => {
     cy.on('uncaught:exception', (error) => {
-      errorMessage = error.message;
+      (globalThis as any).errorMessage = error.message;
       return false;
     });
 
@@ -174,14 +176,14 @@ defineStep(
       onBeforeLoad(win) {
         cy.stub(win.console, 'warn').as('consoleWarn');
       }
-    }).then(() => cy.writeLocal(`error.txt`, errorMessage));
+    }).then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage));
 
     // cy.wait('@initialCall');
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000);
     cy.get('body')
       .should('be.visible')
-      .then(() => cy.writeLocal(`error.txt`, errorMessage));
+      .then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage));
     cy.get('body').should('be.visible');
   }
 );
@@ -237,7 +239,7 @@ defineStep('the {string} page is loaded with query parameters', (page: string, d
   cy.wait(1000);
   cy.get('body')
     .should('be.visible')
-    .then(() => cy.writeLocal(`error.txt`, errorMessage));
+    .then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage));
 });
 
 defineStep('no cookie exists on the {string} page', (page: string) => {
@@ -262,25 +264,6 @@ Then('an error is thrown: {string}', (expectedError: string) => {
     timeout: 15000
   });
   cy.readLocal('error.txt').should('include', expectedError);
-});
-
-defineStep('the {string} button is clicked', (event: string) => {
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(1200);
-  const selector = `[data-testid="${event}"]`;
-  cy.on('uncaught:exception', (error) => {
-    errorMessage = error.message;
-    return false;
-  });
-
-  // eslint-disable-next-line cypress/unsafe-to-chain-command
-  //We do not want Cypress to click on buttons before Engage is present in window object
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(1000);
-  cy.get(selector)
-    .should('be.visible')
-    .click({ force: true })
-    .then(() => cy.writeLocal(`error.txt`, errorMessage));
 });
 
 Given('no cookie is created on the {string} page', (page: string) => {
@@ -374,10 +357,9 @@ defineStep('the event parameters are:', (params: string) => {
 
 defineStep('the event request is sent with parameters:', (params: string) => {
   const parameters = JSON.parse(params);
-  cy.wait('@eventRequest').then(({ request, response }) => {
+  cy.wait('@eventRequest').then(({ request }) => {
     expect(request).to.not.equal(undefined);
 
-    if (response) statusCode = response.statusCode;
     Object.keys(parameters).forEach((value) => {
       expect(request.body[value]).to.deep.equal(parameters[value]);
     });

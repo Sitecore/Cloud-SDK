@@ -1,5 +1,6 @@
-/* eslint-disable @nx/enforce-module-boundaries */
+import { loadCommands } from '@sitecore-cloudsdk/cypress-utils';
 
+/* eslint-disable @nx/enforce-module-boundaries */
 export {};
 
 // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -9,9 +10,6 @@ declare global {
     interface Chainable {
       assertRequestBodyValue(testID: string, bodyAttribute: string): void;
       assertLogs(testID: string, log: string): void;
-      getLogOutput(): any;
-      writeLocal(fileName: string, content: any): void;
-      readLocal(fileName: string): any;
       visit(url: string, options: string): void;
       replace(filePath: string, regex: any, text: string): void;
     }
@@ -21,6 +19,8 @@ declare global {
     args: [];
   }
 }
+
+loadCommands(['getLogOutput', 'readLocal', 'writeLocal']);
 
 // Asserts if the provided attribute exists in the body
 // Asserts if the provided attribute value exists in the body,

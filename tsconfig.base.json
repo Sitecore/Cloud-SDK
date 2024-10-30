@@ -18,6 +18,7 @@
       "@sitecore-cloudsdk/core/browser": ["packages/core/src/browser.ts"],
       "@sitecore-cloudsdk/core/internal": ["packages/core/src/internal.ts"],
       "@sitecore-cloudsdk/core/server": ["packages/core/src/server.ts"],
+      "@sitecore-cloudsdk/cypress-utils": ["integration-tests/cypress-utils/src/index.ts"],
       "@sitecore-cloudsdk/events/browser": ["packages/events/src/browser.ts"],
       "@sitecore-cloudsdk/events/server": ["packages/events/src/server.ts"],
       "@sitecore-cloudsdk/personalize/browser": ["packages/personalize/src/browser.ts"],

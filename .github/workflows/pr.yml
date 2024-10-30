@@ -94,6 +94,8 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
+      - name: Build Cypress Utils
+        run: npx nx run cypress-utils:build
       - name: Get affected app
         id: get-affected
         run: echo "affected=$(npx nx show projects --affected --with-target engage-next-events --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -122,6 +124,8 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
+      - name: Build Cypress Utils
+        run: npx nx run cypress-utils:build
       - name: Get affected app
         id: get-affected
         run: echo "affected=$(npx nx show projects --affected --with-target engage-next-personalize --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
@@ -150,6 +154,8 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
+      - name: Build Cypress Utils
+        run: npx nx run cypress-utils:build
       - name: Get affected app
         id: get-affected
         run: echo "affected=$(npx nx show projects --affected --with-target search-api-client-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT

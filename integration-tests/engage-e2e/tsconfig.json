@@ -7,6 +7,7 @@
     "types": ["cypress", "node"],
     "resolveJsonModule": true,
     "paths": {
+      "@sitecore-cloudsdk/cypress-utils": ["./integration-tests/cypress-utils/src/index.ts"],
       "@badeball/cypress-cucumber-preprocessor/*": [
         "./node_modules/@badeball/cypress-cucumber-preprocessor/dist/subpath-entrypoints/*"
       ]

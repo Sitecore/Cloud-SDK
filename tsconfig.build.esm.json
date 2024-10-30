@@ -9,6 +9,7 @@
     { "path": "./packages/core" },
     { "path": "./packages/events" },
     { "path": "./packages/personalize" },
-    { "path": "./packages/search-api-client" }
+    { "path": "./packages/search-api-client" },
+    { "path": "./integration-tests/cypress-utils" }
   ]
 }

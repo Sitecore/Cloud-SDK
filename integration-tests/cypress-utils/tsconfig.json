@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base",
+  "compilerOptions": {
+    "composite": true,
+    "rootDir": ".",
+    "outDir": "./dist/esm",
+    "declaration": true,
+    "resolveJsonModule": true,
+    "types": ["cypress", "node"]
+  },
+  "include": ["src/**/*", "package.json"],
+  "exclude": []
+}

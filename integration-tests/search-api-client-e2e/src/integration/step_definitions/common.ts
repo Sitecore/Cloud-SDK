@@ -1,7 +1,10 @@
 import { After, Before, defineStep, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { loadSteps } from '@sitecore-cloudsdk/cypress-utils';
 
-let errorMessage: string;
+(globalThis as any).errorMessage = '';
 const middlewarePath = '../search-api-client-next/middleware.ts';
+
+loadSteps(['the_S_ButtonIsClicked']);
 
 defineStep('the {string} page is loaded', (page: string) => {
   // eslint-disable-next-line max-len
@@ -14,24 +17,6 @@ defineStep('the {string} page is loaded', (page: string) => {
     expect(loc.pathname).to.eq(page);
   });
   cy.get('body').should('be.visible');
-});
-
-defineStep('the {string} button is clicked', (button: string) => {
-  // eslint-disable-next-line cypress/no-unnecessary-waiting
-  cy.wait(1200);
-  const selector = `[data-testid="${button}"]`;
-  cy.on('uncaught:exception', (error) => {
-    errorMessage = error.message;
-    return false;
-  });
-
-  /* eslint-disable cypress/unsafe-to-chain-command,cypress/no-unnecessary-waiting */
-  cy.wait(1000);
-  cy.get(selector)
-    .should('be.visible')
-    .click()
-    .then(() => cy.writeLocal(`error.txt`, errorMessage || ' '));
-  /* eslint-enable cypress/unsafe-to-chain-command,cypress/no-unnecessary-waiting */
 });
 
 Then('an error is thrown: {string}', (expectedError: string) => {
@@ -59,7 +44,7 @@ defineStep(
     );
 
     cy.on('uncaught:exception', (error) => {
-      errorMessage = error.message;
+      (globalThis as any).errorMessage = error.message;
       return false;
     });
 
@@ -76,7 +61,7 @@ defineStep(
     cy.wait(1000);
     cy.get('body')
       .should('be.visible')
-      .then(() => cy.writeLocal(`error.txt`, errorMessage || ''));
+      .then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage || ''));
     cy.get('body').should('be.visible');
   }
 );
@@ -113,7 +98,7 @@ defineStep(
 
 //beforeEach hook as a workaround to not bypass CORS errors on preflight OPTIONS requests to callFlows and events
 beforeEach(() => {
-  errorMessage = '';
+  (globalThis as any).errorMessage = '';
   cy.clearCookies();
 });
 

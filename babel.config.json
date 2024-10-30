@@ -14,7 +14,8 @@
           "@sitecore-cloudsdk/personalize/server": "./packages/personalize/src/server.ts",
           "@sitecore-cloudsdk/personalize/browser": "./packages/personalize/src/browser.ts",
           "@sitecore-cloudsdk/search-api-client/server": "./packages/search-api-client/src/server.ts",
-          "@sitecore-cloudsdk/search-api-client/browser": "./packages/search-api-client/src/browser.ts"
+          "@sitecore-cloudsdk/search-api-client/browser": "./packages/search-api-client/src/browser.ts",
+          "@sitecore-cloudsdk/cypress-utils": "./integration-tests/cypress-utils/src/index.ts"
         }
       }
     ]

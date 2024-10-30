@@ -1,0 +1,16 @@
+{
+  "name": "cypress-utils",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "integration-tests/cypress-utils/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["integration-tests/cypress-utils/**/*.ts", "integration-tests/cypress-utils/package.json"]
+      }
+    }
+  },
+  "tags": []
+}

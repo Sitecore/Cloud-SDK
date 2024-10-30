@@ -1,4 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import { loadCommands } from '@sitecore-cloudsdk/cypress-utils';
 import corePackageJson from '../../../../packages/core/package.json';
 import eventsPackageJson from '../../../../packages/events/package.json';
 import personalizePackageJson from '../../../../packages/personalize/package.json';
@@ -17,23 +18,22 @@ declare global {
       assertLogs(testID: string, log: string): void;
       assertLogsNotContaining(testID: string, log: string): void;
       assertRequestHeaders(request: any, expectedReqHeaders: any): void;
-      getLogOutput(): any;
       waitForRequest(alias: string): any;
       waitForResponse(alias: string): any;
       convertToSnakeCase(str: string): string;
-      writeLocal(fileName: string, content: any): void;
-      readLocal(fileName: string): any;
       visit(url: string, options: string): void;
       requestGuestContext(): any;
       replace(filePath: string, regex: any, text: string): void;
       getCorePackageVersion(): any;
     }
   }
-
   interface JQuery {
     args: [];
   }
 }
+
+// Load commands from cypress-utils
+loadCommands(['getLogOutput', 'readLocal', 'writeLocal']);
 
 // Asserts the provided header data from the stored file in fixtures,
 // the data is added by the Next app with the request decorators

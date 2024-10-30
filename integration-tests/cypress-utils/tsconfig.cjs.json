@@ -1,0 +1,9 @@
+{
+  "extends": ".",
+  "compilerOptions": {
+    "module": "commonjs",
+    "outDir": "./dist/cjs"
+  },
+  "include": ["src/**/*", "package.json"],
+  "exclude": []
+}
