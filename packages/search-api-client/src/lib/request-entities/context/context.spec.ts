@@ -276,6 +276,30 @@ describe('context request data creation', () => {
       expect(result).toBeUndefined();
     });
   });
+
+  describe('ids', () => {
+    it('Should be undefined if not set', () => {
+      expect(contextInstance.ids).toBeUndefined();
+    });
+
+    it(`should be present in dto if at least one attribute is set`, () => {
+      contextInstance.ids = { testProp: ['testProp 1234'] };
+      expect(contextInstance.toDTO().context.ids).toBeDefined();
+    });
+
+    it(`should not be present in dto if it is set but no properties included`, () => {
+      contextInstance.ids = {};
+      expect(contextInstance.toDTO().context.ids).toBeUndefined();
+    });
+
+    it('Should be set to undefined if removeBrowser is called', () => {
+      contextInstance.ids = { testProp: ['testProp 1234'] };
+      contextInstance.removeIds();
+      const result = contextInstance.toDTO().context.ids;
+      expect(result).toBeUndefined();
+    });
+  });
+
   describe('store', () => {
     it(`should be undefined if not set`, () => {
       expect(contextInstance.store).toBeUndefined();

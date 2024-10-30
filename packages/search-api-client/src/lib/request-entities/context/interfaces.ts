@@ -1,4 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 
 export interface BrowserData {
   appType?: string;
@@ -28,6 +29,14 @@ export interface StoreData {
   id: string;
 }
 
+export interface IdsData {
+  [key: string]: ArrayOfAtLeastOne<string>;
+}
+
+export interface IdsDTO {
+  [key: string]: ArrayOfAtLeastOne<string>;
+}
+
 export interface ContextData {
   locale?: LocaleData;
   page?: PageData;
@@ -36,6 +45,7 @@ export interface ContextData {
   campaign?: CampaignData;
   geo?: GeoData;
   browser?: BrowserData;
+  ids?: IdsData;
 }
 
 export interface BrowserDTO {
@@ -76,6 +86,7 @@ export interface ContextDTO {
     geo?: GeoDTO;
     user?: UserDTO;
     browser?: BrowserDTO;
+    ids?: IdsDTO;
   };
 }
 
