@@ -1,5 +1,5 @@
-import { ComparisonFilter } from '../filters/comparison-filter';
 import { ErrorMessages } from '../../consts';
+import { ComparisonFilter } from '../filters/comparison-filter';
 import { WidgetItem } from './widget-item';
 
 describe('widget item class', () => {
@@ -420,40 +420,6 @@ describe('widget item class', () => {
       const dto = widgetItem.toDTO();
 
       expect(JSON.stringify(dto.search)).toBeUndefined();
-      expect(mockFilter.toDTO).not.toHaveBeenCalled();
-    });
-  });
-
-  describe('recommendations', () => {
-    let widgetItem: WidgetItem;
-    const validWidgetItem = {
-      entity: 'test',
-      rfkId: 'test'
-    };
-    beforeEach(() => {
-      widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
-    });
-
-    it('toDTO returns correct DTO when _recommendations is undefined', () => {
-      widgetItem['_recommendations'] = undefined;
-      const dto = widgetItem.toDTO();
-      expect(JSON.stringify(dto.recommendations)).toBeUndefined();
-      expect(mockFilter.toDTO).not.toHaveBeenCalled();
-    });
-
-    it('toDTO returns correct DTO when _recommendations is set to empty object', () => {
-      widgetItem['_recommendations'] = {};
-      const dto = widgetItem.toDTO();
-      expect(dto.recommendations).toBeDefined();
-      expect(JSON.stringify(dto.recommendations)).toEqual('{}');
-      expect(mockFilter.toDTO).not.toHaveBeenCalled();
-    });
-
-    it('toDTO returns correct DTO when _recommendations is set to an object', () => {
-      widgetItem['_recommendations'] = { test: 'test' };
-      const dto = widgetItem.toDTO();
-      expect(dto.recommendations).toBeDefined();
-      expect(JSON.stringify(dto.recommendations)).toEqual('{"test":"test"}');
       expect(mockFilter.toDTO).not.toHaveBeenCalled();
     });
   });

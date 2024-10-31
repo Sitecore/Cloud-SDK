@@ -1,8 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { RecommendationWidgetItemDTO, WidgetItemRecommendation } from './interfaces';
+import type { ContentType, WidgetItemRecommendation, WidgetItemRecommendationDTO } from './interfaces';
 import { WidgetItem } from './widget-item';
 
 export class RecommendationWidgetItem extends WidgetItem {
+  protected _recommendations?: WidgetItemRecommendation;
+
   /**
    * Creates and holds the functionality of a recommendation widget item.
    * @param entity - The widget's item entity.
@@ -15,10 +17,24 @@ export class RecommendationWidgetItem extends WidgetItem {
   }
 
   /**
+   * Sets the recommendation content for the RecommendationWidgetItem.
+   * This method updates the `content` property of the recommendations configuration.
+   * The value is used to define specific recommendation criteria.
+   * @param value - {@link ContentType}.
+   *
+   */
+  set content(value: ContentType) {
+    this._recommendations = {
+      ...this._recommendations,
+      content: value
+    };
+  }
+
+  /**
    * Maps the recommendation widget item to its DTO format.
    */
-  toDTO(): RecommendationWidgetItemDTO {
+  toDTO(): WidgetItemRecommendationDTO {
     const superDTO = super.toDTO();
-    return superDTO.recommendations ? { ...superDTO, recommendations: { ...superDTO.recommendations } } : superDTO;
+    return this._recommendations ? { ...superDTO, recommendations: this._recommendations } : superDTO;
   }
 }

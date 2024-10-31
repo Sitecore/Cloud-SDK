@@ -76,6 +76,13 @@ export default function GetRecommendationWidgetData() {
         onClick={getRecommendationWidgetDataFromAPIWithValidPayload}>
         Get Recommendation Widget Data From API With Valid Data
       </button>
+      <br />
+      <button
+        type='button'
+        data-testid='getRecommendationWidgetDataFromAPIWithEmptyContent'
+        onClick={getRecommendationWidgetDataFromAPIWithValidPayload}>
+        Get Recommendation Widget Data From API With Empty Content
+      </button>
     </div>
   );
 }

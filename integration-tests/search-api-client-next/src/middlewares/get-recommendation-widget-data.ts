@@ -35,7 +35,25 @@ export async function getRecommendationWidgetDataMiddleware(
         .addSearch({ userId: 'test' })
         .initialize();
 
-      widget = new RecommendationWidgetItem('content', 'rfkid_7', {});
+      widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { fields: ['id'] } });
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+
+      break;
+
+    case 'getRecommendationWidgetDataFromMiddlewareWithValidPayloadUsingSetter':
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
+
+      widget = new RecommendationWidgetItem('content', 'rfkid_7');
+      widget.content = { fields: ['id'] };
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

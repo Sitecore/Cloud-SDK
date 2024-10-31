@@ -1,14 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { ComparisonFacetFilter } from '../filters/facet/comparison-facet-filter';
-import type { ListFacetFilter } from '../filters/facet/list-facet-filter';
 import type {
   ComparisonFacetFilterDTO,
-  NotFacetFilterDTO,
+  ListFacetFilterDTO,
   LogicalFacetFilterDTO,
-  ListFacetFilterDTO
+  NotFacetFilterDTO
 } from '../filters/facet/interfaces';
-import type { NotFacetFilter } from '../filters/facet/not-facet-filter';
+import type { ListFacetFilter } from '../filters/facet/list-facet-filter';
 import type { LogicalFacetFilter } from '../filters/facet/logical-facet-filter';
+import type { NotFacetFilter } from '../filters/facet/not-facet-filter';
 import type { ArrayOfAtLeastOne, Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
 
 /**
@@ -17,7 +17,6 @@ import type { ArrayOfAtLeastOne, Filter, FilterDTO, LogicalOperators } from '../
 export interface WidgetItemDTO {
   entity: string;
   search?: WidgetItemSearchDTO;
-  recommendations?: WidgetItemRecommendationDTO;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
 }
@@ -46,11 +45,16 @@ export interface WidgetItemSearch {
   };
 }
 
+export type ContentType = {
+  fields?: ArrayOfAtLeastOne<string>;
+};
+
 /**
  * Represents a widget item recommendation object.
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface WidgetItemRecommendation {}
+export interface WidgetItemRecommendation {
+  content?: ContentType | Record<string, never>;
+}
 
 type FacetSortName = 'text' | 'count';
 type FacetSortOrder = 'asc' | 'desc';
@@ -124,8 +128,6 @@ export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
   filter?: FilterDTO;
 };
 
-export interface RecommendationWidgetItemDTO extends WidgetItemDTO {
-  recommendations?: WidgetItemRecommendationDTO;
+export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
+  recommendations?: WidgetItemRecommendation;
 }
-
-export type WidgetItemRecommendationDTO = WidgetItemRecommendation;
