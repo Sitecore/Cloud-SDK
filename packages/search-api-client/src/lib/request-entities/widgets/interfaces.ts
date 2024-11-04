@@ -49,11 +49,16 @@ export type ContentType = {
   fields?: ArrayOfAtLeastOne<string>;
 };
 
+export type ContentTypeDTO = {
+  fields?: ArrayOfAtLeastOne<string>;
+};
+
 /**
  * Represents a widget item recommendation object.
  */
 export interface WidgetItemRecommendation {
   content?: ContentType | Record<string, never>;
+  filter?: Filter;
 }
 
 type FacetSortName = 'text' | 'count';
@@ -129,5 +134,8 @@ export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
 };
 
 export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
-  recommendations?: WidgetItemRecommendation;
+  recommendations?: {
+    content?: ContentTypeDTO | Record<string, never>;
+    filter?: FilterDTO;
+  };
 }

@@ -1,6 +1,7 @@
 import type { NextRequest, NextResponse } from 'next/server';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import {
+  ComparisonFilter,
   getWidgetData,
   RecommendationWidgetItem,
   WidgetRequestData
@@ -59,6 +60,28 @@ export async function getRecommendationWidgetDataMiddleware(
       await getWidgetData(widgetRequestData);
 
       break;
+
+    case 'getRecommendationWidgetDataFromMiddlewareWithFilters':
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
+
+      widget = new RecommendationWidgetItem('content', 'rfkid_7');
+      // eslint-disable-next-line no-case-declarations
+      const filter = new ComparisonFilter('title', 'eq', 'title1');
+      widget.filter = filter;
+
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+
+      break;
   }
+
   resetFetch();
 }

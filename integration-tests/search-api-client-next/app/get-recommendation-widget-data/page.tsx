@@ -8,6 +8,7 @@ import {
   RecommendationWidgetItem,
   WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/browser';
+import { createFilter } from '../../src/utils';
 
 export default function GetRecommendationWidgetData() {
   const searchParams = useSearchParams();
@@ -43,6 +44,15 @@ export default function GetRecommendationWidgetData() {
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
           const widget = new RecommendationWidgetItem(item.entity, item.rfkId, item.recommendations);
+          const filterOperator = item.recommendations?.filter?.type;
+
+          if (!filterOperator) return widget;
+
+          const filterRaw = item.recommendations.filter;
+          const filter = createFilter(filterOperator, filterRaw);
+
+          if (filter) widget.filter = filter;
+
           return widget;
         });
 

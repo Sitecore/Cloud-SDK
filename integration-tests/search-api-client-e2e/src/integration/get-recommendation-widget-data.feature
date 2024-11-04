@@ -12,8 +12,18 @@ Feature: Request recommendation widget data from Search REST API
             | getRecommendationWidgetDataFromMiddlewareWithValidPayload            |
             | getRecommendationWidgetDataFromMiddlewareWithValidPayloadUsingSetter |
 
+    Scenario: Developer requests recommendation widget data from Middleware with filter payload
+        Given the '/get-recommendation-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
+        Then the request with id '<testID>' will contain:
+            """
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","recommendations":{"filter":{"name":"title","type":"eq","value":"title1"}}}]}
+            """
 
-   Scenario: Developer requests recommendation widget data from API with a valid payload
+        Examples:
+            | testID                                               |
+            | getRecommendationWidgetDataFromMiddlewareWithFilters |
+
+    Scenario: Developer requests recommendation widget data from API with a valid payload
         Given the '/get-recommendation-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
         And the 'getRecommendationWidgetDataFromAPIWithValidPayload' button is clicked
         Then the request with id '<testID>' will contain:
@@ -25,9 +35,9 @@ Feature: Request recommendation widget data from Search REST API
             | testID                                                        |
             | getRecommendationWidgetDataFromAPIWithValidPayload            |
             | getRecommendationWidgetDataFromAPIWithValidPayloadUsingSetter |
- 
 
-   Scenario: Developer requests recommendation widget data from API with empty content
+
+    Scenario: Developer requests recommendation widget data from API with empty content
         Given the '/get-recommendation-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
         And the 'getRecommendationWidgetDataFromAPIWithEmptyContent' button is clicked
         Then the request with id '<testID>' will contain:
@@ -36,9 +46,9 @@ Feature: Request recommendation widget data from Search REST API
             """
 
         Examples:
-            | testID                                                                      |
-            | getRecommendationWidgetDataFromAPIWithEmptyContent           |
- 
+            | testID                                             |
+            | getRecommendationWidgetDataFromAPIWithEmptyContent |
+
     Scenario: Developer requests recommendation widget data from browser with a valid payload
         Given the '/get-recommendation-widget-data' page is loaded
         When the widget item parameters are:
@@ -57,10 +67,14 @@ Feature: Request recommendation widget data from Search REST API
         Then Search API responds with status code '<status_code>'
 
         Examples:
-            | items                                                                                                 | items_request_payload                                                                              | status_code |
-            | [{"rfkId":"rfkid_7","entity":"content"}]                                                              | [{"rfk_id":"rfkid_7","entity":"content"}]                                                          | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{}}]                                         | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{}}]                                     | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{}}}]                             | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{}}}]                         | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id"]}}}]              | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id"]}}}]          | 200         |
-            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id","type"]}}}]       | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id","type"]}}}]   | 200         |
-          
+            | items                                                                                                                                                                                       | items_request_payload                                                                                                                                                                        | status_code |
+            | [{"rfkId":"rfkid_7","entity":"content"}]                                                                                                                                                    | [{"rfk_id":"rfkid_7","entity":"content"}]                                                                                                                                                    | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{}}]                                                                                                                               | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{}}]                                                                                                                               | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{}}}]                                                                                                                   | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{}}}]                                                                                                                   | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id"]}}}]                                                                                                    | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id"]}}}]                                                                                                    | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id","type"]}}}]                                                                                             | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"content":{"fields":["id","type"]}}}]                                                                                             | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"name":"title","type":"eq","value":"title1"}}}]                                                                         | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"name":"title","type":"eq","value":"title1"}}}]                                                                         | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"or","filters":[{"type":"lt","name":"title","value":"50"},{"type":"gt","name":"title","value":"0"}]}}}]          | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"or","filters":[{"type":"lt","name":"title","value":"50"},{"type":"gt","name":"title","value":"0"}]}}}]          | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoDistance","name":"title","distance":"10km"}}}]                                                               | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoDistance","name":"title","distance":"10km"}}}]                                                               | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"allOf","name":"title","values":["test"]}}}]                                                                     | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"allOf","name":"title","values":["test"]}}}]                                                                     | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoWithin","name":"title","coordinates":[{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3}]}}}] | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoWithin","name":"title","coordinates":[{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3}]}}}] | 200         |
