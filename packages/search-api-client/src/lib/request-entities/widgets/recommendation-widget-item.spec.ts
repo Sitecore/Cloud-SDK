@@ -43,6 +43,15 @@ describe('recommendation widget item class', () => {
       expect(dto.entity).toEqual('content');
       expect(dto.rfk_id).toEqual('rfkid_7');
     });
+
+    it('should set the recommendations.groupBy with a valid value', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', { groupBy: 'test' });
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toBeDefined();
+      expect(dto.recommendations).toEqual({ group_by: 'test' });
+      expect(dto.entity).toEqual('content');
+      expect(dto.rfk_id).toEqual('rfkid_7');
+    });
   });
 
   describe('content via setter', () => {
@@ -62,6 +71,16 @@ describe('recommendation widget item class', () => {
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toBeDefined();
       expect(dto.recommendations).toEqual({ content: { fields: ['test1', 'test2'] } });
+      expect(dto.entity).toEqual('content');
+      expect(dto.rfk_id).toEqual('rfkid_7');
+    });
+
+    it('should set the recommendations.groupBy with a valid value', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.groupBy = 'test';
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toBeDefined();
+      expect(dto.recommendations).toEqual({ group_by: 'test' });
       expect(dto.entity).toEqual('content');
       expect(dto.rfk_id).toEqual('rfkid_7');
     });

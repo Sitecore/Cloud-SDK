@@ -4,5 +4,8 @@
   "cSpell.words": ["cloudsdk", "sitecore"],
   "conventionalCommits.scopes": ["core", "utils", "events", "personalize", "search-api-client"],
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "esbenp.prettier-vscode"
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[feature]": {
+    "editor.defaultFormatter": "alexkrechik.cucumberautocomplete"
+  }
 }

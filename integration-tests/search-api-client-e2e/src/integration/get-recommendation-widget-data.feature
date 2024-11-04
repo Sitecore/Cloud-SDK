@@ -23,6 +23,18 @@ Feature: Request recommendation widget data from Search REST API
             | testID                                               |
             | getRecommendationWidgetDataFromMiddlewareWithFilters |
 
+
+    Scenario: Developer requests recommendation widget data from Middleware with groupBy payload
+        Given the '/get-recommendation-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
+        Then the request with id '<testID>' will contain:
+            """
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","recommendations":{"group_by":"type"}}]}
+            """
+
+        Examples:
+            | testID                                               |
+            | getRecommendationWidgetDataFromMiddlewareWithGroupBy |
+
     Scenario: Developer requests recommendation widget data from API with a valid payload
         Given the '/get-recommendation-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
         And the 'getRecommendationWidgetDataFromAPIWithValidPayload' button is clicked
@@ -78,3 +90,4 @@ Feature: Request recommendation widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoDistance","name":"title","distance":"10km"}}}]                                                               | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoDistance","name":"title","distance":"10km"}}}]                                                               | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"allOf","name":"title","values":["test"]}}}]                                                                     | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"allOf","name":"title","values":["test"]}}}]                                                                     | 200         |
             | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoWithin","name":"title","coordinates":[{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3}]}}}] | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"filter":{"type":"geoWithin","name":"title","coordinates":[{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3},{"lat":0.3,"lon":0.3}]}}}] | 200         |
+            | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"groupBy": "type"}}]                                                                                                              | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"group_by":"type"}}]                                                                                                              | 200         |

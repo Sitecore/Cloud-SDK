@@ -46,6 +46,18 @@ export class RecommendationWidgetItem extends WidgetItem {
   }
 
   /**
+   * Sets the group_by operator for the the RecommendationWidgetItem.
+   * This method updates the `attribute` property of the recommendations groupBy configuration.
+   * @param attribute - The attribute that specifies what recommendation results are grouped by.
+   */
+  set groupBy(attribute: string) {
+    this._recommendations = {
+      ...this._recommendations,
+      groupBy: attribute
+    };
+  }
+
+  /**
    * Maps the recommendation widget item to its DTO format.
    */
   toDTO(): WidgetItemRecommendationDTO {
@@ -53,6 +65,7 @@ export class RecommendationWidgetItem extends WidgetItem {
 
     const recommendationsDTO = {
       ...(this._recommendations?.content && { content: this._recommendations.content }),
+      ...(this._recommendations?.groupBy && { group_by: this._recommendations.groupBy }),
       ...(this._recommendations?.filter && { filter: this._recommendations.filter.toDTO() as FilterDTO })
     };
 
