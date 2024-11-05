@@ -17,6 +17,7 @@ export class RecommendationWidgetItem extends WidgetItem {
     super(entity, rfkId);
 
     this._validateLimit(recommendations?.limit);
+    this._validateGroupBy(recommendations?.groupBy);
 
     this._recommendations = recommendations;
   }
@@ -53,8 +54,12 @@ export class RecommendationWidgetItem extends WidgetItem {
    * Sets the group_by operator for the the RecommendationWidgetItem.
    * This method updates the `attribute` property of the recommendations groupBy configuration.
    * @param attribute - The attribute that specifies what recommendation results are grouped by.
+   * @throws Error If the attribute is an empty string.
+  
    */
   set groupBy(attribute: string) {
+    this._validateGroupBy(attribute);
+
     this._recommendations = {
       ...this._recommendations,
       groupBy: attribute
@@ -82,6 +87,10 @@ export class RecommendationWidgetItem extends WidgetItem {
 
   private _validateLimit(limit?: number): void {
     if (typeof limit === 'number' && (limit < 1 || limit > 100)) throw new Error(ErrorMessages.IV_0007);
+  }
+
+  private _validateGroupBy(groupBy?: string): void {
+    if (typeof groupBy === 'string' && groupBy.trim().length === 0) throw new Error(ErrorMessages.IV_0022);
   }
 
   /**

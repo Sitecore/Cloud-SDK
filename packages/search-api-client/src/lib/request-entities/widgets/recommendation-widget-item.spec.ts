@@ -7,7 +7,7 @@ describe('recommendation widget item class', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  describe('constructor', () => {
+  describe('recommendations main property', () => {
     it('should not set the recommendations main property', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
       const dto = recommendationWidgetItem.toDTO();
@@ -24,8 +24,10 @@ describe('recommendation widget item class', () => {
       expect(dto.entity).toEqual('content');
       expect(dto.rfk_id).toEqual('rfkid_7');
     });
+  });
 
-    it('should set the recommendations.content with an empty object', () => {
+  describe('content', () => {
+    it('should set the content with a valid empty object via constructor', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', { content: {} });
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toBeDefined();
@@ -34,7 +36,17 @@ describe('recommendation widget item class', () => {
       expect(dto.rfk_id).toEqual('rfkid_7');
     });
 
-    it('should set the recommendations.content.fields with an array of stings', () => {
+    it('should set the content with a valid empty object via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.content = {};
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toBeDefined();
+      expect(dto.recommendations).toEqual({ content: {} });
+      expect(dto.entity).toEqual('content');
+      expect(dto.rfk_id).toEqual('rfkid_7');
+    });
+
+    it('should set the content with valid field values via constructor', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {
         content: { fields: ['test1', 'test2'] }
       });
@@ -45,43 +57,12 @@ describe('recommendation widget item class', () => {
       expect(dto.rfk_id).toEqual('rfkid_7');
     });
 
-    it('should set the recommendations.groupBy with a valid value', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', { groupBy: 'test' });
-      const dto = recommendationWidgetItem.toDTO();
-      expect(dto.recommendations).toBeDefined();
-      expect(dto.recommendations).toEqual({ group_by: 'test' });
-      expect(dto.entity).toEqual('content');
-      expect(dto.rfk_id).toEqual('rfkid_7');
-    });
-  });
-
-  describe('content via setter', () => {
-    it('should set the recommendations.content with an empty object', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
-      recommendationWidgetItem.content = {};
-      const dto = recommendationWidgetItem.toDTO();
-      expect(dto.recommendations).toBeDefined();
-      expect(dto.recommendations).toEqual({ content: {} });
-      expect(dto.entity).toEqual('content');
-      expect(dto.rfk_id).toEqual('rfkid_7');
-    });
-
-    it('should set the recommendations.content.fields an array of stings', () => {
+    it('should set the content with valid field values via setter', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
       recommendationWidgetItem.content = { fields: ['test1', 'test2'] };
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toBeDefined();
       expect(dto.recommendations).toEqual({ content: { fields: ['test1', 'test2'] } });
-      expect(dto.entity).toEqual('content');
-      expect(dto.rfk_id).toEqual('rfkid_7');
-    });
-
-    it('should set the recommendations.groupBy with a valid value', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
-      recommendationWidgetItem.groupBy = 'test';
-      const dto = recommendationWidgetItem.toDTO();
-      expect(dto.recommendations).toBeDefined();
-      expect(dto.recommendations).toEqual({ group_by: 'test' });
       expect(dto.entity).toEqual('content');
       expect(dto.rfk_id).toEqual('rfkid_7');
     });
@@ -97,7 +78,7 @@ describe('recommendation widget item class', () => {
       expect(dto.recommendations).toEqual({ filter: { name: 'title', type: 'eq', value: 'title1' } });
     });
 
-    it('should set the reccomendation object with filters and content', () => {
+    it('should set the recommendation object with filters and content', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
       recommendationWidgetItem.content = { fields: ['test1', 'test2'] };
 
@@ -111,6 +92,7 @@ describe('recommendation widget item class', () => {
       });
     });
   });
+
   describe('limit', () => {
     it.each([0, -1, 101])('should throw an error if an invalid value is provided from setter', (limit) => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -141,6 +123,33 @@ describe('recommendation widget item class', () => {
       expect(() => {
         new RecommendationWidgetItem('content', 'rfkid_7', { limit: null as any });
       }).not.toThrow();
+    });
+  });
+
+  describe('groupBy', () => {
+    it('should set the groupBy with a valid value via constructor', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', { groupBy: 'test' });
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toEqual({ group_by: 'test' });
+    });
+
+    it('should set the groupBy with a valid value via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.groupBy = 'test';
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toEqual({ group_by: 'test' });
+    });
+
+    it('should throw an error if an invalid value is set via constructor', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', { groupBy: '' });
+      }).toThrow(ErrorMessages.IV_0022);
+    });
+
+    it('should throw an error if an invalid value is set via setter', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7').groupBy = ' ';
+      }).toThrow(ErrorMessages.IV_0022);
     });
   });
 });
