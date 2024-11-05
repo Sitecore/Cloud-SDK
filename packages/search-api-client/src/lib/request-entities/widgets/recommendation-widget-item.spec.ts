@@ -1,3 +1,4 @@
+import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
 import { GeoFilter } from '../filters/geo-filter';
 import { RecommendationWidgetItem } from './recommendation-widget-item';
@@ -108,6 +109,38 @@ describe('recommendation widget item class', () => {
         content: { fields: ['test1', 'test2'] },
         filter: { lat: 90, lon: 90, name: 'location', type: 'geoDistance' }
       });
+    });
+  });
+  describe('limit', () => {
+    it.each([0, -1, 101])('should throw an error if an invalid value is provided from setter', (limit) => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+
+      expect(() => {
+        recommendationWidgetItem.limit = limit;
+      }).toThrow(ErrorMessages.IV_0007);
+    });
+
+    it.each([1, 100])('should set the limit if a valid value is provided from setter', (limit) => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.limit = limit;
+
+      const dto = recommendationWidgetItem.toDTO();
+
+      expect(dto.recommendations?.limit).toEqual(limit);
+    });
+
+    it('should set the limit if a valid value is provided from constructor', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', { limit: 10 });
+
+      const dto = recommendationWidgetItem.toDTO();
+
+      expect(dto.recommendations?.limit).toEqual(10);
+    });
+
+    it('should not throw an error if bypassed by typescript', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', { limit: null as any });
+      }).not.toThrow();
     });
   });
 });

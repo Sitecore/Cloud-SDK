@@ -100,6 +100,25 @@ export async function getRecommendationWidgetDataMiddleware(
       await getWidgetData(widgetRequestData);
 
       break;
+
+    case 'getRecommendationWidgetDataFromMiddlewareWithLimit':
+      await CloudSDK(request, response, {
+        enableServerCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
+
+      widget = new RecommendationWidgetItem('content', 'rfkid_7');
+      widget.limit = 1;
+
+      widgetRequestData = new WidgetRequestData([widget]);
+
+      await getWidgetData(widgetRequestData);
+
+      break;
   }
 
   resetFetch();

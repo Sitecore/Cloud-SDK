@@ -60,6 +60,7 @@ export interface WidgetItemRecommendation {
   content?: ContentType | Record<string, never>;
   filter?: Filter;
   groupBy?: string;
+  limit?: number;
 }
 
 type FacetSortName = 'text' | 'count';
@@ -139,5 +140,6 @@ export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
     content?: ContentTypeDTO | Record<string, never>;
     filter?: FilterDTO;
     group_by?: string;
+    limit?: number;
   };
 }
