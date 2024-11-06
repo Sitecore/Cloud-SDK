@@ -45,7 +45,7 @@ export async function handleHttpCookie(
       guestIdCookie.value,
       defaultCookieAttributes
     );
-  else if (cookiesValuesFromEdgeServer.guestId)
+  else if (cookiesValuesFromEdgeServer?.guestId)
     guestIdCookieString = createCookieString(
       settings.cookieSettings.name.guestId,
       cookiesValuesFromEdgeServer.guestId,

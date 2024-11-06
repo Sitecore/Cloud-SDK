@@ -27,7 +27,7 @@ import type { PackageInitializerServer } from './package-initializer';
 
 export let cloudSDKSettings: Settings;
 export const enabledPackages = new Map<string, PackageInitializerServer>();
-let cookiesValuesFromEdge: ProxySettings;
+let cookiesValuesFromEdge: ProxySettings | undefined;
 export let cloudSKDRequest: Request;
 export let cloudSKDResponse: Response;
 

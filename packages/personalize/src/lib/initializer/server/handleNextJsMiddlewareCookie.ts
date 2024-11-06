@@ -37,7 +37,7 @@ export async function handleNextJsMiddlewareCookie(
   let guestIdValue;
 
   if (guestIdCookieValue) guestIdValue = guestIdCookieValue;
-  else if (cookiesValuesFromEdgeServer.guestId) guestIdValue = cookiesValuesFromEdgeServer.guestId;
+  else if (cookiesValuesFromEdgeServer?.guestId) guestIdValue = cookiesValuesFromEdgeServer.guestId;
   else if (browserIdCookieValue) {
     const guestIdCookieValueFromEdgeProxy = await getGuestId(
       browserIdCookieValue,

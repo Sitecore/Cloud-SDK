@@ -152,9 +152,7 @@ describe('handleMiddlewareRequest', () => {
       .spyOn(internalModule, 'getCookieValueFromMiddlewareRequest')
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce(undefined);
-    jest
-      .spyOn(internalModule, 'getCookiesValuesFromEdgeServer')
-      .mockReturnValueOnce({ browserId: 'browser_id_from_proxy', guestId: '' } as any);
+    jest.spyOn(internalModule, 'getCookiesValuesFromEdgeServer').mockReturnValueOnce(undefined as any);
 
     await handleNextJsMiddlewareCookieModule.handleNextJsMiddlewareCookie(
       mockRequest,

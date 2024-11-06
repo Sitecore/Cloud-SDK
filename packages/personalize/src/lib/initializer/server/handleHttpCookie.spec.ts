@@ -55,7 +55,6 @@ describe('handleHttpCookie', () => {
       .spyOn(utilsModule, 'getCookieServerSide')
       .mockReturnValueOnce({ name: 'sc_123_personalize', value: 'guest_id_from_proxy' })
       .mockReturnValueOnce(undefined);
-    // const handleHttpCookieSpy = jest.spyOn(createPersonalizeCookieModule, 'handleHttpCookie');
 
     const createCookieStringSpy = jest
       .spyOn(utilsModule, 'createCookieString')
@@ -63,7 +62,6 @@ describe('handleHttpCookie', () => {
 
     await handleHttpCookieModule.handleHttpCookie(mockRequest, mockResponse, mockSettings, mockCloudSDKSettings);
 
-    // expect(handleHttpCookieSpy).toHaveBeenCalled();
     expect(createCookieStringSpy).toHaveBeenCalledWith('sc_123_personalize', 'guest_id_from_proxy', {
       domain: 'test',
       maxAge: 123345,
@@ -161,9 +159,7 @@ describe('handleHttpCookie', () => {
     };
 
     jest.spyOn(utilsModule, 'getCookieServerSide').mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
-    jest
-      .spyOn(internalModule, 'getCookiesValuesFromEdgeServer')
-      .mockReturnValueOnce({ browserId: '', guestId: '' } as any);
+    jest.spyOn(internalModule, 'getCookiesValuesFromEdgeServer').mockReturnValueOnce(undefined as any);
 
     await handleHttpCookieModule.handleHttpCookie(mockRequest, mockResponse, mockSettings, mockCloudSDKSettings);
 

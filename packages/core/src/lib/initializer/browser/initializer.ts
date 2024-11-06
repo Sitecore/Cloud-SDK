@@ -20,7 +20,7 @@ import type { PackageInitializer } from './package-initializer';
 export let cloudSDKSettings: Settings;
 export const enabledPackages = new Map<string, PackageInitializer>();
 export let initCoreState: Promise<void> | null = null;
-export let cookiesValuesFromEdge: ProxySettings;
+export let cookiesValuesFromEdge: ProxySettings | undefined;
 
 export class CloudSDKBrowserInitializer {
   /**
