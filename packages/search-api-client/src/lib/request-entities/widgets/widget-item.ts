@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
-import type { WidgetItemDTO, WidgetItemSearch } from './interfaces';
+import type { ContentType, WidgetItemDTO, WidgetItemSearch } from './interfaces';
 
 export class WidgetItem {
   protected entity: string;
@@ -64,10 +64,10 @@ export class WidgetItem {
    * The fields is used to define specific search criteria or filters.
    * @param fields - The array fields that specifies the search criteria.
    */
-  set content(value: object | string[]) {
+  set content(value: ContentType) {
     this._search = {
       ...this._search,
-      content: Array.isArray(value) ? { fields: value } : undefined
+      content: value
     };
   }
   /**
@@ -145,6 +145,15 @@ export class WidgetItem {
       filter: undefined
     };
   }
+  /**
+   * Sets the search content to undefined
+   */
+  resetSearchContent() {
+    this._search = {
+      ...this._search,
+      content: undefined
+    };
+  }
 
   /**
    * Maps the widget item to its DTO format.
@@ -157,7 +166,10 @@ export class WidgetItem {
     };
 
     if (this._search && JSON.stringify(this._search) !== '{}')
-      dto.search = { ...this._search, filter: this._search?.filter?.toDTO() as FilterDTO };
+      dto.search = {
+        ...this._search,
+        filter: this._search?.filter?.toDTO() as FilterDTO
+      };
 
     return dto;
   }

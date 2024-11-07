@@ -30,11 +30,13 @@ export interface WidgetDTO {
   };
 }
 
+export type ContentType = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
+
 /**
  * Represents a widget item search object.
  */
 export interface WidgetItemSearch {
-  content?: { fields?: string[] | unknown };
+  content?: ContentType;
   limit?: number;
   offset?: number;
   filter?: Filter;
@@ -45,19 +47,11 @@ export interface WidgetItemSearch {
   };
 }
 
-export type ContentType = {
-  fields?: ArrayOfAtLeastOne<string>;
-};
-
-export type ContentTypeDTO = {
-  fields?: ArrayOfAtLeastOne<string>;
-};
-
 /**
  * Represents a widget item recommendation object.
  */
 export interface WidgetItemRecommendation {
-  content?: ContentType | Record<string, never>;
+  content?: ContentType;
   filter?: Filter;
   groupBy?: string;
   limit?: number;
@@ -131,13 +125,21 @@ export interface SearchWidgetItemDTO extends WidgetItemDTO {
   search?: WidgetItemSearchDTO & { facet?: FacetDTO };
 }
 
-export type WidgetItemSearchDTO = Omit<WidgetItemSearch, 'filter'> & {
+export type WidgetItemSearchDTO = {
   filter?: FilterDTO;
+  content?: ContentType;
+  limit?: number;
+  offset?: number;
+  groupBy?: string;
+  query?: {
+    keyphrase: string;
+    operator?: Omit<LogicalOperators, 'not'>;
+  };
 };
 
 export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
   recommendations?: {
-    content?: ContentTypeDTO | Record<string, never>;
+    content?: ContentType;
     filter?: FilterDTO;
     group_by?: string;
     limit?: number;

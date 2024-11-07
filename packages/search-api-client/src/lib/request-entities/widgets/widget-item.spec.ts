@@ -1,5 +1,6 @@
 import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import { WidgetItem } from './widget-item';
 
 describe('widget item class', () => {
@@ -183,32 +184,39 @@ describe('widget item class', () => {
       widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
     });
     it('should set content to fields array when provided an array', () => {
-      const fieldsArray = ['name', 'description'];
-      widgetItem.content = fieldsArray;
-      expect(widgetItem['_search']?.content).toEqual({ fields: fieldsArray });
+      widgetItem.content = { fields: ['name', 'description'] };
+      expect(widgetItem['_search']?.content).toEqual({ fields: ['name', 'description'] });
     });
 
     it('should set content to empty object when provided an empty object', () => {
       widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
+      expect(widgetItem['_search']?.content).toStrictEqual({});
     });
 
     it('should overwrite previous content with empty object', () => {
       widgetItem.content = {};
-      const fieldsArray = ['name', 'description'];
-      widgetItem.content = fieldsArray;
+      const fieldsArray: ArrayOfAtLeastOne<string> = ['name', 'description'];
+      widgetItem.content = { fields: fieldsArray };
       expect(widgetItem['_search']?.content).toEqual({ fields: fieldsArray });
     });
+  });
 
-    it('should maintain the integrity of the content structure', () => {
-      widgetItem.content = ['item1', 'item2'];
-      widgetItem.content = {};
-      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
+  describe('resetSearchContent', () => {
+    let widgetItem: WidgetItem;
+    const validWidgetItem = {
+      entity: 'test',
+      rfkId: 'test'
+    };
+    beforeEach(() => {
+      widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem.content = { fields: ['item1', 'item2'] };
     });
-
-    it('should not set the content if you do not provide one', () => {
-      widgetItem.content = null as unknown as string[];
+    it('should reset the content if resetSearchContent is called', () => {
+      widgetItem.resetSearchContent();
+      expect(widgetItem['_search']).toStrictEqual({ content: undefined });
+      expect(widgetItem['_search']?.content).toBeUndefined();
       expect(widgetItem.toDTO().search?.content).toEqual(undefined);
+      expect(widgetItem.toDTO().search).toEqual(undefined);
     });
   });
 
@@ -315,15 +323,13 @@ describe('widget item class', () => {
 
     beforeEach(() => {
       widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
-      widgetItem.content = {
-        query: { keyphrase: 'example', operator: 'and' }
-      };
+      widgetItem.keyphrase = 'example';
+      widgetItem.operator = 'and';
     });
 
     it('resetSearchQuery should set the query property to undefined', () => {
       widgetItem.resetSearchQuery();
-      expect(widgetItem['_search']).toStrictEqual({ content: undefined, query: undefined });
-      expect(widgetItem['_search']?.content).toStrictEqual(undefined);
+      expect(widgetItem['_search']).toStrictEqual({ query: undefined });
       expect(widgetItem['_search']?.query).toBeUndefined();
       expect(widgetItem.toDTO().search?.query).toBeUndefined();
     });
@@ -400,12 +406,8 @@ describe('widget item class', () => {
     });
 
     it('resetSearchFilter should set the filter property to undefined', () => {
-      widgetItem.content = {
-        query: { keyphrase: 'example', operator: 'and' }
-      };
-
       widgetItem.removeSearchFilter();
-      expect(widgetItem['_search']).toStrictEqual({ content: undefined, filter: undefined });
+      expect(widgetItem['_search']).toStrictEqual({ filter: undefined });
       expect(widgetItem['_search']?.filter).toBeUndefined();
       expect(widgetItem.toDTO().search?.filter).toBeUndefined();
       const dto = widgetItem.toDTO();
