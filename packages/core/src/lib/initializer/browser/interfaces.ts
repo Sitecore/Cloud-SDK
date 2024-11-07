@@ -39,6 +39,7 @@ export interface Core {
   getBrowserId: () => string;
   getGuestId: () => Promise<string>;
   settings: {
+    siteName: string;
     sitecoreEdgeContextId: string;
     sitecoreEdgeUrl: string;
   };

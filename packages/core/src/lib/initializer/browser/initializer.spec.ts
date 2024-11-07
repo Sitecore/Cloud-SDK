@@ -384,6 +384,7 @@ describe('initializer browser', () => {
       expect(global.window.scCloudSDK.core.getGuestId).toBeDefined();
       expect(global.window.scCloudSDK.core.version).toEqual(LIBRARY_VERSION);
       expect(global.window.scCloudSDK.core.settings).toEqual({
+        siteName: '456',
         sitecoreEdgeContextId: '123',
         sitecoreEdgeUrl: SITECORE_EDGE_URL
       });

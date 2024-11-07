@@ -2,10 +2,10 @@
 Feature: Developer uses web personalization
 
     Scenario: Developer initializes CloudSDK without web personalization
-            Given the web personalization page is loaded
-            When the 'initializeWithoutWebPersonalization' button is clicked
-            Then web personalization settings are not injected to the window object
-            And webExperiences are not loaded to DOM
+        Given the web personalization page is loaded
+        When the 'initializeWithoutWebPersonalization' button is clicked
+        Then web personalization settings are not injected to the window object
+        And webExperiences are not loaded to DOM
 
     Scenario: Developer initializes CloudSDK with web personalization without events
         Given the web personalization page is loaded
@@ -19,6 +19,13 @@ Feature: Developer uses web personalization
             """
             {
                 "scCloudSDK": {
+                    "core": {
+                        "settings": {
+                            "siteName": "spinair.com",
+                            "sitecoreEdgeContextId": "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
+                            "sitecoreEdgeUrl": "https://edge-platform.sitecorecloud.io"
+                        }
+                    },
                     "personalize": {
                         "settings": {
                             "async": false,
@@ -38,6 +45,13 @@ Feature: Developer uses web personalization
             """
             {
                 "scCloudSDK": {
+                    "core": {
+                        "settings": {
+                            "siteName": "spinair.com",
+                            "sitecoreEdgeContextId": "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
+                            "sitecoreEdgeUrl": "https://edge-platform.sitecorecloud.io"
+                        }
+                    },
                     "personalize": {
                         "settings": {
                             "async": true,
@@ -57,6 +71,13 @@ Feature: Developer uses web personalization
             """
             {
                 "scCloudSDK": {
+                    "core": {
+                        "settings": {
+                            "siteName": "spinair.com",
+                            "sitecoreEdgeContextId": "83d8199c-2837-4c29-a8ab-1bf234fea2d1",
+                            "sitecoreEdgeUrl": "https://edge-platform.sitecorecloud.io"
+                        }
+                    },
                     "personalize": {
                         "settings": {
                             "async": true,

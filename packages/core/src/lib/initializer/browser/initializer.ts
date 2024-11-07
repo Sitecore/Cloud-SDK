@@ -65,6 +65,7 @@ export class CloudSDKBrowserInitializer {
         getBrowserId,
         getGuestId,
         settings: {
+          siteName: cloudSDKSettings.siteName,
           sitecoreEdgeContextId: cloudSDKSettings.sitecoreEdgeContextId,
           sitecoreEdgeUrl: cloudSDKSettings.sitecoreEdgeUrl
         },

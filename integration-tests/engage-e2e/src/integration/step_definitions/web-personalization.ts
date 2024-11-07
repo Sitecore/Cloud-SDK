@@ -21,6 +21,11 @@ defineStep('the provided settings are injected to the window object', (table: st
     expect(win.scCloudSDK.personalize).to.have.property('settings');
     expect(win.scCloudSDK.personalize.settings.async).to.equal(data.scCloudSDK.personalize.settings.async);
     expect(win.scCloudSDK.personalize.settings.defer).to.equal(data.scCloudSDK.personalize.settings.defer);
+    expect(win.scCloudSDK.core.settings.siteName).to.equal(data.scCloudSDK.core.settings.siteName);
+    expect(win.scCloudSDK.core.settings.sitecoreEdgeContextId).to.equal(
+      data.scCloudSDK.core.settings.sitecoreEdgeContextId
+    );
+    expect(win.scCloudSDK.core.settings.sitecoreEdgeUrl).to.equal(data.scCloudSDK.core.settings.sitecoreEdgeUrl);
   });
 });
 

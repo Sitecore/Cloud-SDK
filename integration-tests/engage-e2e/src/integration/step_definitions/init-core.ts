@@ -24,10 +24,12 @@ defineStep('the core settings are injected to the window object', (table: string
     expect(win.scCloudSDK.core).to.have.property('version');
     expect(win.scCloudSDK.core.settings).to.have.property('sitecoreEdgeContextId');
     expect(win.scCloudSDK.core.settings).to.have.property('sitecoreEdgeUrl');
+    expect(win.scCloudSDK.core.settings).to.have.property('siteName');
     expect(win.scCloudSDK.core.version).to.equal(corePackageVersion);
     expect(win.scCloudSDK.core.settings.sitecoreEdgeContextId).to.equal(
       data.scCloudSDK.core.settings.sitecoreEdgeContextId
     );
     expect(win.scCloudSDK.core.settings.sitecoreEdgeUrl).to.equal(data.scCloudSDK.core.settings.sitecoreEdgeUrl);
+    expect(win.scCloudSDK.core.settings.siteName).to.equal(data.scCloudSDK.core.settings.siteName);
   });
 });
