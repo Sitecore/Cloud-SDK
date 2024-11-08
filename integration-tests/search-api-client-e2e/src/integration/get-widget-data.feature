@@ -20,7 +20,7 @@ Feature: Request widget data from Search REST API
         And the 'getWidgetDataFromAPIWithSearchPayload' button is clicked
         Then the request with id 'getWidgetDataFromAPIWithSearchPayload' will contain:
             """
-            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"groupBy":"type"}}]}
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","search":{"group_by":"type"}}]}
             """
 
     Scenario Outline: Developer requests widget data from browser with a valid payload

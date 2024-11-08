@@ -167,8 +167,12 @@ export class WidgetItem {
 
     if (this._search && JSON.stringify(this._search) !== '{}')
       dto.search = {
-        ...this._search,
-        filter: this._search?.filter?.toDTO() as FilterDTO
+        ...(this._search.content && { content: this._search.content }),
+        ...(this._search.filter && { filter: this._search.filter.toDTO() as FilterDTO }),
+        ...(this._search.groupBy && { group_by: this._search.groupBy }),
+        ...(this._search.limit && { limit: this._search.limit }),
+        ...(typeof this._search.offset === 'number' && { offset: this._search.offset }),
+        ...(this._search.query && { query: this._search.query })
       };
 
     return dto;

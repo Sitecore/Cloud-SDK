@@ -91,10 +91,9 @@ describe('widget item class', () => {
         widgetItem.offset = offset;
         expect(widgetItem['_search']?.offset).toBe(offset);
         expect(widgetItem).toBe(widgetItem);
-        expect(widgetItem.toDTO()).toStrictEqual({
+        expect(widgetItem.toDTO()).toEqual({
           ...expected,
           search: {
-            filter: undefined,
             offset
           }
         });
@@ -129,9 +128,11 @@ describe('widget item class', () => {
       entity: 'test',
       rfkId: 'test'
     };
+
     beforeEach(() => {
       widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
     });
+
     it('should set the limit when given a valid value', () => {
       expect(widgetItem.limit).toBeUndefined();
       const validLimits = [1, 2, 50, 99, 100];
@@ -143,7 +144,6 @@ describe('widget item class', () => {
         expect(widgetItem.toDTO()).toStrictEqual({
           ...expected,
           search: {
-            filter: undefined,
             limit
           }
         });
@@ -180,12 +180,15 @@ describe('widget item class', () => {
       entity: 'test',
       rfkId: 'test'
     };
+
     beforeEach(() => {
       widgetItem = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
     });
+
     it('should set content to fields array when provided an array', () => {
       widgetItem.content = { fields: ['name', 'description'] };
       expect(widgetItem['_search']?.content).toEqual({ fields: ['name', 'description'] });
+      expect(widgetItem.toDTO().search?.content).toEqual({ fields: ['name', 'description'] });
     });
 
     it('should set content to empty object when provided an empty object', () => {
@@ -358,12 +361,12 @@ describe('widget item class', () => {
         ...expected,
         search: {
           filter: undefined,
-          groupBy: 'type'
+          group_by: 'type'
         }
       });
 
       const dto = widgetItem.toDTO();
-      expect(JSON.stringify(dto.search)).toEqual('{"groupBy":"type"}');
+      expect(JSON.stringify(dto.search)).toEqual('{"group_by":"type"}');
       expect(mockFilter.toDTO).not.toHaveBeenCalled();
     });
 
