@@ -25,6 +25,8 @@ export enum ErrorMessages {
   IV_0020 = '[IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces.',
   IV_0021 = '[IV-0021] You must set ​"sort.name"​​ to ​"text"​​ if you use "​after"​​. ',
   IV_0022 = '[IV-0022] Incorrect value for "groupBy". Set the value to a non-empty string.',
+  IV_0023 = '[IV-0023] Incorrect value for recipe "id". Set the value to a non-empty string.',
+  IV_0024 = '[IV-0024] Incorrect value for recipe "version". Set the value to an integer greater than or equal to 1.',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
   MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',

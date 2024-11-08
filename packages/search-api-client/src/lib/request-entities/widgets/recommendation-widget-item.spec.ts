@@ -7,6 +7,7 @@ describe('recommendation widget item class', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
+
   describe('recommendations main property', () => {
     it('should not set the recommendations main property', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -150,6 +151,87 @@ describe('recommendation widget item class', () => {
       expect(() => {
         new RecommendationWidgetItem('content', 'rfkid_7').groupBy = ' ';
       }).toThrow(ErrorMessages.IV_0022);
+    });
+  });
+
+  describe('recipe', () => {
+    it('should set the recipe with valid values via constructor', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {
+        recipe: { id: 'recipe-id', version: 1 }
+      });
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toEqual({ recipe: { id: 'recipe-id', version: 1 } });
+    });
+
+    it('should set the recipe with valid values via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.recipe = { id: 'recipe-id', version: 2 };
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toEqual({ recipe: { id: 'recipe-id', version: 2 } });
+    });
+
+    it('should throw an error if recipe id is empty via constructor', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', {
+          recipe: { id: '', version: 1 }
+        });
+      }).toThrow(ErrorMessages.IV_0023);
+    });
+
+    it('should throw an error if recipe id contains only whitespace via constructor', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', {
+          recipe: { id: '   ', version: 1 }
+        });
+      }).toThrow(ErrorMessages.IV_0023);
+    });
+
+    it('should throw an error if recipe version is less than 1 via constructor', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', {
+          recipe: { id: 'recipe-id', version: 0 }
+        });
+      }).toThrow(ErrorMessages.IV_0024);
+    });
+
+    it('should throw an error if recipe id is empty via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      expect(() => {
+        recommendationWidgetItem.recipe = { id: '', version: 1 };
+      }).toThrow(ErrorMessages.IV_0023);
+    });
+
+    it('should throw an error if recipe id contains only whitespace via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      expect(() => {
+        recommendationWidgetItem.recipe = { id: '   ', version: 1 };
+      }).toThrow(ErrorMessages.IV_0023);
+    });
+
+    it('should throw an error if recipe version is less than 1 via setter', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      expect(() => {
+        recommendationWidgetItem.recipe = { id: 'recipe-id', version: 0 };
+      }).toThrow(ErrorMessages.IV_0024);
+    });
+
+    it('should not throw an error if recipe is undefined in constructor', () => {
+      expect(() => {
+        new RecommendationWidgetItem('content', 'rfkid_7', {});
+      }).not.toThrow();
+    });
+
+    it('should combine recipe with other properties in toDTO', () => {
+      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      recommendationWidgetItem.content = { fields: ['test1'] };
+      recommendationWidgetItem.recipe = { id: 'recipe-id', version: 1 };
+      recommendationWidgetItem.limit = 5;
+      const dto = recommendationWidgetItem.toDTO();
+      expect(dto.recommendations).toEqual({
+        content: { fields: ['test1'] },
+        limit: 5,
+        recipe: { id: 'recipe-id', version: 1 }
+      });
     });
   });
 });

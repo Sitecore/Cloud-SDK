@@ -31,6 +31,7 @@ export interface WidgetDTO {
 }
 
 export type ContentType = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
+export type Recipe = { id: string; version: number };
 
 /**
  * Represents a widget item search object.
@@ -55,6 +56,7 @@ export interface WidgetItemRecommendation {
   filter?: Filter;
   groupBy?: string;
   limit?: number;
+  recipe?: Recipe;
 }
 
 type FacetSortName = 'text' | 'count';
@@ -143,5 +145,6 @@ export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
     filter?: FilterDTO;
     group_by?: string;
     limit?: number;
+    recipe?: Recipe;
   };
 }
