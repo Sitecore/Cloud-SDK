@@ -1,7 +1,7 @@
 /* eslint-disable cypress/unsafe-to-chain-command */
 /// <reference types='cypress' />
-import type { CyHttpMessages } from 'cypress/types/net-stubbing';
 import { defineStep } from '@badeball/cypress-cucumber-preprocessor';
+import type { CyHttpMessages } from 'cypress/types/net-stubbing';
 
 let statusCode: number;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

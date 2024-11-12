@@ -44,7 +44,7 @@ export interface WidgetItemSearch {
   groupBy?: string;
   query?: {
     keyphrase: string;
-    operator?: Omit<LogicalOperators, 'not'>;
+    operator?: Exclude<LogicalOperators, 'not'>;
   };
 }
 
@@ -135,7 +135,7 @@ export type WidgetItemSearchDTO = {
   groupBy?: string;
   query?: {
     keyphrase: string;
-    operator?: Omit<LogicalOperators, 'not'>;
+    operator?: Exclude<LogicalOperators, 'not'>;
   };
 };
 

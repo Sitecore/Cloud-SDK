@@ -7,14 +7,14 @@ import type { FacetFilterBase, LogicalFacetFilterDTO } from './interfaces';
  * Creates LogicalFacetFilter object.
  */
 export class LogicalFacetFilter implements FacetFilterBase {
-  private _operator: Omit<LogicalOperators, 'not'>;
+  private _operator: Exclude<LogicalOperators, 'not'>;
   private _value: Array<FacetFilter>;
 
   /**
    * @param operator - The operator to be applied on attribute.
    * @param value - The value to check against of.
    */
-  constructor(operator: Omit<LogicalOperators, 'not'>, value: Array<FacetFilter>) {
+  constructor(operator: Exclude<LogicalOperators, 'not'>, value: Array<FacetFilter>) {
     this._operator = operator;
     this._value = value;
   }

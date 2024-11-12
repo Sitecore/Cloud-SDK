@@ -7,7 +7,7 @@ declare global {
   }
 }
 
-function writeLocalImplementation(fileName: string, content: string) {
+function writeLocalImplementation(fileName: string, content: Cypress.FileContents) {
   return cy.writeFile(`src/fixtures/local/${fileName}`, content);
 }
 

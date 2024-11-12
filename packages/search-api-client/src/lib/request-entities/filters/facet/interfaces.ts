@@ -1,5 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
 import type { FacetFilterDTO } from '../../widgets/interfaces';
 import type { ArrayOfAtLeastOne, ListOperators, LogicalOperators } from '../interfaces';
 
@@ -23,6 +22,6 @@ export interface NotFacetFilterDTO {
 }
 
 export interface LogicalFacetFilterDTO {
-  type: Omit<LogicalOperators, 'not'>;
+  type: Exclude<LogicalOperators, 'not'>;
   filters: ArrayOfAtLeastOne<FacetFilterDTO>;
 }

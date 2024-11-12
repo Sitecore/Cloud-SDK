@@ -93,7 +93,7 @@ export class WidgetItem {
    * The operator is used to define specific search criteria.
    * @param operator - The operator that specifies the search criteria.
    */
-  set operator(operator: Omit<LogicalOperators, 'not'>) {
+  set operator(operator: Exclude<LogicalOperators, 'not'>) {
     this._search = {
       ...this._search,
       query: {

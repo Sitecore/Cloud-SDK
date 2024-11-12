@@ -64,33 +64,9 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   cy.wait(600);
 });
 
-Cypress.Commands.add('writeLocal', (fileName, content) => {
-  cy.writeFile(`src/fixtures/local/${fileName}`, content);
-});
-
-Cypress.Commands.add('readLocal', (fileName) => {
-  let value: any;
-  cy.readFile(`src/fixtures/local/${fileName}`).then((content) => (value = content));
-  return value;
-});
-
 Cypress.Commands.add('replace', (filePath, regexMatch, text) => {
   cy.readFile(filePath).then((data) => {
     const pageData = data;
     cy.writeFile(filePath, pageData.replace(regexMatch, text));
   });
-});
-
-Cypress.Commands.add('getLogOutput', () => {
-  const logs: string[] = [];
-
-  // eslint-disable-next-line cypress/unsafe-to-chain-command
-  cy.get('@consoleLogOutput')
-    .invoke('getCalls')
-    .each((call) => {
-      call.args.forEach((arg) => {
-        logs.push(arg);
-      });
-    })
-    .then(() => logs);
 });
