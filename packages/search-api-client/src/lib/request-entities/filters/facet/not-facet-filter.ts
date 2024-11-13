@@ -4,11 +4,9 @@ import type { FacetFilterBase, NotFacetFilterDTO } from './interfaces';
 import type { FacetFilter } from '../../widgets/interfaces';
 
 export class NotFacetFilter implements FacetFilterBase {
-  private _operator: 'not';
   private _value: string | FacetFilter;
 
-  constructor(operator: 'not', value: string | FacetFilter) {
-    this._operator = operator;
+  constructor(value: string | FacetFilter) {
     this._value = value;
   }
 
@@ -22,7 +20,7 @@ export class NotFacetFilter implements FacetFilterBase {
     const filter = typeof this._value === 'string' ? this._value : this._value.toDTO();
     return {
       filter,
-      type: this._operator
+      type: 'not'
     };
   }
 }

@@ -42,7 +42,6 @@ export default function SearchFilters() {
 
     if (filterOperator === 'not') {
       return new NotFacetFilter(
-        filterOperator,
         typeof filterValue === 'string' ? filterValue : createFilter(filterValue.type, filterValue.value)
       );
     }
