@@ -2,8 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-## [0.4.1](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.4.0...core-0.4.1) (2024-11-07)
+## [0.4.2](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/core-0.4.1...core-0.4.2) (2024-11-19)
 
-### Bug Fixes
+### Features
 
-- CDK-549 Cannot read properties of undefined (reading guestId) during initialization ([#317](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/317)) ([eba7adf](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/eba7adfb5b400d474fbe432c660cafbd02c575d7))
+- CDK-550 siteName should be stored to window.scCloudSDK.core.settings object ([#320](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/320)) ([7a5d26a](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/7a5d26aceec45a95a3ff478b6bb90eff84f15efe))
