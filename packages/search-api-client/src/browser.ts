@@ -18,6 +18,14 @@ export { NotFacetFilter } from './lib/request-entities/filters/facet/not-facet-f
 
 export type { BrowserSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
+export type {
+  FacetOptions,
+  QueryOptions,
+  ContentOptions,
+  Recipe,
+  SearchOptions,
+  RecommendationOptions
+} from './lib/request-entities/widgets/interfaces';
 
 export { getWidgetData } from './lib/requests/browser/get-widget-data';
 export { getPageWidgetData } from './lib/requests/browser/get-page-widget-data';

@@ -14,7 +14,13 @@ export type Filter =
   | ListFilter
   | GeoWithinFilter;
 
-export type FilterDTO = LogicalFilter<keyof LogicalFilterValues> | GeoFilterDTO | ComparisonFilterDTO;
+export type FilterDTO =
+  | LogicalFilterDTO
+  | NotFilterDTO
+  | GeoFilterDTO
+  | ComparisonFilterDTO
+  | ListFilterDTO
+  | GeoWithinFilterDTO;
 
 export interface ComparisonFilterDTO {
   name: string;

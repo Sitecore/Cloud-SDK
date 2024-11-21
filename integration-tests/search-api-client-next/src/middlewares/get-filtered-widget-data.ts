@@ -1,13 +1,13 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 // eslint-disable-next-line sort-imports
 import {
   ComparisonFilter,
-  WidgetItem,
-  WidgetRequestData,
-  getWidgetData
+  getWidgetData,
+  SearchWidgetItem,
+  WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/server';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 
 export async function getFilteredWidgetDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
@@ -19,7 +19,7 @@ export async function getFilteredWidgetDataMiddleware(request: NextRequest, resp
   )
     return;
 
-  let widget: WidgetItem;
+  let widget: SearchWidgetItem;
   let widgetRequestData: WidgetRequestData;
 
   decorateFetch(testID as string);
@@ -34,7 +34,7 @@ export async function getFilteredWidgetDataMiddleware(request: NextRequest, resp
         .addSearch({ userId: 'test' })
         .initialize();
 
-      widget = new WidgetItem('content', 'rfkid_7');
+      widget = new SearchWidgetItem('content', 'rfkid_7');
 
       widget.filter = new ComparisonFilter('test', 'eq', 10);
 

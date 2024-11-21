@@ -15,8 +15,17 @@ export { GeoWithinFilter } from './lib/request-entities/filters/geo-within-filte
 export { Context } from './lib/request-entities/context/context';
 export { LogicalFacetFilter } from './lib/request-entities/filters/facet/logical-facet-filter';
 export { NotFacetFilter } from './lib/request-entities/filters/facet/not-facet-filter';
+
 export type { ServerSettings } from './lib/types';
 export type { GeoData } from './lib/request-entities/context/interfaces';
+export type {
+  FacetOptions,
+  QueryOptions,
+  ContentOptions,
+  Recipe,
+  SearchOptions,
+  RecommendationOptions
+} from './lib/request-entities/widgets/interfaces';
 
 export { getSettings, initServer as init } from './lib/init/server/initializer';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/server/get-widget-data-server';

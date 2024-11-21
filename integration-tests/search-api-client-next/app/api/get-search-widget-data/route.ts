@@ -28,31 +28,33 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7', {
-        all: true,
-        coverage: true,
-        max: 50,
-        sort: { name: 'count', order: 'asc' },
-        types: [
-          {
-            exclude: ['type'],
-            filter: {
-              type: 'and',
-              values: [
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
-                'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
-              ]
-            },
-            keyphrase: 'test',
-            max: 1,
-            minCount: 1,
-            name: 'type',
-            sort: {
-              after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
-              name: 'text',
-              order: 'asc'
+        facet: {
+          all: true,
+          coverage: true,
+          max: 50,
+          sort: { name: 'count', order: 'asc' },
+          types: [
+            {
+              exclude: ['type'],
+              filter: {
+                type: 'and',
+                values: [
+                  'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                  'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+                ]
+              },
+              keyphrase: 'test',
+              max: 1,
+              minCount: 1,
+              name: 'type',
+              sort: {
+                after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
+                name: 'text',
+                order: 'asc'
+              }
             }
-          }
-        ]
+          ]
+        }
       });
       widgetRequestData = new WidgetRequestData([widget]);
 

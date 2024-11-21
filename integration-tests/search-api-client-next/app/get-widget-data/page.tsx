@@ -6,6 +6,7 @@ import {
   Context,
   GeoFilter,
   getWidgetData,
+  SearchWidgetItem,
   WidgetItem,
   WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/browser';
@@ -50,14 +51,21 @@ export default function GetWidgetData() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
-          const widget = new WidgetItem(item.entity, item.rfkId);
+          if (Object.keys(item).length === 2) {
+            const widget = new WidgetItem(item.entity, item.rfkId);
+
+            return widget;
+          }
+
+          const widget = new SearchWidgetItem(item.entity, item.rfkId);
 
           if (item.search?.limit) widget.limit = item.search.limit;
           if (item.search?.offset) widget.offset = item.search.offset;
           if (item.search?.content) widget.content = item.search.content;
           if (item.search?.query) {
-            if (item.search.query?.keyphrase !== undefined) widget.keyphrase = item.search.query.keyphrase;
-            if (item.search.query?.operator !== undefined) widget.operator = item.search.query.operator;
+            if (item.search.query?.keyphrase !== undefined) widget.query = { keyphrase: item.search.query.keyphrase };
+            if (item.search.query?.operator !== undefined)
+              widget.query = { keyphrase: item.search.query.keyphrase, operator: item.search.query.operator };
           }
 
           if (item.search?.filter) {
@@ -72,7 +80,7 @@ export default function GetWidgetData() {
                 break;
               case 'remove':
                 widget.filter = filter;
-                widget.removeSearchFilter();
+                widget.resetFilter();
                 break;
             }
           }

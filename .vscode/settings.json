@@ -1,6 +1,9 @@
 {
-  "cucumberautocomplete.steps": ["apps/engage-e2e/src/integration/step_definitions/*.ts"],
-  "cucumberautocomplete.syncfeatures": "apps/engage-e2e/src/integration/*.feature",
+  "cucumberautocomplete.steps": [
+    "integration-tests/*-e2e/src/integration/step_definitions/*.ts",
+    "integration-tests/cypress-utils/src/lib/steps/*.ts"
+  ],
+  "cucumberautocomplete.syncfeatures": "integration-tests/*-e2e/src/integration/*.feature",
   "cSpell.words": ["cloudsdk", "sitecore"],
   "conventionalCommits.scopes": ["core", "utils", "events", "personalize", "search-api-client"],
   "editor.formatOnSave": true,

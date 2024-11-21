@@ -12,61 +12,41 @@ import type { NotFacetFilter } from '../filters/facet/not-facet-filter';
 import type { ArrayOfAtLeastOne, Filter, FilterDTO, LogicalOperators } from '../filters/interfaces';
 
 /**
- * Represents a widget item object that holds all possible members in its DTO format.
+ * Represents a widget item object that holds the base members in its DTO format.
  */
 export interface WidgetItemDTO {
   entity: string;
-  search?: WidgetItemSearchDTO;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
 }
 
 /**
- * Represents a widget object in its DTO format.
+ * Represents the content options property of the results widget item.
  */
-export interface WidgetDTO {
-  widget: {
-    items: WidgetItemDTO[];
-  };
-}
-
-export type ContentType = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
-export type Recipe = { id: string; version: number };
+export type ContentOptions = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
 
 /**
- * Represents a widget item search object.
+ * Represents a results widget item object.
  */
-export interface WidgetItemSearch {
-  content?: ContentType;
+export interface ResultsOptions {
   limit?: number;
-  offset?: number;
   filter?: Filter;
   groupBy?: string;
-  query?: {
-    keyphrase: string;
-    operator?: Exclude<LogicalOperators, 'not'>;
-  };
+  content?: ContentOptions;
 }
 
 /**
- * Represents a widget item recommendation object.
+ * Represents a results widget item object in its DTO format.
  */
-export interface WidgetItemRecommendation {
-  content?: ContentType;
-  filter?: Filter;
-  groupBy?: string;
+export interface ResultsItemDTO {
   limit?: number;
-  recipe?: Recipe;
+  filter?: FilterDTO;
+  group_by?: string;
+  content?: ContentOptions;
 }
 
 type FacetSortName = 'text' | 'count';
 type FacetSortOrder = 'asc' | 'desc';
-
-export interface FacetSort {
-  name: FacetSortName;
-  order: FacetSortOrder;
-  after?: string;
-}
 
 export type FacetFilter = ComparisonFacetFilter | NotFacetFilter | LogicalFacetFilter | ListFacetFilter;
 export type FacetFilterDTO = ComparisonFacetFilterDTO | NotFacetFilterDTO | LogicalFacetFilterDTO | ListFacetFilterDTO;
@@ -83,7 +63,10 @@ export type FacetTypeFilterDTO = {
 
 export type FacetSortDTO = Omit<FacetSort, 'after'>;
 
-export interface FacetType {
+/**
+ * Represents the type object of the facet object.
+ */
+export interface FacetTypeOptions {
   name: string;
   exclude?: ArrayOfAtLeastOne<string>;
   max?: number;
@@ -93,6 +76,9 @@ export interface FacetType {
   filter?: FacetTypeFilter;
 }
 
+/**
+ * Represents the facet object of search widget item in its DTO format.
+ */
 export interface FacetTypeDTO {
   name: string;
   exclude?: ArrayOfAtLeastOne<string>;
@@ -104,15 +90,30 @@ export interface FacetTypeDTO {
   filter?: FacetTypeFilterDTO;
 }
 
-export interface Facet {
+/**
+ * Represents the facet object of search widget item.
+ */
+export interface FacetOptions {
   all?: boolean;
   max?: number;
   coverage?: boolean;
   sort?: FacetSort;
-  types?: ArrayOfAtLeastOne<FacetType>;
+  types?: ArrayOfAtLeastOne<FacetTypeOptions>;
 }
 
-export interface FacetDTO {
+/**
+ * Represents the sort object of the facet object.
+ */
+export interface FacetSort {
+  name: FacetSortName;
+  order: FacetSortOrder;
+  after?: string;
+}
+
+/**
+ * Represents the facet object its DTO format.
+ */
+export interface FacetOptionsDTO {
   all?: boolean;
   max?: number;
   coverage?: boolean;
@@ -121,30 +122,82 @@ export interface FacetDTO {
 }
 
 /**
- * Represents a search widget item DTO search object.
+ * Represents the query object of search widget item.
  */
-export interface SearchWidgetItemDTO extends WidgetItemDTO {
-  search?: WidgetItemSearchDTO & { facet?: FacetDTO };
+export interface QueryOptions {
+  keyphrase: string;
+  operator?: Exclude<LogicalOperators, 'not'>;
 }
 
-export type WidgetItemSearchDTO = {
-  filter?: FilterDTO;
-  content?: ContentType;
-  limit?: number;
-  offset?: number;
-  groupBy?: string;
-  query?: {
-    keyphrase: string;
-    operator?: Exclude<LogicalOperators, 'not'>;
-  };
-};
+/**
+ * Represents the query object of search widget item in its DTO format.
+ */
+export interface QueryOptionsDTO {
+  keyphrase: string;
+  operator?: Exclude<LogicalOperators, 'not'>;
+}
 
+/*
+ * Represents the search widget item object.
+ */
+export interface SearchOptions extends ResultsOptions {
+  facet?: FacetOptions;
+  query?: QueryOptions;
+  offset?: number;
+}
+
+/**
+ * Represents the search object of the search widget item in its DTO format.
+ */
+export interface SearchDTO extends ResultsItemDTO {
+  facet?: FacetOptionsDTO;
+  query?: QueryOptionsDTO;
+  offset?: number;
+}
+
+/**
+ * Represents the search widget item object in its DTO format.
+ */
+export interface SearchWidgetItemDTO extends WidgetItemDTO {
+  search?: SearchDTO;
+}
+
+/**
+ * Represents the recipe object of the recommendation widget item.
+ */
+export type Recipe = { id: string; version: number };
+
+/**
+ * Represents recommendation widget item.
+ */
+export interface Recommendation {
+  recipe?: Recipe;
+}
+
+/**
+ * Represents a widget item recommendation object.
+ */
+export type RecommendationOptions = ResultsOptions & Recommendation;
+
+/**
+ * Represents the recommendations object of the recommendation widget item in its DTO format.
+ */
+export interface RecommendationDTO extends ResultsItemDTO {
+  recipe?: Recipe;
+}
+
+/**
+ * Represents the recommendation widget item object in its DTO format.
+ */
 export interface WidgetItemRecommendationDTO extends WidgetItemDTO {
-  recommendations?: {
-    content?: ContentType;
-    filter?: FilterDTO;
-    group_by?: string;
-    limit?: number;
-    recipe?: Recipe;
+  recommendations?: RecommendationDTO;
+}
+
+/**
+ * Represents a widget object in its DTO format.
+ */
+export interface WidgetDTO {
+  widget: {
+    items: WidgetItemDTO[];
   };
 }

@@ -1,13 +1,13 @@
-import {
-  ComparisonFilter,
-  WidgetItem,
-  WidgetRequestData,
-  getWidgetData
-} from '@sitecore-cloudsdk/search-api-client/server';
-import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import {
+  ComparisonFilter,
+  getWidgetData,
+  SearchWidgetItem,
+  WidgetRequestData
+} from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const searchParams = req.nextUrl.searchParams;
@@ -16,7 +16,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   if (!testID) return NextResponse.json({});
 
-  let widget: WidgetItem;
+  let widget: SearchWidgetItem;
   let widgetRequestData: WidgetRequestData;
 
   decorateFetch(testID as string);
@@ -32,7 +32,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .addSearch({ userId: 'test' })
         .initialize();
 
-      widget = new WidgetItem('content', 'rfkid_7');
+      widget = new SearchWidgetItem('content', 'rfkid_7');
 
       widget.filter = new ComparisonFilter('test', 'eq', 10);
 

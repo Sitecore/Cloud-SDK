@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { getWidgetData, WidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/browser';
+import { getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/browser';
 import { createFilter } from '../../src/utils';
 
 export default function Filters() {
@@ -38,7 +38,7 @@ export default function Filters() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
-          const widget = new WidgetItem(item.entity, item.rfkId);
+          const widget = new SearchWidgetItem(item.entity, item.rfkId);
 
           const filterOperator = item.search.filter.type;
 

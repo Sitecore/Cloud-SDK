@@ -1,52 +1,78 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { ArrayOfAtLeastOne } from '../filters/interfaces';
-import type { Facet, FacetDTO, FacetSort, FacetType, FacetTypeDTO, SearchWidgetItemDTO } from './interfaces';
+import type {
+  FacetOptions,
+  FacetOptionsDTO,
+  FacetTypeDTO,
+  FacetTypeOptions,
+  QueryOptions,
+  SearchDTO,
+  SearchOptions,
+  SearchWidgetItemDTO
+} from './interfaces';
+import { ResultsWidgetItem } from './results-widget-item';
 import { isFacetFilter } from './utils';
-import { WidgetItem } from './widget-item';
 
-export class SearchWidgetItem extends WidgetItem {
-  private _all?: boolean;
-  private _max?: number;
-  private _coverage?: boolean;
-  private _sort?: FacetSort;
-  private _types?: ArrayOfAtLeastOne<FacetType>;
-
-  /**
-   * Builds the sort piece of the DTO.
-   */
-  private _sortToDTO(type: FacetType) {
-    if (type.sort)
-      return {
-        after: type.sort.after,
-        sort: { name: type.sort.name, order: type.sort.order }
-      };
-    return {};
-  }
+export class SearchWidgetItem extends ResultsWidgetItem {
+  private _query?: QueryOptions;
+  private _offset?: number;
+  private _facet?: FacetOptions;
 
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
    * @param rfkId - The widget's item rfkId.
-   * @param facet - The widget's facet options.
+   * @param searchOptions - The widget's search options object.
    *
    */
-  constructor(entity: string, rfkId: string, facet?: Facet) {
-    super(entity, rfkId);
+  constructor(entity: string, rfkId: string, searchOptions?: SearchOptions) {
+    super(entity, rfkId, {
+      content: searchOptions?.content,
+      filter: searchOptions?.filter,
+      groupBy: searchOptions?.groupBy,
+      limit: searchOptions?.limit
+    });
 
-    if (!facet || !Object.keys(facet).length) return;
+    if (!searchOptions) return;
 
-    this._validateNumberInRange1To100(ErrorMessages.IV_0014, facet.max);
+    if (searchOptions.facet && Object.keys(searchOptions.facet).length) {
+      this._validateNumberInRange1To100(ErrorMessages.IV_0014, searchOptions.facet.max);
+      this._validateFacetTypes(searchOptions.facet.types);
 
-    if (facet.types) {
-      this._validateFacetTypes(facet.types);
-      this._types = facet.types;
+      this._facet = searchOptions.facet;
     }
 
-    this._max = facet.max;
-    this._all = facet.all;
-    this._coverage = facet.coverage;
-    this._sort = facet.sort;
+    if (searchOptions.query) {
+      this._validateQuery(searchOptions.query);
+
+      this._query = searchOptions.query;
+    }
+
+    if (this._isValidOffset(searchOptions.offset)) this._offset = searchOptions.offset;
+  }
+
+  /**
+   * Sets the search query for the SearchWidgetItem.
+   * This method updates the `query` property of the search configuration within the SearchWidgetItem instance.
+   * The query is used to define specific search criteria.
+   * @param query - The operator that specifies the search criteria.
+   */
+  set query(query: QueryOptions) {
+    this._validateQuery(query);
+
+    this._query = query;
+  }
+
+  private _validateQuery(query: QueryOptions) {
+    if (query.keyphrase.length < 1 || query.keyphrase.length > 100) throw new Error(ErrorMessages.IV_0009);
+  }
+
+  /**
+   * Sets the query data to undefined
+   */
+  resetQuery() {
+    this._query = undefined;
   }
 
   /**
@@ -56,24 +82,46 @@ export class SearchWidgetItem extends WidgetItem {
    * @param facet - The object to set as the search facet.
    * @throws Error If the max is less than 1 or greater than 100, indicating an invalid range.
    */
-  set facet(facet: Facet) {
+  set facet(facet: FacetOptions) {
     this._validateNumberInRange1To100(ErrorMessages.IV_0014, facet.max);
+    this._validateFacetTypes(facet.types);
 
-    if (facet.types) {
-      this._validateFacetTypes(facet.types);
-      this._types = facet.types;
+    this._facet = facet;
+  }
+
+  /**
+   * Sets the facet data to undefined
+   */
+  resetFacet() {
+    this._facet = undefined;
+  }
+
+  /**
+   * Sets the search offset for the WidgetItem.
+   * Updates the offset property to manage pagination. Throws an error if the offset value is less than 0.
+   * @param offset - The non-negative integer to set as the search offset.
+   * @throws Error If the offset is less than 0.
+   */
+  set offset(offset: number) {
+    if (this._isValidOffset(offset)) this._offset = offset;
+  }
+
+  protected _isValidOffset(offset?: number) {
+    if (typeof offset === 'number') {
+      if (offset < 0) throw new Error(ErrorMessages.IV_0008);
+
+      return true;
     }
 
-    this._all = facet.all;
-    this._max = facet.max;
-    this._coverage = facet.coverage;
-    this._sort = facet.sort;
+    return false;
   }
 
   /**
    * Validates the facet type fields. Throws an errors if incorrect values are provided.
    */
-  private _validateFacetTypes(types: ArrayOfAtLeastOne<FacetType>) {
+  private _validateFacetTypes(types?: ArrayOfAtLeastOne<FacetTypeOptions>) {
+    if (!types) return;
+
     types.forEach((type) => {
       if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
 
@@ -88,22 +136,7 @@ export class SearchWidgetItem extends WidgetItem {
     });
   }
 
-  private _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number) {
-    if (typeof num === 'number' && (num < 1 || num > 100)) throw new Error(errorMessage);
-  }
-
-  /**
-   * Sets the facet data to undefined
-   */
-  removeFacet() {
-    this._all = undefined;
-    this._max = undefined;
-    this._coverage = undefined;
-    this._sort = undefined;
-    this._types = undefined;
-  }
-
-  private _filterToDTO(type: FacetType) {
+  private _filterToDTO(type: FacetTypeOptions) {
     if (!type.filter) return undefined;
 
     if (!isFacetFilter(type.filter.values)) return type.filter;
@@ -112,30 +145,54 @@ export class SearchWidgetItem extends WidgetItem {
   }
 
   /**
+   * Builds the sort piece of the DTO.
+   */
+  private _facetSortToDTO(type: FacetTypeOptions) {
+    if (type.sort)
+      return {
+        after: type.sort.after,
+        sort: { name: type.sort.name, order: type.sort.order }
+      };
+    return {};
+  }
+
+  /**
    * Maps the search widget item to its DTO format.
    */
   toDTO(): SearchWidgetItemDTO {
-    const superDTO = super.toDTO();
-    const facet: FacetDTO = {
-      all: this._all,
-      coverage: this._coverage,
-      max: this._max,
-      sort: this._sort
+    const baseDTO = super.toDTO();
+    const resultsDTO = this._resultsToDTO();
+
+    const facet: FacetOptionsDTO = {
+      all: this._facet?.all,
+      coverage: this._facet?.coverage,
+      max: this._facet?.max,
+      sort: this._facet?.sort
     };
 
-    if (this._types)
-      facet.types = this._types.map((type) => ({
+    if (this._facet?.types)
+      facet.types = this._facet.types.map((type) => ({
         exclude: type.exclude,
         filter: this._filterToDTO(type),
         keyphrase: type.keyphrase,
         max: type.max,
         min_count: type.minCount,
         name: type.name,
-        ...this._sortToDTO(type)
+        ...this._facetSortToDTO(type)
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
 
-    if (!Object.values(facet).filter((value) => value !== undefined).length) return superDTO;
+    const search: SearchDTO = {
+      ...{ offset: this._offset },
+      ...(this._query && { query: this._query }),
+      ...(Object.values(facet).filter((value) => value !== undefined).length && { facet }),
+      ...resultsDTO
+    };
 
-    return { ...superDTO, search: { ...superDTO.search, facet } };
+    const dto: SearchWidgetItemDTO = {
+      ...baseDTO,
+      search: Object.values(search).filter((value) => value !== undefined).length ? search : undefined
+    };
+
+    return dto;
   }
 }
