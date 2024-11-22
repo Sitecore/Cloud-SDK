@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { isValidHttpURL, isValidLocation } from '@sitecore-cloudsdk/utils';
+import { isValidLocation } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../../consts';
 import type {
   BrowserData,
@@ -182,19 +182,21 @@ export class Context {
   }
 
   /**
+   * Validate the `page` object which required a `uri` property.
+   * @param page - The page object to validate.
+   */
+  private _validatePage(page?: PageData): void {
+    if (!page) return;
+    if (!page.uri || typeof page.uri !== 'string' || !page.uri.trim()) throw new Error(ErrorMessages.IV_0025);
+  }
+
+  /**
    * Validate context object.
    */
   private _validateContext(context: ContextData): void {
     this._validateContextLocale(context.locale);
     this._validateUser(context.user);
-
-    if (
-      context.page &&
-      context.page.custom &&
-      ((Object.keys(context.page.custom).length && (!context.page.uri || !isValidHttpURL(context.page.uri))) ||
-        (!Object.keys(context.page.custom).length && context.page.uri && isValidHttpURL(context.page.uri)))
-    )
-      throw new Error(ErrorMessages.MV_0008);
+    this._validatePage(context.page);
 
     if (context.store && ((context.store.groupId && !context.store.id) || (!context.store.groupId && context.store.id)))
       throw new Error(ErrorMessages.MV_0009);

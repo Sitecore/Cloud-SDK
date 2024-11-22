@@ -13,8 +13,7 @@ export interface LocaleData {
 }
 
 export interface PageData {
-  custom?: { [key: string]: unknown };
-  uri?: string;
+  uri: string;
 }
 
 export interface UserData {

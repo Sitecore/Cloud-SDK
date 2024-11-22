@@ -14,16 +14,12 @@ jest.mock('@sitecore-cloudsdk/utils', () => {
 
 describe('context request data creation', () => {
   let contextInstance: Context;
-
   const context = {
     locale: {
       country: 'us',
       language: 'us'
     },
     page: {
-      custom: {
-        test: '123'
-      },
       uri: 'http://acbd.com'
     },
     store: {
@@ -414,51 +410,21 @@ describe('context request data creation', () => {
       expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0006);
       expect(() => new Context(invalidContext4)).toThrow(ErrorMessages.MV_0007);
     });
-
-    it(`should throw an error if one of the 'page' properties (custom, uri) 
-        is set (with valid value) and the other is empty`, () => {
-      const invalidContext1 = {
-        ...context,
-        ...{
-          page: {
-            custom: {},
-            uri: 'https://test.com'
-          }
-        }
-      };
-
-      const invalidContext2 = {
-        ...context,
-        ...{
-          page: {
-            custom: { test: 123 },
-            uri: ''
-          }
-        }
-      };
-
-      const invalidContext3 = {
-        ...context,
-        ...{
-          page: {
-            custom: { test: 123 },
-            uri: 'httpppp://test.com'
-          }
-        }
-      };
-
-      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0008);
-      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0008);
-      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0008);
-    });
-
-    it(`should not throw an error if the 'page' object is empty`, () => {
-      const validContext = {
-        ...context,
-        page: {}
-      };
-
-      expect(() => new Context(validContext)).not.toThrow();
+    it(`should throw an error if page.uri is missing, empty, or invalid`, () => {
+      const cases = [
+        { page: { uri: '/home' }, shouldThrow: false },
+        { page: { uri: '' }, shouldThrow: true },
+        { page: { uri: '   ' }, shouldThrow: true },
+        { page: { uri: null }, shouldThrow: true },
+        { page: { uri: undefined }, shouldThrow: true },
+        { page: { uri: 123 }, shouldThrow: true },
+        { page: {}, shouldThrow: true }
+      ];
+      cases.forEach(({ page, shouldThrow }) => {
+        const testContext: any = { ...context, page };
+        if (shouldThrow) expect(() => new Context(testContext)).toThrow(ErrorMessages.IV_0025);
+        else expect(() => new Context(testContext)).not.toThrow();
+      });
     });
 
     it(`should throw an error if one of the 'store' properties (groupId, id) is set and the other is empty`, () => {
