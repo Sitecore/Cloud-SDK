@@ -28,6 +28,7 @@ export enum ErrorMessages {
   IV_0023 = '[IV-0023] Incorrect value for recipe "id". Set the value to a non-empty string.',
   IV_0024 = '[IV-0024] Incorrect value for recipe "version". Set the value to an integer greater than or equal to 1.',
   IV_0025 = '[IV-0025] Incorrect value for "uri" in "page". Set the value to a relative or absolute path. Examples: "/products", "https://www.example.com/products".',
+  IV_0026 = '[IV-0026] Incorrect value for "name" in "sortValue". Set the value to a non-empty string.',
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] Incorrect value for "country". Format the value according to ISO 3166-1 alpha-2.',
   MV_0007 = '[MV-0007] Incorrect value for "language". Format the value according to ISO 639.',

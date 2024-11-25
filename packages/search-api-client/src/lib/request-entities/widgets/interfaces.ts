@@ -46,7 +46,7 @@ export interface ResultsItemDTO {
 }
 
 type FacetSortName = 'text' | 'count';
-type FacetSortOrder = 'asc' | 'desc';
+type SortingOptions = 'asc' | 'desc';
 
 export type FacetFilter = ComparisonFacetFilter | NotFacetFilter | LogicalFacetFilter | ListFacetFilter;
 export type FacetFilterDTO = ComparisonFacetFilterDTO | NotFacetFilterDTO | LogicalFacetFilterDTO | ListFacetFilterDTO;
@@ -106,7 +106,7 @@ export interface FacetOptions {
  */
 export interface FacetSort {
   name: FacetSortName;
-  order: FacetSortOrder;
+  order: SortingOptions;
   after?: string;
 }
 
@@ -144,6 +144,7 @@ export interface SearchOptions extends ResultsOptions {
   facet?: FacetOptions;
   query?: QueryOptions;
   offset?: number;
+  sort?: SearchSortOptions;
 }
 
 /**
@@ -153,6 +154,7 @@ export interface SearchDTO extends ResultsItemDTO {
   facet?: FacetOptionsDTO;
   query?: QueryOptionsDTO;
   offset?: number;
+  sort?: SearchSortOptionsDTO;
 }
 
 /**
@@ -160,6 +162,38 @@ export interface SearchDTO extends ResultsItemDTO {
  */
 export interface SearchWidgetItemDTO extends WidgetItemDTO {
   search?: SearchDTO;
+}
+
+/**
+ * Represents the search widget item sort param options.
+ */
+export interface SortValue {
+  name: string;
+  order?: SortingOptions;
+}
+
+/**
+ * Represents the search widget item sort param options in its DTO format.
+ */
+export interface SortValueDTO {
+  name: string;
+  order?: SortingOptions;
+}
+
+/**
+ * Represents the search widget item sort param.
+ */
+export interface SearchSortOptions {
+  choices?: boolean;
+  value?: Array<SortValue>;
+}
+
+/**
+ * Represents the search widget item sort param in its DTO format.
+ */
+export interface SearchSortOptionsDTO {
+  choices?: boolean;
+  value?: Array<SortValue>;
 }
 
 /**

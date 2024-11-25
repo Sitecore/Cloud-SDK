@@ -41,13 +41,22 @@ export default function GetSearchWidgetData() {
           if (item.search?.facetSetter) {
             const widget = new SearchWidgetItem(item.entity, item.rfkId);
             widget.facet = item.search.facetSetter;
-
+            return widget;
+          }
+          if (item.search?.facet) {
+            return new SearchWidgetItem(item.entity, item.rfkId, { facet: item.search?.facet });
+          }
+          if (item.search?.sort) {
+            const widget = new SearchWidgetItem(item.entity, item.rfkId, { sort: item.search?.sort });
+            return widget;
+          }
+          if (item.search?.sortSetter) {
+            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            widget.sort = item.search?.sortSetter;
             return widget;
           }
 
-          const widget = new SearchWidgetItem(item.entity, item.rfkId, { facet: item.search?.facet });
-
-          return widget;
+          return new SearchWidgetItem(item.entity, item.rfkId);
         });
 
     const widgetRequestData = new WidgetRequestData(widgets);

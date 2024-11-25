@@ -9,6 +9,7 @@ import type {
   QueryOptions,
   SearchDTO,
   SearchOptions,
+  SearchSortOptions,
   SearchWidgetItemDTO
 } from './interfaces';
 import { ResultsWidgetItem } from './results-widget-item';
@@ -18,6 +19,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _query?: QueryOptions;
   private _offset?: number;
   private _facet?: FacetOptions;
+  private _sort?: SearchSortOptions;
 
   /**
    * Creates and holds the functionality of a search widget item.
@@ -48,8 +50,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
 
       this._query = searchOptions.query;
     }
-
     if (this._isValidOffset(searchOptions.offset)) this._offset = searchOptions.offset;
+    if (this._isValidSort(searchOptions.sort)) this._sort = searchOptions.sort;
   }
 
   /**
@@ -114,6 +116,38 @@ export class SearchWidgetItem extends ResultsWidgetItem {
     }
 
     return false;
+  }
+
+  /**
+   * Sets the search sort property for SearchWidgetItem
+   * Throws an error if one of the values under sort have an empty `name`
+   * @param sort - the object for the sort param
+   * @throws error if <SearchSortOptions>.<SortValue>.name(s) property is an empty string
+   */
+  set sort(sort: SearchSortOptions) {
+    if (this._isValidSort(sort)) this._sort = sort;
+  }
+
+  /**
+   * Sets the sort data to undefined
+   */
+  resetSort() {
+    this._sort = undefined;
+  }
+
+  /**
+   * Validates the <SearchSortOptions>.<SortValue>.name property that its not an empty string
+   * Empty object for `sort` is also valid
+   * @throws error if <SearchSortOptions>.<SortValue>.name(s) property is an empty string
+   */
+  private _isValidSort(sort?: SearchSortOptions) {
+    if (!sort) return false;
+
+    if (sort.value)
+      for (const sortValueItem of sort.value)
+        if (sortValueItem.name.trim().length === 0) throw new Error(ErrorMessages.IV_0026);
+
+    return true;
   }
 
   /**
@@ -185,6 +219,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       ...{ offset: this._offset },
       ...(this._query && { query: this._query }),
       ...(Object.values(facet).filter((value) => value !== undefined).length && { facet }),
+      ...{ sort: this._sort },
       ...resultsDTO
     };
 

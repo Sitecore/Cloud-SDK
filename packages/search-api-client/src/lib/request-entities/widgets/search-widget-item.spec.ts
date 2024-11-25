@@ -2,7 +2,7 @@ import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
 import { ComparisonFacetFilter } from '../filters/facet/comparison-facet-filter';
 import { LogicalFilter } from '../filters/logical-filter';
-import type { FacetOptions, FacetOptionsDTO } from './interfaces';
+import type { FacetOptions, FacetOptionsDTO, SearchSortOptions, SearchSortOptionsDTO } from './interfaces';
 import { SearchWidgetItem } from './search-widget-item';
 import * as utilsModule from './utils';
 
@@ -718,6 +718,162 @@ describe('search widget item class', () => {
           limit: 10
         }
       });
+    });
+  });
+
+  describe('Sort testing Suite from Constructor', () => {
+    const invalidSort: SearchSortOptions = {
+      choices: true,
+      value: [
+        {
+          name: 'color'
+        },
+        {
+          name: ' '
+        }
+      ]
+    };
+    const validSort: SearchSortOptions = {
+      choices: true,
+      value: [{ name: 'color', order: 'asc' }]
+    };
+    const expectedSort: SearchSortOptionsDTO = {
+      choices: true,
+      value: [{ name: 'color', order: 'asc' }]
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should return valid sort if valid sort is given', () => {
+      const sut = new SearchWidgetItem('test', 'test', { sort: validSort });
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual(expectedSort);
+    });
+
+    it('should set the sort property to undefined', () => {
+      const sut = new SearchWidgetItem('test', 'test', { sort: validSort });
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual(expectedSort);
+      sut.resetSort();
+      const actualAfterReset = sut.toDTO();
+      expect(actualAfterReset.search?.sort).toBeUndefined();
+    });
+
+    it('should return empty object if empty object is passed', () => {
+      const sut = new SearchWidgetItem('test', 'test', { sort: {} });
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual({});
+    });
+    it('should return undefined if we pass undefined', () => {
+      const sut = new SearchWidgetItem('test', 'test', { sort: undefined });
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toBeUndefined();
+    });
+    it('should throw an error if we pass invalid sort', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { sort: invalidSort });
+      }).toThrow(ErrorMessages.IV_0026);
+    });
+
+    it('should not throw an error if we pass valid sort', () => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { sort: validSort });
+      }).not.toThrow(ErrorMessages.IV_0026);
+    });
+    it('should be undefined if we do not pass sort options', () => {
+      const sut = new SearchWidgetItem('test', 'test', {});
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toBeUndefined();
+    });
+    it('should return true with undefined sort', () => {
+      const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
+      new SearchWidgetItem('test', 'test', { sort: {} });
+      expect(sutSpy).toHaveReturnedWith(true);
+    });
+    it('should return true with valid sort', () => {
+      const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
+      new SearchWidgetItem('test', 'test', { sort: validSort });
+      expect(sutSpy).toHaveReturnedWith(true);
+    });
+  });
+
+  describe('Sort testing suite from setter', () => {
+    let sut: SearchWidgetItem;
+    const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
+    const invalidSort: SearchSortOptions = {
+      choices: true,
+      value: [
+        {
+          name: 'color'
+        },
+        {
+          name: ''
+        }
+      ]
+    };
+    const validSort: SearchSortOptions = {
+      choices: true,
+      value: [{ name: 'color', order: 'asc' }]
+    };
+    const expectedSort: SearchSortOptionsDTO = {
+      choices: true,
+      value: [{ name: 'color', order: 'asc' }]
+    };
+
+    beforeEach(() => {
+      jest.clearAllMocks();
+      sut = new SearchWidgetItem('test', 'test');
+    });
+
+    it('should return valid sort if valid sort is given', () => {
+      sut.sort = validSort;
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual(expectedSort);
+    });
+
+    it('should set the sort property to undefined', () => {
+      sut.sort = validSort;
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual(expectedSort);
+      sut.resetSort();
+      const actualAfterReset = sut.toDTO();
+      expect(actualAfterReset.search?.sort).toBeUndefined();
+    });
+
+    it('should return empty object if empty object is passed', () => {
+      sut.sort = {};
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toEqual({});
+    });
+    it('should return undefined if we pass undefined', () => {
+      sut.sort = undefined as any;
+      const actual = sut.toDTO();
+      expect(actual.search?.sort).toBeUndefined();
+    });
+    it('should throw an error if we pass invalid sort', () => {
+      expect(() => {
+        sut.sort = invalidSort;
+      }).toThrow(ErrorMessages.IV_0026);
+    });
+
+    it('should not throw an error if we pass valid sort', () => {
+      expect(() => {
+        sut.sort = validSort;
+      }).not.toThrow(ErrorMessages.IV_0026);
+    });
+    it('should return true with empty object', () => {
+      sut.sort = {};
+      expect(sutSpy).toHaveReturnedWith(true);
+    });
+    it('should return true with valid sort', () => {
+      sut.sort = validSort;
+      expect(sutSpy).toHaveReturnedWith(true);
+    });
+    it('should return false with undefined sort', () => {
+      sut.sort = undefined as any;
+      expect(sutSpy).toHaveReturnedWith(false);
     });
   });
 });
