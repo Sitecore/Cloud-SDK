@@ -70,7 +70,7 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   private _validateRecipe(recipe?: Recipe) {
     if (!recipe) return;
 
-    if (!recipe.id || recipe.id.trim().length === 0) throw new Error(ErrorMessages.IV_0023);
+    this._validateNonEmptyString(ErrorMessages.IV_0023, recipe.id);
     if (recipe.version < 1) throw new Error(ErrorMessages.IV_0024);
   }
 

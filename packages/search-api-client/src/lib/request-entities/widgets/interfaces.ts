@@ -235,3 +235,39 @@ export interface WidgetDTO {
     items: WidgetItemDTO[];
   };
 }
+
+type QueryType = 'question' | 'statement' | 'keyword';
+
+export interface RelatedQuestionsOptions {
+  limit?: number;
+  includeSources?: boolean;
+  filter?: Filter;
+  offset?: number;
+}
+
+export interface ExactAnswerOptions {
+  includeSources?: boolean;
+  queryTypes?: ArrayOfAtLeastOne<QueryType>;
+}
+
+export interface QuestionsAnswersOptions {
+  keyphrase: string;
+  exactAnswer?: ExactAnswerOptions;
+  relatedQuestions?: RelatedQuestionsOptions;
+}
+
+export interface QuestionsAnswersWidgetItemDTO extends WidgetItemDTO {
+  questions: {
+    keyphrase: string;
+    exact_answer?: {
+      include_sources?: boolean;
+      query_types?: ArrayOfAtLeastOne<QueryType>;
+    };
+    related_questions?: {
+      filter?: FilterDTO;
+      include_sources?: boolean;
+      limit?: number;
+      offset?: number;
+    };
+  };
+}

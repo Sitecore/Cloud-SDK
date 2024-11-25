@@ -5,6 +5,7 @@ export { WidgetRequestData } from './lib/request-entities/widgets/widget-request
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { RecommendationWidgetItem } from './lib/request-entities/widgets/recommendation-widget-item';
+export { QuestionsAnswersWidgetItem } from './lib/request-entities/widgets/questions-answers-widget-item';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 export { ComparisonFacetFilter } from './lib/request-entities/filters/facet/comparison-facet-filter';
@@ -24,7 +25,10 @@ export type {
   ContentOptions,
   Recipe,
   SearchOptions,
-  RecommendationOptions
+  RecommendationOptions,
+  QuestionsAnswersOptions,
+  ExactAnswerOptions,
+  RelatedQuestionsOptions
 } from './lib/request-entities/widgets/interfaces';
 
 export { getSettings, initServer as init } from './lib/init/server/initializer';

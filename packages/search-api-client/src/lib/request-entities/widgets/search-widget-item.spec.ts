@@ -52,12 +52,6 @@ describe('search widget item class', () => {
       expect(result.search?.facet).toBeUndefined();
     });
 
-    it('should ignore if bypassed by typescript', () => {
-      expect(() => {
-        new SearchWidgetItem('content', 'rfkid_7', { facet: { max: null as unknown as number } });
-      }).not.toThrow(ErrorMessages.IV_0014);
-    });
-
     it('should remove the facet', () => {
       const expected: FacetOptionsDTO = {
         all: true,
@@ -392,18 +386,6 @@ describe('search widget item class', () => {
       }).toThrow(ErrorMessages.IV_0016);
     });
 
-    it('should not throw error if typescript bypassed for max ', () => {
-      expect(() => {
-        /**
-         *  This is a way to pass a stryker mutant when it replaces the comparison to "true"
-         *  if(typeof a === 'number')
-         *  to
-         *  if(true)
-         *  */
-        new SearchWidgetItem('test', 'test', { facet: { types: [{ max: null as unknown as number, name: 'test' }] } });
-      }).not.toThrow();
-    });
-
     it('should not throw error if max is 100', () => {
       expect(() => {
         new SearchWidgetItem('test', 'test', { facet: { types: [{ max: 100, name: 'test' }] } });
@@ -437,14 +419,6 @@ describe('search widget item class', () => {
       expect(() => {
         new SearchWidgetItem('test', 'test', { facet: { types: [{ keyphrase: '', name: 'test' }] } });
       }).toThrow(ErrorMessages.IV_0018);
-    });
-
-    it('should not throw error if typescript bypassed for minCount ', () => {
-      expect(() => {
-        new SearchWidgetItem('test', 'test', {
-          facet: { types: [{ minCount: null as unknown as number, name: 'test' }] }
-        });
-      }).not.toThrow();
     });
 
     it('should not throw error if minCount is 100', () => {
@@ -504,13 +478,6 @@ describe('search widget item class', () => {
   });
 
   describe('max validator', () => {
-    it('should ignore if bypassed by typescript', () => {
-      expect(() => {
-        const widgetItem = new SearchWidgetItem('test', 'test');
-        widgetItem.facet = { max: null as unknown as number };
-      }).not.toThrow(ErrorMessages.IV_0014);
-    });
-
     it('should throw error if max is less than 1', () => {
       expect(() => {
         const widgetItem = new SearchWidgetItem('test', 'test');
@@ -567,16 +534,6 @@ describe('search widget item class', () => {
       });
     });
 
-    it('should not set the offset when given a invalid value', () => {
-      const invalidOffset = null as any;
-
-      const isValidOffsetSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidOffset');
-      widgetItem.offset = invalidOffset as any;
-      expect(widgetItem.toDTO().search?.offset).toBeUndefined();
-      expect(isValidOffsetSpy).toHaveBeenCalledTimes(1);
-      expect(isValidOffsetSpy).toHaveNthReturnedWith(1, false);
-    });
-
     it('should reflect the offset as undefined when it is reset or not set', () => {
       widgetItem.offset = undefined as unknown as number;
       expect(widgetItem.offset).toBeUndefined();
@@ -601,6 +558,16 @@ describe('search widget item class', () => {
 
     it('should not set the offset when not provided in constructor', () => {
       const uut = new SearchWidgetItem('test', 'test', {});
+
+      expect(uut.toDTO().search?.offset).toBeUndefined();
+    });
+
+    it('should reset the offset', () => {
+      const uut = new SearchWidgetItem('test', 'test', { offset: 10 });
+
+      expect(uut.toDTO().search?.offset).toBe(10);
+
+      uut.resetOffset();
 
       expect(uut.toDTO().search?.offset).toBeUndefined();
     });
@@ -787,21 +754,15 @@ describe('search widget item class', () => {
       const actual = sut.toDTO();
       expect(actual.search?.sort).toBeUndefined();
     });
-    it('should return true with undefined sort', () => {
-      const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
-      new SearchWidgetItem('test', 'test', { sort: {} });
-      expect(sutSpy).toHaveReturnedWith(true);
-    });
-    it('should return true with valid sort', () => {
-      const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
-      new SearchWidgetItem('test', 'test', { sort: validSort });
-      expect(sutSpy).toHaveReturnedWith(true);
+    it.each([{}, validSort])('should not throw error with valid sort', (sort) => {
+      expect(() => {
+        new SearchWidgetItem('test', 'test', { sort });
+      }).not.toThrow();
     });
   });
 
   describe('Sort testing suite from setter', () => {
     let sut: SearchWidgetItem;
-    const sutSpy = jest.spyOn(SearchWidgetItem.prototype as any, '_isValidSort');
     const invalidSort: SearchSortOptions = {
       choices: true,
       value: [
@@ -858,22 +819,10 @@ describe('search widget item class', () => {
       }).toThrow(ErrorMessages.IV_0026);
     });
 
-    it('should not throw an error if we pass valid sort', () => {
+    it.each([validSort, {}, undefined])('should not throw an error if we pass valid sort', () => {
       expect(() => {
         sut.sort = validSort;
       }).not.toThrow(ErrorMessages.IV_0026);
-    });
-    it('should return true with empty object', () => {
-      sut.sort = {};
-      expect(sutSpy).toHaveReturnedWith(true);
-    });
-    it('should return true with valid sort', () => {
-      sut.sort = validSort;
-      expect(sutSpy).toHaveReturnedWith(true);
-    });
-    it('should return false with undefined sort', () => {
-      sut.sort = undefined as any;
-      expect(sutSpy).toHaveReturnedWith(false);
     });
   });
 });

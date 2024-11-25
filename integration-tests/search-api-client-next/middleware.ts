@@ -3,8 +3,9 @@ import { NextResponse } from 'next/server';
 import { entityViewMiddleware } from './src/middlewares/entity-view-event';
 import { getFilteredWidgetDataMiddleware } from './src/middlewares/get-filtered-widget-data';
 import { getPageWidgetDataMiddleware } from './src/middlewares/get-page-widget-data';
-import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
+import { getQuestionsWidgetDataMiddleware } from './src/middlewares/get-questions-widget-data';
 import { getRecommendationWidgetDataMiddleware } from './src/middlewares/get-recommendation-widget-data';
+import { getSearchWidgetDataMiddleware } from './src/middlewares/get-search-widget-data';
 import { getWidgetDataMiddleware } from './src/middlewares/get-widget-data';
 import { initMiddleware } from './src/middlewares/init';
 import { widgetFacetClickMiddleware } from './src/middlewares/widget-facet-click-event';
@@ -33,6 +34,7 @@ export async function middleware(request: NextRequest) {
   await widgetViewMiddleware(request, response);
   await entityViewMiddleware(request, response);
   await initMiddleware(request, response);
+  await getQuestionsWidgetDataMiddleware(request, response);
 
   return response;
 }

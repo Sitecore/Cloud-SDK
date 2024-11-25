@@ -12,6 +12,43 @@ describe('widget item class', () => {
     jest.clearAllMocks();
   });
 
+  describe('protected validators', () => {
+    describe('_validateNonEmptyString', () => {
+      it.each([undefined, 't', 't'.repeat(100)])(`should not throw an error if valid value is passed`, (s) => {
+        const widgetItem = new WidgetItem('e', 'r');
+
+        expect(() => {
+          widgetItem['_validateNonEmptyString']('test' as any, s);
+        }).not.toThrow();
+      });
+
+      it.each(['', '  '])(`should throw an error if invalid values is passed`, (s) => {
+        const widgetItem = new WidgetItem('e', 'r');
+
+        expect(() => {
+          widgetItem['_validateNonEmptyString']('test' as any, s as any);
+        }).toThrow('test');
+      });
+    });
+    describe('_validateStringLengthInRange1To100', () => {
+      it.each([undefined, 't', 't'.repeat(100)])(`should not throw an error if valid value is passed`, (s) => {
+        const widgetItem = new WidgetItem('e', 'r');
+
+        expect(() => {
+          widgetItem['_validateStringLengthInRange1To100']('test' as any, s);
+        }).not.toThrow();
+      });
+
+      it.each(['', '  ', 't'.repeat(101)])(`should throw an error if invalid values is passed`, (s) => {
+        const widgetItem = new WidgetItem('e', 'r');
+
+        expect(() => {
+          widgetItem['_validateStringLengthInRange1To100']('test' as any, s as any);
+        }).toThrow('test');
+      });
+    });
+  });
+
   describe('validator', () => {
     it(`should not throw an error if all properties are correct`, () => {
       const validWidgetItem = {

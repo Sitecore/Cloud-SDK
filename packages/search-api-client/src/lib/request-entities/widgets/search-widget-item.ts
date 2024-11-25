@@ -50,8 +50,12 @@ export class SearchWidgetItem extends ResultsWidgetItem {
 
       this._query = searchOptions.query;
     }
-    if (this._isValidOffset(searchOptions.offset)) this._offset = searchOptions.offset;
-    if (this._isValidSort(searchOptions.sort)) this._sort = searchOptions.sort;
+
+    this._validatePositiveInteger(ErrorMessages.IV_0008, searchOptions.offset);
+    this._offset = searchOptions.offset;
+
+    this._validateSort(searchOptions.sort);
+    this._sort = searchOptions.sort;
   }
 
   /**
@@ -67,7 +71,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   private _validateQuery(query: QueryOptions) {
-    if (query.keyphrase.length < 1 || query.keyphrase.length > 100) throw new Error(ErrorMessages.IV_0009);
+    this._validateStringLengthInRange1To100(ErrorMessages.IV_0009, query.keyphrase);
   }
 
   /**
@@ -105,17 +109,16 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    * @throws Error If the offset is less than 0.
    */
   set offset(offset: number) {
-    if (this._isValidOffset(offset)) this._offset = offset;
+    this._validatePositiveInteger(ErrorMessages.IV_0008, offset);
+
+    this._offset = offset;
   }
 
-  protected _isValidOffset(offset?: number) {
-    if (typeof offset === 'number') {
-      if (offset < 0) throw new Error(ErrorMessages.IV_0008);
-
-      return true;
-    }
-
-    return false;
+  /**
+   * Sets the offset value to undefined
+   */
+  resetOffset() {
+    this._offset = undefined;
   }
 
   /**
@@ -125,7 +128,9 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    * @throws error if <SearchSortOptions>.<SortValue>.name(s) property is an empty string
    */
   set sort(sort: SearchSortOptions) {
-    if (this._isValidSort(sort)) this._sort = sort;
+    this._validateSort(sort);
+
+    this._sort = sort;
   }
 
   /**
@@ -136,18 +141,12 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   /**
-   * Validates the <SearchSortOptions>.<SortValue>.name property that its not an empty string
-   * Empty object for `sort` is also valid
-   * @throws error if <SearchSortOptions>.<SortValue>.name(s) property is an empty string
+   * Validates the sort field. Throws an error if incorrect values are provided.
    */
-  private _isValidSort(sort?: SearchSortOptions) {
-    if (!sort) return false;
-
-    if (sort.value)
-      for (const sortValueItem of sort.value)
-        if (sortValueItem.name.trim().length === 0) throw new Error(ErrorMessages.IV_0026);
-
-    return true;
+  private _validateSort(sort?: SearchSortOptions) {
+    sort?.value?.forEach((sortValueItem) => {
+      this._validateNonEmptyString(ErrorMessages.IV_0026, sortValueItem.name);
+    });
   }
 
   /**
@@ -159,8 +158,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
     types.forEach((type) => {
       if (!type.name || type.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
 
-      if (typeof type.keyphrase === 'string' && !type.keyphrase) throw new Error(ErrorMessages.IV_0018);
-
+      this._validateStringLengthInRange1To100(ErrorMessages.IV_0018, type.keyphrase);
       this._validateNumberInRange1To100(ErrorMessages.IV_0017, type.max);
       this._validateNumberInRange1To100(ErrorMessages.IV_0019, type.minCount);
       if (typeof type.sort === 'object' && typeof type.sort.after === 'string') {

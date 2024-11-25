@@ -51,7 +51,27 @@ export class WidgetItem {
   }
 
   protected _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number) {
-    if (typeof num === 'number' && (num < 1 || num > 100)) throw new Error(errorMessage);
+    if (num === undefined || (num >= 1 && num <= 100)) return;
+
+    throw new Error(errorMessage);
+  }
+
+  protected _validateStringLengthInRange1To100(errorMessage: ErrorMessages, str?: string) {
+    if (str === undefined || (str.trim().length >= 1 && str.length <= 100)) return;
+
+    throw new Error(errorMessage);
+  }
+
+  protected _validatePositiveInteger(error: ErrorMessages, num?: number) {
+    if (num === undefined || num >= 0) return;
+
+    throw new Error(error);
+  }
+
+  protected _validateNonEmptyString(errorMessage: ErrorMessages, str?: string) {
+    if (str === undefined || str.trim().length >= 1) return;
+
+    throw new Error(errorMessage);
   }
 
   /**

@@ -5,6 +5,7 @@ export { WidgetRequestData } from './lib/request-entities/widgets/widget-request
 export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { RecommendationWidgetItem } from './lib/request-entities/widgets/recommendation-widget-item';
+export { QuestionsAnswersWidgetItem } from './lib/request-entities/widgets/questions-answers-widget-item';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 export { ComparisonFacetFilter } from './lib/request-entities/filters/facet/comparison-facet-filter';
@@ -24,16 +25,17 @@ export type {
   ContentOptions,
   Recipe,
   SearchOptions,
-  RecommendationOptions
+  RecommendationOptions,
+  QuestionsAnswersOptions,
+  ExactAnswerOptions,
+  RelatedQuestionsOptions
 } from './lib/request-entities/widgets/interfaces';
 
 export { getWidgetData } from './lib/requests/browser/get-widget-data';
 export { getPageWidgetData } from './lib/requests/browser/get-page-widget-data';
-/* eslint-disable max-len */
 export { widgetNavigationClick } from './lib/requests/browser/widget-navigation-click-event';
 export { getSettings, init } from './lib/init/browser/initializer';
 export { widgetItemClick } from './lib/requests/browser/widget-item-click-event';
-/* eslint-disable max-len */
 export { widgetSuggestionClick } from './lib/requests/browser/widget-suggestion-click-event';
 export { widgetFacetClick } from './lib/requests/browser/widget-facet-click-event';
 export { widgetView } from './lib/requests/browser/widget-view-event';
