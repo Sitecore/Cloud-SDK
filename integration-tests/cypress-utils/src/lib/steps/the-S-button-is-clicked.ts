@@ -10,7 +10,6 @@ export function the_S_ButtonIsClicked() {
     const selector = `[data-testid="${event}"]`;
     cy.on('uncaught:exception', (error) => {
       (globalThis as any).errorMessage = error.message;
-
       return false;
     });
 
@@ -22,5 +21,7 @@ export function the_S_ButtonIsClicked() {
       .should('be.visible')
       .click({ force: true })
       .then(() => cy.writeLocal(`error.txt`, (globalThis as any).errorMessage));
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000);
   });
 }

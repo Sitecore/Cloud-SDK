@@ -11,7 +11,9 @@ const nextConfig = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CONTEXT_ID: process.env.CONTEXT_ID || '',
     // eslint-disable-next-line @typescript-eslint/naming-convention
-    DEBUG_MULTILINE: process.env.DEBUG_MULTILINE || 'false'
+    DEBUG_MULTILINE: process.env.DEBUG_MULTILINE || 'false',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    SITE_NAME: process.env.SITE_NAME || ''
   },
   nx: {
     // Set this to true if you would like to use SVGR

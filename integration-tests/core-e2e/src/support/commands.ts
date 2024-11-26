@@ -1,4 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import { loadCommands } from '@sitecore-cloudsdk/cypress-utils';
+import corePackageJson from '../../../../packages/core/package.json';
 
 export {};
 
@@ -14,6 +16,7 @@ declare global {
       readLocal(fileName: string): any;
       visit(url: string, options: string): void;
       replace(filePath: string, regex: any, text: string): void;
+      getCorePackageVersion(): any;
     }
   }
 
@@ -21,6 +24,8 @@ declare global {
     args: [];
   }
 }
+
+loadCommands(['getLogOutput', 'readLocal', 'writeLocal']);
 
 // Asserts if the provided attribute exists in the body
 // Asserts if the provided attribute value exists in the body,
@@ -64,16 +69,6 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   cy.wait(600);
 });
 
-Cypress.Commands.add('writeLocal', (fileName, content) => {
-  cy.writeFile(`src/fixtures/local/${fileName}`, content);
-});
-
-Cypress.Commands.add('readLocal', (fileName) => {
-  let value: any;
-  cy.readFile(`src/fixtures/local/${fileName}`).then((content) => (value = content));
-  return value;
-});
-
 Cypress.Commands.add('replace', (filePath, regexMatch, text) => {
   cy.readFile(filePath).then((data) => {
     const pageData = data;
@@ -93,4 +88,8 @@ Cypress.Commands.add('getLogOutput', () => {
       });
     })
     .then(() => logs);
+});
+
+Cypress.Commands.add('getCorePackageVersion', () => {
+  return corePackageJson.version;
 });

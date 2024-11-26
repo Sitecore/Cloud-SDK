@@ -2,7 +2,8 @@
   "name": "@sitecore-cloudsdk/cypress-utils",
   "version": "0.0.1",
   "dependencies": {
-    "@badeball/cypress-cucumber-preprocessor": "^21.0.2"
+    "@badeball/cypress-cucumber-preprocessor": "^21.0.2",
+    "cypress-wait-until": "^2.0.1"
   },
   "exports": {
     ".": {
