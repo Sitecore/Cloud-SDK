@@ -11,6 +11,8 @@ const nextConfig = {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     CONTEXT_ID: process.env.CONTEXT_ID || '',
     // eslint-disable-next-line @typescript-eslint/naming-convention
+    SITE_NAME: process.env.SITE_NAME || '',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     DEBUG_MULTILINE: process.env.DEBUG_MULTILINE || 'false'
   },
   nx: {

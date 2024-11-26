@@ -12,18 +12,11 @@ declare global {
   namespace Cypress {
     interface Chainable {
       assertRequest(expectedReq: any, request: any): void;
-      assertRequestBody(testID: string, bodyAttributeName: string): void;
-      assertRequestBodyNotContaining(testID: string, bodyAttributeName: string): void;
-      assertRequestHeader(testID: string, headerName: string, headerValue?: string): void;
-      assertLogs(testID: string, log: string): void;
       assertLogsNotContaining(testID: string, log: string): void;
-      assertRequestHeaders(request: any, expectedReqHeaders: any): void;
-      waitForRequest(alias: string): any;
       waitForResponse(alias: string): any;
       convertToSnakeCase(str: string): string;
       visit(url: string, options: string): void;
       requestGuestContext(): any;
-      replace(filePath: string, regex: any, text: string): void;
       getCorePackageVersion(): any;
     }
   }
@@ -33,78 +26,18 @@ declare global {
 }
 
 // Load commands from cypress-utils
-loadCommands(['getLogOutput', 'readLocal', 'writeLocal']);
-
-// Asserts the provided header data from the stored file in fixtures,
-// the data is added by the Next app with the request decorators
-Cypress.Commands.add('assertRequestHeader', (testID: string, headerName: string, headerValue?: string) => {
-  cy.waitUntil(
-    () =>
-      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
-        expect(fileContents[testID].headers).to.have.property(headerName);
-
-        if (headerValue) expect(fileContents[testID].headers[headerName]).to.contain(headerValue);
-      }),
-    {
-      errorMsg: 'Error not found',
-      interval: 100,
-      timeout: 15000
-    }
-  );
-});
-
-// Asserts the provided attribute value from the stored file in fixtures,
-// the data is added by the Next app with the request decorators
-Cypress.Commands.add('assertRequestBody', (testID, bodyAttributeName) => {
-  cy.waitUntil(
-    () =>
-      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
-        const body = JSON.parse(fileContents[testID].body);
-
-        expect(body).to.have.property(bodyAttributeName);
-      }),
-    {
-      errorMsg: 'Request body not found',
-      interval: 100,
-      timeout: 15000
-    }
-  );
-});
-
-// Asserts the provided attribute is not present in stored file in fixtures,
-// the data is added by the Next app with the request decorators
-Cypress.Commands.add('assertRequestBodyNotContaining', (testID, bodyAttributeName) => {
-  cy.waitUntil(
-    () =>
-      cy.readLocal('fetchData.json').then((fileContents: Record<string, any>) => {
-        const body = JSON.parse(fileContents[testID].body);
-
-        expect(body[bodyAttributeName]).to.be.undefined;
-      }),
-    {
-      errorMsg: 'Request body not found',
-      interval: 100,
-      timeout: 15000
-    }
-  );
-});
-
-// Asserts the provided logs data from the stored file in fixtures,
-// the data is added by the Next app with the debug decorators
-Cypress.Commands.add('assertLogs', (testID: string, log: string) => {
-  cy.waitUntil(
-    () =>
-      cy.readLocal('logsData.json').then((fileContents: Record<string, any>) => {
-        expect(fileContents).to.have.property(testID);
-        expect(fileContents[testID]).to.contain(log);
-      }),
-    {
-      errorMsg: 'Error not found',
-      interval: 100,
-      timeout: 15000
-    }
-  );
-});
+loadCommands([
+  'getLogOutput',
+  'readLocal',
+  'writeLocal',
+  'assertRequestHeader',
+  'assertRequestHeaders',
+  'waitForRequest',
+  'assertRequestBody',
+  'assertRequestBodyNotContaining',
+  'assertLogs',
+  'replace'
+]);
 
 // Asserts the provided logs data not present in stored file in fixtures,
 // the data is added by the Next app with the debug decorators
@@ -131,16 +64,6 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   cy.wait(600);
 });
 
-//Returns the request made for the latest alias during a run
-Cypress.Commands.add('waitForRequest', (alias) => {
-  cy.wait(alias);
-  cy.get(`${alias}.all`).then((aliasList) => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const lastEventRequest: any = aliasList[aliasList.length - 1];
-    return cy.wrap(lastEventRequest.request);
-  });
-});
-
 //Returns the response from EP
 Cypress.Commands.add('waitForResponse', (alias) => {
   cy.wait(alias);
@@ -149,20 +72,6 @@ Cypress.Commands.add('waitForResponse', (alias) => {
     const lastEventResponse: any = aliasList[aliasList.length - 1];
     return cy.wrap(lastEventResponse.response);
   });
-});
-
-Cypress.Commands.add('writeLocal', (fileName, content) => {
-  cy.writeFile(`src/fixtures/local/${fileName}`, content);
-});
-
-Cypress.Commands.add('readLocal', (fileName) => {
-  let value: any;
-  cy.readFile(`src/fixtures/local/${fileName}`).then((content) => (value = content));
-  return value;
-});
-
-Cypress.Commands.add('assertRequestHeaders', (request, expectedReqHeaders) => {
-  for (const entry of expectedReqHeaders) expect(request.headers[entry.name]).to.contain(entry.value);
 });
 
 Cypress.Commands.add('assertRequest', (request, expectedReq) => {
@@ -219,27 +128,6 @@ Cypress.Commands.add('requestGuestContext', () => {
           });
         });
     });
-});
-
-Cypress.Commands.add('replace', (filePath, regexMatch, text) => {
-  cy.readFile(filePath).then((data) => {
-    const pageData = data;
-    cy.writeFile(filePath, pageData.replace(regexMatch, text));
-  });
-});
-
-Cypress.Commands.add('getLogOutput', () => {
-  const logs: string[] = [];
-
-  // eslint-disable-next-line cypress/unsafe-to-chain-command
-  cy.get('@consoleLogOutput')
-    .invoke('getCalls')
-    .each((call) => {
-      call.args.forEach((arg) => {
-        logs.push(arg);
-      });
-    })
-    .then(() => logs);
 });
 
 Cypress.Commands.add('getCorePackageVersion', () => {
