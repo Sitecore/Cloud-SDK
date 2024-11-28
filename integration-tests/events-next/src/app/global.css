@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Mono:wght@400;500;700&display=swap');
+
+.fira-mono-regular {
+  font-family: 'Fira Mono', monospace;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.fira-mono-medium {
+  font-family: 'Fira Mono', monospace;
+  font-weight: 500;
+  font-style: normal;
+}
+
+.fira-mono-bold {
+  font-family: 'Fira Mono', monospace;
+  font-weight: 700;
+  font-style: normal;
+}
+
+* {
+  font-family: 'Fira Mono', monospace;
+  color: #fff;
+}
+html {
+  background-color: #727274;
+}
+nav {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+a:visited {
+  color: lightblue;
+}
+a {
+  color: #fff;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  text-decoration: none;
+}
+a:hover {
+  color: hsl(60, 100%, 50%);
+}
+button {
+  background-color: hsl(60, 100%, 50%);
+  color: black;
+  box-shadow: 2px 2px 0 0 #000;
+  border-radius: 0.15rem;
+  border: black solid 1px;
+  padding: 0.2rem 1rem;
+  font-weight: 500;
+  margin: 0.1rem;
+  cursor: pointer;
+  font-size: 1rem;
+}
+button:hover {
+  background-color: #ff00cc;
+  color: #fff;
+  transform: translate(-0.125rem, -0.125rem);
+}
+button:active {
+  box-shadow: inset 3px 3px 0 0 #000;
+  transform: translate(0.125rem, 0.125rem);
+}
+a.active {
+  color: yellow;
+}
+input:not(button) {
+  color: black;
+  margin: 0.5rem;
+}
+[type='text'] {
+  padding: 0.25rem 0.5rem;
+  border: 1px solid black;
+}
+textarea {
+  color: black;
+  margin: 0.5rem;
+  border: 2px solid black;
+}
+fieldset {
+  border-radius: 1rem;
+  padding: 1rem 3rem;
+  margin-bottom: 2rem;
+  width: fit-content;
+  display: flex;
+  flex-direction: column;
+}
+legend {
+  font-size: 2rem;
+  font-weight: 600;
+}
+h1 {
+  font-size: 3rem;
+}
+h2 {
+  font-size: 2.5rem;
+}
+h3 {
+  font-size: 2rem;
+}
+h1,
+h2,
+h3,
+legend {
+  text-shadow: 1px 1px #000, 2px 2px #000, 3px 3px #000, 4px 4px #000, 5px 5px #000;
+}
+.flex {
+  display: flex;
+  flex-wrap: wrap;
+}

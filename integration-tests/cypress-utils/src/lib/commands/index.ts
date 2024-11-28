@@ -9,6 +9,7 @@ export { assertRequestHeader } from './assert-request-header';
 export { waitForRequest } from './wait-for-request';
 export { assertRequestBodyValue } from './assert-request-body-value';
 export { assertLogs } from './assert-logs';
+export { assertLogsNotContaining } from './assert-logs-not-containing';
 export { replace } from './replace';
 export { assertRequestBody } from './assert-request-body';
 export { assertRequestBodyNotContaining } from './assert-request-body-not-containing';

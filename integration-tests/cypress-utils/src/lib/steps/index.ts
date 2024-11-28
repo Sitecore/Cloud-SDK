@@ -3,3 +3,5 @@ export { the_S_ButtonIsClicked } from './the-S-button-is-clicked';
 export { anErrorIsThrown_S } from './an-error-is-thrown-S';
 export { apiRequestError_S_S_S } from './api-request-error-S-S-S';
 export { apiRequest_S } from './api-request-S';
+export { clientDebugLog_S } from './client-debug-log-S';
+export { serverDebugLog_S_S } from './server-debug-log-S';

@@ -1,6 +1,4 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-
-/* eslint-disable cypress/unsafe-to-chain-command */
 import { defineStep } from '@badeball/cypress-cucumber-preprocessor';
 
 export function apiRequestError_S_S_S() {

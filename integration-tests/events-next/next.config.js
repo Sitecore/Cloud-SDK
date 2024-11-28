@@ -8,10 +8,11 @@ const { composePlugins, withNx } = require('@nx/next');
  **/
 const nextConfig = {
   env: {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    /* eslint-disable @typescript-eslint/naming-convention */
     CONTEXT_ID: process.env.CONTEXT_ID || '',
-    // eslint-disable-next-line @typescript-eslint/naming-convention
+    SITE_NAME: process.env.SITE_NAME || '',
     DEBUG_MULTILINE: process.env.DEBUG_MULTILINE || 'false'
+    /* eslint-enable @typescript-eslint/naming-convention */
   },
   nx: {
     // Set this to true if you would like to use SVGR

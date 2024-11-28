@@ -27,8 +27,7 @@
     "**/*.js",
     "**/*.jsx",
     "next-env.d.ts",
-    "../../integration-tests/core-next/.next/types/**/*.ts",
-    "../../dist/integration-tests/core-next/.next/types/**/*.ts"
+    "../../integration-tests/core-next/.next/types/**/*.ts"
   ],
   "exclude": ["node_modules"]
 }

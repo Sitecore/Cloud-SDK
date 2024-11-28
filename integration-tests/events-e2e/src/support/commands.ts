@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { loadCommands } from '@sitecore-cloudsdk/cypress-utils';
+import eventsPackageJson from '../../../../packages/events/package.json';
 
 export {};
 
@@ -9,6 +10,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       visit(url: string, options: string): void;
+      getEventsPackageVersion(): any;
     }
   }
 
@@ -17,7 +19,19 @@ declare global {
   }
 }
 
-loadCommands(['getLogOutput', 'readLocal', 'writeLocal', 'assertRequestBodyValue', 'assertLogs', 'replace']);
+loadCommands([
+  'getLogOutput',
+  'readLocal',
+  'writeLocal',
+  'assertRequestBody',
+  'assertRequestBodyValue',
+  'assertRequestBodyNotContaining',
+  'assertLogs',
+  'assertLogsNotContaining',
+  'assertRequestHeader',
+  'replace',
+  'waitForRequest'
+]);
 
 //Overwrites cy.visit to check if the current baseurl belongs to cdn app in order to add the respective .html extension
 Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
@@ -25,4 +39,8 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   //Overwriting cy.visit behaves faster than the original function so a cy.wait is necessary
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(600);
+});
+
+Cypress.Commands.add('getEventsPackageVersion', () => {
+  return eventsPackageJson.version;
 });

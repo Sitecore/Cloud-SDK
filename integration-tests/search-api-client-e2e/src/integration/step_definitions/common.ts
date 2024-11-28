@@ -85,6 +85,8 @@ defineStep('the {string} domain cookie is not created', () => {
 
 defineStep('client: debug log is printed out in the console with message including {string}', (logMessage: string) => {
   cy.getLogOutput().then((logs: string[]) => {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000);
     expect(logs.join('')).to.contain(logMessage);
   });
 });
@@ -92,6 +94,8 @@ defineStep('client: debug log is printed out in the console with message includi
 defineStep(
   'server: debug log is printed out in the console with message including {string} from testID {string}',
   (log: string, testID: string) => {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000);
     cy.assertLogs(testID, log);
   }
 );
