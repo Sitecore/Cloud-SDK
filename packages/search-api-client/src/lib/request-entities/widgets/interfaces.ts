@@ -145,6 +145,7 @@ export interface SearchOptions extends ResultsOptions {
   query?: QueryOptions;
   offset?: number;
   sort?: SearchSortOptions;
+  suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
 }
 
 /**
@@ -155,6 +156,7 @@ export interface SearchDTO extends ResultsItemDTO {
   query?: QueryOptionsDTO;
   offset?: number;
   sort?: SearchSortOptionsDTO;
+  suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptionsDTO>;
 }
 
 /**
@@ -185,7 +187,7 @@ export interface SortValueDTO {
  */
 export interface SearchSortOptions {
   choices?: boolean;
-  value?: Array<SortValue>;
+  value?: ArrayOfAtLeastOne<SortValue>;
 }
 
 /**
@@ -193,7 +195,27 @@ export interface SearchSortOptions {
  */
 export interface SearchSortOptionsDTO {
   choices?: boolean;
-  value?: Array<SortValue>;
+  value?: ArrayOfAtLeastOne<SortValue>;
+}
+
+/**
+ * Represents the search widget item suggestion param.
+ */
+export interface SearchSuggestionOptions {
+  exclude?: ArrayOfAtLeastOne<string>;
+  keyphraseFallback?: boolean;
+  max?: number;
+  name: string;
+}
+
+/**
+ * Represents the search widget item suggestion param in DTO format.
+ */
+export interface SearchSuggestionOptionsDTO {
+  exclude?: ArrayOfAtLeastOne<string>;
+  keyphrase_fallback?: boolean;
+  max?: number;
+  name: string;
 }
 
 /**

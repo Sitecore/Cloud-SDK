@@ -10,6 +10,8 @@ import type {
   SearchDTO,
   SearchOptions,
   SearchSortOptions,
+  SearchSuggestionOptions,
+  SearchSuggestionOptionsDTO,
   SearchWidgetItemDTO
 } from './interfaces';
 import { ResultsWidgetItem } from './results-widget-item';
@@ -20,6 +22,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _offset?: number;
   private _facet?: FacetOptions;
   private _sort?: SearchSortOptions;
+  private _suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
 
   /**
    * Creates and holds the functionality of a search widget item.
@@ -56,6 +59,9 @@ export class SearchWidgetItem extends ResultsWidgetItem {
 
     this._validateSort(searchOptions.sort);
     this._sort = searchOptions.sort;
+
+    this._validateSuggestion(searchOptions.suggestion);
+    this._suggestion = searchOptions.suggestion;
   }
 
   /**
@@ -119,6 +125,45 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    */
   resetOffset() {
     this._offset = undefined;
+  }
+
+  /**
+   * Sets the suggestion property for SearchWidgetItem
+   * @param suggestion - the <array>array of objects for the suggestion param
+   * @throws error if <SearchSuggestionOptions>.<suggestion>.name property is an empty string or contains spaces
+   * @throws error if <SearchSuggestionOptions>.<suggestion>.max property is not between the range 1 ~ 100
+   */
+  set suggestion(suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions>) {
+    this._validateSuggestion(suggestion);
+    this._suggestion = suggestion;
+  }
+
+  /**
+   * Sets the suggestion property to undefined.
+   */
+  resetSuggestion() {
+    this._suggestion = undefined;
+  }
+
+  private _suggestionToDTO() {
+    if (!this._suggestion) return undefined;
+
+    return this._suggestion.map((item) => {
+      const { keyphraseFallback, ...rest } = item;
+
+      return { ...rest, keyphrase_fallback: keyphraseFallback };
+    }) as ArrayOfAtLeastOne<SearchSuggestionOptionsDTO>;
+  }
+
+  /**
+   * Validates the suggestion property. Throws error if provided with incorrect values.
+   * @param suggestion - the <array> of objects for the suggestion param
+   */
+  private _validateSuggestion(suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>) {
+    suggestion?.forEach((suggestionItem) => {
+      this._validateNumberInRange1To100(ErrorMessages.IV_0014, suggestionItem.max);
+      if (!suggestionItem.name || suggestionItem.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
+    });
   }
 
   /**
@@ -213,10 +258,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
         ...this._facetSortToDTO(type)
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
 
+    const suggestionDTO = this._suggestionToDTO();
+
     const search: SearchDTO = {
       ...{ offset: this._offset },
       ...(this._query && { query: this._query }),
       ...(Object.values(facet).filter((value) => value !== undefined).length && { facet }),
+      ...{ suggestion: suggestionDTO },
       ...{ sort: this._sort },
       ...resultsDTO
     };

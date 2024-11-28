@@ -46,9 +46,16 @@ export default function GetSearchWidgetData() {
           if (item.search?.facet) {
             return new SearchWidgetItem(item.entity, item.rfkId, { facet: item.search?.facet });
           }
-          if (item.search?.sort) {
-            const widget = new SearchWidgetItem(item.entity, item.rfkId, { sort: item.search?.sort });
+          if (item.search?.suggestion) {
+            return new SearchWidgetItem(item.entity, item.rfkId, { suggestion: item.search?.suggestion });
+          }
+          if (item.search?.suggestionSetter) {
+            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            widget.suggestion = item.search?.suggestionSetter;
             return widget;
+          }
+          if (item.search?.sort) {
+            return new SearchWidgetItem(item.entity, item.rfkId, { sort: item.search?.sort });
           }
           if (item.search?.sortSetter) {
             const widget = new SearchWidgetItem(item.entity, item.rfkId);

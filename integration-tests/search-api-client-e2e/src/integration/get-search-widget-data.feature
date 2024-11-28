@@ -152,7 +152,7 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":" ","name":"text","order":"asc"}}]}}}]       | [IV-0020] Incorrect value for "after" in "facet.types". Set the value to a non-empty string, and do not include spaces. |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"facet":{"types":[{"name":"t","sort":{"after":"id1234","name":"count","order":"asc"}}]}}}] | [IV-0021] You must set ​"sort.name"​​ to ​"text"​​ if you use "​after"​​.                                               |
 
-    Scenario Outline: Developer requests search widget data from browser for <Sort> with a valid payload
+    Scenario Outline: Developer requests search widget data from browser for Sort with a valid payload
         Given the '/get-search-widget-data' page is loaded
         When the widget item parameters are:
             """
@@ -179,7 +179,7 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"choices":true,"value":[{"name":"color", "order": "desc"},{"name":"size", "order": "asc"}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"choices":true,"value":[{"name":"color","order":"desc"},{"name":"size","order":"asc"}]}}}] |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"value":[{"name":"color", "order": "desc"},{"name":"size", "order": "asc"}]}}}]                | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"value":[{"name":"color","order":"desc"},{"name":"size","order":"asc"}]}}}]                |
 
-    Scenario Outline: Developer requests search widget data from browser for <Sort> with a valid payload using setter method
+    Scenario Outline: Developer requests search widget data from browser for Sort with a valid payload using setter method
         Given the '/get-search-widget-data' page is loaded
         When the widget item parameters are:
             """
@@ -206,7 +206,7 @@ Feature: Request search widget data from Search REST API
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sortSetter":{"choices":true,"value":[{"name":"color", "order": "desc"},{"name":"size", "order": "asc"}]}}}] | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"choices":true,"value":[{"name":"color","order":"desc"},{"name":"size","order":"asc"}]}}}] |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sortSetter":{"value":[{"name":"color", "order": "desc"},{"name":"size", "order": "asc"}]}}}]                | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"value":[{"name":"color","order":"desc"},{"name":"size","order":"asc"}]}}}]                |
 
-    Scenario Outline: Developer requests search widget data from browser for <Sort> with invalid attributes
+    Scenario Outline: Developer requests search widget data from browser for Sort with invalid attributes
         Given the '/get-search-widget-data' page is loaded
         When the widget item parameters are:
             """
@@ -221,3 +221,74 @@ Feature: Request search widget data from Search REST API
             | items                                                                                                   | error_code                                                                                |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"choices":true,"value":[{"name":""}]}}}]       | [IV-0026] Incorrect value for "name" in "sortValue". Set the value to a non-empty string. |
             | [{"rfkId":"rfkid_7","entity":"content","search":{"sort":{"choices":true,"value":[{"name":"      "}]}}}] | [IV-0026] Incorrect value for "name" in "sortValue". Set the value to a non-empty string. |
+
+
+    Scenario Outline: Developer requests search widget data from browser for Suggetion with a valid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                                                                                                                                      | items_payload                                                                                                                                                                                                                                                |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name":"something"}]}}]                                                                                                                                                                 | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something"}]}}]                                                                                                                                                                  |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name":"something", "max": 10}]}}]                                                                                                                                                      | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10}]}}]                                                                                                                                                        |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name":"something", "max": 10, "keyphraseFallback": false}]}}]                                                                                                                          | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false}]}}]                                                                                                                            |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name":"something", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]}]}}]                                                                                              | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false, "exlude": ["test", "test2"]}]}}]                                                                                               |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name":"something", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]},{"name":"something_else", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]}]}}] | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false, "exlude": ["test", "test2"]},{"name":"something_else", "max": 10, "keyphrase_fallback": false,"exlude": ["test", "test2"]}]}}] |
+
+
+    Scenario Outline: Developer requests search widget data from browser for Suggetion with a valid payload from setter method
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                                                                                                                                            | items_payload                                                                                                                                                                                                                                                |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestionSetter": [{"name":"something"}]}}]                                                                                                                                                                 | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something"}]}}]                                                                                                                                                                  |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestionSetter": [{"name":"something", "max": 10}]}}]                                                                                                                                                      | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10}]}}]                                                                                                                                                        |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestionSetter": [{"name":"something", "max": 10, "keyphraseFallback": false}]}}]                                                                                                                          | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false}]}}]                                                                                                                            |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestionSetter": [{"name":"something", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]}]}}]                                                                                              | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false, "exlude": ["test", "test2"]}]}}]                                                                                               |
+            | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestionSetter": [{"name":"something", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]},{"name":"something_else", "max": 10, "keyphraseFallback": false,"exlude": ["test", "test2"]}]}}] | [{"rfkId":"rfkid_7","entity":"content", "search": {"suggestion": [{"name": "something","max": 10,"keyphrase_fallback": false, "exlude": ["test", "test2"]},{"name":"something_else", "max": 10, "keyphrase_fallback": false,"exlude": ["test", "test2"]}]}}] |
+
+    Scenario Outline: Developer requests search widget data from browser for Suggestion with invalid attributes
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then an error is thrown: '<error_code>'
+
+        Examples:
+            | items                                                                                                   | error_code                                                                                            |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something "}]}}]              | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":""}]}}]                        | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":" "}]}}]                       | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":" "}, {"name":"something"}]}}] | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces. |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": 0}]}}]      | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": 101} ]}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
+            | [{"rfkId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": -1}]}}]     | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
