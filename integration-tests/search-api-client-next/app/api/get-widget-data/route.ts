@@ -1,12 +1,7 @@
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import {
-  getWidgetData,
-  SearchWidgetItem,
-  WidgetItem,
-  WidgetRequestData
-} from '@sitecore-cloudsdk/search-api-client/server';
+import { getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/server';
 import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -32,7 +27,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .addSearch({ userId: 'test' })
         .initialize();
 
-      widget = new WidgetItem('content', 'rfkid_7');
+      widget = new SearchWidgetItem('content', 'rfkid_7');
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

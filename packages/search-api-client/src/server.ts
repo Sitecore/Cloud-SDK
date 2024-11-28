@@ -2,7 +2,6 @@
 import './lib/initializer/server/initializer';
 
 export { WidgetRequestData } from './lib/request-entities/widgets/widget-request-data';
-export { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { RecommendationWidgetItem } from './lib/request-entities/widgets/recommendation-widget-item';
 export { QuestionsAnswersWidgetItem } from './lib/request-entities/widgets/questions-answers-widget-item';
@@ -30,6 +29,7 @@ export type {
   ExactAnswerOptions,
   RelatedQuestionsOptions
 } from './lib/request-entities/widgets/interfaces';
+export type { WidgetItem } from './lib/request-entities/widgets/widget-item';
 
 export { getSettings, initServer as init } from './lib/init/server/initializer';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/server/get-widget-data-server';

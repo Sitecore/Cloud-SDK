@@ -1,14 +1,14 @@
 import type { NextRequest, NextResponse } from 'next/server';
-import { WidgetItem, WidgetRequestData, getWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
-import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../e2e-decorators/fetch-decorator';
 
 export async function getWidgetDataMiddleware(request: NextRequest, response: NextResponse): Promise<void> {
   const testID = request?.nextUrl?.searchParams?.get('testID');
 
   if (!request.nextUrl.pathname.startsWith('/get-widget-data') || !testID || !testID.includes('FromMiddleware')) return;
 
-  let widget: WidgetItem;
+  let widget: SearchWidgetItem;
   let widgetRequestData: WidgetRequestData;
 
   decorateFetch(testID as string);
@@ -23,7 +23,7 @@ export async function getWidgetDataMiddleware(request: NextRequest, response: Ne
         .addSearch({ userId: 'test' })
         .initialize();
 
-      widget = new WidgetItem('content', 'rfkid_7');
+      widget = new SearchWidgetItem('content', 'rfkid_7');
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

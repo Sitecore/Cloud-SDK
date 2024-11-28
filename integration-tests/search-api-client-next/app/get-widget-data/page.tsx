@@ -7,23 +7,19 @@ import {
   GeoFilter,
   getWidgetData,
   SearchWidgetItem,
-  WidgetItem,
   WidgetRequestData
 } from '@sitecore-cloudsdk/search-api-client/browser';
 
 export default function GetWidgetData() {
   useEffect(() => {
-    async function initSearch() {
-      await CloudSDK({
-        enableBrowserCookie: true,
-        siteName: 'TestSite',
-        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
-      })
-        .addEvents()
-        .addSearch({ userId: 'test' })
-        .initialize();
-    }
-    initSearch();
+    CloudSDK({
+      enableBrowserCookie: true,
+      siteName: 'TestSite',
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+    })
+      .addEvents()
+      .addSearch({ userId: 'test' })
+      .initialize();
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
@@ -52,7 +48,7 @@ export default function GetWidgetData() {
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
           if (Object.keys(item).length === 2) {
-            const widget = new WidgetItem(item.entity, item.rfkId);
+            const widget = new SearchWidgetItem(item.entity, item.rfkId);
 
             return widget;
           }
