@@ -114,6 +114,44 @@ Feature: Request recommendation widget data from Search REST API
       | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"recipe":{"id":"recipe-123","version":1}}}]                                                                                       | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"recipe":{"id":"recipe-123","version":1}}}]                                                                                       |
       | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"recipe":{"id":"recipe-abc","version":2}}}]                                                                                       | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"recipe":{"id":"recipe-abc","version":2}}}]                                                                                       |
 
+  Scenario: Developer requests recommendation widget data with rule from browser with a valid payload
+    Given the '/get-recommendation-widget-data' page is loaded
+    When the widget item parameters are:
+      """
+      {
+        "items": <items>
+      }
+      """
+    And the 'getRecommendationWidgetDataWithRule' button is clicked
+    Then the recommendation widget data request is sent with parameters:
+      """
+      {
+        "items": <items_request_payload>
+      }
+      """
+
+    Examples:
+      | items                                                                                                                                                                                                                                                                                                                                                                                                                               | items_request_payload                                                                                                                                                                                                                                                                                                                                                                                                                |
+      | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"rule":{"behaviors":false,"blacklist":{"filter":{"name":"title","type":"eq","value":"title1"}},"boost":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[5],"weight":4}],"bury":{"filter":{"name":"title","type":"eq","value":"title1"}},"include":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[1]}],"pin":[{"id":"2","slot":4}]}}}] | [{"rfk_id":"rfkid_7","entity":"content","recommendations":{"rule":{"behaviors":false,"blacklist":{"filter":{"name":"title","type":"eq","value":"title1"}},"boost":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[5],"weight":4}],"bury":{"filter":{"name":"title","type":"eq","value":"title1"}},"include":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[1]}],"pin":[{"id":"2","slot":4}]}}}] |
+
+  Scenario: Developer requests recommendation widget data with rule from browser with a invalid payload
+    Given the '/get-recommendation-widget-data' page is loaded
+    When the widget item parameters are:
+      """
+      {
+        "items": <items>
+      }
+      """
+    And the 'getRecommendationWidgetDataWithRule' button is clicked
+    Then an error is thrown: '<error_code>'
+
+    Examples:
+      | items                                                                                                                                                            | error_code                                                                                    |
+      | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"rule":{"boost":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[-5],"weight":4}]}}}] | [IV-0028] Incorrect value for "slot". Set the value to an integer greater than or equal to 0. |
+      | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"rule":{"pin":[{"id":"1","slot":-2}]}}}]                                                               | [IV-0028] Incorrect value for "slot". Set the value to an integer greater than or equal to 0. |
+      | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"rule":{"include":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[-5]}]}}}]          | [IV-0028] Incorrect value for "slot". Set the value to an integer greater than or equal to 0. |
+      | [{"rfkId":"rfkid_7","entity":"content","recommendations":{"rule":{"pin":[{"id":"","slot":2}]}}}]                                                                 | [IV-0027] Incorrect value for pin item "id". Set the value to a non-empty string.             |
+
   Scenario: Developer requests recommendation widget data from browser with a invalid payload
     Given the '/get-recommendation-widget-data' page is loaded
     When the widget item parameters are:

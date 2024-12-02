@@ -3,11 +3,11 @@ import {
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
   getEnabledPackageBrowser as getEnabledPackage
 } from '@sitecore-cloudsdk/core/internal';
-import type { Context } from '../../request-entities/context/context';
 import { PACKAGE_NAME } from '../../consts';
-import type { SearchEndpointResponse } from '../post-request';
-import type { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
 import { getSettings } from '../../init/browser/initializer';
+import type { Context } from '../../request-entities/context/context';
+import type { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
+import type { SearchEndpointResponse } from '../post-request';
 import { sendPostRequest } from '../post-request';
 
 /**

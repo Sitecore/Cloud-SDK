@@ -33,6 +33,7 @@ export interface ResultsOptions {
   filter?: Filter;
   groupBy?: string;
   content?: ContentOptions;
+  rule?: SearchRuleOptions;
 }
 
 /**
@@ -43,6 +44,7 @@ export interface ResultsItemDTO {
   filter?: FilterDTO;
   group_by?: string;
   content?: ContentOptions;
+  rule?: SearchRuleOptions;
 }
 
 type FacetSortName = 'text' | 'count';
@@ -145,6 +147,7 @@ export interface SearchOptions extends ResultsOptions {
   query?: QueryOptions;
   offset?: number;
   sort?: SearchSortOptions;
+  rule?: SearchRuleOptions;
   suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
 }
 
@@ -292,4 +295,29 @@ export interface QuestionsAnswersWidgetItemDTO extends WidgetItemDTO {
       offset?: number;
     };
   };
+}
+
+interface Boost {
+  filter: Filter;
+  slots?: ArrayOfAtLeastOne<number>;
+  weight?: number;
+}
+
+interface Include {
+  filter: Filter;
+  slots: ArrayOfAtLeastOne<number>;
+}
+
+interface PinItem {
+  id: string;
+  slot: number;
+}
+
+export interface SearchRuleOptions {
+  behaviors?: boolean;
+  blacklist?: { filter: Filter };
+  boost?: ArrayOfAtLeastOne<Boost>;
+  bury?: { filter: Filter };
+  include?: ArrayOfAtLeastOne<Include>;
+  pin?: ArrayOfAtLeastOne<PinItem>;
 }

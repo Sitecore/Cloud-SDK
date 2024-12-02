@@ -61,6 +61,73 @@ export default function GetRecommendationWidgetData() {
     await getWidgetData(widgetRequestData, contextRequestData);
   };
 
+  const requestRecommendationWidgetDataWithRule = async () => {
+    let contextRequestData;
+
+    const ruleObject = { boost: [], include: [], pin: [] } as any;
+    const parsedInputWidgetItemsData = JSON.parse(inputWidgetItemsData);
+
+    if (!parsedInputWidgetItemsData) return;
+
+    const widgets = !parsedInputWidgetItemsData.items
+      ? []
+      : parsedInputWidgetItemsData.items.map((item: any) => {
+          const widget = new RecommendationWidgetItem(item.entity, item.rfkId, item.recommendations);
+
+          if (!item.recommendations?.rule) return widget;
+
+          if (item.recommendations.rule?.blacklist) {
+            const filter = createFilter(
+              item.recommendations.rule.blacklist.filter.type,
+              item.recommendations.rule.blacklist.filter
+            );
+            ruleObject.blacklist = { filter };
+          }
+
+          if (item.recommendations.rule?.boost) {
+            item.recommendations.rule.boost.forEach((item: any) => {
+              ruleObject.boost.push({
+                filter: createFilter(item.filter.type, item.filter),
+                slots: item.slots,
+                weight: item.weight
+              });
+            });
+          }
+
+          if (item.recommendations.rule?.bury) {
+            const filter = createFilter(
+              item.recommendations.rule.bury.filter.type,
+              item.recommendations.rule.bury.filter
+            );
+            ruleObject.bury = { filter };
+          }
+
+          if (item.recommendations.rule?.include) {
+            item.recommendations.rule.include.forEach((item: any) => {
+              ruleObject.include.push({
+                filter: createFilter(item.filter.type, item.filter),
+                slots: item.slots
+              });
+            });
+          }
+
+          if (item.recommendations.rule?.pin) {
+            item.recommendations.rule.pin.forEach((item: any) => {
+              ruleObject.pin.push({
+                id: item.id,
+                slot: item.slot
+              });
+            });
+          }
+
+          widget.rule = { ...item.recommendations.rule, ...ruleObject };
+          return widget;
+        });
+
+    const widgetRequestData = new WidgetRequestData(widgets);
+    await getWidgetData(widgetRequestData, contextRequestData);
+  };
+
   return (
     <div>
       <h1>Get search widget data page</h1>
@@ -69,6 +136,12 @@ export default function GetRecommendationWidgetData() {
         data-testid='getRecommendationWidgetData'
         onClick={requestRecommendationWidgetData}>
         Get Widget Data
+      </button>
+      <button
+        type='button'
+        data-testid='getRecommendationWidgetDataWithRule'
+        onClick={requestRecommendationWidgetDataWithRule}>
+        Get Widget Data with Rule
       </button>
       <br />
       Widget items data:

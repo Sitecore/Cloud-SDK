@@ -1,6 +1,7 @@
 import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
-import type { ArrayOfAtLeastOne } from '../filters/interfaces';
+import type { ArrayOfAtLeastOne, Filter } from '../filters/interfaces';
+import type { SearchRuleOptions } from './interfaces';
 import { ResultsWidgetItem } from './results-widget-item';
 
 describe('widget item class', () => {
@@ -284,6 +285,214 @@ describe('widget item class', () => {
       expect(dto.filter).toBeUndefined();
 
       expect(mockFilter.toDTO).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('set rule', () => {
+    let widgetItem: ResultsWidgetItem;
+
+    const validWidgetItem = {
+      entity: 'test',
+      rfkId: 'test'
+    };
+
+    const validRule = {
+      behaviors: false,
+      blacklist: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+      boost: [
+        {
+          filter: new ComparisonFilter('title', 'eq', 'title1'),
+          slots: [5],
+          weight: 4
+        }
+      ],
+      bury: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+      include: [{ filter: new ComparisonFilter('title', 'eq', 'title1'), slots: [2] }],
+      pin: [
+        {
+          id: '2',
+          slot: 4
+        }
+      ]
+    } as SearchRuleOptions;
+
+    beforeEach(() => {
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    });
+
+    it(`should update the 'rule' property`, () => {
+      widgetItem.rule = validRule;
+
+      expect(widgetItem['_rule']).toBe(validRule);
+
+      const dto = widgetItem['_resultsToDTO']();
+
+      expect(dto.rule).toEqual({
+        behaviors: false,
+        blacklist: {
+          filter: {
+            name: 'title',
+            type: 'eq',
+            value: 'title1'
+          }
+        },
+        boost: [
+          {
+            filter: {
+              name: 'title',
+              type: 'eq',
+              value: 'title1'
+            },
+            slots: [5],
+            weight: 4
+          }
+        ],
+        bury: {
+          filter: {
+            name: 'title',
+            type: 'eq',
+            value: 'title1'
+          }
+        },
+        include: [
+          {
+            filter: {
+              name: 'title',
+              type: 'eq',
+              value: 'title1'
+            },
+            slots: [2]
+          }
+        ],
+        pin: [
+          {
+            id: '2',
+            slot: 4
+          }
+        ]
+      });
+    });
+
+    it(`should reflect the 'rule' as undefined when it is not set or reset`, () => {
+      widgetItem.rule = undefined as unknown as SearchRuleOptions;
+      expect(widgetItem.rule).toBeUndefined();
+
+      widgetItem.rule = validRule;
+      widgetItem.resetRule();
+      expect(widgetItem['_resultsToDTO']().rule).toBeUndefined();
+    });
+
+    // eslint-disable-next-line max-len
+    it('should throw an error if an invalid value for boost.slots, include.slots, pin.slot and pin.id are set via constructor', () => {
+      const scenarios = [
+        {
+          error: ErrorMessages.IV_0028,
+          rule: { boost: [{ filter: new ComparisonFilter('price', 'lt', 100), slots: [-2, 3], weight: 3 }] }
+        },
+        {
+          error: ErrorMessages.IV_0028,
+          rule: { include: [{ filter: new ComparisonFilter('price', 'lt', 100), slots: [-2, 3] }] }
+        },
+        { error: ErrorMessages.IV_0028, rule: { pin: [{ id: '1', slot: -2 }] } },
+        { error: ErrorMessages.IV_0027, rule: { pin: [{ id: '', slot: 2 }] } }
+      ];
+
+      scenarios.forEach((scenario) => {
+        expect(() => {
+          new ResultsWidgetItem('content', 'rfkid_7', {
+            rule: scenario.rule as SearchRuleOptions
+          });
+        }).toThrow(scenario.error);
+      });
+    });
+
+    it('should handle rule.include being null', () => {
+      const validatePositiveIntegerSpy = jest.spyOn(ResultsWidgetItem.prototype as any, '_validatePositiveInteger');
+
+      const rule = { ...validRule, include: null as any } as SearchRuleOptions;
+      new ResultsWidgetItem('content', 'rfkid_7', { rule });
+
+      expect(validatePositiveIntegerSpy).toHaveBeenCalledTimes(2);
+    });
+
+    it('should handle rule.boost.slots being undefined', () => {
+      const validatePositiveIntegerSpy = jest.spyOn(ResultsWidgetItem.prototype as any, '_validatePositiveInteger');
+
+      const rule = {
+        ...validRule,
+        boost: [{ filter: new ComparisonFilter('title', 'eq', 'title1') }]
+      } as SearchRuleOptions;
+      new ResultsWidgetItem('content', 'rfkid_7', { rule });
+
+      expect(validatePositiveIntegerSpy).toHaveBeenCalledTimes(2);
+    });
+  });
+
+  describe('_ruletoDTO', () => {
+    let widget: ResultsWidgetItem;
+
+    beforeEach(() => {
+      widget = new ResultsWidgetItem('entity', 'rfkId');
+    });
+
+    it('should return undefined when rule is undefined', () => {
+      const result = (widget as any)._ruletoDTO(undefined);
+      expect(result).toBeUndefined();
+    });
+
+    it('should correctly map a partially populated rule', () => {
+      const mockRule: SearchRuleOptions = {
+        behaviors: false,
+        blacklist: undefined,
+        boost: undefined,
+        bury: undefined,
+        include: undefined,
+        pin: undefined
+      };
+
+      const result = (widget as any)._ruletoDTO(mockRule);
+      expect(result).toEqual({
+        behaviors: false,
+        blacklist: undefined,
+        boost: undefined,
+        bury: undefined,
+        include: undefined,
+        pin: undefined
+      });
+    });
+
+    it('should correctly map a fully populated rule', () => {
+      const mockFilter = {
+        toDTO: jest.fn().mockReturnValue({ some: 'filterDTO' })
+      };
+
+      const mockRule: SearchRuleOptions = {
+        behaviors: false,
+        blacklist: { filter: mockFilter as unknown as Filter },
+        boost: [{ filter: mockFilter as unknown as Filter, slots: [1, 2], weight: 10 }],
+        bury: { filter: mockFilter as unknown as Filter },
+        include: [{ filter: mockFilter as unknown as Filter, slots: [3, 4] }],
+        pin: [
+          { id: '123', slot: 1 },
+          { id: '456', slot: 2 }
+        ]
+      };
+
+      const result = (widget as any)._ruletoDTO(mockRule);
+
+      expect(result).toEqual({
+        behaviors: false,
+        blacklist: { filter: { some: 'filterDTO' } },
+        boost: [{ filter: { some: 'filterDTO' }, slots: [1, 2], weight: 10 }],
+        bury: { filter: { some: 'filterDTO' } },
+        include: [{ filter: { some: 'filterDTO' }, slots: [3, 4] }],
+        pin: [
+          { id: '123', slot: 1 },
+          { id: '456', slot: 2 }
+        ]
+      });
+
+      expect(mockFilter.toDTO).toHaveBeenCalledTimes(4);
     });
   });
 });

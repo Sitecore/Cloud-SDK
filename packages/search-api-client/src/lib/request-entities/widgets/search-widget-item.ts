@@ -36,7 +36,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       content: searchOptions?.content,
       filter: searchOptions?.filter,
       groupBy: searchOptions?.groupBy,
-      limit: searchOptions?.limit
+      limit: searchOptions?.limit,
+      rule: searchOptions?.rule
     });
 
     if (!searchOptions) return;

@@ -26,7 +26,6 @@ defineStep('Search API responds with:', (params: string) => {
           if (limit) expect(limit).to.deep.equal(searchParam.limit);
           if (offset) expect(offset).to.deep.equal(searchParam.offset);
           if (content) expect(content.length).to.equal(searchParam.content);
-          if (content) expect(content.length).to.equal(searchParam.content);
         }
   }
 });
