@@ -1,9 +1,19 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
+import AddToCartButton from './AddToCartButton';
 import { useCart } from '../context/Cart';
+import PriceTag from './PriceTag';
+import Image from 'next/image';
 import React from 'react';
+
+export type RecommendedProduct = {
+  id: string;
+  name: string;
+  price: string;
+  image_url: string;
+  brand: string;
+  sku: string;
+};
 
 export type Product = {
   id: string;
@@ -14,41 +24,58 @@ export type Product = {
   slug: string;
 };
 
-/**
- * A component that renders a list of products in a grid.
- * @param props An object with a `products` property that is an array of products.
- * @returns A grid of products.
- */
-export function Products({ products }: { products: Product[] }) {
+type ProductsProps = {
+  products?: RecommendedProduct[];
+};
+
+export function Products({ products }: ProductsProps) {
   const cart = useCart();
 
   return (
-    <div className='grid grid-cols-4 gap-8 my-16'>
-      {products.map((product) => (
+    <div className='grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-6 my-8 sm:my-12'>
+      {products?.map((product) => (
         <div
           key={product.id}
-          className='p-6 bg-white flex flex-col justify-between transition-colors duration-500 rounded-tl-3xl rounded-br-3xl'>
-          <Link href={`/product/${product.slug}`}>
-            <Image
-              src={product.imageUrl}
-              alt={product.title}
-              className='w-full h-48 object-contain bg-white rounded-xl'
-              height={200}
-              width={200}
-            />
-            <h1 className='text-lg font-semibold mt-2'>{product.title}</h1>
-          </Link>
-          <h4 className={`${product.discount && 'line-through'}`}>€{product.price}</h4>
-          {product.discount && <h4>{cart.calculateDiscountPrice(product.price, product.discount).toFixed(2)}</h4>}
-          <button
-            onClick={() => cart.addProductItem(product, 1)}
-            className='text-blue-600 hover:bg-slate-100 px-4 py-2 mt-3 float-end rounded-lg'>
-            Add to cart
-          </button>
+          className='group relative p-4 sm:p-6 bg-white border border-gray-200 rounded-lg shadow-sm transition-all duration-300 hover:shadow-lg hover:border-red-300 hover:scale-[1.02] focus-within:ring-2 focus-within:ring-red-500 focus-within:ring-offset-2 flex flex-col min-h-[400px]'>
+          <div className='w-full mb-4'>
+            <div className='aspect-w-1 aspect-h-1 w-full overflow-hidden rounded-lg bg-gray-50'>
+              <Image
+                src={product.image_url}
+                alt={product.name}
+                className='w-full h-40 sm:h-48 object-contain transform transition-transform duration-300 group-hover:scale-105'
+                height={200}
+                width={200}
+                priority={true}
+              />
+            </div>
+          </div>
+          <div className='flex-1 flex flex-col'>
+            <div>
+              <span className='text-sm font-medium text-red-600'>{product.brand}</span>
+              <h2 className='text-base sm:text-lg font-semibold text-gray-900 mt-1 line-clamp-2'>{product.name}</h2>
+            </div>
+            <div className='mt-auto'>
+              <PriceTag price={product.price} />
+              <AddToCartButton
+                onClick={() =>
+                  cart.addProductItem(
+                    {
+                      id: product.id,
+                      title: product.name,
+                      price: parseFloat(product.price) || 0,
+                      imageUrl: product.image_url,
+                      slug: product.sku
+                    },
+                    1
+                  )
+                }
+              />
+            </div>
+          </div>
         </div>
       ))}
     </div>
   );
 }
 
-export const MemoizedProducts = React.memo(Products);
+export default React.memo(Products);

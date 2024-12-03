@@ -59,7 +59,7 @@ export function Newsletter() {
         </div>
         <button
           type='submit'
-          className='w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:bg-blue-300 '
+          className='w-full bg-red-500 text-white p-2 rounded-md hover:bg-red-600 disabled:bg-red-300 '
           disabled={isLoading}>
           Subscribe
         </button>

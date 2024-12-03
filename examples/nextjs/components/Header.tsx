@@ -1,29 +1,24 @@
 'use client';
 
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useCart } from '../context/Cart';
-import { useRouter } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useAuth } from '../context/Auth';
+import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useAuth } from '../context/Auth';
 
 export function Header() {
   const { isLoggedIn, logout } = useAuth();
-
   const cart = useCart();
   const router = useRouter();
   const accountDialogRef = useRef<HTMLDialogElement>(null);
-  const [query, setQuery] = useState('');
+  const searchParams = useSearchParams();
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
-      router.push(`/search?q=${query}`);
+      const value = (event.target as HTMLInputElement).value;
+      router.push(`/search?q=${value}`);
     }
-  };
-
-  const handleLogout = () => {
-    logout();
-    router.push('/login');
   };
 
   return (
@@ -38,26 +33,24 @@ export function Header() {
           &times;
         </button>
       </dialog>
+
       <header className='container mx-auto flex justify-between items-center p-4'>
-        <div>
-          <Link href='/'>
-            <Image
-              src='https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore?t=sc42h'
-              alt='Logo'
-              height={29}
-              width={150}
-              priority
-            />
-          </Link>
-        </div>
+        <Link href='/'>
+          <Image
+            src='https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore?t=sc42h'
+            alt='Logo'
+            height={29}
+            width={150}
+            priority
+          />
+        </Link>
+
         <div className='flex gap-x-4'>
           <div className='relative w-[15rem]'>
             <input
-              id='search'
-              onKeyDown={handleKeyDown}
-              onChange={(e) => setQuery(e.target.value)}
-              type='text'
-              className='border border-gray-300 rounded-xl px-3 py-2 w-full'
+              defaultValue={searchParams.get('q') ?? ''}
+              onKeyDown={handleSearch}
+              className='border border-gray-300 rounded-xl px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500'
               placeholder='Search'
             />
             <svg
@@ -87,7 +80,10 @@ export function Header() {
                 <>
                   <li>
                     <button
-                      onClick={handleLogout}
+                      onClick={() => {
+                        logout();
+                        router.push('/login');
+                      }}
                       className='flex hover:bg-slate-50 rounded-xl px-3 py-2'>
                       <svg
                         xmlns='http://www.w3.org/2000/svg'
@@ -140,7 +136,7 @@ export function Header() {
                         <path d='M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0' />
                         <path d='M17 17h-11v-14h-2' />
                         <path d='M6 5l14 1l-1 7h-13' />
-                      </svg>{' '}
+                      </svg>
                       &nbsp; Cart
                     </button>
                   </li>
@@ -167,7 +163,7 @@ export function Header() {
                       />
                       <path d='M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0' />
                       <path d='M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2' />
-                    </svg>{' '}
+                    </svg>
                     &nbsp; Sign in
                   </button>
                 </li>
