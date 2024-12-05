@@ -2,7 +2,7 @@
 
 ## Step 1: Create a feature file
 
-Create a new .feature file inside `integration-tests/<YOUR_E2E_APP>/src/integration` folder e.g., `integration-tests/engage-e2e/src/integration/send-view-event.feature`. This is where you will add your [Gherkin](https://cucumber.io/docs/gherkin/) steps.
+Create a new .feature file inside `integration-tests/<YOUR_E2E_APP>/src/integration` folder e.g., `integration-tests/events-e2e/src/integration/send-view-event.feature`. This is where you will add your [Gherkin](https://cucumber.io/docs/gherkin/) steps.
 
 > Note: In case the tests you wish to add belong to an existing feature, you should not create a new file but add the tests to its respective .feature one instead.
 
@@ -30,7 +30,7 @@ A simple example of a feature file:
 Feature: Send clear cart event to an organization
 Scenario: Developer creates a clear cart event
     Given the '/cart' page is loaded
-    When the 'engage.clearCart' event is triggered
+    When the 'clearCart' event is triggered
     Then the event is sent with 'CLEAR_CART' type
 ```
 
@@ -49,7 +49,7 @@ When the steps you wish to add to your tests aren’t already in common.ts, then
 
 Once you’re finished with the BDD layer of your tests, you can proceed with creating a new .ts file with the respective step definitions (stepDefs). In case you have only used steps that are already defined in common.ts, there is no need for a new stepDef file.
 
-However, if you have introduced new steps to our code, to create their definitions, create a new .ts file, with the same name as your feature file, inside `integration-tests/<YOUR_E2E_APP>/src/integration/step_definitions` folder e.g., `integration-tests/engage-e2e/src/integration/step_definitions/send-view-event.ts`
+However, if you have introduced new steps to our code, to create their definitions, create a new .ts file, with the same name as your feature file, inside `integration-tests/<YOUR_E2E_APP>/src/integration/step_definitions` folder e.g., `integration-tests/events-e2e/src/integration/step_definitions/send-view-event.ts`
 
 ### Utilize custom commands
 
@@ -81,7 +81,7 @@ npx nx run <YOUR_E2E_APP>:<YOUR_TARGET> --watch
 For example:
 
 ```
-npx nx run integration-tests/engage-e2e:engage-next-events --watch
+npx nx run integration-tests/events-e2e:events-e2e --watch
 ```
 
 From the Cypress Runner you can choose which feature file’s tests you wish to run specifically.
@@ -97,7 +97,7 @@ Once your feature’s tests have successfully passed and before you open a PR, m
 For example:
 
 ```
-npx nx run integration-tests/engage-e2e:engage-events-smoke-test
+npx nx run integration-tests/events-e2e:events-smoke-test
 ```
 
 Cypress will headlessly run all the available tests and will print the test results on your terminal.

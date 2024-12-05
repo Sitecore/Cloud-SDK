@@ -40,7 +40,6 @@ jobs:
           npm install --save-dev start-server-and-test
           npm pkg set 'scripts.test'='npx cypress run' 'scripts.start-server'='npx next dev' 'scripts.ci'='npx start-server-and-test start-server 3000 test'
           cat package.json
-          cp $GITHUB_WORKSPACE/integration-tests/engage-e2e/cypress.env.json  ./
       - name: Install @sitecore libraries using npm link
         run: |
           cd ../my-next-app-old

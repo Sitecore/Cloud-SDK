@@ -1,5 +1,3 @@
 # Add files here to ignore them from prettier formatting
 /dist
 /coverage
-# REMOVE this line when old fetch decorator replaced with decorateFetch
-/integration-tests/engage-next/middleware.ts

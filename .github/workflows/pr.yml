@@ -80,66 +80,6 @@ jobs:
       - run: npm ci
       - name: Run Mutation Tests
         run: npx stryker run ./packages/${{ matrix.mutation-package }}/stryker.conf.js
-  events-e2e-tests:
-    name: Run Events E2E
-    runs-on: ubuntu-latest
-    outputs:
-      affected: ${{ steps.get-affected.outputs.affected }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-      - run: npm ci
-      - name: Build Cypress Utils
-        run: npx nx run cypress-utils:build
-      - name: Get affected app
-        id: get-affected
-        run: echo "affected=$(npx nx show projects --affected --with-target engage-next-events --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-      - name: Run E2E Tests
-        run: npx nx affected --target=engage-next-events --base=remotes/origin/master --head=HEAD
-      - name: Generate Events E2E Test Report
-        if: always() && steps.get-affected.outputs.affected != '[]'
-        run: npm run generate-e2e-report
-      - name: Upload Events E2E Test Report
-        if: always()  && steps.get-affected.outputs.affected != '[]'
-        uses: actions/upload-artifact@v4
-        with:
-          name: events-e2e-report
-          path: integration-tests/engage-e2e/cypress/results/
-  personalize-e2e-tests:
-    name: Run Personalize E2E
-    runs-on: ubuntu-latest
-    outputs:
-      affected: ${{ steps.get-affected.outputs.affected }}
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-      - name: Use Node.js
-        uses: actions/setup-node@v4
-        with:
-          cache: 'npm'
-      - run: npm ci
-      - name: Build Cypress Utils
-        run: npx nx run cypress-utils:build
-      - name: Get affected app
-        id: get-affected
-        run: echo "affected=$(npx nx show projects --affected --with-target engage-next-personalize --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-      - name: Run E2E Tests
-        run: npx nx affected --target=engage-next-personalize --base=remotes/origin/master --head=HEAD
-      - name: Generate Personalize E2E Test Report
-        if: always() && steps.get-affected.outputs.affected != '[]'
-        run: npm run generate-e2e-report
-      - name: Upload Personalize E2E Test Report
-        if: always() && steps.get-affected.outputs.affected != '[]'
-        uses: actions/upload-artifact@v4
-        with:
-          name: personalize-e2e-report
-          path: integration-tests/engage-e2e/cypress/results/
   search-api-client-e2e-tests:
     name: Run Search API Client E2E
     runs-on: ubuntu-latest
@@ -232,16 +172,7 @@ jobs:
     name: Check if all jobs run successfully
     runs-on: ubuntu-latest
     if: always()
-    needs:
-      [
-        lint-and-build,
-        unit-test,
-        mutation-tests,
-        events-e2e-tests,
-        personalize-e2e-tests,
-        search-api-client-e2e-tests,
-        check-pr-title
-      ]
+    needs: [lint-and-build, unit-test, mutation-tests, search-api-client-e2e-tests, check-pr-title]
     steps:
       - run: |
           if [[ "${{contains(needs.*.result, 'failure')}}" == 'true' ]]; then

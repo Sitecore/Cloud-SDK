@@ -9,8 +9,6 @@
   "scripts": {
     "build": "nx affected --target=build",
     "build-all": "tsc --build",
-    "clean-past-e2e-reports": "rm -r integration-tests/engage-e2e/cypress/results/",
-    "generate-e2e-report": "mochawesome-merge integration-tests/engage-e2e/cypress/results/*.json --o integration-tests/engage-e2e/cypress/results/reports/test-results.json && marge integration-tests/engage-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/engage-e2e/cypress/results/reports/ --inline && rm integration-tests/engage-e2e/cypress/results/*.json",
     "generate-e2e-search-api-client-report": "mochawesome-merge integration-tests/search-api-client-e2e/cypress/results/*.json --o integration-tests/search-api-client-e2e/cypress/results/reports/test-results.json && marge integration-tests/search-api-client-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/search-api-client-e2e/cypress/results/reports/ --inline && rm integration-tests/search-api-client-e2e/cypress/results/*.json",
     "lint": "nx affected --target=lint",
     "mutation-local": "nx run-many --target=stryker",
