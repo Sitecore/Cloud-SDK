@@ -4,14 +4,14 @@ import { ErrorMessages } from '../consts';
 import type {
   SearchEventRequest,
   SearchEventRequestDTO,
-  SuggestionFilter,
-  SuggestionFilterDTO,
+  SuggestionFilterEventParams,
+  SuggestionFilterEventParamsDTO,
   WidgetSuggestionClickEventParams
 } from './interfaces';
 
 export class WidgetSuggestionClickEvent {
   protected request: SearchEventRequest;
-  protected filters: Array<SuggestionFilter>;
+  protected filters: Array<SuggestionFilterEventParams>;
   protected pathname: string;
   protected page: string;
   protected widgetIdentifier: string;
@@ -51,7 +51,7 @@ export class WidgetSuggestionClickEvent {
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.MV_0007);
   }
 
-  private _mapFiltersToDTO(): Array<SuggestionFilterDTO> {
+  private _mapFiltersToDTO(): Array<SuggestionFilterEventParamsDTO> {
     return this.filters.map((filter) => ({
       display_name: [filter.displayName],
       name: filter.name,

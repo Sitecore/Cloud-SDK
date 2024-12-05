@@ -53,7 +53,7 @@ export interface EventFilterDTO {
   value_position?: Array<string>;
 }
 
-export interface SuggestionFilter {
+export interface SuggestionFilterEventParams {
   name: string;
   title: string;
   value: string;
@@ -61,7 +61,7 @@ export interface SuggestionFilter {
   displayName: string;
 }
 
-export interface SuggestionFilterDTO {
+export interface SuggestionFilterEventParamsDTO {
   name: string;
   title: string;
   value: string[];
@@ -69,26 +69,26 @@ export interface SuggestionFilterDTO {
   display_name: string[];
 }
 
-export interface FacetFilter extends SuggestionFilter {
+export interface FacetFilterEventParams extends SuggestionFilterEventParams {
   facetPosition: number;
 }
 
-export interface FacetFilterDTO extends SuggestionFilterDTO {
+export interface FacetFilterEventParamsDTO extends SuggestionFilterEventParamsDTO {
   facet_position: number;
 }
 
-export interface RangeFacetFilter extends SuggestionFilter {
+export interface RangeFacetFilterEventParams extends SuggestionFilterEventParams {
   startValue: string;
   endValue: string;
 }
 
-export interface RangeFacetFilterDTO extends SuggestionFilterDTO {
+export interface RangeFacetFilterEventParamsDTO extends SuggestionFilterEventParamsDTO {
   start_value: string;
   end_value: string;
   facet_position: 0;
 }
 
-export type EventFilter = SuggestionFilter | FacetFilter | RangeFacetFilter;
+export type EventFilter = SuggestionFilterEventParams | FacetFilterEventParams | RangeFacetFilterEventParams;
 
 export interface WidgetNavigationClickEventParams {
   pathname: string;
@@ -114,7 +114,7 @@ export interface WidgetItemClickEventParams {
 
 export interface WidgetSuggestionClickEventParams {
   request: SearchEventRequest;
-  filters: Array<SuggestionFilter>;
+  filters: Array<SuggestionFilterEventParams>;
   pathname: string;
   widgetId: string;
   page: string;
@@ -125,7 +125,7 @@ export interface WidgetSuggestionClickEventParams {
 
 export interface WidgetFacetClickEventParams {
   request: SearchEventRequest;
-  filters: Array<FacetFilter | RangeFacetFilter>;
+  filters: Array<FacetFilterEventParams | RangeFacetFilterEventParams>;
   pathname: string;
   widgetId: string;
   page?: string;

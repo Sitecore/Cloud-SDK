@@ -2,10 +2,10 @@
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../consts';
 import type {
-  FacetFilter,
-  FacetFilterDTO,
-  RangeFacetFilter,
-  RangeFacetFilterDTO,
+  FacetFilterEventParams,
+  FacetFilterEventParamsDTO,
+  RangeFacetFilterEventParams,
+  RangeFacetFilterEventParamsDTO,
   SearchEventRequest,
   SearchEventRequestDTO,
   WidgetFacetClickEventParams
@@ -19,7 +19,7 @@ export class WidgetFacetClickEvent {
   protected currency?: string;
   protected language?: string;
   protected channel?: string;
-  protected filters: Array<FacetFilter | RangeFacetFilter>;
+  protected filters: Array<FacetFilterEventParams | RangeFacetFilterEventParams>;
 
   /**
    * Creates a search widget facet click event.
@@ -53,7 +53,7 @@ export class WidgetFacetClickEvent {
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.MV_0007);
   }
 
-  private _mapFiltersToDTO(): Array<FacetFilterDTO | RangeFacetFilterDTO> {
+  private _mapFiltersToDTO(): Array<FacetFilterEventParamsDTO | RangeFacetFilterEventParamsDTO> {
     return this.filters.map((filter) => {
       if (this._rangeFacetFilterTypeGuard(filter))
         return {
@@ -92,7 +92,9 @@ export class WidgetFacetClickEvent {
     };
   }
 
-  private _rangeFacetFilterTypeGuard(filter: FacetFilter | RangeFacetFilter): filter is RangeFacetFilter {
+  private _rangeFacetFilterTypeGuard(
+    filter: FacetFilterEventParams | RangeFacetFilterEventParams
+  ): filter is RangeFacetFilterEventParams {
     return 'startValue' in filter;
   }
 
