@@ -1,5 +1,6 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import type { MiddlewareRequest } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import { personalizeServer } from './personalizeServer';
@@ -128,13 +129,10 @@ describe('personalizeServer', () => {
 
     it('should throw error if settings have not been configured properly', async () => {
       jest.spyOn(coreInternalModule, 'getSettingsServer').mockImplementation(() => {
-        throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+        throw new Error(ErrorMessages.IE_0008);
       });
 
-      await expect(async () => await personalizeServer(req, personalizeData)).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0017] - You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server", and import "@sitecore-cloudsdk/personalize/server". Then, run "await CloudSDK().addPersonalize().initialize()".`
-      );
+      await expect(async () => await personalizeServer(req, personalizeData)).rejects.toThrow(ErrorMessages.IE_0017);
     });
 
     it(`should use the request.geo if personalizeData.geo is empty
@@ -483,10 +481,7 @@ describe('personalizeServer', () => {
         .mockReturnValueOnce(undefined)
         .mockReturnValueOnce(undefined);
 
-      await expect(async () => await personalizeServer(req, personalizeData)).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0017] - You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server", and import "@sitecore-cloudsdk/personalize/server". Then, run "await CloudSDK().addPersonalize().initialize()".`
-      );
+      await expect(async () => await personalizeServer(req, personalizeData)).rejects.toThrow(ErrorMessages.IE_0017);
 
       expect(Personalizer).not.toHaveBeenCalled();
     });

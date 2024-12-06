@@ -1,6 +1,7 @@
 import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
+import { ErrorMessages as UtilsErrorMessages } from '@sitecore-cloudsdk/utils';
+import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { PersonalizeData, PersonalizeIdentifierInput } from './personalizer';
 import { Personalizer } from './personalizer';
 import * as CallFlowsRequest from './send-call-flows-request';
@@ -85,24 +86,24 @@ describe('Test Personalizer Class', () => {
     it('should not throw error when friendlyId are provided', async () => {
       await new Personalizer(browserId, guestId).getInteractiveExperienceData(personalizeInputMock, settingsMock, '');
       expect(validateSpy).toHaveBeenCalledTimes(1);
-      expect(() => validateSpy).not.toThrow(`[MV-0004] "friendlyId" is required.`);
+      expect(() => validateSpy).not.toThrow(ErrorMessages.MV_0004);
       expect(sanitizeInputSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw error when friendlyId is undefined ', async () => {
       const mockData = undefined;
       personalizeInputMock.friendlyId = mockData as unknown as string;
-      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
     });
 
     it('should throw error when friendlyId is empty space string', async () => {
       personalizeInputMock.friendlyId = ' ';
-      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
     });
 
     it('should throw error when friendlyId is empty string', async () => {
       personalizeInputMock.friendlyId = '';
-      callValidation(personalizeInputMock, `[MV-0004] "friendlyId" is required.`);
+      callValidation(personalizeInputMock, ErrorMessages.MV_0004);
     });
   });
 
@@ -853,9 +854,6 @@ describe('Test Personalizer Class', () => {
     });
 
     it('should throw error if a negative number is used for timeout value', async () => {
-      const expectedErrorMessage =
-        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
-
       expect(async () => {
         await new Personalizer(browserId, guestId).getInteractiveExperienceData(
           personalizeInputMock,
@@ -865,13 +863,10 @@ describe('Test Personalizer Class', () => {
             timeout: -10
           }
         );
-      }).rejects.toThrow(expectedErrorMessage);
+      }).rejects.toThrow(UtilsErrorMessages.IV_0006);
     });
 
     it('should throw error if a float number is used for timeout value', async () => {
-      const expectedErrorMessage =
-        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.';
-
       expect(async () => {
         await new Personalizer(browserId, guestId).getInteractiveExperienceData(
           personalizeInputMock,
@@ -881,7 +876,7 @@ describe('Test Personalizer Class', () => {
             timeout: 420.69
           }
         );
-      }).rejects.toThrow(expectedErrorMessage);
+      }).rejects.toThrow(UtilsErrorMessages.IV_0006);
     });
 
     it("should call abort method of AbortController if didn't get a response in time", async () => {
@@ -913,8 +908,6 @@ describe('Test Personalizer Class', () => {
           this.name = 'AbortError';
         }
       }
-      const expectedError = '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.';
-
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       try {
@@ -925,7 +918,7 @@ describe('Test Personalizer Class', () => {
           { timeout: 0 }
         );
       } catch (error) {
-        expect((error as FetchError).message).toBe(expectedError);
+        expect((error as FetchError).message).toBe(UtilsErrorMessages.IE_0002);
       }
     });
 
@@ -937,14 +930,12 @@ describe('Test Personalizer Class', () => {
           this.name = 'AbortError';
         }
       }
-      const expectedError = '[IE-0002] Timeout exceeded. The server did not respond within the allotted time.';
-
       global.fetch = jest.fn().mockRejectedValue(new FetchError('Failed to fetch'));
 
       new Personalizer(browserId, guestId)
         .getInteractiveExperienceData(personalizeInputMock, settingsMock, window.location.search, { timeout: 100 })
         .catch((err) => {
-          expect(err.message).toEqual(expectedError);
+          expect(err.message).toEqual(UtilsErrorMessages.IE_0002);
         });
     });
 

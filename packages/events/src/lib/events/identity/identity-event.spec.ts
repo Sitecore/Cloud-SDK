@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+
 /* eslint-disable multiline-comment-style */
 import type * as core from '@sitecore-cloudsdk/core/internal';
-import * as sendEvent from '../send-event/sendEvent';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../../consts';
 import { BaseEvent } from '../base-event';
+import { MAX_EXT_ATTRIBUTES } from '../consts';
+import * as sendEvent from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
-import { MAX_EXT_ATTRIBUTES } from '../consts';
 
 jest.mock('../base-event');
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -81,7 +83,7 @@ describe('Test Identity', () => {
           sendEvent: sendEvent.sendEvent,
           settings: settingsMock
         })
-    ).not.toThrow(`[MV-0003] "identifiers" is required.`);
+    ).not.toThrow(ErrorMessages.MV_0003);
 
     expect(data.city).toEqual(undefined);
     expect(data.country).toEqual(undefined);
@@ -158,7 +160,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock
       });
-    }).toThrow(`[MV-0003] "identifiers" is required.`);
+    }).toThrow(ErrorMessages.MV_0003);
   });
 
   it('Should throw error when an invalid email parameter is passed', () => {
@@ -184,7 +186,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock
       });
-    }).toThrow('[IV-0003] Incorrect value for "email". Set the value to a valid email address.');
+    }).toThrow(ErrorMessages.IV_0003);
   });
 
   it('should not throw error when the identifiers has object', () => {
@@ -195,7 +197,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock
       });
-    }).not.toThrow(`[MV-0003] "identifiers" is required.`);
+    }).not.toThrow(ErrorMessages.MV_0003);
   });
 
   it('Should make all values to Title Case', () => {
@@ -368,7 +370,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock
       }).send();
-    }).toThrow(`[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.`);
+    }).toThrow(ErrorMessages.IV_0002);
   });
 
   it('Should throw an error if expiry date has invalid date format', () => {
@@ -382,7 +384,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings: settingsMock
       }).send();
-    }).toThrow(`[IV-0004] Incorrect value for "expiryDate". Format the value according to ISO 8601.`);
+    }).toThrow(ErrorMessages.IV_0004);
   });
 
   it('should send a identity event with an ext property containing extension data when passed', () => {
@@ -436,8 +438,6 @@ describe('Test Identity', () => {
   });
 
   it('should throw an error when more than 50 ext attributes are passed', () => {
-    const extErrorMessage =
-      '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
     const identityData = {
       channel: 'WEB',
       city: 'city',
@@ -474,12 +474,10 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings
       }).send();
-    }).toThrow(extErrorMessage);
+    }).toThrow(ErrorMessages.IV_0005);
   });
 
   it('should not throw an error when no more than 50 ext attributes are passed', () => {
-    const extErrorMessage =
-      '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
     const identityData = {
       channel: 'WEB',
       city: 'city',
@@ -515,7 +513,7 @@ describe('Test Identity', () => {
         sendEvent: sendEvent.sendEvent,
         settings
       }).send();
-    }).not.toThrow(extErrorMessage);
+    }).not.toThrow(ErrorMessages.IV_0005);
   });
 
   it('should not call flatten object method when no extension data is passed', () => {

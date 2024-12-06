@@ -1,8 +1,8 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages } from '../../consts';
+import type { BrowserSettings } from '../../types';
 import * as initModule from './initializer';
 import { awaitInit, getSettings, init } from './initializer';
-import type { BrowserSettings } from '../../types';
-import { ErrorMessages } from '../../consts';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -105,10 +105,7 @@ describe('Browser Initialization and Settings Retrieval', () => {
 
     await expect(async () => {
       await init(browserSettings);
-    }).rejects.toThrow(
-      // eslint-disable-next-line max-len
-      `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`
-    );
+    }).rejects.toThrow(ErrorMessages.IE_0001);
   });
 });
 

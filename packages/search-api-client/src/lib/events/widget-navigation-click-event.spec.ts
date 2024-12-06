@@ -44,7 +44,7 @@ describe('widget navigation event class', () => {
       language: 'TEST'
     };
 
-    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new WidgetNavigationClickEvent(invalidWidgetNavigationEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {

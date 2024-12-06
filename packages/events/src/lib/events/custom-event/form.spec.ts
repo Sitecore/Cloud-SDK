@@ -1,7 +1,7 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import type { BrowserSettings, EPResponse } from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
-import { PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
+import { ErrorMessages, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
 import * as initializerModule from '../../init/browser/initializer';
 import { init } from '../../init/browser/initializer';
 import { form } from './form';
@@ -102,13 +102,10 @@ describe('form function', () => {
       const getSettingsSpy = jest.spyOn(coreInternalModule, 'getSettings');
 
       getSettingsSpy.mockImplementation(() => {
-        throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+        throw new Error(ErrorMessages.IE_0008);
       });
 
-      await expect(async () => await form('1234', 'SUBMITTED', 'test')).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0014] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/events/browser". Then, run "CloudSDK().addEvents().initialize()".`
-      );
+      await expect(async () => await form('1234', 'SUBMITTED', 'test')).rejects.toThrow(ErrorMessages.IE_0014);
     });
   });
   describe('new init', () => {

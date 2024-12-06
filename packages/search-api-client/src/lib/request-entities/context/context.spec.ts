@@ -348,13 +348,13 @@ describe('context request data creation', () => {
     it('should throw an error when locale object is updated with invalid country information', () => {
       const newContext = new Context(context);
 
-      expect(() => (newContext.locale = { ...context.locale, country: 'ussss' })).toThrow(ErrorMessages.MV_0006);
+      expect(() => (newContext.locale = { ...context.locale, country: 'ussss' })).toThrow(ErrorMessages.IV_0010);
     });
 
     it('should throw an error when locale object is updated with invalid language information', () => {
       const newContext = new Context(context);
 
-      expect(() => (newContext.locale = { ...context.locale, language: 'ussss' })).toThrow(ErrorMessages.MV_0007);
+      expect(() => (newContext.locale = { ...context.locale, language: 'ussss' })).toThrow(ErrorMessages.IV_0011);
     });
 
     it(`should set the locale to undefined when removeLocale is called`, () => {
@@ -405,10 +405,10 @@ describe('context request data creation', () => {
         }
       };
 
-      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.MV_0007);
-      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.MV_0006);
-      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.MV_0006);
-      expect(() => new Context(invalidContext4)).toThrow(ErrorMessages.MV_0007);
+      expect(() => new Context(invalidContext1)).toThrow(ErrorMessages.IV_0011);
+      expect(() => new Context(invalidContext2)).toThrow(ErrorMessages.IV_0010);
+      expect(() => new Context(invalidContext3)).toThrow(ErrorMessages.IV_0010);
+      expect(() => new Context(invalidContext4)).toThrow(ErrorMessages.IV_0011);
     });
     it(`should throw an error if page.uri is missing, empty, or invalid`, () => {
       const cases = [

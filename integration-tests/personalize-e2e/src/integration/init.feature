@@ -46,12 +46,12 @@ Feature: Edge Proxy sitecoreEdgeContextId , siteName, sitecoreEdgeUrl settings i
     Scenario: Init CloudSDK without addPersonalize and call the personalize function
         Given the '/init' page is loaded without init function
         And the 'initCloudSDKWithoutAddPersonalize' button is clicked
-        Then an error is thrown: '[IE-0016] - You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/personalize/browser". Then, run "CloudSDK().addPersonalize().initialize()".'
+        Then an error is thrown: '[IE-0016] You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/personalize/browser". Then, run "CloudSDK().addPersonalize().initialize()".'
 
     # NOTE: This test is manually tested. Due to complications with writing to error.txt it wasn't straightforward to get the error message in automated way  .
     # Scenario: Developer calls the new CloudSDK from Middleware without addPersonalize and calls the personalize function
     #     Given the '/init' page is loaded with 'testID' name and 'initFromMiddlewareWithoutAddPersonalize' value query parameter
-    #     Then an error is thrown: '[IE-0017] - You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server", and import "@sitecore-cloudsdk/personalize/server". Then, run "await CloudSDK().addPersonalize().initialize()"'
+    #     Then an error is thrown: '[IE-0017] You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server", and import "@sitecore-cloudsdk/personalize/server". Then, run "await CloudSDK().addPersonalize().initialize()"'
 
     Scenario: Developer calls the init from browser when no window is present (middleware)
         Given the '/init' page is loaded with 'testID' name and 'initFromMiddlewareWithBrowserInit' value query parameter

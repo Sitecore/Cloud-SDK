@@ -26,7 +26,7 @@ export class EntityViewEvent {
 
   private _validate(currency: string, language: string) {
     if (currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language.length !== 2) throw new Error(ErrorMessages.MV_0007);
+    if (language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   toDTO() {

@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../../consts';
 import * as initializerModule from '../../init/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import { pageView } from './page-view';
@@ -145,12 +146,11 @@ describe('pageView', () => {
       jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
 
       getSettingsSpy.mockImplementation(() => {
-        throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+        throw new Error(ErrorMessages.IE_0008);
       });
 
       await expect(async () => await pageView({ ...pageViewData, extensionData })).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0014] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/events/browser". Then, run "CloudSDK().addEvents().initialize()".`
+        ErrorMessages.IE_0014
       );
     });
   });

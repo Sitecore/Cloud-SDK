@@ -1,10 +1,10 @@
-import * as core from '@sitecore-cloudsdk/core/internal';
-import * as initModule from './initializer';
-import * as utils from '@sitecore-cloudsdk/utils';
-import { EVENTS_NAMESPACE, ErrorMessages, PACKAGE_VERSION } from '../../consts';
-import { awaitInit, init } from './initializer';
 import debug from 'debug';
+import * as core from '@sitecore-cloudsdk/core/internal';
+import * as utils from '@sitecore-cloudsdk/utils';
 import packageJson from '../../../../package.json';
+import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
+import * as initModule from './initializer';
+import { awaitInit, init } from './initializer';
 
 jest.mock('../../eventStorage/eventStorage');
 jest.mock('@sitecore-cloudsdk/utils', () => {
@@ -72,7 +72,7 @@ describe('initializer', () => {
   it('should be initialized properly if all settings are configured', () => {
     expect(async () => {
       await init(settingsParams);
-    }).not.toThrow(`[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.`);
+    }).not.toThrow(ErrorMessages.IE_0004);
 
     expect(core.initCore).toHaveBeenCalledTimes(1);
   });
@@ -113,10 +113,7 @@ describe('initializer', () => {
 
     await expect(async () => {
       await init(settingsParams);
-    }).rejects.toThrow(
-      // eslint-disable-next-line max-len
-      `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`
-    );
+    }).rejects.toThrow(ErrorMessages.IE_0001);
   });
 
   it('should add the library version to window.Engage object', async () => {

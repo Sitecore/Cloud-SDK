@@ -107,7 +107,7 @@ describe('widget item event class', () => {
       language: 'TEST'
     };
 
-    expect(() => new WidgetFacetClickEvent(invalidWidgetItemEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new WidgetFacetClickEvent(invalidWidgetItemEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {

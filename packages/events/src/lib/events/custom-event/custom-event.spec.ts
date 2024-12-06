@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
 import * as sendEventModule from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
@@ -112,8 +113,6 @@ describe('CustomEvent', () => {
     });
 
     it('should throw an error when more than 50 ext attributes are passed', () => {
-      const extErrorMessage =
-        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < 51; i++) extensionData[`key${i}`] = `value${i}`;
 
@@ -124,12 +123,10 @@ describe('CustomEvent', () => {
           sendEvent: sendEventModule.sendEvent,
           settings
         });
-      }).toThrow(extErrorMessage);
+      }).toThrow(ErrorMessages.IV_0005);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
-      const extErrorMessage =
-        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
 
@@ -140,7 +137,7 @@ describe('CustomEvent', () => {
           sendEvent: sendEventModule.sendEvent,
           settings
         });
-      }).not.toThrow(extErrorMessage);
+      }).not.toThrow(ErrorMessages.IV_0005);
     });
   });
 

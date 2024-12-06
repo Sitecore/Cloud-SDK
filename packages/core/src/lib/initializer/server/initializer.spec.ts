@@ -479,10 +479,7 @@ describe('getCloudSDKSettings', () => {
 
     expect(() => {
       getCloudSDKSettings();
-    }).toThrow(
-      // eslint-disable-next-line max-len
-      '[IE-0013] - You must first initialize the Cloud SDK. Import "CloudSDK" from "@sitecore-cloudsdk/core/server", then run "await CloudSDK().initialize()".'
-    );
+    }).toThrow(ErrorMessages.IE_0013);
   });
 
   it('should return cloudSDKSettings if it is defined', () => {

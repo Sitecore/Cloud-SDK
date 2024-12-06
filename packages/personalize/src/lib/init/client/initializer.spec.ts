@@ -1,7 +1,7 @@
+import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import { awaitInit, init } from './initializer';
-import debug from 'debug';
 
 jest.mock('../../personalization/personalizer');
 jest.mock('../../personalization/send-call-flows-request');
@@ -117,10 +117,7 @@ describe('initializer', () => {
 
       await expect(async () => {
         await init(settingsParams);
-      }).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`
-      );
+      }).rejects.toThrow(ErrorMessages.IE_0001);
     });
 
     it('should expand the window.Engage object', async () => {

@@ -1,8 +1,9 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as sendEventModule from '../send-event/sendEvent';
-import * as utils from '@sitecore-cloudsdk/utils';
 import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import * as utils from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
+import * as sendEventModule from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 
@@ -283,25 +284,21 @@ describe('PageViewEvent', () => {
 
   describe('Should throw error', () => {
     it('should throw an error when more than 50 ext attributes are passed', () => {
-      const extErrorMessage =
-        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < 51; i++) extensionData[`key${i}`] = `value${i}`;
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).toThrow(extErrorMessage);
+      }).toThrow(ErrorMessages.IV_0005);
     });
 
     it('should not throw an error when no more than 50 ext attributes are passed', () => {
-      const extErrorMessage =
-        '[IV-0005] "extensionData" supports maximum 50 attributes. Reduce the number of attributes.';
       const extensionData: { [key: string]: string } = {};
       for (let i = 0; i < MAX_EXT_ATTRIBUTES; i++) extensionData[`key${i}`] = `value${i}`;
 
       expect(() => {
         callPageViewEvent(pageViewData, id, settings, extensionData);
-      }).not.toThrow(extErrorMessage);
+      }).not.toThrow(ErrorMessages.IV_0005);
     });
   });
 

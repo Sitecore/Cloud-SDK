@@ -1,7 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+
 /* eslint-disable @typescript-eslint/naming-convention */
-import { MAX_EXT_ATTRIBUTES } from './events/consts';
 import packageJson from '../../package.json';
+import { MAX_EXT_ATTRIBUTES } from './events/consts';
 
 export const EVENTS_NAMESPACE = 'sitecore-cloudsdk:events';
 export const PACKAGE_VERSION = packageJson.version;
@@ -18,6 +19,7 @@ export enum ErrorMessages {
   IE_0001 = `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`,
   IE_0004 = '[IE-0004] You must first initialize the "events/browser" module. Run the "init" function.',
   IE_0005 = '[IE-0005] You must first initialize the "events/server" module. Run the "init" function.',
+  IE_0008 = '[IE-0008] You must first initialize the "core" package. Run the "init" function.',
   IE_0014 = '[IE-0014] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/events/browser". Then, run "CloudSDK().addEvents().initialize()".',
   IE_0015 = '[IE-0015] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server" and import "@sitecore-cloudsdk/events/server". Then, run "await CloudSDK().addEvents().initialize()".',
   IV_0002 = '[IV-0002] Incorrect value for "dob". Format the value according to ISO 8601.',

@@ -1,8 +1,8 @@
+import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
 import type { EPCallFlowsBody } from './send-call-flows-request';
-import debug from 'debug';
 import { sendCallFlowsRequest } from './send-call-flows-request';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
@@ -258,27 +258,23 @@ describe('sendCallFlowsRequest', () => {
 
     it('should throw [IV-0006] when we pass negative timeout value', async () => {
       const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
-        throw new Error(
-          '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
-        );
+        throw new Error(utils.ErrorMessages.IV_0006);
       });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow(
-        '[IV-0006] Incorrect value for "timeout". Set the value to an integer greater than or equal to 0.'
-      );
+      }).rejects.toThrow(utils.ErrorMessages.IV_0006);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 
     it('should throw [IE-0002] when we get an AbortError', async () => {
       const fetchWithTimeoutSpy = jest.spyOn(utils, 'fetchWithTimeout').mockImplementationOnce(() => {
-        throw new Error('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+        throw new Error(utils.ErrorMessages.IE_0002);
       });
 
       await expect(async () => {
         await sendCallFlowsRequest(personalizeData, settingsObj, { timeout: -100 });
-      }).rejects.toThrow('[IE-0002] Timeout exceeded. The server did not respond within the allotted time.');
+      }).rejects.toThrow(utils.ErrorMessages.IE_0002);
       expect(fetchWithTimeoutSpy).toHaveBeenCalledTimes(1);
     });
 

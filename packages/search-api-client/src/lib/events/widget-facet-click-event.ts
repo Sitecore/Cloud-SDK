@@ -50,7 +50,7 @@ export class WidgetFacetClickEvent {
 
   private _validate(currency?: string, language?: string) {
     if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.MV_0007);
+    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   private _mapFiltersToDTO(): Array<FacetFilterEventParamsDTO | RangeFacetFilterEventParamsDTO> {

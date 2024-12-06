@@ -85,7 +85,7 @@ describe('widget suggestion click event class', () => {
       language: 'TEST'
     };
 
-    expect(() => new WidgetSuggestionClickEvent(invalidWidgetSuggestionClickEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new WidgetSuggestionClickEvent(invalidWidgetSuggestionClickEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {

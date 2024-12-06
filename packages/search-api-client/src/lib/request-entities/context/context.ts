@@ -168,8 +168,8 @@ export class Context {
   private _validateContextLocale(locale?: LocaleData): void {
     if (!locale) return;
 
-    if (locale.country.length !== 2) throw new Error(ErrorMessages.MV_0006);
-    if (locale.language.length !== 2) throw new Error(ErrorMessages.MV_0007);
+    if (locale.country.length !== 2) throw new Error(ErrorMessages.IV_0010);
+    if (locale.language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   /**

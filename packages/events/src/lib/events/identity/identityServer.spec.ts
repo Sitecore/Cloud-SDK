@@ -1,4 +1,5 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages } from '../../consts';
 // Import the function to be tested
 import { sendEvent } from '../send-event/sendEvent';
 import type { IdentityData } from './identity-event';
@@ -123,12 +124,11 @@ describe('identityServer', () => {
 
     it('should throw error if settings have not been configured properly', async () => {
       getSettingsServerSpy.mockImplementation(() => {
-        throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+        throw new Error(ErrorMessages.IE_0008);
       });
 
       await expect(async () => await identityServer(req, { ...identityData, extensionData })).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0015] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server" and import "@sitecore-cloudsdk/events/server". Then, run "await CloudSDK().addEvents().initialize()".`
+        ErrorMessages.IE_0015
       );
     });
   });
@@ -190,8 +190,7 @@ describe('identityServer', () => {
       );
 
       await expect(async () => await identityServer(req, { ...identityData, extensionData })).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0015] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server" and import "@sitecore-cloudsdk/events/server". Then, run "await CloudSDK().addEvents().initialize()".`
+        ErrorMessages.IE_0015
       );
 
       expect(IdentityEvent).not.toHaveBeenCalled();

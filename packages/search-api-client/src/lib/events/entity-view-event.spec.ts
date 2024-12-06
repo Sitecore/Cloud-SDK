@@ -1,5 +1,5 @@
-import { EntityViewEvent } from './entity-view-event';
 import { ErrorMessages } from '../consts';
+import { EntityViewEvent } from './entity-view-event';
 import type { SearchEventEntity } from './interfaces';
 
 describe('conversion event class', () => {
@@ -60,7 +60,7 @@ describe('conversion event class', () => {
       language: 'TEST'
     };
 
-    expect(() => new EntityViewEvent(invalidConversionEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new EntityViewEvent(invalidConversionEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {

@@ -1,5 +1,6 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import type { EventData } from '../events/custom-event/custom-event';
 import * as initializerModule from '../init/browser/initializer';
 import { addToEventQueue } from './addToEventQueue';
@@ -71,13 +72,10 @@ describe('addToEventQueue', () => {
       const getSettingsSpy = jest.spyOn(core, 'getSettings');
 
       getSettingsSpy.mockImplementation(() => {
-        throw new Error(`[IE-0008] You must first initialize the "core" package. Run the "init" function.`);
+        throw new Error(ErrorMessages.IE_0008);
       });
 
-      await expect(async () => await addToEventQueue(eventData)).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0014] You must first initialize the Cloud SDK and the "events" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/events/browser". Then, run "CloudSDK().addEvents().initialize()".`
-      );
+      await expect(async () => await addToEventQueue(eventData)).rejects.toThrow(ErrorMessages.IE_0014);
     });
   });
   describe('new init', () => {

@@ -1,5 +1,6 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
+import { ErrorMessages } from '../consts';
 import * as initializerModule from '../init/client/initializer';
 import { personalize } from './personalize';
 import { Personalizer } from './personalizer';
@@ -98,15 +99,10 @@ describe('personalize', () => {
       const getSettingsSpy = jest.spyOn(coreInternalModule, 'getSettings');
       jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
       getSettingsSpy.mockImplementation(() => {
-        throw new Error(
-          `[IE-0006] You must first initialize the "personalize/browser" module. Run the "init" function.`
-        );
+        throw new Error(ErrorMessages.IE_0006);
       });
 
-      await expect(async () => await personalize(personalizeData)).rejects.toThrow(
-        // eslint-disable-next-line max-len
-        `[IE-0016] - You must first initialize the Cloud SDK and the "personalize" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser" and import "@sitecore-cloudsdk/personalize/browser". Then, run "CloudSDK().addPersonalize().initialize()".`
-      );
+      await expect(async () => await personalize(personalizeData)).rejects.toThrow(ErrorMessages.IE_0016);
     });
 
     it('should call getInteractiveExperience with timeout in opts object', async () => {

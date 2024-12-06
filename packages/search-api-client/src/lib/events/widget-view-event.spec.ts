@@ -109,7 +109,7 @@ describe('widget view event class', () => {
       language: 'TEST'
     };
 
-    expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).toThrow(ErrorMessages.MV_0007);
+    expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
   it(`should throw an error if 'currency' provided is invalid`, () => {
