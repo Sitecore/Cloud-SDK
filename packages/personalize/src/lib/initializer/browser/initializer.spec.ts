@@ -143,54 +143,6 @@ describe('sideEffects', () => {
     expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
     expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
   });
-
-  it(`should not add the following methods: 
-    \`pageView\`, \`identity\`, \`form\`, \`event\`, \`addToEventQueue\`, \`processEventQueue\` and \`clearEventQueue\` 
-    to window.scCloudSDK.personalize object`, async () => {
-    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({
-      settings: {
-        webPersonalization: false
-      }
-    } as any);
-    expect(global.window.scCloudSDK).toStrictEqual({
-      personalize: {
-        version: PACKAGE_VERSION
-      }
-    });
-    await sideEffects();
-    expect(global.window.scCloudSDK.personalize.pageView).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.identity).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.form).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.event).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.addToEventQueue).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.processEventQueue).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.clearEventQueue).toBeUndefined();
-    expect(global.window.scCloudSDK.personalize.version).toEqual(PACKAGE_VERSION);
-  });
-
-  it(`should add the following methods:
-    \`pageView\`, \`identity\`, \`form\`, \`event\`, \`addToEventQueue\`, \`processEventQueue\` and \`clearEventQueue\`
-    to window.scCloudSDK.personalize object`, async () => {
-    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({
-      settings: {
-        webPersonalization: { async: true, defer: true }
-      }
-    } as any);
-    expect(global.window.scCloudSDK).toStrictEqual({
-      personalize: {
-        version: PACKAGE_VERSION
-      }
-    });
-    await sideEffects();
-    expect(global.window.scCloudSDK.personalize.pageView).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.identity).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.form).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.event).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.addToEventQueue).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.processEventQueue).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.clearEventQueue).toBeDefined();
-    expect(global.window.scCloudSDK.personalize.version).toEqual(PACKAGE_VERSION);
-  });
 });
 
 describe('addPersonalize', () => {

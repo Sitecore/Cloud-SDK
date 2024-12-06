@@ -1,4 +1,4 @@
-import { After, Before, defineStep, Then } from '@badeball/cypress-cucumber-preprocessor';
+import { After, Before, defineStep } from '@badeball/cypress-cucumber-preprocessor';
 import { loadSteps } from '@sitecore-cloudsdk/cypress-utils';
 
 (globalThis as any).statusCode = '';

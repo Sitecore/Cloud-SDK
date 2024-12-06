@@ -34,27 +34,6 @@ defineStep('web personalization settings are not injected to the window object',
     expect(win).to.have.property('scCloudSDK');
     expect(win.scCloudSDK).to.have.property('personalize');
     expect(win.scCloudSDK.personalize).not.to.have.property('settings');
-    expect(win.scCloudSDK.personalize).not.to.have.property('pageView');
-    expect(win.scCloudSDK.personalize).not.to.have.property('identity');
-    expect(win.scCloudSDK.personalize).not.to.have.property('form');
-    expect(win.scCloudSDK.personalize).not.to.have.property('event');
-    expect(win.scCloudSDK.personalize).not.to.have.property('addToEventQueue');
-    expect(win.scCloudSDK.personalize).not.to.have.property('processEventQueue');
-    expect(win.scCloudSDK.personalize).not.to.have.property('clearEventQueue');
-  });
-});
-
-defineStep('user has access to events under personalize package via the window object', () => {
-  cy.window().then((win: any) => {
-    expect(win).to.have.property('scCloudSDK');
-    expect(win.scCloudSDK).to.have.property('personalize');
-    expect(win.scCloudSDK.personalize).to.have.property('pageView');
-    expect(win.scCloudSDK.personalize).to.have.property('identity');
-    expect(win.scCloudSDK.personalize).to.have.property('form');
-    expect(win.scCloudSDK.personalize).to.have.property('event');
-    expect(win.scCloudSDK.personalize).to.have.property('addToEventQueue');
-    expect(win.scCloudSDK.personalize).to.have.property('processEventQueue');
-    expect(win.scCloudSDK.personalize).to.have.property('clearEventQueue');
   });
 });
 

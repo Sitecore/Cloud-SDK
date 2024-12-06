@@ -35,7 +35,6 @@ Feature: Developer uses web personalization
                 }
             }
             """
-        And user has access to events under personalize package via the window object
         And webExperiences are loaded to DOM
 
     Scenario: Developer initializes CloudSDK web personalization with the option set to true
@@ -62,7 +61,6 @@ Feature: Developer uses web personalization
             }
             """
         And webExperiences are loaded to DOM
-        And user has access to events under personalize package via the window object
 
     Scenario: Developer initializes CloudSDK web personalization with the option set to empty object
         Given the web personalization page is loaded
@@ -87,4 +85,3 @@ Feature: Developer uses web personalization
                 }
             }
             """
-        And user has access to events under personalize package via the window object

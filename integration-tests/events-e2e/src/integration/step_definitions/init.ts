@@ -9,9 +9,21 @@ defineStep('the scCloudSDK.events object is injected to the window object', () =
   cy.getEventsPackageVersion().then((version: string) => (eventsPackageVersion = version));
 
   cy.window().then((window: any) => {
+    const eventProperties = [
+      'pageView',
+      'identity',
+      'form',
+      'event',
+      'addToEventQueue',
+      'processEventQueue',
+      'clearEventQueue',
+      'version'
+    ];
+
     expect(window).to.have.property('scCloudSDK');
-    expect(window.scCloudSDK).to.have.property('events');
-    expect(window.scCloudSDK.events).to.have.property('version');
+    eventProperties.forEach((property) => {
+      expect(window.scCloudSDK.events).to.have.property(property);
+    });
     expect(window.scCloudSDK.events.version).to.equal(eventsPackageVersion);
   });
 });

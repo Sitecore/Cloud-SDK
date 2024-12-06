@@ -36,11 +36,24 @@ jest.mock('debug', () => {
 describe('sideEffects', () => {
   const debugMock = debug as unknown as jest.Mock;
   it('should add the library properties to window.scCloudSDK object', async () => {
+    const eventProperties = [
+      'pageView',
+      'identity',
+      'form',
+      'event',
+      'addToEventQueue',
+      'processEventQueue',
+      'clearEventQueue',
+      'version'
+    ];
+
     global.window.scCloudSDK = undefined as any;
     expect(global.window.scCloudSDK).toBeUndefined();
     await sideEffects();
-    expect(global.window.scCloudSDK.events).toBeDefined();
     expect(global.window.scCloudSDK.events.version).toEqual(PACKAGE_VERSION);
+    eventProperties.forEach((property) => {
+      expect((window.scCloudSDK.events as any)[property]).toBeDefined();
+    });
 
     expect(debugMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenLastCalledWith(EVENTS_NAMESPACE);

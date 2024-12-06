@@ -4,24 +4,15 @@ import {
   COOKIE_NAME_PREFIX,
   debug,
   enabledPackagesBrowser as enabledPackages,
-  type EPResponse,
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
   getEnabledPackageBrowser,
   type PackageContextDependencyBrowser,
   PackageInitializer
 } from '@sitecore-cloudsdk/core/internal';
 import {
-  addToEventQueue,
-  clearEventQueue,
-  event,
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
-  form,
-  identity,
-  PACKAGE_INITIALIZER_METHOD_NAME,
-  pageView,
-  processEventQueue
+  PACKAGE_INITIALIZER_METHOD_NAME
 } from '@sitecore-cloudsdk/events/browser';
-import type { EventData, IdentityData } from '@sitecore-cloudsdk/events/browser';
 import { appendScriptWithAttributes } from '@sitecore-cloudsdk/utils';
 import { PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import { getCdnUrl } from '../../web-personalization/get-cdn-url';
@@ -42,16 +33,6 @@ export async function sideEffects() {
   if (personalizeSettings.webPersonalization) {
     // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     window.scCloudSDK.personalize.settings = personalizeSettings.webPersonalization;
-    window.scCloudSDK.personalize = {
-      ...window.scCloudSDK.personalize,
-      addToEventQueue,
-      clearEventQueue,
-      event,
-      form,
-      identity,
-      pageView,
-      processEventQueue
-    };
 
     const cdnUrl = await getCdnUrl(cloudSDKSettings.sitecoreEdgeContextId, cloudSDKSettings.sitecoreEdgeUrl);
     if (cdnUrl) appendScriptWithAttributes({ async: personalizeSettings.webPersonalization.async, src: cdnUrl });
@@ -118,16 +99,5 @@ declare global {
       defer?: boolean;
     };
     version: string;
-    pageView?: () => Promise<EPResponse | null>;
-    identity?: (identityData: IdentityData) => Promise<EPResponse | null>;
-    form?: (
-      formId: string,
-      interactionType: 'VIEWED' | 'SUBMITTED',
-      componentInstanceId: string
-    ) => Promise<EPResponse | null>;
-    event?: (eventData: EventData) => Promise<EPResponse | null>;
-    addToEventQueue?: (eventData: EventData) => Promise<void>;
-    processEventQueue?: () => Promise<void>;
-    clearEventQueue?: () => Promise<void>;
   }
 }
