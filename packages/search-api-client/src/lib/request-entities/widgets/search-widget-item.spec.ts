@@ -981,4 +981,28 @@ describe('search widget item class', () => {
       });
     });
   });
+
+  describe('SearchWidgetItem getters', () => {
+    it('should get all properties', () => {
+      const query = { keyphrase: 'test' };
+      const offset = 10;
+      const facet = { all: true };
+      const sort: SearchSortOptions = { choices: true, value: [{ name: 'test' }] };
+      const suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions> = [{ name: 'test' }];
+
+      const widgetItem = new SearchWidgetItem('content', 'rfkid_qa', {
+        facet,
+        offset,
+        query,
+        sort,
+        suggestion
+      });
+
+      expect(widgetItem.query).toEqual(query);
+      expect(widgetItem.offset).toBe(offset);
+      expect(widgetItem.facet).toEqual(facet);
+      expect(widgetItem.sort).toEqual(sort);
+      expect(widgetItem.suggestion).toEqual(suggestion);
+    });
+  });
 });

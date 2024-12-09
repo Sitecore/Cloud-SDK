@@ -61,6 +61,13 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   }
 
   /**
+   * @returns The recipe property of the RecommendationWidgetItem.
+   */
+  get recipe(): Recipe | undefined {
+    return this._recommendation?.recipe;
+  }
+
+  /**
    * Sets the recipe to undefined
    */
   resetRecipe() {

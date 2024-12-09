@@ -31,6 +31,13 @@ export class WidgetItem {
     this._entity = entity;
   }
 
+  /**
+   * @returns The entity property of the WidgetItem.
+   */
+  get entity() {
+    return this._entity;
+  }
+
   private _validateEntity(entity: string) {
     if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
   }
@@ -44,6 +51,13 @@ export class WidgetItem {
   set rfkid(rfkid: string) {
     this._validateRfkId(rfkid);
     this._rfkId = rfkid;
+  }
+
+  /**
+   * @returns The rfkid property of the WidgetItem.
+   */
+  get rfkid() {
+    return this._rfkId;
   }
 
   private _validateRfkId(rfkId: string) {

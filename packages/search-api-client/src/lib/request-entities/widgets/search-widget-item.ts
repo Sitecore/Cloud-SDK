@@ -77,6 +77,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
     this._query = query;
   }
 
+  /**
+   * @returns The query property of the SearchWidgetItem.
+   */
+  get query(): QueryOptions | undefined {
+    return this._query;
+  }
+
   private _validateQuery(query: QueryOptions) {
     this._validateStringLengthInRange1To100(ErrorMessages.IV_0009, query.keyphrase);
   }
@@ -103,6 +110,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   /**
+   * @returns The facet property of the SearchWidgetItem.
+   */
+  get facet(): FacetOptions | undefined {
+    return this._facet;
+  }
+
+  /**
    * Sets the facet data to undefined
    */
   resetFacet() {
@@ -122,6 +136,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   /**
+   * @returns The offset property of the SearchWidgetItem.
+   */
+  get offset(): number | undefined {
+    return this._offset;
+  }
+
+  /**
    * Sets the offset value to undefined
    */
   resetOffset() {
@@ -137,6 +158,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   set suggestion(suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions>) {
     this._validateSuggestion(suggestion);
     this._suggestion = suggestion;
+  }
+
+  /**
+   * @returns The suggestion property of the SearchWidgetItem.
+   */
+  get suggestion(): ArrayOfAtLeastOne<SearchSuggestionOptions> | undefined {
+    return this._suggestion;
   }
 
   /**
@@ -177,6 +205,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
     this._validateSort(sort);
 
     this._sort = sort;
+  }
+
+  /**
+   * @returns The sort property of the SearchWidgetItem.
+   */
+  get sort(): SearchSortOptions | undefined {
+    return this._sort;
   }
 
   /**

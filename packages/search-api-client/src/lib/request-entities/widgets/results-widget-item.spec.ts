@@ -1,7 +1,7 @@
 import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
 import type { ArrayOfAtLeastOne, Filter } from '../filters/interfaces';
-import type { SearchRuleOptions } from './interfaces';
+import type { ContentOptions, SearchRuleOptions } from './interfaces';
 import { ResultsWidgetItem } from './results-widget-item';
 
 describe('widget item class', () => {
@@ -493,6 +493,37 @@ describe('widget item class', () => {
       });
 
       expect(mockFilter.toDTO).toHaveBeenCalledTimes(4);
+    });
+  });
+
+  describe('ResultsWidgetItem getters', () => {
+    it('should get all properties', () => {
+      const limit = 10;
+      const content: ContentOptions = { fields: ['test'] };
+      const filter = new ComparisonFilter('test', 'eq', 'te');
+      const groupBy = 'groupBy';
+      const rule: SearchRuleOptions = {
+        behaviors: false,
+        blacklist: { filter: new ComparisonFilter('test', 'eq', 'te') },
+        boost: [{ filter: new ComparisonFilter('test', 'eq', 'te'), slots: [1], weight: 10 }],
+        bury: { filter: new ComparisonFilter('test', 'eq', 'te') },
+        include: [{ filter: new ComparisonFilter('test', 'eq', 'te'), slots: [1] }],
+        pin: [{ id: '123', slot: 1 }]
+      };
+
+      const widgetItem = new ResultsWidgetItem('content', 'rfkid_qa', {
+        content,
+        filter,
+        groupBy,
+        limit,
+        rule
+      });
+
+      expect(widgetItem.content).toEqual(content);
+      expect(widgetItem.filter).toEqual(filter);
+      expect(widgetItem.groupBy).toBe(groupBy);
+      expect(widgetItem.limit).toBe(limit);
+      expect(widgetItem.rule).toEqual(rule);
     });
   });
 });

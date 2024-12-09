@@ -46,6 +46,13 @@ export class ResultsWidgetItem extends WidgetItem {
   }
 
   /**
+   * @returns The limit property of the WidgetItem.
+   */
+  get limit(): number | undefined {
+    return this._limit;
+  }
+
+  /**
    * Sets the limit to undefined
    */
   resetLimit() {
@@ -60,6 +67,13 @@ export class ResultsWidgetItem extends WidgetItem {
    */
   set content(contentOptions: ContentOptions) {
     this._content = contentOptions;
+  }
+
+  /**
+   * @returns The content property of the WidgetItem.
+   */
+  get content(): ContentOptions | undefined {
+    return this._content;
   }
 
   /**
@@ -81,6 +95,13 @@ export class ResultsWidgetItem extends WidgetItem {
   }
 
   /**
+   * @returns The groupBy property of the WidgetItem.
+   */
+  get groupBy(): string | undefined {
+    return this._groupBy;
+  }
+
+  /**
    * Sets the groupBy to undefined
    */
   resetGroupBy() {
@@ -99,6 +120,13 @@ export class ResultsWidgetItem extends WidgetItem {
   }
 
   /**
+   * @returns The filter property of the WidgetItem.
+   */
+  get filter(): Filter | undefined {
+    return this._filter;
+  }
+
+  /**
    * Sets the filter to undefined
    */
   resetFilter() {
@@ -112,6 +140,13 @@ export class ResultsWidgetItem extends WidgetItem {
     this._validateRule(rule);
 
     this._rule = rule;
+  }
+
+  /**
+   * @returns The rule property of the WidgetItem.
+   */
+  get rule(): SearchRuleOptions | undefined {
+    return this._rule;
   }
 
   /**

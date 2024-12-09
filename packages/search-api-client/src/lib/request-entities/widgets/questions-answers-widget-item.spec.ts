@@ -1,5 +1,6 @@
 import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
+import type { ExactAnswerOptions, RelatedQuestionsOptions } from './interfaces';
 import { QuestionsAnswersWidgetItem } from './questions-answers-widget-item';
 
 describe('QuestionsAnswersWidgetItem widget item class', () => {
@@ -162,6 +163,29 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
           relatedQuestions: { offset: offset as unknown as number }
         });
       }).not.toThrow();
+    });
+  });
+
+  describe('QuestionsAnswersWidgetItem getters', () => {
+    it('should get all properties', () => {
+      const exactAnswer: ExactAnswerOptions = { includeSources: true, queryTypes: ['keyword'] };
+      const keyphrase = 'test';
+      const relatedQuestions: RelatedQuestionsOptions = {
+        filter: new ComparisonFilter('test', 'eq', 'te'),
+        includeSources: true,
+        limit: 10,
+        offset: 5
+      };
+
+      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+        exactAnswer,
+        keyphrase,
+        relatedQuestions
+      });
+
+      expect(widgetItem.keyphrase).toBe('test');
+      expect(widgetItem.exactAnswer).toEqual(exactAnswer);
+      expect(widgetItem.relatedQuestions).toEqual(relatedQuestions);
     });
   });
 });

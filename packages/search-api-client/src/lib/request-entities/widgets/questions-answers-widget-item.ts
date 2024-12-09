@@ -50,6 +50,13 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
   }
 
   /**
+   * @returns The keyphrase property of the QuestionsAnswersWidgetItem.
+   */
+  get keyphrase() {
+    return this._keyphrase;
+  }
+
+  /**
    * Sets the exactAnswer for the QuestionsAnswersWidgetItem.
    * This method updates the `exactAnswer` property of the questions answers configuration.
    *
@@ -57,6 +64,13 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
    */
   set exactAnswer(exactAnswer: ExactAnswerOptions) {
     this._exactAnswer = exactAnswer;
+  }
+
+  /**
+   * @returns The exactAnswer property of the QuestionsAnswersWidgetItem.
+   */
+  get exactAnswer(): ExactAnswerOptions | undefined {
+    return this._exactAnswer;
   }
 
   /**
@@ -76,6 +90,13 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
     this._validateRelatedQuestions(relatedQuestions);
 
     this._relatedQuestions = relatedQuestions;
+  }
+
+  /**
+   * @returns The relatedQuestions property of the QuestionsAnswersWidgetItem.
+   */
+  get relatedQuestions(): RelatedQuestionsOptions | undefined {
+    return this._relatedQuestions;
   }
 
   /**

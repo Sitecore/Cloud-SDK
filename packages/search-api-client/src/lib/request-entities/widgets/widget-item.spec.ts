@@ -117,4 +117,16 @@ describe('widget item class', () => {
       expect(widgetItem.toDTO()).toEqual({ entity: 'test2', rfk_id: 'test2' });
     });
   });
+
+  describe('WidgetItem getters', () => {
+    it('should get all properties', () => {
+      const entity = 'content';
+      const rfkId = 'rfkid';
+
+      const widgetItem = new WidgetItem(entity, rfkId);
+
+      expect(widgetItem.entity).toBe(entity);
+      expect(widgetItem.rfkid).toBe(rfkId);
+    });
+  });
 });

@@ -204,4 +204,22 @@ describe('recommendation widget item class', () => {
       expect(dto.recommendations?.recipe).toBeUndefined();
     });
   });
+
+  describe('RecommendationWidgetItem getters', () => {
+    it('should get all properties', () => {
+      const recipe = { id: 'recipe-id', version: 1 };
+
+      const widgetItem = new RecommendationWidgetItem('content', 'rfkid_qa');
+
+      expect(widgetItem.recipe).toBeUndefined();
+
+      widgetItem.resetRecommendations();
+
+      expect(widgetItem.recipe).toBeUndefined();
+
+      widgetItem.recipe = recipe;
+
+      expect(widgetItem.recipe).toEqual(recipe);
+    });
+  });
 });
