@@ -18,4 +18,3 @@ Feature: Include software id header in all event requests
         Then the request with id 'sendEventFromMiddlewareWithSoftwareID' will contain the 'X-Client-Software-ID' header
         And the request with id 'sendEventFromMiddlewareWithSoftwareID' will contain 'X-Client-Software-ID' log
 
-

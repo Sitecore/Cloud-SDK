@@ -1,5 +1,3 @@
-/* eslint-disable cypress/unsafe-to-chain-command */
-/// <reference types='cypress' />
 import { Then } from '@badeball/cypress-cucumber-preprocessor';
 
 Then('all requests from previous calls have progressive requested_at values and are in correct format', () => {

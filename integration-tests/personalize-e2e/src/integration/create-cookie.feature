@@ -1,4 +1,4 @@
-Feature: Developer initialize perosnalize package with or without enable personalize cookie
+Feature: Developer initializes perosnalize package with or without enable personalize cookie
 
     Scenario Outline: Developer calls personalize from middleware with enablePersonalizeCookie set to true
         Given the 'sc_[sitecoreContextId]_personalize' domain cookie is not created

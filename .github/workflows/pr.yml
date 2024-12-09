@@ -80,8 +80,8 @@ jobs:
       - run: npm ci
       - name: Run Mutation Tests
         run: npx stryker run ./packages/${{ matrix.mutation-package }}/stryker.conf.js
-  search-api-client-e2e-tests:
-    name: Run Search API Client E2E
+  core-e2e-tests:
+    name: Run core e2e
     runs-on: ubuntu-latest
     outputs:
       affected: ${{ steps.get-affected.outputs.affected }}
@@ -94,17 +94,107 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
-      - name: Build Cypress Utils
+      - name: Build cypress utils
+        run: npx nx run cypress-utils:build
+      - name: Get affected app
+        id: get-affected
+        run: echo "affected=$(npx nx show projects --affected --with-target core-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+      - name: Run e2e tests
+        run: npx nx affected --target=core-e2e --base=remotes/origin/master --head=HEAD
+      - name: Generate core test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        run: npm run generate-e2e-core-report
+      - name: Upload core test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-e2e-report
+          path: integration-tests/core-e2e/cypress/results/
+  events-e2e-tests:
+    name: Run events e2e
+    runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.get-affected.outputs.affected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Build cypress utils
+        run: npx nx run cypress-utils:build
+      - name: Get affected app
+        id: get-affected
+        run: echo "affected=$(npx nx show projects --affected --with-target events-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+      - name: Run e2e tests
+        run: npx nx affected --target=events-e2e --base=remotes/origin/master --head=HEAD
+      - name: Generate events test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        run: npm run generate-e2e-events-report
+      - name: Upload events test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        uses: actions/upload-artifact@v4
+        with:
+          name: events-e2e-report
+          path: integration-tests/events-e2e/cypress/results/
+  personalize-e2e-tests:
+    name: Run personalize e2e
+    runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.get-affected.outputs.affected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Build cypress utils
+        run: npx nx run cypress-utils:build
+      - name: Get affected app
+        id: get-affected
+        run: echo "affected=$(npx nx show projects --affected --with-target personalize-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+      - name: Run e2e tests
+        run: npx nx affected --target=personalize-e2e --base=remotes/origin/master --head=HEAD
+      - name: Generate personalize test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        run: npm run generate-e2e-personalize-report
+      - name: Upload personalize test report
+        if: always() && steps.get-affected.outputs.affected != '[]'
+        uses: actions/upload-artifact@v4
+        with:
+          name: personalize-e2e-report
+          path: integration-tests/personalize-e2e/cypress/results/
+  search-api-client-e2e-tests:
+    name: Run search-api-client e2e
+    runs-on: ubuntu-latest
+    outputs:
+      affected: ${{ steps.get-affected.outputs.affected }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          cache: 'npm'
+      - run: npm ci
+      - name: Build cypress utils
         run: npx nx run cypress-utils:build
       - name: Get affected app
         id: get-affected
         run: echo "affected=$(npx nx show projects --affected --with-target search-api-client-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
-      - name: Run E2E Tests
+      - name: Run e2e tests
         run: npx nx affected --target=search-api-client-e2e --base=remotes/origin/master --head=HEAD
-      - name: Generate Search API Client Test Report
+      - name: Generate search-api-client test report
         if: always() && steps.get-affected.outputs.affected != '[]'
         run: npm run generate-e2e-search-api-client-report
-      - name: Upload Search API Client Test Report
+      - name: Upload search-api-client test report
         if: always() && steps.get-affected.outputs.affected != '[]'
         uses: actions/upload-artifact@v4
         with:
@@ -172,7 +262,17 @@ jobs:
     name: Check if all jobs run successfully
     runs-on: ubuntu-latest
     if: always()
-    needs: [lint-and-build, unit-test, mutation-tests, search-api-client-e2e-tests, check-pr-title]
+    needs:
+      [
+        lint-and-build,
+        unit-test,
+        mutation-tests,
+        core-e2e-tests,
+        events-e2e-tests,
+        personalize-e2e-tests,
+        search-api-client-e2e-tests,
+        check-pr-title
+      ]
     steps:
       - run: |
           if [[ "${{contains(needs.*.result, 'failure')}}" == 'true' ]]; then

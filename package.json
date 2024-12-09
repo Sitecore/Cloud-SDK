@@ -9,6 +9,9 @@
   "scripts": {
     "build": "nx affected --target=build",
     "build-all": "tsc --build",
+    "generate-e2e-core-report": "mochawesome-merge integration-tests/core-e2e/cypress/results/*.json --o integration-tests/core-e2e/cypress/results/reports/test-results.json && marge integration-tests/core-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/core-e2e/cypress/results/reports/ --inline && rm integration-tests/core-e2e/cypress/results/*.json",
+    "generate-e2e-events-report": "mochawesome-merge integration-tests/events-e2e/cypress/results/*.json --o integration-tests/events-e2e/cypress/results/reports/test-results.json && marge integration-tests/events-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/events-e2e/cypress/results/reports/ --inline && rm integration-tests/events-e2e/cypress/results/*.json",
+    "generate-e2e-personalize-report": "mochawesome-merge integration-tests/personalize-e2e/cypress/results/*.json --o integration-tests/personalize-e2e/cypress/results/reports/test-results.json && marge integration-tests/personalize-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/personalize-e2e/cypress/results/reports/ --inline && rm integration-tests/personalize-e2e/cypress/results/*.json",
     "generate-e2e-search-api-client-report": "mochawesome-merge integration-tests/search-api-client-e2e/cypress/results/*.json --o integration-tests/search-api-client-e2e/cypress/results/reports/test-results.json && marge integration-tests/search-api-client-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/search-api-client-e2e/cypress/results/reports/ --inline && rm integration-tests/search-api-client-e2e/cypress/results/*.json",
     "lint": "nx affected --target=lint",
     "mutation-local": "nx run-many --target=stryker",

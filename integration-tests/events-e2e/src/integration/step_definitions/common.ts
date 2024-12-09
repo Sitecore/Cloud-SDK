@@ -6,7 +6,6 @@ import { loadSteps } from '@sitecore-cloudsdk/cypress-utils';
 const middlewarePath = '../events-next/src/middleware.ts';
 
 beforeEach(() => {
-  (globalThis as any).errorMessage = '';
   cy.intercept(
     'POST',
     `https://${Cypress.env('HOSTNAME')}/${Cypress.env('EDGE_PROXY_VERSION')}/events/${Cypress.env(

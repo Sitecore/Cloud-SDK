@@ -118,13 +118,12 @@ Feature: Send pageView events
 
     Scenario: Developer sends a pageView event from API and sc_search is included in the body
         Given a request to api '/page-view?testID=sendPageViewEventFromAPIWithSearchData' is sent
-        Then the request with id 'sendPageViewEventFromBrowserWithSearchData' will contain the 'sc_search' in the body
-        And the request with id 'sendPageViewEventFromBrowserWithSearchData' will contain ut_api_version in the metadata
-        And the request with id 'sendPageViewEventFromBrowserWithSearchData' will contain 'sc_search' log
+        Then the request with id 'sendPageViewEventFromAPIWithSearchData' will contain the 'sc_search' in the body
+        And the request with id 'sendPageViewEventFromAPIWithSearchData' will contain ut_api_version in the metadata
+        And the request with id 'sendPageViewEventFromAPIWithSearchData' will contain 'sc_search' log
 
     Scenario:  Developer sends a pageView event from Middleware and sc_search is included in the body
         Given the '/page-view' page is loaded with 'testID' name and 'sendPageViewEventFromMiddlewareWithSearchData' value query parameter
         Then the request with id 'sendPageViewEventFromMiddlewareWithSearchData' will contain the 'sc_search' in the body
         And the request with id 'sendPageViewEventFromMiddlewareWithSearchData' will contain ut_api_version in the metadata
         And the request with id 'sendPageViewEventFromMiddlewareWithSearchData' will contain 'sc_search' log
-
