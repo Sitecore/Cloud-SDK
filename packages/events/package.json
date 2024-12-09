@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-cloudsdk/events",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "license": "Apache-2.0",
   "homepage": "https://doc.sitecore.com/xmc/en/developers/sdk/latest/cloud-sdk/index.html",
   "exports": {
@@ -16,8 +16,8 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/core": "^0.4.2",
-    "@sitecore-cloudsdk/utils": "^0.4.2"
+    "@sitecore-cloudsdk/core": "^0.4.3",
+    "@sitecore-cloudsdk/utils": "^0.4.3"
   },
   "scripts": {
     "build": "npm run build:cjs && npm run build:es",
