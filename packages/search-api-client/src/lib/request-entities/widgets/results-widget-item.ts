@@ -14,11 +14,11 @@ export class ResultsWidgetItem extends WidgetItem {
   /**
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.
-   * @param rfkId - The widget's item rfkId.
+   * @param widgetId - The widget's item id.
    * @param resultOptions - The widget's results options object.
    */
-  constructor(entity: string, rfkId: string, resultOptions?: ResultsOptions) {
-    super(entity, rfkId);
+  constructor(entity: string, widgetId: string, resultOptions?: ResultsOptions) {
+    super(entity, widgetId);
 
     this._validateNumberInRange1To100(ErrorMessages.IV_0007, resultOptions?.limit);
     this._validateGroupBy(resultOptions?.groupBy);

@@ -36,7 +36,7 @@ export enum ErrorMessages {
   MV_0005 = '[MV-0005] "userId" is required.',
   MV_0009 = '[MV-0009] You must set values for both "groupId" and "id" if you set a value for one of them.',
   MV_0010 = '[MV-0010] "entity" is required.',
-  MV_0011 = '[MV-0011] "rfkId" is required.',
+  MV_0011 = '[MV-0011] "widgetId" is required.',
   MV_0012 = '[MV-0012] The "widgetItems" array must contain a minimum of 1 item.',
   MV_0013 = '[MV-0013] You must set a value for "userId" or "uuid".'
 }

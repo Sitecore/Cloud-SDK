@@ -15,9 +15,14 @@ import { SearchWidgetItem } from './search-widget-item';
 import * as utilsModule from './utils';
 
 describe('search widget item class', () => {
+  const validWidgetItem = {
+    entity: 'test',
+    widgetId: 'test'
+  };
+
   describe('constructor', () => {
     it('should early return if passed an empty object', () => {
-      const widgetItem = new SearchWidgetItem('content', ' rfkid_7', {});
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {});
 
       const result = widgetItem.toDTO();
 
@@ -26,7 +31,7 @@ describe('search widget item class', () => {
 
     it('should set the facet when given only all value', () => {
       const expected = { all: true };
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', { facet: expected });
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, { facet: expected });
 
       const result = widgetItem.toDTO();
 
@@ -36,7 +41,9 @@ describe('search widget item class', () => {
     it('should set the facet when given only types value', () => {
       const expected = { types: [{ name: 'test' }] };
 
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', { facet: { types: [{ name: 'test' }] } });
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
+        facet: { types: [{ name: 'test' }] }
+      });
 
       const result = widgetItem.toDTO();
 
@@ -46,7 +53,7 @@ describe('search widget item class', () => {
     it('should set the facet when given only max value', () => {
       const expected = { max: 50 };
 
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', { facet: expected });
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, { facet: expected });
 
       const result = widgetItem.toDTO();
 
@@ -54,7 +61,7 @@ describe('search widget item class', () => {
     });
 
     it('should be undefined if not set', () => {
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7');
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       const result = widgetItem.toDTO();
 
       expect(result.search?.facet).toBeUndefined();
@@ -83,7 +90,7 @@ describe('search widget item class', () => {
         types: [{ name: 'test' }]
       };
 
-      const widgetItem = new SearchWidgetItem('content', 'rfkid_7', { facet: data });
+      const widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, { facet: data });
       const result = widgetItem.toDTO();
 
       expect(result.search?.facet).toEqual(expected);
@@ -97,13 +104,9 @@ describe('search widget item class', () => {
 
   describe('set facet', () => {
     let widgetItem: SearchWidgetItem;
-    const validWidgetItem = {
-      entity: 'test',
-      rfkId: 'test'
-    };
 
     beforeEach(() => {
-      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     afterEach(() => {
@@ -519,11 +522,11 @@ describe('search widget item class', () => {
     let widgetItem: SearchWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     beforeEach(() => {
-      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     afterEach(() => {
@@ -585,10 +588,10 @@ describe('search widget item class', () => {
     let widgetItem: SearchWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
     beforeEach(() => {
-      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     describe('keyphrase constructor', () => {
@@ -659,11 +662,11 @@ describe('search widget item class', () => {
       let widgetItem: SearchWidgetItem;
       const validWidgetItem = {
         entity: 'test',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
       beforeEach(() => {
-        widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+        widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
         widgetItem.query = { keyphrase: 'example', operator: 'and' };
       });
       it('resetSearchQuery should set the query property to undefined', () => {

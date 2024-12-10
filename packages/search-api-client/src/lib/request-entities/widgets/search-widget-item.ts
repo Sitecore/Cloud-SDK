@@ -27,12 +27,12 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
-   * @param rfkId - The widget's item rfkId.
+   * @param widgetId - The widget's item id.
    * @param searchOptions - The widget's search options object.
    *
    */
-  constructor(entity: string, rfkId: string, searchOptions?: SearchOptions) {
-    super(entity, rfkId, {
+  constructor(entity: string, widgetId: string, searchOptions?: SearchOptions) {
+    super(entity, widgetId, {
       content: searchOptions?.content,
       filter: searchOptions?.filter,
       groupBy: searchOptions?.groupBy,

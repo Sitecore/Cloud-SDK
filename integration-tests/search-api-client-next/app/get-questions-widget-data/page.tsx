@@ -25,7 +25,7 @@ export default function GetQuestionsWidgetData() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7","questions":{"keyphrase":"test"}}]}'
+    '{"items":[{"entity":"content","widgetId":"rfkid_7","questions":{"keyphrase":"test"}}]}'
   );
 
   const getQuestionsWidgetDataFromAPIWithValidPayload = async () => {
@@ -49,7 +49,7 @@ export default function GetQuestionsWidgetData() {
             item.questions.relatedQuestions.filter = filter;
           }
 
-          const widget = new QuestionsAnswersWidgetItem(item.entity, item.rfkId, item.questions);
+          const widget = new QuestionsAnswersWidgetItem(item.entity, item.widgetId, item.questions);
 
           return widget;
         });

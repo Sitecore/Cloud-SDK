@@ -4,6 +4,11 @@ import { LogicalFilter } from '../filters/logical-filter';
 import { RecommendationWidgetItem } from './recommendation-widget-item';
 
 describe('recommendation widget item class', () => {
+  const validWidgetItem = {
+    entity: 'content',
+    widgetId: 'rfkid_7'
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
@@ -12,7 +17,7 @@ describe('recommendation widget item class', () => {
     it('should early return if no recommendation object is passed to constructor', () => {
       const stringifySpy = jest.spyOn(JSON, 'stringify');
 
-      const widgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const widgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
 
       expect(stringifySpy).not.toHaveBeenCalled();
 
@@ -21,7 +26,7 @@ describe('recommendation widget item class', () => {
     });
 
     it('should not set the recommendations main property', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toBeUndefined();
       expect(dto.entity).toEqual('content');
@@ -29,7 +34,11 @@ describe('recommendation widget item class', () => {
     });
 
     it('should set the recommendations main property', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {});
+      const recommendationWidgetItem = new RecommendationWidgetItem(
+        validWidgetItem.entity,
+        validWidgetItem.widgetId,
+        {}
+      );
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toBeDefined();
       expect(dto.recommendations).toEqual({});
@@ -38,7 +47,7 @@ describe('recommendation widget item class', () => {
     });
 
     it('should set recommendations to an empty object when resetRecommendations is called', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
         recipe: { id: 'recipe-id', version: 1 }
       });
       recommendationWidgetItem.resetRecommendations();
@@ -108,7 +117,11 @@ describe('recommendation widget item class', () => {
   describe('recipe', () => {
     it('should not set the recipe if not provided in constructor', () => {
       const isValidRecipeSpy = jest.spyOn(RecommendationWidgetItem.prototype as any, '_validateRecipe');
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {});
+      const recommendationWidgetItem = new RecommendationWidgetItem(
+        validWidgetItem.entity,
+        validWidgetItem.widgetId,
+        {}
+      );
       const dto = recommendationWidgetItem.toDTO();
 
       expect(dto.recommendations).toEqual({});
@@ -116,7 +129,7 @@ describe('recommendation widget item class', () => {
     });
 
     it('should set the recipe with valid values via constructor', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
         recipe: { id: 'recipe-id', version: 1 }
       });
       const dto = recommendationWidgetItem.toDTO();
@@ -124,7 +137,7 @@ describe('recommendation widget item class', () => {
     });
 
     it('should set the recipe with valid values via setter', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       recommendationWidgetItem.recipe = { id: 'recipe-id', version: 2 };
       const dto = recommendationWidgetItem.toDTO();
       expect(dto.recommendations).toEqual({ recipe: { id: 'recipe-id', version: 2 } });
@@ -132,7 +145,7 @@ describe('recommendation widget item class', () => {
 
     it('should throw an error if recipe id is empty via constructor', () => {
       expect(() => {
-        new RecommendationWidgetItem('content', 'rfkid_7', {
+        new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
           recipe: { id: '', version: 1 }
         });
       }).toThrow(ErrorMessages.IV_0023);
@@ -140,7 +153,7 @@ describe('recommendation widget item class', () => {
 
     it('should throw an error if recipe id contains only whitespace via constructor', () => {
       expect(() => {
-        new RecommendationWidgetItem('content', 'rfkid_7', {
+        new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
           recipe: { id: '   ', version: 1 }
         });
       }).toThrow(ErrorMessages.IV_0023);
@@ -148,28 +161,28 @@ describe('recommendation widget item class', () => {
 
     it('should throw an error if recipe version is less than 1 via constructor', () => {
       expect(() => {
-        new RecommendationWidgetItem('content', 'rfkid_7', {
+        new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
           recipe: { id: 'recipe-id', version: 0 }
         });
       }).toThrow(ErrorMessages.IV_0024);
     });
 
     it('should throw an error if recipe id is empty via setter', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       expect(() => {
         recommendationWidgetItem.recipe = { id: '', version: 1 };
       }).toThrow(ErrorMessages.IV_0023);
     });
 
     it('should throw an error if recipe id contains only whitespace via setter', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       expect(() => {
         recommendationWidgetItem.recipe = { id: '   ', version: 1 };
       }).toThrow(ErrorMessages.IV_0023);
     });
 
     it('should throw an error if recipe version is less than 1 via setter', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       expect(() => {
         recommendationWidgetItem.recipe = { id: 'recipe-id', version: 0 };
       }).toThrow(ErrorMessages.IV_0024);
@@ -177,12 +190,12 @@ describe('recommendation widget item class', () => {
 
     it('should not throw an error if recipe is undefined in constructor', () => {
       expect(() => {
-        new RecommendationWidgetItem('content', 'rfkid_7', {});
+        new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {});
       }).not.toThrow();
     });
 
     it('should combine recipe with other properties in toDTO', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7');
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       recommendationWidgetItem.content = { fields: ['test1'] };
       recommendationWidgetItem.recipe = { id: 'recipe-id', version: 1 };
       recommendationWidgetItem.limit = 5;
@@ -195,7 +208,7 @@ describe('recommendation widget item class', () => {
     });
 
     it('should reset the recipe', () => {
-      const recommendationWidgetItem = new RecommendationWidgetItem('content', 'rfkid_7', {
+      const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId, {
         recipe: { id: 'recipe-id', version: 1 }
       });
       recommendationWidgetItem.resetRecipe();

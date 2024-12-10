@@ -22,29 +22,29 @@ describe('widget item class', () => {
     it(`should not throw an error if all properties are correct`, () => {
       const validWidgetItem = {
         entity: 'test',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId)).not.toThrow();
+      expect(() => new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId)).not.toThrow();
     });
     it(`should throw an error if the 'entity' property is empty string`, () => {
       const invalidWidgetItem = {
         entity: '',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(
+      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(
         ErrorMessages.MV_0010
       );
     });
 
-    it(`should throw an error if the 'rfkId' property is empty string`, () => {
+    it(`should throw an error if the 'widgetId' property is empty string`, () => {
       const invalidWidgetItem = {
         entity: 'test',
-        rfkId: ''
+        widgetId: ''
       };
 
-      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(
+      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(
         ErrorMessages.MV_0011
       );
     });
@@ -52,21 +52,21 @@ describe('widget item class', () => {
     it(`should throw an error if the 'entity' property is a string with empty spaces`, () => {
       const invalidWidgetItem = {
         entity: '   ',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(
+      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(
         ErrorMessages.MV_0010
       );
     });
 
-    it(`should throw an error if the 'rfkId' property is a string with empty spaces`, () => {
+    it(`should throw an error if the 'widgetId' property is a string with empty spaces`, () => {
       const invalidWidgetItem = {
         entity: 'test',
-        rfkId: '   '
+        widgetId: '   '
       };
 
-      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(
+      expect(() => new ResultsWidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(
         ErrorMessages.MV_0011
       );
     });
@@ -75,10 +75,10 @@ describe('widget item class', () => {
     it('should return the original widget item mapped', () => {
       const validWidgetItem = {
         entity: 'test',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      const result = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId).toDTO();
+      const result = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId).toDTO();
 
       expect(result).toStrictEqual(expected);
     });
@@ -88,11 +88,11 @@ describe('widget item class', () => {
     let widgetItem: ResultsWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     it('should set the limit when given a valid value', () => {
@@ -142,11 +142,11 @@ describe('widget item class', () => {
     let widgetItem: ResultsWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     it('should set content to fields array when provided an array', () => {
@@ -172,10 +172,10 @@ describe('widget item class', () => {
     let widgetItem: ResultsWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
       widgetItem.content = { fields: ['item1', 'item2'] };
     });
     it('should reset the content if resetSearchContent is called', () => {
@@ -189,11 +189,11 @@ describe('widget item class', () => {
 
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     it(`should update the 'groupBy' search property`, () => {
@@ -239,12 +239,12 @@ describe('widget item class', () => {
     let widgetItem: ResultsWidgetItem;
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     const comparisonFilter = new ComparisonFilter('price', 'lt', 100);
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     it('should get the current filter', () => {
@@ -293,7 +293,7 @@ describe('widget item class', () => {
 
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
     const validRule = {
@@ -317,7 +317,7 @@ describe('widget item class', () => {
     } as SearchRuleOptions;
 
     beforeEach(() => {
-      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+      widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
     it(`should update the 'rule' property`, () => {

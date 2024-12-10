@@ -53,45 +53,45 @@ describe('widget item class', () => {
     it(`should not throw an error if all properties are correct`, () => {
       const validWidgetItem = {
         entity: 'test',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId)).not.toThrow();
+      expect(() => new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId)).not.toThrow();
     });
     it(`should throw an error if the 'entity' property is empty string`, () => {
       const invalidWidgetItem = {
         entity: '',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(ErrorMessages.MV_0010);
     });
 
-    it(`should throw an error if the 'rfkId' property is empty string`, () => {
+    it(`should throw an error if the 'widgetId' property is empty string`, () => {
       const invalidWidgetItem = {
         entity: 'test',
-        rfkId: ''
+        widgetId: ''
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0011);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(ErrorMessages.MV_0011);
     });
 
     it(`should throw an error if the 'entity' property is a string with empty spaces`, () => {
       const invalidWidgetItem = {
         entity: '   ',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0010);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(ErrorMessages.MV_0010);
     });
 
-    it(`should throw an error if the 'rfkId' property is a string with empty spaces`, () => {
+    it(`should throw an error if the 'widgetId' property is a string with empty spaces`, () => {
       const invalidWidgetItem = {
         entity: 'test',
-        rfkId: '   '
+        widgetId: '   '
       };
 
-      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.rfkId)).toThrow(ErrorMessages.MV_0011);
+      expect(() => new WidgetItem(invalidWidgetItem.entity, invalidWidgetItem.widgetId)).toThrow(ErrorMessages.MV_0011);
     });
   });
 
@@ -99,10 +99,10 @@ describe('widget item class', () => {
     it('should return the original widget item mapped', () => {
       const validWidgetItem = {
         entity: 'test',
-        rfkId: 'test'
+        widgetId: 'test'
       };
 
-      const result = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId).toDTO();
+      const result = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId).toDTO();
 
       expect(result).toStrictEqual(expected);
     });
@@ -112,7 +112,7 @@ describe('widget item class', () => {
     it('should set the entity', () => {
       const widgetItem = new WidgetItem('test', 'test');
       widgetItem.entity = 'test2';
-      widgetItem.rfkid = 'test2';
+      widgetItem.widgetId = 'test2';
 
       expect(widgetItem.toDTO()).toEqual({ entity: 'test2', rfk_id: 'test2' });
     });
@@ -121,12 +121,12 @@ describe('widget item class', () => {
   describe('WidgetItem getters', () => {
     it('should get all properties', () => {
       const entity = 'content';
-      const rfkId = 'rfkid';
+      const widgetId = 'rfkid';
 
-      const widgetItem = new WidgetItem(entity, rfkId);
+      const widgetItem = new WidgetItem(entity, widgetId);
 
       expect(widgetItem.entity).toBe(entity);
-      expect(widgetItem.rfkid).toBe(rfkId);
+      expect(widgetItem.widgetId).toBe(widgetId);
     });
   });
 });

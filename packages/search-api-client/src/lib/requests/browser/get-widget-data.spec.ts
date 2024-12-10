@@ -1,11 +1,11 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import * as getSettingsModule from '../../init/browser/initializer';
-import * as sendPostRequestModule from '../post-request';
+import { init } from '../../init/browser/initializer';
 import { Context } from '../../request-entities/context/context';
 import { WidgetItem } from '../../request-entities/widgets/widget-item';
 import { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
+import * as sendPostRequestModule from '../post-request';
 import { getWidgetData } from './get-widget-data';
-import { init } from '../../init/browser/initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -39,10 +39,10 @@ describe('getWidgetData function', () => {
   it(`should construct the response and call sendPostRequest without context`, async () => {
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     const widgetRequest = new WidgetRequestData([widget1]);
 
     const expectedBody = JSON.stringify(widgetRequest.toDTO());
@@ -57,10 +57,10 @@ describe('getWidgetData function', () => {
   it(`should construct the response and call sendPostRequest with context`, async () => {
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     const widgetRequest = new WidgetRequestData([widget1]);
 
     const contextRequestData = new Context({ locale: { country: 'us', language: 'en' } });
@@ -79,10 +79,10 @@ describe('getWidgetData function', () => {
     jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     const widgetRequest = new WidgetRequestData([widget1]);
 
     const contextRequestData = new Context({ locale: { country: 'us', language: 'en' } });

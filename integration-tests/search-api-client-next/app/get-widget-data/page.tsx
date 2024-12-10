@@ -23,7 +23,7 @@ export default function GetWidgetData() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7" , "search": {"limit": 10, "offset": 0,  "filter": "add"}}]}'
+    '{"items":[{"entity":"content","widgetId":"rfkid_7" , "search": {"limit": 10, "offset": 0,  "filter": "add"}}]}'
   );
 
   const [inputContextData, setInputContextData] = useState('{"context":{"locale":{"country":"US","language":"EN"}}}');
@@ -48,12 +48,12 @@ export default function GetWidgetData() {
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
           if (Object.keys(item).length === 2) {
-            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
 
             return widget;
           }
 
-          const widget = new SearchWidgetItem(item.entity, item.rfkId);
+          const widget = new SearchWidgetItem(item.entity, item.widgetId);
 
           if (item.search?.limit) widget.limit = item.search.limit;
           if (item.search?.offset) widget.offset = item.search.offset;

@@ -21,7 +21,7 @@ export default function Filters() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7","search":{"filter":{"type":"eq","name":"test","value":"test"}}}]}'
+    '{"items":[{"entity":"content","widgetId":"rfkid_7","search":{"filter":{"type":"eq","name":"test","value":"test"}}}]}'
   );
 
   const getFilteredWidgetDataFromAPIWithValidPayload = async () => {
@@ -38,7 +38,7 @@ export default function Filters() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
-          const widget = new SearchWidgetItem(item.entity, item.rfkId);
+          const widget = new SearchWidgetItem(item.entity, item.widgetId);
 
           const filterOperator = item.search.filter.type;
 

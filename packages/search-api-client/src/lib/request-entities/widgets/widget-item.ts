@@ -4,20 +4,20 @@ import type { WidgetItemDTO } from './interfaces';
 
 export class WidgetItem {
   protected _entity: string;
-  protected _rfkId: string;
+  protected _widgetId: string;
 
   /**
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.
-   * @param rfkId - The widget's item rfkId.
+   * @param widgetId - The widget's item id.
    *
    */
-  constructor(entity: string, rfkId: string) {
-    this._validateRfkId(rfkId);
+  constructor(entity: string, widgetId: string) {
+    this._validateWidgetId(widgetId);
     this._validateEntity(entity);
 
     this._entity = entity;
-    this._rfkId = rfkId;
+    this._widgetId = widgetId;
   }
 
   /**
@@ -43,25 +43,25 @@ export class WidgetItem {
   }
 
   /**
-   * Sets the rfkid for the WidgetItem.
-   * This method updates the `rfkid` property of WidgetItem instance.
+   * Sets the id for the WidgetItem.
+   * This method updates the `widgetId` property of WidgetItem instance.
    *
-   * @param rfkid - The entity to set.
+   * @param widgetId - The entity to set.
    */
-  set rfkid(rfkid: string) {
-    this._validateRfkId(rfkid);
-    this._rfkId = rfkid;
+  set widgetId(widgetId: string) {
+    this._validateWidgetId(widgetId);
+    this._widgetId = widgetId;
   }
 
   /**
-   * @returns The rfkid property of the WidgetItem.
+   * @returns The id property of the WidgetItem.
    */
-  get rfkid() {
-    return this._rfkId;
+  get widgetId() {
+    return this._widgetId;
   }
 
-  private _validateRfkId(rfkId: string) {
-    if (!rfkId || rfkId.trim().length === 0) throw new Error(ErrorMessages.MV_0011);
+  private _validateWidgetId(widgetId: string) {
+    if (!widgetId || widgetId.trim().length === 0) throw new Error(ErrorMessages.MV_0011);
   }
 
   protected _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number) {
@@ -95,7 +95,7 @@ export class WidgetItem {
     return {
       entity: this._entity,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      rfk_id: this._rfkId
+      rfk_id: this._widgetId
     };
   }
 }

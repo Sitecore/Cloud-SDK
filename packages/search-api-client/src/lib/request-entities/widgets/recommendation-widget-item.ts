@@ -15,13 +15,13 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   /**
    * Creates and holds the functionality of a recommendation widget item.
    * @param entity - The widget's item entity.
-   * @param rfkId - The widget's item rfkId.
+   * @param widgetId - The widget's item id.
    * @param recommendationOptions - The widget's recommendation options object.
    */
-  constructor(entity: string, rfkId: string, recommendationOptions?: RecommendationOptions) {
+  constructor(entity: string, widgetId: string, recommendationOptions?: RecommendationOptions) {
     const { recipe, ...rest } = recommendationOptions || {};
 
-    super(entity, rfkId, rest);
+    super(entity, widgetId, rest);
 
     if (!recommendationOptions) return;
 

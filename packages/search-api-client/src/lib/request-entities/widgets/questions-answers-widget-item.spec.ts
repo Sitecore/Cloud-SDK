@@ -4,13 +4,20 @@ import type { ExactAnswerOptions, RelatedQuestionsOptions } from './interfaces';
 import { QuestionsAnswersWidgetItem } from './questions-answers-widget-item';
 
 describe('QuestionsAnswersWidgetItem widget item class', () => {
+  const qaWidgetItem = {
+    entity: 'content',
+    widgetId: 'rfkid_qa'
+  };
+
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   describe('QuestionsAnswersWidgetItem main properties with constructor', () => {
     it('should set only the mandatory properties', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', { keyphrase: 'test' });
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
+        keyphrase: 'test'
+      });
       const dto = widgetItem.toDTO();
 
       expect(dto.questions.exact_answer).toBeUndefined();
@@ -21,7 +28,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
     });
 
     it('should set the optional properties to empty objects', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
         exactAnswer: {},
         keyphrase: 'test',
         relatedQuestions: {}
@@ -33,7 +40,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
     });
 
     it('should set the optional properties to their full values', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
         exactAnswer: { includeSources: true, queryTypes: ['keyword'] },
         keyphrase: 'test',
         relatedQuestions: {
@@ -59,7 +66,9 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
 
   describe('QuestionsAnswersWidgetItem main properties with setters', () => {
     it('should set only the mandatory properties', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', { keyphrase: 'test' });
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
+        keyphrase: 'test'
+      });
 
       widgetItem.keyphrase = 'mutated';
       const dto = widgetItem.toDTO();
@@ -68,7 +77,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
     });
 
     it('should set the optional properties to empty objects', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
         keyphrase: 'test'
       });
 
@@ -82,7 +91,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
     });
 
     it('should set the optional properties to their full values', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
         keyphrase: 'test'
       });
 
@@ -110,7 +119,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
 
   describe('QuestionsAnswersWidgetItem reset functions', () => {
     it('should reset the optional properties', () => {
-      const widgetItem = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+      const widgetItem = new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
         exactAnswer: {},
         keyphrase: 'test',
         relatedQuestions: {}
@@ -133,7 +142,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
   describe('QuestionsAnswersWidgetItem validations', () => {
     it.each(['', 't'.repeat(101)])('should throw error if invalid keyphrase is provided', (keyphrase) => {
       expect(() => {
-        new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+        new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
           keyphrase: keyphrase as string
         });
       }).toThrow(ErrorMessages.IV_0009);
@@ -141,7 +150,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
 
     it.each(['t', ' t ', 't'.repeat(100)])('should not throw error if valid keyphrase is provided', (keyphrase) => {
       expect(() => {
-        new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+        new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
           keyphrase: keyphrase as string
         });
       }).not.toThrow(ErrorMessages.IV_0009);
@@ -149,7 +158,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
 
     it.each([-1])('should throw error if invalid offset is provided', (offset) => {
       expect(() => {
-        new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+        new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
           keyphrase: 'test',
           relatedQuestions: { offset: offset as unknown as number }
         });
@@ -158,7 +167,7 @@ describe('QuestionsAnswersWidgetItem widget item class', () => {
 
     it.each([0, 1, 101])('should not throw error if valid offset is provided', (offset) => {
       expect(() => {
-        new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {
+        new QuestionsAnswersWidgetItem(qaWidgetItem.entity, qaWidgetItem.widgetId, {
           keyphrase: 'test',
           relatedQuestions: { offset: offset as unknown as number }
         });

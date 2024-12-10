@@ -20,7 +20,7 @@ export default function GetSearchWidgetData() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7","search":{"facet":{"all":true,"max":50}}}]}'
+    '{"items":[{"entity":"content","widgetId":"rfkid_7","search":{"facet":{"all":true,"max":50}}}]}'
   );
 
   const getSearchWidgetDataFromAPIWithValidPayload = async () => {
@@ -39,31 +39,31 @@ export default function GetSearchWidgetData() {
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
           if (item.search?.facetSetter) {
-            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
             widget.facet = item.search.facetSetter;
             return widget;
           }
           if (item.search?.facet) {
-            return new SearchWidgetItem(item.entity, item.rfkId, { facet: item.search?.facet });
+            return new SearchWidgetItem(item.entity, item.widgetId, { facet: item.search?.facet });
           }
           if (item.search?.suggestion) {
-            return new SearchWidgetItem(item.entity, item.rfkId, { suggestion: item.search?.suggestion });
+            return new SearchWidgetItem(item.entity, item.widgetId, { suggestion: item.search?.suggestion });
           }
           if (item.search?.suggestionSetter) {
-            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
             widget.suggestion = item.search?.suggestionSetter;
             return widget;
           }
           if (item.search?.sort) {
-            return new SearchWidgetItem(item.entity, item.rfkId, { sort: item.search?.sort });
+            return new SearchWidgetItem(item.entity, item.widgetId, { sort: item.search?.sort });
           }
           if (item.search?.sortSetter) {
-            const widget = new SearchWidgetItem(item.entity, item.rfkId);
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
             widget.sort = item.search?.sortSetter;
             return widget;
           }
 
-          return new SearchWidgetItem(item.entity, item.rfkId);
+          return new SearchWidgetItem(item.entity, item.widgetId);
         });
 
     const widgetRequestData = new WidgetRequestData(widgets);

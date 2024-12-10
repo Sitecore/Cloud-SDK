@@ -25,7 +25,7 @@ export default function GetRecommendationWidgetData() {
   }, []);
 
   const [inputWidgetItemsData, setInputWidgetItemsData] = useState(
-    '{"items":[{"entity":"content","rfkId":"rfkid_7","recommendations":{}}]}'
+    '{"items":[{"entity":"content","widgetId":"rfkid_7","recommendations":{}}]}'
   );
 
   const getRecommendationWidgetDataFromAPIWithValidPayload = async () => {
@@ -43,7 +43,7 @@ export default function GetRecommendationWidgetData() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
-          const widget = new RecommendationWidgetItem(item.entity, item.rfkId, item.recommendations);
+          const widget = new RecommendationWidgetItem(item.entity, item.widgetId, item.recommendations);
           const filterOperator = item.recommendations?.filter?.type;
 
           if (!filterOperator) return widget;
@@ -72,7 +72,7 @@ export default function GetRecommendationWidgetData() {
     const widgets = !parsedInputWidgetItemsData.items
       ? []
       : parsedInputWidgetItemsData.items.map((item: any) => {
-          const widget = new RecommendationWidgetItem(item.entity, item.rfkId, item.recommendations);
+          const widget = new RecommendationWidgetItem(item.entity, item.widgetId, item.recommendations);
 
           if (!item.recommendations?.rule) return widget;
 

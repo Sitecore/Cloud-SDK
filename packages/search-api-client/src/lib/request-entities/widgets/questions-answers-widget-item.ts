@@ -16,11 +16,11 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
   /**
    * Creates and holds the functionality of a questions answers widget item.
    * @param entity - The widget's item entity.
-   * @param rfkId - The widget's item rfkId.
+   * @param widgetId - The widget's item id.
    * @param questionsAnswersOptions - The widget's questions answers options object.
    */
-  constructor(entity: string, rfkId: string, questionsAnswersOptions: QuestionsAnswersOptions) {
-    super(entity, rfkId);
+  constructor(entity: string, widgetId: string, questionsAnswersOptions: QuestionsAnswersOptions) {
+    super(entity, widgetId);
 
     this._validateStringLengthInRange1To100(ErrorMessages.IV_0009, questionsAnswersOptions.keyphrase);
     this._keyphrase = questionsAnswersOptions.keyphrase;

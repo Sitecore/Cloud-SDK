@@ -61,10 +61,10 @@ describe('getWidgetDataServer', () => {
 
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     const widgetRequest = new WidgetRequestData([widget1]);
 
     const expectedBody = JSON.stringify(widgetRequest.toDTO());
@@ -94,10 +94,10 @@ describe('getWidgetDataServer', () => {
 
     const validWidgetItem = {
       entity: 'test',
-      rfkId: 'test'
+      widgetId: 'test'
     };
 
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.rfkId);
+    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     const widgetRequest = new WidgetRequestData([widget1]);
 
     const expectedBody = JSON.stringify(widgetRequest.toDTO());
