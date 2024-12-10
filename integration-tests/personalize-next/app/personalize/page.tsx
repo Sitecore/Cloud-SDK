@@ -20,7 +20,6 @@ export default function PersonalizeCall() {
 
   const [personalizeData, setPersonalizetData] = useState<any>({
     channel: 'WEB',
-    currency: 'EUR',
     language: 'EN',
     page: 'personalize'
   });

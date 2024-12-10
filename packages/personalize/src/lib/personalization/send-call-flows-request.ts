@@ -121,7 +121,7 @@ export interface EPCallFlowsBody {
   identifiers?: EPIdentifier;
   channel: string;
   clientKey: string;
-  currencyCode: string;
+  currencyCode?: string;
   language: string | undefined;
   params?: EPCallFlowsParams;
   pointOfSale: string;

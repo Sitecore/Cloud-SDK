@@ -135,7 +135,7 @@ export interface PersonalizeGeolocation {
  */
 export interface PersonalizeData {
   channel: string;
-  currency: string;
+  currency?: string;
   email?: string;
   friendlyId: string;
   geo?: PersonalizeGeolocation;
