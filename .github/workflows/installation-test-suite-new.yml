@@ -39,7 +39,7 @@ jobs:
           cd ../my-next-app          
           npm install cypress
           cp -r $GITHUB_WORKSPACE/tools/testing_resources/installation-test/cypress-template/*  ./          
-          mv ./cypress/e2e/sanity-test-template.txt ./cypress/e2e/test.cy.js
+          mv ./cypress/e2e/sanity-test-template.ts ./cypress/e2e/test.cy.js
           mv ./cypress-config.txt ./cypress.config.js
           npm install --save-dev start-server-and-test
           npm pkg set 'scripts.test'='npx cypress run' 'scripts.start-server'='npx next dev' 'scripts.ci'='npx start-server-and-test start-server 3000 test'
@@ -51,8 +51,8 @@ jobs:
           npm link @sitecore-cloudsdk/events --save
           npm link @sitecore-cloudsdk/personalize --save
           npm link @sitecore-cloudsdk/search-api-client --save
-          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/page-template.txt ./pages/index.tsx
-          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/middleware-template.txt ./middleware.ts
+          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/page-template.tsx ./pages/index.tsx
+          cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/middleware-template.ts ./middleware.ts
       - name: Build Next app
         run: |
           cd ../my-next-app
