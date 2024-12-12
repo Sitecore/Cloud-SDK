@@ -15,6 +15,7 @@ import {
 } from '@sitecore-cloudsdk/events/browser';
 import { appendScriptWithAttributes } from '@sitecore-cloudsdk/utils';
 import { PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
+import { personalize } from '../../personalization/personalize';
 import { getCdnUrl } from '../../web-personalization/get-cdn-url';
 import { createPersonalizeCookie } from './createPersonalizeCookie';
 import type { BrowserSettings, PersonalizeSettings, WebPersonalizationSettings } from './interfaces';
@@ -26,6 +27,7 @@ export async function sideEffects() {
   window.scCloudSDK = {
     ...window.scCloudSDK,
     personalize: {
+      personalize,
       version: PACKAGE_VERSION
     }
   };
@@ -94,6 +96,7 @@ declare module '@sitecore-cloudsdk/core/browser' {
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Personalize {
+    personalize?: typeof personalize;
     settings?: {
       async?: boolean;
       defer?: boolean;

@@ -101,6 +101,7 @@ describe('sideEffects', () => {
     expect(global.window.scCloudSDK.personalize).toBeDefined();
     expect(global.window.scCloudSDK.personalize.version).toEqual(PACKAGE_VERSION);
     expect(global.window.scCloudSDK.personalize.settings).toEqual({ async: true, defer: false });
+    expect(global.window.scCloudSDK.personalize.personalize).toBeDefined();
     expect(appendScriptWithAttributesMock).toHaveBeenCalledWith({ async: true, src: 'https://test' });
     expect(debugMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
