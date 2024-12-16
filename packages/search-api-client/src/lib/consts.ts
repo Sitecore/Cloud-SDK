@@ -34,6 +34,7 @@ export enum ErrorMessages {
   IV_0027 = '[IV-0027] Incorrect value for pin item "id". Set the value to a non-empty string.',
   IV_0028 = '[IV-0028] Incorrect value for "slot". Set the value to an integer greater than or equal to 0.',
   MV_0005 = '[MV-0005] "userId" is required.',
+  MV_0006 = '[MV-0006] "context.page.uri" is required.',
   MV_0009 = '[MV-0009] You must set values for both "groupId" and "id" if you set a value for one of them.',
   MV_0010 = '[MV-0010] "entity" is required.',
   MV_0011 = '[MV-0011] "widgetId" is required.',

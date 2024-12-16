@@ -103,6 +103,26 @@ describe('context request data creation', () => {
       expect(isValidLocationSpy).toHaveBeenCalledTimes(1);
     });
 
+    it('should be available through the getter', () => {
+      const geo = { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } };
+      const context = new Context({ geo });
+
+      expect(context.geo).toEqual(geo);
+    });
+
+    it(`should update geo without location`, () => {
+      const isValidLocationSpy = jest
+        .spyOn(utils, 'isValidLocation')
+        .mockReturnValue({ latitude: true, longitude: true });
+
+      const context = new Context({ geo: { ip: '1.1.1.1', location: { latitude: -40, longitude: 40 } } });
+      context.geo = { ip: '2.2.2.2' };
+
+      const result = context.toDTO().context.geo?.location;
+
+      expect(result).toBeUndefined();
+      expect(isValidLocationSpy).toHaveBeenCalledTimes(1);
+    });
     describe('location', () => {
       let context: Context;
       const invalidLons = [-190, 190];
@@ -191,6 +211,13 @@ describe('context request data creation', () => {
       expect(contextInstance.campaign).toBeUndefined();
     });
 
+    it('should be available through the getter', () => {
+      const campaign = { campaign: 'campaign' };
+      contextInstance.campaign = campaign as any;
+
+      expect(contextInstance.campaign).toEqual(campaign);
+    });
+
     it(`should be present in dto if at least one attribute is set`, () => {
       contextInstance.campaign = { campaign: 'campaign' };
 
@@ -241,6 +268,13 @@ describe('context request data creation', () => {
       expect(contextInstance.browser).toBeUndefined();
     });
 
+    it('should be available through the getter', () => {
+      const browser = { userAgent: 'Browser 1234' };
+      contextInstance.browser = browser as any;
+
+      expect(contextInstance.browser).toEqual(browser);
+    });
+
     it(`should be present in dto if at least one attribute is set`, () => {
       contextInstance.browser = { userAgent: 'Browser 1234' };
 
@@ -278,6 +312,13 @@ describe('context request data creation', () => {
       expect(contextInstance.ids).toBeUndefined();
     });
 
+    it('should be available through the getter', () => {
+      const ids = { testProp: ['testProp 1234'] };
+      contextInstance.ids = ids as any;
+
+      expect(contextInstance.ids).toEqual(ids);
+    });
+
     it(`should be present in dto if at least one attribute is set`, () => {
       contextInstance.ids = { testProp: ['testProp 1234'] };
       expect(contextInstance.toDTO().context.ids).toBeDefined();
@@ -301,6 +342,13 @@ describe('context request data creation', () => {
       expect(contextInstance.store).toBeUndefined();
     });
 
+    it('should be available through the getter', () => {
+      const store = { groupId: '123', id: '2' };
+      contextInstance.store = store;
+
+      expect(contextInstance.store).toEqual(store);
+    });
+
     it(`should be present in dto if at least one attribute is set`, () => {
       contextInstance.store = { groupId: '123', id: '2' };
 
@@ -318,9 +366,16 @@ describe('context request data creation', () => {
     });
   });
 
-  describe('locale set and reset', () => {
+  describe('locale', () => {
     it(`should be undefined if not set`, () => {
       expect(contextInstance.locale).toBeUndefined();
+    });
+
+    it('should be available through the getter', () => {
+      const locale = { country: 'US', language: 'us' };
+      contextInstance.locale = locale;
+
+      expect(contextInstance.locale).toEqual(locale);
     });
 
     it(`should locale object be present in dto if both attributes are set`, () => {
@@ -475,6 +530,13 @@ describe('context request data creation', () => {
       expect(contextInstance.user).toBeUndefined();
     });
 
+    it('should be available through the getter', () => {
+      const user = { custom: { key: 'value' }, userId: 'user123', uuid: 'uuid123' };
+      contextInstance.user = user;
+
+      expect(contextInstance.user).toEqual(user);
+    });
+
     it('should throw an error if neither userId nor uuid are provided', () => {
       const user = { custom: { key: 'value' } };
       expect(() => {
@@ -528,6 +590,35 @@ describe('context request data creation', () => {
       const ctx = new Context({ user });
       ctx.removeUser();
       expect(ctx.user).toBeUndefined();
+    });
+  });
+
+  describe('page', () => {
+    it('should be undefined if not set', () => {
+      expect(contextInstance.page).toBeUndefined();
+    });
+
+    it('should be available through the getter', () => {
+      const page = { uri: '/home' };
+      contextInstance.page = page;
+
+      expect(contextInstance.page).toEqual(page);
+    });
+
+    it('should be present in dto if set', () => {
+      const page = { uri: '/home' };
+      contextInstance.page = page;
+
+      expect(contextInstance.toDTO().context.page).toEqual(page);
+    });
+
+    it('should set the page to undefined when removePage is called', () => {
+      contextInstance.page = { uri: '/home' };
+      contextInstance.removePage();
+
+      const result = contextInstance.toDTO().context.page;
+
+      expect(result).toBeUndefined();
     });
   });
 });

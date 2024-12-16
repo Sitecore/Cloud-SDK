@@ -1,4 +1,5 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages } from '../../consts';
 import * as getSettingsModule from '../../init/server/initializer';
 import { initServer } from '../../init/server/initializer';
 import { Context } from '../../request-entities/context/context';
@@ -98,5 +99,30 @@ describe('getPageWidgetDataServer', () => {
 
     expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
     expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, newSettings);
+  });
+
+  it('should throw an error if context is missing page property', async () => {
+    const context = new Context({});
+
+    await expect(getPageWidgetDataServer(context)).rejects.toThrow(ErrorMessages.MV_0006);
+  });
+
+  it('should construct the request and call sendPostRequest with context when page is properly passed', async () => {
+    const settings = {
+      siteName: 'siteName',
+      sitecoreEdgeContextId: 'sitecoreEdgeContextId,com',
+      sitecoreEdgeUrl: 'asd'
+    };
+
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValue(settings as any);
+
+    const context = new Context({ page: { uri: '/test' } });
+    const expectedBody = JSON.stringify(context.toDTO());
+
+    await getPageWidgetDataServer(context);
+
+    expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
+    expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, settings);
   });
 });

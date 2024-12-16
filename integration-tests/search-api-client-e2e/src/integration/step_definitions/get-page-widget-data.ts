@@ -38,3 +38,12 @@ defineStep('the pathname parameter is {string}', (pathname: string) => {
     });
   }
 });
+
+defineStep('the context parameter is {string}', (context: string) => {
+  if (context) {
+    cy.get('[data-testid="contextInput"]').clear();
+    cy.get('[data-testid="contextInput"]').type(context, {
+      parseSpecialCharSequences: false
+    });
+  }
+});

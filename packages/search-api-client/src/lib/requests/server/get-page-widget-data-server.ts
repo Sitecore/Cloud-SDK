@@ -1,14 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Pathname, ServerSettings } from '../../types';
 import {
   getCloudSDKSettingsServer as getCloudSDKSettings,
   getEnabledPackageServer as getEnabledPackage
 } from '@sitecore-cloudsdk/core/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
-import { Context } from '../../request-entities/context/context';
-import { PACKAGE_NAME } from '../../consts';
-import type { SearchEndpointResponse } from '../post-request';
+import { ErrorMessages, PACKAGE_NAME } from '../../consts';
 import { getSettings } from '../../init/server/initializer';
+import { Context } from '../../request-entities/context/context';
+import type { Pathname } from '../../types';
+import type { SearchEndpointResponse } from '../post-request';
 import { sendPostRequest } from '../post-request';
 
 /**
@@ -16,13 +15,24 @@ import { sendPostRequest } from '../post-request';
  * @param pathname - The path of the URL.
  * @returns The response object.
  */
-export async function getPageWidgetDataServer(pathname: Pathname): Promise<SearchEndpointResponse | null> {
-  let settings: ServerSettings | CloudSDKSettings;
+export async function getPageWidgetDataServer(pathname: Pathname): Promise<SearchEndpointResponse | null>;
+/**
+ * This function requests widget data for a page from server side.
+ * @param context - The context.
+ * @returns The response object.
+ */
+export async function getPageWidgetDataServer(context: Context): Promise<SearchEndpointResponse | null>;
+export async function getPageWidgetDataServer(param: Pathname | Context): Promise<SearchEndpointResponse | null> {
+  const settings = getEnabledPackage(PACKAGE_NAME) ? getCloudSDKSettings() : getSettings();
 
-  if (getEnabledPackage(PACKAGE_NAME)) settings = getCloudSDKSettings();
-  else settings = getSettings();
+  let context: Context;
 
-  const context = new Context({ page: { uri: pathname } });
+  if (param instanceof Context) {
+    if (!param.page) throw new Error(ErrorMessages.MV_0006);
+
+    context = param;
+  } else context = new Context({ page: { uri: param } });
+
   const contextRequestBody = context.toDTO();
   const body = JSON.stringify({ ...contextRequestBody });
 

@@ -1,8 +1,8 @@
-import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
-import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import type { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import { getPageWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
+import { CloudSDK } from '@sitecore-cloudsdk/core/server';
+import { Context, getPageWidgetData } from '@sitecore-cloudsdk/search-api-client/server';
+import { decorateFetch, resetFetch } from '../../../src/e2e-decorators/fetch-decorator';
 
 export async function GET(req: NextRequest, res: NextResponse) {
   const searchParams = req.nextUrl.searchParams;
@@ -25,6 +25,18 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .initialize();
 
       await getPageWidgetData('/test');
+      break;
+    case 'getPageWidgetDataFromAPIWithValidContextPayload':
+      await CloudSDK(req, res, {
+        enableServerCookie: true,
+        siteName: 'TestSite',
+        sitecoreEdgeContextId: process.env.CONTEXT_ID as string
+      })
+        .addEvents()
+        .addSearch({ userId: 'test' })
+        .initialize();
+
+      await getPageWidgetData(new Context({ page: { uri: '/test' } }));
       break;
   }
   resetFetch();

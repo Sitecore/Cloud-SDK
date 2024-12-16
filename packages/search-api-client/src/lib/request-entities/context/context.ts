@@ -48,25 +48,26 @@ export class Context {
   }
 
   /**
-   * Gets the user data.
-   * @returns The user data.
+   * Sets the campaign data.
+   * @param campaign - The new value to set.
+   *
    */
-  get user(): UserData | undefined {
-    return this._user;
+  set campaign(campaign: CampaignData) {
+    this._campaign = campaign;
   }
 
   /**
-   * Sets the user data.
-   * @param user - The new value to set.
+   * @returns The campaign data.
    */
-  set user(user: UserData | undefined) {
-    this._validateUser(user);
-    this._user = user;
+  get campaign(): CampaignData | undefined {
+    return this._campaign;
   }
 
-  /** Simply removes the user data from the context */
-  removeUser() {
-    this._user = undefined;
+  /**
+   * Sets the campaign data to undefined
+   */
+  removeCampaign() {
+    this._campaign = undefined;
   }
 
   /**
@@ -81,16 +82,75 @@ export class Context {
   }
 
   /**
+   * @returns The locale data.
+   */
+  get locale(): LocaleData | undefined {
+    return this._locale;
+  }
+
+  /**
    * Sets the campaign data to undefined
    */
   removeLocale() {
     this._locale = undefined;
   }
+
   /**
-   * Sets the browser data
+   * Sets the page data.
+   * @param page - The new value to set.
+   *
    */
-  set browser(browser: BrowserData) {
-    this._browser = browser;
+  set page(page: PageData) {
+    this._validatePage(page);
+
+    this._page = page;
+  }
+
+  /**
+   * @returns The page data.
+   */
+  get page(): PageData | undefined {
+    return this._page;
+  }
+
+  /**
+   * Sets the page data to undefined
+   */
+  removePage() {
+    this._page = undefined;
+  }
+
+  /**
+   * Validate context locale object.
+   */
+  private _validateContextLocale(locale?: LocaleData): void {
+    if (!locale) return;
+
+    if (locale.country.length !== 2) throw new Error(ErrorMessages.IV_0010);
+    if (locale.language.length !== 2) throw new Error(ErrorMessages.IV_0011);
+  }
+
+  /**
+   * Sets the store data.
+   * @param store - The new value to set.
+   *
+   */
+  set store(store: StoreData) {
+    this._store = store;
+  }
+
+  /**
+   * @returns The store data.
+   */
+  get store(): StoreData | undefined {
+    return this._store;
+  }
+
+  /**
+   * Sets the store data to undefined
+   */
+  removeStore() {
+    this._store = undefined;
   }
 
   /**
@@ -105,18 +165,10 @@ export class Context {
   }
 
   /**
-   * Sets the campaign data.
-   * @param campaign - The new value to set.
-   *
+   * @returns The geo data.
    */
-  set campaign(campaign: CampaignData) {
-    this._campaign = campaign;
-  }
-  /**
-   * Sets the browser dta to undefined.
-   */
-  removeBrowser() {
-    this._browser = undefined;
+  get geo(): GeoData | undefined {
+    return this._geo;
   }
 
   /**
@@ -127,49 +179,35 @@ export class Context {
   }
 
   /**
-   * Sets the campaign data to undefined
+   * Validate location object.
    */
-  removeCampaign() {
-    this._campaign = undefined;
+  private _validateLocation(location: LocationData) {
+    const result = isValidLocation(location);
+
+    if (!result.latitude) throw new Error(ErrorMessages.IV_0012);
+
+    if (!result.longitude) throw new Error(ErrorMessages.IV_0013);
   }
 
   /**
-   * Sets the store data.
-   * @param store - The new value to set.
-   *
+   * Sets the user data.
+   * @param user - The new value to set.
    */
-  set store(store: StoreData) {
-    this._store = store;
+  set user(user: UserData | undefined) {
+    this._validateUser(user);
+    this._user = user;
   }
 
   /**
-   * Sets the store data to undefined
+   * @returns The user data.
    */
-  removeStore() {
-    this._store = undefined;
-  }
-  /**
-   * Sets the ids data.
-   * @param ids -New value for ids {@Link IdsData}
-   */
-  set ids(ids: IdsData) {
-    this._ids = ids;
-  }
-  /**
-   * Unset the value for ids.
-   */
-  removeIds() {
-    this._ids = undefined;
+  get user(): UserData | undefined {
+    return this._user;
   }
 
-  /**
-   * Validate context locale object.
-   */
-  private _validateContextLocale(locale?: LocaleData): void {
-    if (!locale) return;
-
-    if (locale.country.length !== 2) throw new Error(ErrorMessages.IV_0010);
-    if (locale.language.length !== 2) throw new Error(ErrorMessages.IV_0011);
+  /** Simply removes the user data from the context */
+  removeUser() {
+    this._user = undefined;
   }
 
   /**
@@ -182,12 +220,46 @@ export class Context {
   }
 
   /**
-   * Validate the `page` object which required a `uri` property.
-   * @param page - The page object to validate.
+   * Sets the browser data
    */
-  private _validatePage(page?: PageData): void {
-    if (!page) return;
-    if (!page.uri || typeof page.uri !== 'string' || !page.uri.trim()) throw new Error(ErrorMessages.IV_0025);
+  set browser(browser: BrowserData) {
+    this._browser = browser;
+  }
+
+  /**
+   * @returns The browser data.
+   */
+  get browser(): BrowserData | undefined {
+    return this._browser;
+  }
+
+  /**
+   * Sets the browser dta to undefined.
+   */
+  removeBrowser() {
+    this._browser = undefined;
+  }
+
+  /**
+   * Sets the ids data.
+   * @param ids -New value for ids {@Link IdsData}
+   */
+  set ids(ids: IdsData) {
+    this._ids = ids;
+  }
+
+  /**
+   * @returns The ids data.
+   */
+  get ids(): IdsData | undefined {
+    return this._ids;
+  }
+
+  /**
+   * Unset the value for ids.
+   */
+  removeIds() {
+    this._ids = undefined;
   }
 
   /**
@@ -204,12 +276,13 @@ export class Context {
     if (context.geo && context.geo.location) this._validateLocation(context.geo.location);
   }
 
-  private _validateLocation(location: LocationData) {
-    const result = isValidLocation(location);
-
-    if (!result.latitude) throw new Error(ErrorMessages.IV_0012);
-
-    if (!result.longitude) throw new Error(ErrorMessages.IV_0013);
+  /**
+   * Validate the `page` object which required a `uri` property.
+   * @param page - The page object to validate.
+   */
+  private _validatePage(page?: PageData): void {
+    if (!page) return;
+    if (!page.uri || typeof page.uri !== 'string' || !page.uri.trim()) throw new Error(ErrorMessages.IV_0025);
   }
 
   /**
