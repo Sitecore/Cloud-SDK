@@ -9,6 +9,8 @@ import type {
   QueryOptions,
   SearchDTO,
   SearchOptions,
+  SearchPersonalizationOptions,
+  SearchRankingOptions,
   SearchSortOptions,
   SearchSuggestionOptions,
   SearchSuggestionOptionsDTO,
@@ -23,6 +25,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _facet?: FacetOptions;
   private _sort?: SearchSortOptions;
   private _suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
+  private _ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
+  private _personalization?: SearchPersonalizationOptions;
 
   /**
    * Creates and holds the functionality of a search widget item.
@@ -51,18 +55,99 @@ export class SearchWidgetItem extends ResultsWidgetItem {
 
     if (searchOptions.query) {
       this._validateQuery(searchOptions.query);
-
       this._query = searchOptions.query;
     }
 
     this._validatePositiveInteger(ErrorMessages.IV_0008, searchOptions.offset);
     this._offset = searchOptions.offset;
 
+    this._validatePersonalization(searchOptions.personalization);
+    this._personalization = searchOptions.personalization;
+
+    this._validateRanking(searchOptions.ranking);
+    this._ranking = searchOptions.ranking;
+
     this._validateSort(searchOptions.sort);
     this._sort = searchOptions.sort;
 
     this._validateSuggestion(searchOptions.suggestion);
     this._suggestion = searchOptions.suggestion;
+  }
+
+  /**
+   * @param personalization - the object of the `personalization` param
+   */
+  set personalization(personalization: SearchPersonalizationOptions) {
+    this._validatePersonalization(personalization);
+    this._personalization = personalization;
+  }
+
+  /**
+   * @returns the `personalization` property of the SearchWidgetItem
+   */
+  get personalization(): SearchPersonalizationOptions | undefined {
+    return this._personalization;
+  }
+
+  /**
+   * sets the `personalization` property to undefined of the SearchWidgetItem
+   */
+  resetPersonalization(): void {
+    this._personalization = undefined;
+  }
+
+  /**
+   *
+   * @param personalization - the object of the `personalization` property
+   * @throws IV_0030 if `personalization.fields` contains an empty or whitespace string
+   * @throws IV_0031 if `personalization.ids` contains an empty string
+   */
+  private _validatePersonalization(personalization?: SearchPersonalizationOptions): void {
+    if (!personalization) return;
+
+    personalization.fields.forEach((field) => {
+      this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0030, field);
+    });
+
+    if (personalization.algorithm === 'mlt')
+      personalization.ids.forEach((id) => {
+        this._validateNonEmptyString(ErrorMessages.IV_0031, id);
+      });
+  }
+
+  /**
+   * @param ranking - the object of the `ranking` param
+   */
+  set ranking(ranking: ArrayOfAtLeastOne<SearchRankingOptions>) {
+    this._validateRanking(ranking);
+    this._ranking = ranking;
+  }
+
+  /**
+   * @returns the `ranking` property of the SearchWidgetItem
+   */
+  get ranking(): ArrayOfAtLeastOne<SearchRankingOptions> | undefined {
+    return this._ranking;
+  }
+
+  /**
+   * sets the `ranking` property to undefined of the SearchWidgetItem
+   */
+  resetRanking(): void {
+    this._ranking = undefined;
+  }
+
+  /**
+   *
+   * @param ranking - the object of the `ranking` property
+   * @throws IV_0016 if `ranking.name` contains an empty string
+   * @throws IV_0016 if `ranking.weight` is outside of range 1 ~ 100
+   */
+  private _validateRanking(ranking?: ArrayOfAtLeastOne<SearchRankingOptions>): void {
+    ranking?.forEach((rank) => {
+      this._validateNumberInRange(ErrorMessages.IV_0029, { max: 100, min: 0.1 }, rank.weight);
+      this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0016, rank.name);
+    });
   }
 
   /**
@@ -191,7 +276,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _validateSuggestion(suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>) {
     suggestion?.forEach((suggestionItem) => {
       this._validateNumberInRange1To100(ErrorMessages.IV_0014, suggestionItem.max);
-      if (!suggestionItem.name || suggestionItem.name.includes(' ')) throw new Error(ErrorMessages.IV_0016);
+      this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0016, suggestionItem.name);
     });
   }
 
@@ -243,7 +328,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       this._validateNumberInRange1To100(ErrorMessages.IV_0017, type.max);
       this._validateNumberInRange1To100(ErrorMessages.IV_0019, type.minCount);
       if (typeof type.sort === 'object' && typeof type.sort.after === 'string') {
-        if (!type.sort.after || type.sort.after.includes(' ')) throw new Error(ErrorMessages.IV_0020);
+        this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0020, type.sort.after);
         if (type.sort.name !== 'text') throw new Error(ErrorMessages.IV_0021);
       }
     });
@@ -300,6 +385,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       ...{ offset: this._offset },
       ...(this._query && { query: this._query }),
       ...(Object.values(facet).filter((value) => value !== undefined).length && { facet }),
+      ...{ personalization: this._personalization },
+      ...{ ranking: this._ranking },
       ...{ suggestion: suggestionDTO },
       ...{ sort: this._sort },
       ...resultsDTO

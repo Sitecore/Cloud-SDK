@@ -70,6 +70,23 @@ export class WidgetItem {
     throw new Error(errorMessage);
   }
 
+  /**
+   *
+   * @param errorMessage - The error message
+   * @param range - min and max range
+   * @param num - number to test
+   * @returns void
+   */
+  protected _validateNumberInRange(
+    errorMessage: ErrorMessages,
+    range: { min: number; max: number },
+    num?: number
+  ): void {
+    if (num === undefined || (num >= range.min && num <= range.max)) return;
+
+    throw new Error(errorMessage);
+  }
+
   protected _validateStringLengthInRange1To100(errorMessage: ErrorMessages, str?: string) {
     if (str === undefined || (str.trim().length >= 1 && str.length <= 100)) return;
 
@@ -84,6 +101,19 @@ export class WidgetItem {
 
   protected _validateNonEmptyString(errorMessage: ErrorMessages, str?: string) {
     if (str === undefined || str.trim().length >= 1) return;
+
+    throw new Error(errorMessage);
+  }
+
+  /**
+   * Tests if passed string is defined, is not empty string and does not contain whitespaces.
+   * @param errorMessage - Error Message
+   * @param string - the string to test
+   * @returns void
+   * @throws Error when failed
+   */
+  protected _validateNonEmptyNoWhitespaceString(errorMessage: ErrorMessages, string?: string) {
+    if (string && !string.includes(' ')) return;
 
     throw new Error(errorMessage);
   }

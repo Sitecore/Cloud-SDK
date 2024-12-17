@@ -149,6 +149,8 @@ export interface SearchOptions extends ResultsOptions {
   sort?: SearchSortOptions;
   rule?: SearchRuleOptions;
   suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
+  ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
+  personalization?: SearchPersonalizationOptions;
 }
 
 /**
@@ -160,6 +162,8 @@ export interface SearchDTO extends ResultsItemDTO {
   offset?: number;
   sort?: SearchSortOptionsDTO;
   suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptionsDTO>;
+  ranking?: ArrayOfAtLeastOne<SearchRankingOptionsDto>;
+  personalization?: SearchPersonalizationOptionsDto;
 }
 
 /**
@@ -185,6 +189,39 @@ export interface SortValueDTO {
   order?: SortingOptions;
 }
 
+/**
+ * Represents `ranking` property options of the search widget item.
+ */
+export interface SearchRankingOptions {
+  name: string;
+  weight?: number;
+}
+
+/**
+ * Represents `ranking` property options of the search widget item in DTO format.
+ */
+export interface SearchRankingOptionsDto {
+  name: string;
+  weight?: number;
+}
+
+/**
+ * Typescript restriction for the `personalization` property.
+ * if `algorithm` = affinity, `ids` should not be present.
+ */
+export type SearchPersonalizationOptions = { fields: ArrayOfAtLeastOne<string> } & (
+  | { algorithm: 'affinity' }
+  | { algorithm: 'mlt'; ids: ArrayOfAtLeastOne<string> }
+);
+
+/**
+ * Typescript restriction for the `personalization` property in DTO format.
+ * if `algorithm` = affinity, `ids` should not be present.
+ */
+export type SearchPersonalizationOptionsDto = { fields: ArrayOfAtLeastOne<string> } & (
+  | { algorithm: 'affinity' }
+  | { algorithm: 'mlt'; ids: ArrayOfAtLeastOne<string> }
+);
 /**
  * Represents the search widget item sort param.
  */

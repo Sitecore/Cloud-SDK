@@ -62,6 +62,22 @@ export default function GetSearchWidgetData() {
             widget.sort = item.search?.sortSetter;
             return widget;
           }
+          if (item.search?.personalization) {
+            return new SearchWidgetItem(item.entity, item.widgetId, { personalization: item.search?.personalization });
+          }
+          if (item.search?.personalizationSetter) {
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
+            widget.personalization = item.search?.personalizationSetter;
+            return widget;
+          }
+          if (item.search?.ranking) {
+            return new SearchWidgetItem(item.entity, item.widgetId, { ranking: item.search?.ranking });
+          }
+          if (item.search?.rankingSetter) {
+            const widget = new SearchWidgetItem(item.entity, item.widgetId);
+            widget.ranking = item.search?.rankingSetter;
+            return widget;
+          }
 
           return new SearchWidgetItem(item.entity, item.widgetId);
         });

@@ -6,6 +6,8 @@ import { LogicalFilter } from '../filters/logical-filter';
 import type {
   FacetOptions,
   FacetOptionsDTO,
+  SearchPersonalizationOptions,
+  SearchRankingOptions,
   SearchSortOptions,
   SearchSortOptionsDTO,
   SearchSuggestionOptions,
@@ -985,18 +987,321 @@ describe('search widget item class', () => {
     });
   });
 
+  describe('Personalization Testing Suite', () => {
+    const validPersonalization1: SearchPersonalizationOptions = {
+      algorithm: 'affinity',
+      fields: ['somefield']
+    };
+    const validPersonalization2: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      fields: ['somefield'],
+      ids: ['someid']
+    };
+    const validPersonalization3: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      fields: ['somefield'],
+      ids: ['someid']
+    };
+
+    const invalidPersonalization1: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      fields: ['somefield', ''],
+      ids: ['someid']
+    };
+
+    const invalidPersonalization2: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      fields: ['somefield', ' '],
+      ids: ['someid']
+    };
+    const invalidPersonalization3: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      fields: ['somefield'],
+      ids: ['']
+    };
+
+    describe('from constructor', () => {
+      it('should return valid personalization if valid personalization is given', () => {
+        const searchWidgetItem1 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization1 });
+        const actual1 = searchWidgetItem1.toDTO();
+        expect(actual1.search?.personalization).toEqual(validPersonalization1);
+
+        const searchWidgetItem2 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization2 });
+        const actual2 = searchWidgetItem2.toDTO();
+        expect(actual2.search?.personalization).toEqual(validPersonalization2);
+
+        const searchWidgetItem3 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization3 });
+        const actual3 = searchWidgetItem3.toDTO();
+        expect(actual3.search?.personalization).toEqual(validPersonalization3);
+      });
+      it('should not throw error when valid personalization is given', () => {
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: validPersonalization1 });
+        }).not.toThrow();
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: validPersonalization2 });
+        }).not.toThrow();
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: validPersonalization3 });
+        }).not.toThrow();
+      });
+      it('should return undefined if no personalization is given', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', {});
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.personalization).toBeUndefined();
+      });
+      it('should return undefined if undefined personalization is passed', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', { personalization: undefined });
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.personalization).toBeUndefined();
+      });
+      it('should throw error when invalid personalization is given', () => {
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: invalidPersonalization1 });
+        }).toThrow(ErrorMessages.IV_0030);
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: invalidPersonalization2 });
+        }).toThrow(ErrorMessages.IV_0030);
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { personalization: invalidPersonalization3 });
+        }).toThrow(ErrorMessages.IV_0031);
+      });
+      it('should reset personalization property', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', { personalization: validPersonalization1 });
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.personalization).toEqual(validPersonalization1);
+        searchWidgetItem.resetPersonalization();
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.personalization).toBeUndefined();
+      });
+    });
+
+    describe('from setter', () => {
+      let searchWidgetItem: SearchWidgetItem;
+
+      beforeEach(() => {
+        searchWidgetItem = new SearchWidgetItem('test', 'test');
+      });
+
+      it('should return valid personalization if valid personalization is given', () => {
+        searchWidgetItem.personalization = validPersonalization1;
+        const actual1 = searchWidgetItem.toDTO();
+        expect(actual1.search?.personalization).toEqual(validPersonalization1);
+
+        searchWidgetItem.personalization = validPersonalization2;
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.personalization).toEqual(validPersonalization2);
+
+        searchWidgetItem.personalization = validPersonalization3;
+        const actual3 = searchWidgetItem.toDTO();
+        expect(actual3.search?.personalization).toEqual(validPersonalization3);
+      });
+      it('should not throw error when valid personalization is given', () => {
+        expect(() => {
+          searchWidgetItem.personalization = validPersonalization1;
+        }).not.toThrow();
+        expect(() => {
+          searchWidgetItem.personalization = validPersonalization2;
+        }).not.toThrow();
+        expect(() => {
+          searchWidgetItem.personalization = validPersonalization3;
+        }).not.toThrow();
+      });
+
+      it('should throw error when invalid personalization is given', () => {
+        expect(() => {
+          searchWidgetItem.personalization = invalidPersonalization1;
+        }).toThrow(ErrorMessages.IV_0030);
+        expect(() => {
+          searchWidgetItem.personalization = invalidPersonalization2;
+        }).toThrow(ErrorMessages.IV_0030);
+        expect(() => {
+          searchWidgetItem.personalization = invalidPersonalization3;
+        }).toThrow(ErrorMessages.IV_0031);
+      });
+      it('should reset personalization property', () => {
+        searchWidgetItem.personalization = validPersonalization1;
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.personalization).toEqual(validPersonalization1);
+        searchWidgetItem.resetPersonalization();
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.personalization).toBeUndefined();
+      });
+    });
+  });
+
+  describe('Ranking Testing Suite', () => {
+    const validRanking1: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename',
+        weight: 1.3
+      }
+    ];
+    const validRanking2: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename'
+      }
+    ];
+    const validRanking3: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename',
+        weight: 0.1
+      }
+    ];
+    const validRanking4: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename',
+        weight: 100
+      }
+    ];
+
+    const invalidRanking1: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: ''
+      }
+    ];
+    const invalidRanking2: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename',
+        weight: 111
+      }
+    ];
+
+    const invalidRanking3: ArrayOfAtLeastOne<SearchRankingOptions> = [
+      {
+        name: 'somename',
+        weight: 0
+      }
+    ];
+
+    describe('from constructor', () => {
+      it('should return valid ranking if valid ranking is given', () => {
+        const searchWidgetItem1 = new SearchWidgetItem('test', 'test', { ranking: validRanking1 });
+        const actual1 = searchWidgetItem1.toDTO();
+        expect(actual1.search?.ranking).toEqual(validRanking1);
+
+        const searchWidgetItem2 = new SearchWidgetItem('test', 'test', { ranking: validRanking2 });
+        const actual2 = searchWidgetItem2.toDTO();
+        expect(actual2.search?.ranking).toEqual(validRanking2);
+      });
+      it('should not throw error when valid ranking is given', () => {
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: validRanking1 });
+        }).not.toThrow();
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: validRanking2 });
+        }).not.toThrow();
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: validRanking3 });
+        }).not.toThrow();
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: validRanking4 });
+        }).not.toThrow();
+      });
+      it('should return undefined if no ranking is given', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', {});
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.ranking).toBeUndefined();
+      });
+      it('should return undefined if undefined ranking is passed', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', { ranking: undefined });
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.ranking).toBeUndefined();
+      });
+      it('should throw error when invalid ranking is given', () => {
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: invalidRanking1 });
+        }).toThrow(ErrorMessages.IV_0016);
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: invalidRanking2 });
+        }).toThrow(ErrorMessages.IV_0029);
+        expect(() => {
+          new SearchWidgetItem('test', 'test', { ranking: invalidRanking3 });
+        }).toThrow(ErrorMessages.IV_0029);
+      });
+      it('should reset ranking property', () => {
+        const searchWidgetItem = new SearchWidgetItem('test', 'test', { ranking: validRanking1 });
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.ranking).toEqual(validRanking1);
+        searchWidgetItem.resetRanking();
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.ranking).toBeUndefined();
+      });
+    });
+
+    describe('from setter', () => {
+      let searchWidgetItem: SearchWidgetItem;
+
+      beforeEach(() => {
+        searchWidgetItem = new SearchWidgetItem('test', 'test');
+      });
+
+      it('should return valid ranking if valid ranking is given', () => {
+        searchWidgetItem.ranking = validRanking1;
+        const actual1 = searchWidgetItem.toDTO();
+        expect(actual1.search?.ranking).toEqual(validRanking1);
+
+        searchWidgetItem.ranking = validRanking2;
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.ranking).toEqual(validRanking2);
+
+        searchWidgetItem.ranking = validRanking3;
+        const actual3 = searchWidgetItem.toDTO();
+        expect(actual3.search?.ranking).toEqual(validRanking3);
+      });
+      it('should not throw error when valid ranking is given', () => {
+        expect(() => {
+          searchWidgetItem.ranking = validRanking1;
+        }).not.toThrow();
+      });
+
+      it('should throw error when invalid ranking is given', () => {
+        expect(() => {
+          searchWidgetItem.ranking = invalidRanking1;
+        }).toThrow(ErrorMessages.IV_0016);
+        expect(() => {
+          searchWidgetItem.ranking = invalidRanking2;
+        }).toThrow(ErrorMessages.IV_0029);
+        expect(() => {
+          searchWidgetItem.ranking = invalidRanking3;
+        }).toThrow(ErrorMessages.IV_0029);
+      });
+      it('should reset ranking property', () => {
+        searchWidgetItem.ranking = validRanking1;
+        const actual = searchWidgetItem.toDTO();
+        expect(actual.search?.ranking).toEqual(validRanking1);
+        searchWidgetItem.resetRanking();
+        const actual2 = searchWidgetItem.toDTO();
+        expect(actual2.search?.ranking).toBeUndefined();
+      });
+    });
+  });
+
   describe('SearchWidgetItem getters', () => {
     it('should get all properties', () => {
       const query = { keyphrase: 'test' };
       const offset = 10;
       const facet = { all: true };
+      const personalization: SearchPersonalizationOptions = {
+        algorithm: 'mlt',
+        fields: ['color'],
+        ids: ['someid']
+      };
+      const ranking: ArrayOfAtLeastOne<SearchRankingOptions> = [
+        {
+          name: 'somename',
+          weight: 1.0
+        }
+      ];
       const sort: SearchSortOptions = { choices: true, value: [{ name: 'test' }] };
       const suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions> = [{ name: 'test' }];
 
       const widgetItem = new SearchWidgetItem('content', 'rfkid_qa', {
         facet,
         offset,
+        personalization,
         query,
+        ranking,
         sort,
         suggestion
       });
@@ -1004,6 +1309,8 @@ describe('search widget item class', () => {
       expect(widgetItem.query).toEqual(query);
       expect(widgetItem.offset).toBe(offset);
       expect(widgetItem.facet).toEqual(facet);
+      expect(widgetItem.personalization).toEqual(personalization);
+      expect(widgetItem.ranking).toEqual(ranking);
       expect(widgetItem.sort).toEqual(sort);
       expect(widgetItem.suggestion).toEqual(suggestion);
     });

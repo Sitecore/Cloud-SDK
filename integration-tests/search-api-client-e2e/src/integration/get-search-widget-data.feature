@@ -292,3 +292,142 @@ Feature: Request search widget data from Search REST API
             | [{"widgetId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": 0}]}}]      | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
             | [{"widgetId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": 101} ]}}]   | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
             | [{"widgetId":"rfkid_7","entity":"content","search": {"suggestion": [{"name":"something","max": -1}]}}]     | [IV-0014] Incorrect value for "max"​​. Set the value to an integer between 1 and 100 inclusive.       |
+
+    Scenario Outline: Developer requests search widget data from browser for Personalization with a valid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                                                   | items_payload                                                                                                                                                    |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "affinity", "fields": ["somefield1"] }}}]                                        | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"affinity","fields": ["somefield1"]}}}]                                     |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "mlt", "fields": ["somefield1"], "ids": ["someid"] }}}]                          | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"mlt","fields": ["somefield1"],"ids": ["someid"]}}}]                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "mlt", "fields": ["somefield1", "somefield2"], "ids": ["someid", "someid2"] }}}] | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"mlt","fields": ["somefield1","somefield2"],"ids": ["someid","someid2"]}}}] |
+
+
+    Scenario Outline: Developer requests search widget data from browser for Personalization with a valid payload using Setter Method
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                                                         | items_payload                                                                                                                                                    |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "affinity", "fields": ["somefield"] }}}]                                         | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"affinity", "fields": ["somefield"] }}}]                                    |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "mlt", "fields": ["somefield1"], "ids": ["someid"] }}}]                          | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"mlt","fields": ["somefield1"],"ids": ["someid"]}}}]                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "mlt", "fields": ["somefield1", "somefield2"], "ids": ["someid", "someid2"] }}}] | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization":{"algorithm":"mlt","fields": ["somefield1","somefield2"],"ids": ["someid","someid2"]}}}] |
+
+
+
+    Scenario Outline: Developer requests search widget data from browser for Personalization with an invalid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then an error is thrown: '<error_code>'
+
+        Examples:
+            | items                                                                                                                                                     | error_code                                                                                                             |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "mlt", "fields": ["somefield1 "], "ids": ["someid"] }}}]           | [IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "mlt", "fields": ["somefield1 "], "ids": ["someid"] }}}]     | [IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "mlt", "fields": ["somefield1", " "], "ids": ["someid"] }}}]       | [IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "mlt", "fields": ["somefield1", " "], "ids": ["someid"] }}}] | [IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalization": {"algorithm": "mlt", "fields": ["somefield1"], "ids": ["someid", " "] }}}]       | [IV-0031] Incorrect value in "personalization.ids". Set the value to a non-empty string.                               |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"personalizationSetter": {"algorithm": "mlt", "fields": ["somefield1"], "ids": ["someid", " "] }}}] | [IV-0031] Incorrect value in "personalization.ids". Set the value to a non-empty string.                               |
+
+
+    Scenario Outline: Developer requests search widget data from browser for Ranking with a valid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                             | items_payload                                                                                                                                 |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename" }]}}]                                                       | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename"}]}}]                                                      |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 100 }]}}]                                        | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":100}]}}]                                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 0.1 }]}}]                                        | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":0.1}]}}]                                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 1 },{"name": "someothername", "weight": 10 }]}}] | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":1},{"name": "someothername", "weight": 10 }]}}] |
+
+
+
+    Scenario Outline: Developer requests search widget data from browser for Ranking with a valid payload using the Setter Method
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                                                                                                   | items_payload                                                                                                                                 |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"rankingSetter": [{"name": "somename" }]}}]                                                       | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename"}]}}]                                                      |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"rankingSetter": [{"name": "somename", "weight": 100 }]}}]                                        | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":100}]}}]                                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"rankingSetter": [{"name": "somename", "weight": 0.1 }]}}]                                        | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":0.1}]}}]                                        |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"rankingSetter": [{"name": "somename", "weight": 1 },{"name": "someothername", "weight": 10 }]}}] | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename", "weight":1},{"name": "someothername", "weight": 10 }]}}] |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"rankingSetter": [{"name": "somename" },{"name": "someothername", "weight": 10 }]}}]              | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking":[{"name":"somename"},{"name": "someothername", "weight": 10 }]}}]             |
+
+
+
+    Scenario Outline: Developer requests search widget data from browser for Ranking with an invalid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then an error is thrown: '<error_code>'
+
+        Examples:
+            | items                                                                                                                                              | error_code                                                                                                          |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "" }]}}]                                                                | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces.               |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": " " }]}}]                                                               | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces.               |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename" }, {"name":""}]}}]                                           | [IV-0016] Incorrect value for "name". Set the value to a non-empty string, and do not include spaces.               |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 101 }]}}]                                         | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 0 }]}}]                                           | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 10 }, {"name": "someothername", "weight": -1}]}}] | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
