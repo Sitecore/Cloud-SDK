@@ -377,6 +377,48 @@ describe('search widget item class', () => {
       expect(isFacetFilterSpy).toHaveBeenCalledTimes(1);
       expect(isFacetFilterSpy).toHaveBeenCalledWith(['test1', 'test2']);
     });
+
+    it('should set the facet with a valid types name and filterOptions property', () => {
+      const variants = [
+        {
+          dto: ['hard_filters', 'other_facet_values'],
+          filteringOptions: 'Dynamic OR'
+        },
+        {
+          dto: ['hard_filters', 'other_facet_values', 'own_values'],
+          filteringOptions: 'Dynamic AND'
+        },
+        {
+          dto: ['hard_filters'],
+          filteringOptions: 'Static'
+        }
+      ];
+
+      variants.forEach((variant) => {
+        const data: FacetOptions = {
+          types: [
+            {
+              filteringOptions: variant.filteringOptions as any,
+              name: 'type'
+            }
+          ]
+        };
+        const expected: FacetOptionsDTO = {
+          types: [
+            {
+              filtering_options: variant.dto as any,
+              name: 'type'
+            }
+          ]
+        };
+
+        widgetItem.facet = data;
+
+        const result = widgetItem.toDTO();
+
+        expect(result.search?.facet).toEqual(expected);
+      });
+    });
   });
 
   describe('facet types validator', () => {

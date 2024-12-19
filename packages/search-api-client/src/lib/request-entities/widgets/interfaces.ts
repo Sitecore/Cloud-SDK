@@ -65,6 +65,22 @@ export type FacetTypeFilterDTO = {
 
 export type FacetSortDTO = Omit<FacetSort, 'after'>;
 
+type FilteringOptionsDynamicOr = 'Dynamic OR';
+type FilteringOptionsDynamicAnd = 'Dynamic AND';
+type FilteringOptionsStatic = 'Static';
+
+/**
+ * Represents the type filtering option.
+ *
+ * Manages how other filtering affects this facet, and how filtering in this facet affects other facets.
+ */
+export type FilteringOptions = FilteringOptionsDynamicOr | FilteringOptionsDynamicAnd | FilteringOptionsStatic;
+
+export type FilteringOptionsDTO =
+  | ['hard_filters', 'other_facet_values', 'own_values']
+  | ['hard_filters', 'other_facet_values']
+  | ['hard_filters'];
+
 /**
  * Represents the type object of the facet object.
  */
@@ -76,6 +92,7 @@ export interface FacetTypeOptions {
   minCount?: number;
   sort?: FacetSort;
   filter?: FacetTypeFilter;
+  filteringOptions?: FilteringOptions;
 }
 
 /**
@@ -90,6 +107,7 @@ export interface FacetTypeDTO {
   sort?: FacetSortDTO;
   after?: string;
   filter?: FacetTypeFilterDTO;
+  filtering_options?: FilteringOptionsDTO;
 }
 
 /**

@@ -43,6 +43,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
                   'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
                 ]
               },
+              filteringOptions: 'Dynamic AND',
               keyphrase: 'test',
               max: 1,
               minCount: 1,
@@ -86,6 +87,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
                 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
               ]
             },
+            filteringOptions: 'Dynamic AND',
             keyphrase: 'test',
             max: 1,
             minCount: 1,

@@ -6,6 +6,8 @@ import type {
   FacetOptionsDTO,
   FacetTypeDTO,
   FacetTypeOptions,
+  FilteringOptions,
+  FilteringOptionsDTO,
   QueryOptions,
   SearchDTO,
   SearchOptions,
@@ -355,6 +357,16 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   /**
+   * Builds the filtering options array.
+   */
+  private _filteringOptionsToDTO(filteringOptions?: FilteringOptions): FilteringOptionsDTO | undefined {
+    if (!filteringOptions) return undefined;
+    if (filteringOptions === 'Dynamic AND') return ['hard_filters', 'other_facet_values', 'own_values'];
+    if (filteringOptions === 'Dynamic OR') return ['hard_filters', 'other_facet_values'];
+    return ['hard_filters'];
+  }
+
+  /**
    * Maps the search widget item to its DTO format.
    */
   toDTO(): SearchWidgetItemDTO {
@@ -372,6 +384,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       facet.types = this._facet.types.map((type) => ({
         exclude: type.exclude,
         filter: this._filterToDTO(type),
+        filtering_options: this._filteringOptionsToDTO(type.filteringOptions),
         keyphrase: type.keyphrase,
         max: type.max,
         min_count: type.minCount,
