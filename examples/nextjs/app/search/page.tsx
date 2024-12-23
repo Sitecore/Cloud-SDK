@@ -1,33 +1,49 @@
 'use client';
 
-import FacetCheckbox from '../../components/FacetCheckbox';
-import { withAuthGuard } from '../../components/AuthGuard';
-import type { ApiResponseWithContent } from '../../types';
-import { useSearchParams } from 'next/navigation';
-import { useCart } from '../../context/Cart';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import '@sitecore-cloudsdk/events/browser';
 import {
   Context,
   getWidgetData,
   SearchWidgetItem,
-  WidgetRequestData,
-  widgetView,
+  widgetFacetClick,
   widgetItemClick,
-  widgetFacetClick
+  WidgetRequestData,
+  widgetView
 } from '@sitecore-cloudsdk/search-api-client/browser';
+import { withAuthGuard } from '../../components/AuthGuard';
+import FacetCheckbox from '../../components/FacetCheckbox';
+import PaginationLoadMore from '../../components/Listing/PaginationLoadMore';
+import { useCart } from '../../context/Cart';
+import type { ApiResponseWithContent } from '../../types';
 
 type SelectedFacetsType = {
   [key: string]: string[];
 };
 
 const SearchResultsPage = () => {
+  const router = useRouter();
   const cart = useCart();
   const { get } = useSearchParams();
   const [loading, setLoading] = useState(true);
+  const [productLoading, setProductLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [searchData, setSearchData] = useState<any>({});
   const [selectedFacets, setSelectedFacets] = useState<SelectedFacetsType>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(12);
+  const [products, setProducts] = useState([]);
+
+  const setPageQuery = (currentPage: number): void => {
+    const queryParams = new URLSearchParams(searchParams.toString());
+    if (currentPage === 1) {
+      queryParams.delete('p');
+    } else {
+      queryParams.set('p', currentPage as any);
+    }
+    router.push(`${window.location.pathname}?${queryParams.toString()}`);
+  };
 
   const handleFacetChange = (facetName: string, value: string, isChecked: boolean) => {
     widgetFacetClick({
@@ -42,15 +58,12 @@ const SearchResultsPage = () => {
         newFacets[facetName] = [];
       }
       if (isChecked) {
-        // Add the value if it's not already present
         if (!newFacets[facetName].includes(value)) {
           newFacets[facetName] = [...newFacets[facetName], value];
         }
       } else {
-        // Remove the value
         newFacets[facetName] = newFacets[facetName].filter((v) => v !== value);
       }
-      // Clean up empty facet groups
       if (newFacets[facetName].length === 0) {
         delete newFacets[facetName];
       }
@@ -62,27 +75,27 @@ const SearchResultsPage = () => {
     return selectedFacets[facetName]?.includes(value) || false;
   };
 
+  const getRequestData = (): SearchWidgetItem => {
+    return new SearchWidgetItem('product', 'rfkid_7', {
+      content: {},
+      limit: perPage,
+      offset: (currentPage - 1) * perPage,
+      facet: {
+        all: true
+      },
+      ...(query && { query: { keyphrase: query } })
+    });
+  };
+
   const query = get('q') as string;
 
   useEffect(() => {
     const populateData = async function () {
-      const searchWidget = new SearchWidgetItem('product', 'rfkid_7', {
-        content: {},
-        limit: 10,
-        offset: 2,
-        facet: {
-          all: true
-        },
-        ...(query && { query: { keyphrase: query } })
-      });
-
-      const context = new Context({
-        locale: { language: 'en', country: 'us' }
-      });
+      const searchWidget = getRequestData();
 
       const { widgets } = (await getWidgetData(
         new WidgetRequestData([searchWidget]),
-        context
+        new Context({ locale: { language: 'EN', country: 'us' } })
       )) as ApiResponseWithContent;
 
       const response = widgets[0] as unknown as ApiResponseWithContent;
@@ -90,17 +103,26 @@ const SearchResultsPage = () => {
       if (!response) return console.warn('No search results found');
 
       setSearchData(response);
+      setProducts(products.concat(response.content as any));
       widgetView({
         request: {},
         entities: response.content?.map((product) => ({ entity: 'product', id: product.id })),
         pathname: '/search',
         widgetId: 'rfkid_7'
       });
-      setLoading(false);
     };
+    setProductLoading(true);
+    populateData().finally(() => {
+      setLoading(false);
+      setProductLoading(false);
+    });
+  }, [query, currentPage]);
 
-    populateData();
-  }, [query]);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    setPageQuery(currentPage);
+  }, [currentPage]);
 
   if (loading) {
     return (
@@ -126,7 +148,11 @@ const SearchResultsPage = () => {
     <div className='container mx-auto px-4 py-8'>
       <div className='flex justify-between items-center mb-6'>
         <h2 className='text-2xl font-bold text-gray-900'>{query ? `Search Results for "${query}"` : 'All Products'}</h2>
-        {searchData.content?.length > 0 && <p className='text-gray-600'>Showing {searchData.content.length} results</p>}
+        {products?.length > 0 && (
+          <p className='text-gray-600'>
+            Showing {products.length} results out of {searchData.total_item}
+          </p>
+        )}
       </div>
       <div className='flex w-full gap-8'>
         <div className='w-[24%]'>
@@ -167,13 +193,14 @@ const SearchResultsPage = () => {
             </div>
           </div>
         </div>
-        <div className='flex-1'>
+        <div className='flex-1 relative'>
+          {productLoading ? <div className='absolute inset-0 flex justify-center bg-white bg-opacity-75'></div> : null}
           <div className='grid grid-cols-1 gap-6'>
             {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {searchData.content?.map((item: any, index: number) => (
+            {products?.map((item: any, index: number) => (
               <div
                 key={item.id}
-                className='bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200'
+                className='product-item bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200'
                 onClick={() => {
                   widgetItemClick({
                     request: {},
@@ -198,6 +225,7 @@ const SearchResultsPage = () => {
                       <div>
                         <span className='text-sm text-gray-500'>{item.brand}</span>
                         <h2 className='text-xl font-semibold text-gray-900 mt-1'>{item.name}</h2>
+                        <span>{item.id}</span>
                         <p className='text-lg font-medium text-red-600 mt-2'>€ {item.price}</p>
                       </div>
                       <button
@@ -224,6 +252,16 @@ const SearchResultsPage = () => {
             ))}
           </div>
         </div>
+      </div>
+      <div>
+        <PaginationLoadMore
+          pages={Math.ceil(searchData.total_item / perPage)}
+          current={currentPage}
+          totalItems={searchData.total_item}
+          currentItems={products.length}
+          setCurrentPage={setCurrentPage}
+          loading={productLoading}
+        />
       </div>
     </div>
   );
