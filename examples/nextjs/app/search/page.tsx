@@ -19,8 +19,37 @@ import { useCart } from '../../context/Cart';
 import type { ApiResponseWithContent } from '../../types';
 
 type SelectedFacetsType = {
-  [key: string]: string[];
+  [facetName: string]: {
+    facetPosition: number;
+    facetLabel: string;
+    values: {
+      id: string;
+      position: number;
+      text: string;
+    }[];
+  };
 };
+
+type CheckboxFacetChangeType = {
+  facetPosition: number;
+  facetName: string;
+  facetLabel: string;
+  valueId: string;
+  valueText: string;
+  valuePosition: number;
+  isChecked: boolean;
+};
+
+type FacetClickFilterType = {
+  displayName: string;
+  facetPosition: number;
+  name: string;
+  title: string;
+  value: string;
+  valuePosition: number;
+};
+
+const PAGE_SIZE = 12;
 
 const SearchResultsPage = () => {
   const router = useRouter();
@@ -32,7 +61,7 @@ const SearchResultsPage = () => {
   const [searchData, setSearchData] = useState<any>({});
   const [selectedFacets, setSelectedFacets] = useState<SelectedFacetsType>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(12);
+  const [perPage] = useState(PAGE_SIZE);
   const [products, setProducts] = useState([]);
 
   const setPageQuery = (currentPage: number): void => {
@@ -45,26 +74,35 @@ const SearchResultsPage = () => {
     router.push(`${window.location.pathname}?${queryParams.toString()}`);
   };
 
-  const handleFacetChange = (facetName: string, value: string, isChecked: boolean) => {
-    widgetFacetClick({
-      request: {},
-      filters: [],
-      pathname: '/search',
-      widgetId: 'rfkid_7'
-    });
+  const handleFacetChange = ({
+    facetName,
+    facetLabel,
+    facetPosition,
+    valueId,
+    valueText,
+    valuePosition,
+    isChecked
+  }: CheckboxFacetChangeType) => {
     setSelectedFacets((prev) => {
       const newFacets = { ...prev };
       if (!newFacets[facetName]) {
-        newFacets[facetName] = [];
+        newFacets[facetName] = {
+          facetPosition: facetPosition,
+          facetLabel: facetLabel,
+          values: []
+        };
       }
       if (isChecked) {
-        if (!newFacets[facetName].includes(value)) {
-          newFacets[facetName] = [...newFacets[facetName], value];
+        if (!newFacets[facetName].values.find((facet) => facet.id === valueId)) {
+          newFacets[facetName].values = [
+            ...newFacets[facetName].values,
+            { id: valueId, text: valueText, position: valuePosition }
+          ];
         }
       } else {
-        newFacets[facetName] = newFacets[facetName].filter((v) => v !== value);
+        newFacets[facetName].values = newFacets[facetName]?.values.filter((facet) => facet.id !== valueId);
       }
-      if (newFacets[facetName].length === 0) {
+      if (newFacets[facetName].values.length === 0) {
         delete newFacets[facetName];
       }
       return newFacets;
@@ -72,45 +110,71 @@ const SearchResultsPage = () => {
   };
 
   const isFacetSelected = (facetName: string, value: string): boolean => {
-    return selectedFacets[facetName]?.includes(value) || false;
+    return selectedFacets[facetName]?.values.some((facet) => facet.id === value) || false;
   };
 
   const getRequestData = (): SearchWidgetItem => {
+    const facetTypes = Object.entries(selectedFacets).map(([key, facet]) => ({
+      name: key,
+      filter: {
+        type: 'or',
+        values: facet.values.map((f) => f.id)
+      }
+    }));
     return new SearchWidgetItem('product', 'rfkid_7', {
       content: {},
       limit: perPage,
       offset: (currentPage - 1) * perPage,
       facet: {
-        all: true
+        all: true,
+        ...(facetTypes.length && { types: facetTypes as any })
       },
       ...(query && { query: { keyphrase: query } })
     });
   };
 
+  const generateFacetClickFilters = function () {
+    return Object.entries(selectedFacets).reduce((prev, [key, facet]) => {
+      const facetList = facet.values.map(
+        (value): FacetClickFilterType => ({
+          displayName: facet.facetLabel,
+          facetPosition: facet.facetPosition,
+          name: key,
+          title: key,
+          value: value.text,
+          valuePosition: value.position
+        })
+      );
+      return [...prev, ...facetList];
+    }, [] as any);
+  };
+
+  const searchParams = useSearchParams();
   const query = get('q') as string;
 
+  const populateData = async function () {
+    const searchWidget = getRequestData();
+
+    const { widgets } = (await getWidgetData(
+      new WidgetRequestData([searchWidget]),
+      new Context({ locale: { language: 'EN', country: 'us' } })
+    )) as ApiResponseWithContent;
+
+    const response = widgets[0] as unknown as ApiResponseWithContent;
+
+    if (!response) return console.warn('No search results found');
+
+    setSearchData(response);
+    setProducts(products.concat(response.content as any));
+    widgetView({
+      request: {},
+      entities: response.content?.map((product) => ({ entity: 'product', id: product.id })),
+      pathname: '/search',
+      widgetId: 'rfkid_7'
+    });
+  };
+
   useEffect(() => {
-    const populateData = async function () {
-      const searchWidget = getRequestData();
-
-      const { widgets } = (await getWidgetData(
-        new WidgetRequestData([searchWidget]),
-        new Context({ locale: { language: 'EN', country: 'us' } })
-      )) as ApiResponseWithContent;
-
-      const response = widgets[0] as unknown as ApiResponseWithContent;
-
-      if (!response) return console.warn('No search results found');
-
-      setSearchData(response);
-      setProducts(products.concat(response.content as any));
-      widgetView({
-        request: {},
-        entities: response.content?.map((product) => ({ entity: 'product', id: product.id })),
-        pathname: '/search',
-        widgetId: 'rfkid_7'
-      });
-    };
     setProductLoading(true);
     populateData().finally(() => {
       setLoading(false);
@@ -118,11 +182,26 @@ const SearchResultsPage = () => {
     });
   }, [query, currentPage]);
 
-  const searchParams = useSearchParams();
-
   useEffect(() => {
     setPageQuery(currentPage);
   }, [currentPage]);
+
+  useEffect(() => {
+    setProductLoading(true);
+    populateData().finally(() => {
+      setLoading(false);
+      setProductLoading(false);
+    });
+    const facetClickFilters = generateFacetClickFilters();
+    widgetFacetClick({
+      request: {
+        ...(query && { keyword: query })
+      },
+      filters: [...facetClickFilters],
+      pathname: '/search',
+      widgetId: 'rfkid_7'
+    });
+  }, [selectedFacets]);
 
   if (loading) {
     return (
@@ -169,21 +248,33 @@ const SearchResultsPage = () => {
             </div>
             <div className='divide-y divide-gray-200'>
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {searchData.facet?.map((facet: any, index: number) => (
+              {searchData.facet?.map((facet: any, facetPosition: number) => (
                 <div
-                  key={`facet-${index}`}
+                  key={`facet-${facetPosition}`}
                   className='py-4'>
                   <h4 className='px-4 text-sm font-medium text-gray-900 mb-2'>{facet.label}</h4>
                   {facet.value.length > 0 && (
                     <div className='space-y-1'>
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                      {facet.value.map((value: any, index: number) => (
+                      {facet.value.map((value: any, valuePosition: number) => (
                         <FacetCheckbox
-                          key={`facetValue-${index}`}
+                          key={`facetValue-${value.id}`}
                           label={value.text}
                           count={value.count}
-                          checked={isFacetSelected(facet.label, value.text)}
-                          onChange={(checked) => handleFacetChange(facet.label, value.text, checked)}
+                          checked={isFacetSelected(facet.name, value.id)}
+                          onChange={(checked) => {
+                            setProducts([]);
+                            setCurrentPage(1);
+                            handleFacetChange({
+                              facetPosition: facetPosition,
+                              facetName: facet.name,
+                              facetLabel: facet.label,
+                              valueId: value.id,
+                              valueText: value.text,
+                              valuePosition: valuePosition,
+                              isChecked: checked
+                            });
+                          }}
                         />
                       ))}
                     </div>
