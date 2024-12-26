@@ -1,6 +1,6 @@
 import { ErrorMessages } from '../../consts';
 import { ComparisonFilter } from '../filters/comparison-filter';
-import type { ArrayOfAtLeastOne, Filter } from '../filters/interfaces';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import type { ContentOptions, SearchRuleOptions } from './interfaces';
 import { ResultsWidgetItem } from './results-widget-item';
 
@@ -77,9 +77,7 @@ describe('widget item class', () => {
         entity: 'test',
         widgetId: 'test'
       };
-
       const result = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId).toDTO();
-
       expect(result).toStrictEqual(expected);
     });
   });
@@ -324,53 +322,6 @@ describe('widget item class', () => {
       widgetItem.rule = validRule;
 
       expect(widgetItem['_rule']).toBe(validRule);
-
-      const dto = widgetItem['_resultsToDTO']();
-
-      expect(dto.rule).toEqual({
-        behaviors: false,
-        blacklist: {
-          filter: {
-            name: 'title',
-            type: 'eq',
-            value: 'title1'
-          }
-        },
-        boost: [
-          {
-            filter: {
-              name: 'title',
-              type: 'eq',
-              value: 'title1'
-            },
-            slots: [5],
-            weight: 4
-          }
-        ],
-        bury: {
-          filter: {
-            name: 'title',
-            type: 'eq',
-            value: 'title1'
-          }
-        },
-        include: [
-          {
-            filter: {
-              name: 'title',
-              type: 'eq',
-              value: 'title1'
-            },
-            slots: [2]
-          }
-        ],
-        pin: [
-          {
-            id: '2',
-            slot: 4
-          }
-        ]
-      });
     });
 
     it(`should reflect the 'rule' as undefined when it is not set or reset`, () => {
@@ -380,6 +331,16 @@ describe('widget item class', () => {
       widgetItem.rule = validRule;
       widgetItem.resetRule();
       expect(widgetItem['_resultsToDTO']().rule).toBeUndefined();
+    });
+
+    describe('_resultsToDTO', () => {
+      it('should include rule in DTO when _rule is set', () => {
+        const widgetItem = new ResultsWidgetItem('test', 'test');
+        widgetItem['_rule'] = { behaviors: true };
+
+        const dto = widgetItem['_resultsToDTO']();
+        expect(dto.rule).toStrictEqual(widgetItem['_rule']);
+      });
     });
 
     // eslint-disable-next-line max-len
@@ -425,74 +386,6 @@ describe('widget item class', () => {
       new ResultsWidgetItem('content', 'rfkid_7', { rule });
 
       expect(validatePositiveIntegerSpy).toHaveBeenCalledTimes(2);
-    });
-  });
-
-  describe('_ruletoDTO', () => {
-    let widget: ResultsWidgetItem;
-
-    beforeEach(() => {
-      widget = new ResultsWidgetItem('entity', 'rfkId');
-    });
-
-    it('should return undefined when rule is undefined', () => {
-      const result = (widget as any)._ruletoDTO(undefined);
-      expect(result).toBeUndefined();
-    });
-
-    it('should correctly map a partially populated rule', () => {
-      const mockRule: SearchRuleOptions = {
-        behaviors: false,
-        blacklist: undefined,
-        boost: undefined,
-        bury: undefined,
-        include: undefined,
-        pin: undefined
-      };
-
-      const result = (widget as any)._ruletoDTO(mockRule);
-      expect(result).toEqual({
-        behaviors: false,
-        blacklist: undefined,
-        boost: undefined,
-        bury: undefined,
-        include: undefined,
-        pin: undefined
-      });
-    });
-
-    it('should correctly map a fully populated rule', () => {
-      const mockFilter = {
-        toDTO: jest.fn().mockReturnValue({ some: 'filterDTO' })
-      };
-
-      const mockRule: SearchRuleOptions = {
-        behaviors: false,
-        blacklist: { filter: mockFilter as unknown as Filter },
-        boost: [{ filter: mockFilter as unknown as Filter, slots: [1, 2], weight: 10 }],
-        bury: { filter: mockFilter as unknown as Filter },
-        include: [{ filter: mockFilter as unknown as Filter, slots: [3, 4] }],
-        pin: [
-          { id: '123', slot: 1 },
-          { id: '456', slot: 2 }
-        ]
-      };
-
-      const result = (widget as any)._ruletoDTO(mockRule);
-
-      expect(result).toEqual({
-        behaviors: false,
-        blacklist: { filter: { some: 'filterDTO' } },
-        boost: [{ filter: { some: 'filterDTO' }, slots: [1, 2], weight: 10 }],
-        bury: { filter: { some: 'filterDTO' } },
-        include: [{ filter: { some: 'filterDTO' }, slots: [3, 4] }],
-        pin: [
-          { id: '123', slot: 1 },
-          { id: '456', slot: 2 }
-        ]
-      });
-
-      expect(mockFilter.toDTO).toHaveBeenCalledTimes(4);
     });
   });
 

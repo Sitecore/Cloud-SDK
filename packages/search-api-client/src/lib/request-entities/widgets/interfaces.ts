@@ -44,7 +44,7 @@ export interface ResultsItemDTO {
   filter?: FilterDTO;
   group_by?: string;
   content?: ContentOptions;
-  rule?: SearchRuleOptions;
+  rule?: SearchRuleDTO;
 }
 
 type FacetSortName = 'text' | 'count';
@@ -334,6 +334,7 @@ export interface QuestionsAnswersOptions {
   keyphrase: string;
   exactAnswer?: ExactAnswerOptions;
   relatedQuestions?: RelatedQuestionsOptions;
+  rule?: SearchRuleOptions;
 }
 
 export interface QuestionsAnswersWidgetItemDTO extends WidgetItemDTO {
@@ -348,6 +349,7 @@ export interface QuestionsAnswersWidgetItemDTO extends WidgetItemDTO {
       include_sources?: boolean;
       limit?: number;
       offset?: number;
+      rule?: SearchRuleDTO;
     };
   };
 }
@@ -375,4 +377,37 @@ export interface SearchRuleOptions {
   bury?: { filter: Filter };
   include?: ArrayOfAtLeastOne<Include>;
   pin?: ArrayOfAtLeastOne<PinItem>;
+}
+
+export interface PinItemDTO {
+  id: string;
+  slot: number;
+}
+
+export interface BoostRuleDTO {
+  filter: FilterDTO;
+  slots?: ArrayOfAtLeastOne<number>;
+  weight?: number;
+}
+
+export interface IncludeRuleDTO {
+  filter: FilterDTO;
+  slots: ArrayOfAtLeastOne<number>;
+}
+
+export interface FilterRuleDTO {
+  filter: FilterDTO;
+}
+
+export interface SearchRuleDTO {
+  behaviors?: boolean;
+  blacklist?: FilterRuleDTO;
+  boost?: ArrayOfAtLeastOne<BoostRuleDTO>;
+  bury?: FilterRuleDTO;
+  include?: ArrayOfAtLeastOne<IncludeRuleDTO>;
+  pin?: ArrayOfAtLeastOne<PinItemDTO>;
+}
+
+export interface RuleWidgetItemDTO extends WidgetItemDTO {
+  rule?: SearchRuleDTO;
 }

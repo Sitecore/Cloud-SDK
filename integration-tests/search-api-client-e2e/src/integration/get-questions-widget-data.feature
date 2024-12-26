@@ -43,7 +43,7 @@ Feature: Request questions widget data from Search REST API
     And the 'getQuestionsWidgetDataFromAPIWithValidPayload' button is clicked
     Then the request with id '<testID>' will contain:
       """
-      "widget":{"items":[{"entity":"content","rfk_id":"rfkid_qa","questions":{"keyphrase":"test","exact_answer":{"include_sources":true,"query_types":["keyword","question","statement"]},"related_questions":{"filter":{"name":"title","type":"eq","value":"title1"},"include_sources":true,"limit":1,"offset":1}}}]}
+      "widget":{"items":[{"entity":"content","rfk_id":"rfkid_qa","questions":{"keyphrase":"test","exact_answer":{"include_sources":true,"query_types":["keyword","question","statement"]},"related_questions":{"filter":{"name":"title","type":"eq","value":"title1"},"include_sources":true,"limit":1,"offset":1,"rule":{"behaviors":true,"blacklist":{"filter":{"name":"title","type":"eq","value":"title1"}},"boost":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[1],"weight":1}],"bury":{"filter":{"name":"title","type":"eq","value":"title1"}},"include":[{"filter":{"name":"title","type":"eq","value":"title1"},"slots":[1]}],"pin":[{"id":"id1","slot":3}]}}}}]}
       """
 
     Examples:

@@ -5,6 +5,7 @@ export { WidgetRequestData } from './lib/request-entities/widgets/widget-request
 export { SearchWidgetItem } from './lib/request-entities/widgets/search-widget-item';
 export { RecommendationWidgetItem } from './lib/request-entities/widgets/recommendation-widget-item';
 export { QuestionsAnswersWidgetItem } from './lib/request-entities/widgets/questions-answers-widget-item';
+export { RuleWidgetItem } from './lib/request-entities/widgets/rule-widget-item';
 export { LogicalFilter } from './lib/request-entities/filters/logical-filter';
 export { ComparisonFilter } from './lib/request-entities/filters/comparison-filter';
 export { ComparisonFacetFilter } from './lib/request-entities/filters/facet/comparison-facet-filter';

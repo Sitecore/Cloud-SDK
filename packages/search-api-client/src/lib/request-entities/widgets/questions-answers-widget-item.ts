@@ -6,9 +6,9 @@ import type {
   QuestionsAnswersWidgetItemDTO,
   RelatedQuestionsOptions
 } from './interfaces';
-import { WidgetItem } from './widget-item';
+import { RuleWidgetItem } from './rule-widget-item';
 
-export class QuestionsAnswersWidgetItem extends WidgetItem {
+export class QuestionsAnswersWidgetItem extends RuleWidgetItem {
   private _keyphrase: string;
   private _exactAnswer?: ExactAnswerOptions;
   private _relatedQuestions?: RelatedQuestionsOptions;
@@ -20,7 +20,7 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
    * @param questionsAnswersOptions - The widget's questions answers options object.
    */
   constructor(entity: string, widgetId: string, questionsAnswersOptions: QuestionsAnswersOptions) {
-    super(entity, widgetId);
+    super(entity, widgetId, questionsAnswersOptions.rule);
 
     this._validateStringLengthInRange1To100(ErrorMessages.IV_0009, questionsAnswersOptions.keyphrase);
     this._keyphrase = questionsAnswersOptions.keyphrase;
@@ -119,7 +119,8 @@ export class QuestionsAnswersWidgetItem extends WidgetItem {
       filter: this._relatedQuestions.filter?.toDTO(),
       include_sources: this._relatedQuestions.includeSources,
       limit: this._relatedQuestions.limit,
-      offset: this._relatedQuestions.offset
+      offset: this._relatedQuestions.offset,
+      rule: this._ruleToDTO(this._rule)
     };
   }
 

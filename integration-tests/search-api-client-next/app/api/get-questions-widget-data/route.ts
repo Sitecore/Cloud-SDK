@@ -76,6 +76,14 @@ export async function GET(request: NextRequest, response: NextResponse) {
         limit: 1,
         offset: 1
       };
+      widget.rule = {
+        behaviors: true,
+        blacklist: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+        boost: [{ filter: new ComparisonFilter('title', 'eq', 'title1'), slots: [1], weight: 1 }],
+        bury: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+        include: [{ filter: new ComparisonFilter('title', 'eq', 'title1'), slots: [1] }],
+        pin: [{ id: 'id1', slot: 3 }]
+      };
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);
@@ -100,9 +108,16 @@ export async function GET(request: NextRequest, response: NextResponse) {
           includeSources: true,
           limit: 1,
           offset: 1
+        },
+        rule: {
+          behaviors: true,
+          blacklist: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+          boost: [{ filter: new ComparisonFilter('title', 'eq', 'title1'), slots: [1], weight: 1 }],
+          bury: { filter: new ComparisonFilter('title', 'eq', 'title1') },
+          include: [{ filter: new ComparisonFilter('title', 'eq', 'title1'), slots: [1] }],
+          pin: [{ id: 'id1', slot: 3 }]
         }
       });
-
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

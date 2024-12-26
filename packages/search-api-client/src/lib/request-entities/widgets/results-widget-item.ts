@@ -1,15 +1,14 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { Filter } from '../filters/interfaces';
-import type { ContentOptions, ResultsItemDTO, ResultsOptions, SearchRuleOptions } from './interfaces';
-import { WidgetItem } from './widget-item';
+import type { ContentOptions, ResultsItemDTO, ResultsOptions } from './interfaces';
+import { RuleWidgetItem } from './rule-widget-item';
 
-export class ResultsWidgetItem extends WidgetItem {
+export class ResultsWidgetItem extends RuleWidgetItem {
   protected _limit?: number;
   protected _content?: ContentOptions;
   protected _groupBy?: string;
   protected _filter?: Filter;
-  protected _rule?: SearchRuleOptions;
 
   /**
    * Creates and holds the functionality of a widget item.
@@ -18,17 +17,15 @@ export class ResultsWidgetItem extends WidgetItem {
    * @param resultOptions - The widget's results options object.
    */
   constructor(entity: string, widgetId: string, resultOptions?: ResultsOptions) {
-    super(entity, widgetId);
+    super(entity, widgetId, resultOptions?.rule);
 
     this._validateNumberInRange1To100(ErrorMessages.IV_0007, resultOptions?.limit);
     this._validateGroupBy(resultOptions?.groupBy);
-    this._validateRule(resultOptions?.rule);
 
     this._limit = resultOptions?.limit;
     this._content = resultOptions?.content;
     this._groupBy = resultOptions?.groupBy;
     this._filter = resultOptions?.filter;
-    this._rule = resultOptions?.rule;
   }
 
   /**
@@ -41,7 +38,6 @@ export class ResultsWidgetItem extends WidgetItem {
    */
   set limit(limit: number) {
     this._validateNumberInRange1To100(ErrorMessages.IV_0007, limit);
-
     this._limit = limit;
   }
 
@@ -101,9 +97,7 @@ export class ResultsWidgetItem extends WidgetItem {
     return this._groupBy;
   }
 
-  /**
-   * Sets the groupBy to undefined
-   */
+  /** Sets the groupBy to undefined */
   resetGroupBy() {
     this._groupBy = undefined;
   }
@@ -112,85 +106,19 @@ export class ResultsWidgetItem extends WidgetItem {
     if (typeof groupBy === 'string' && groupBy.trim().length === 0) throw new Error(ErrorMessages.IV_0022);
   }
 
-  /**
-   * Set the search filter
-   */
+  /** Set the search filter */
   set filter(filter: Filter) {
     this._filter = filter;
   }
 
-  /**
-   * @returns The filter property of the WidgetItem.
-   */
+  /** @returns The filter property of the WidgetItem */
   get filter(): Filter | undefined {
     return this._filter;
   }
 
-  /**
-   * Sets the filter to undefined
-   */
+  /** Sets the filter to undefined */
   resetFilter() {
     this._filter = undefined;
-  }
-
-  /**
-   * Set the rule that is applied to a request
-   */
-  set rule(rule: SearchRuleOptions) {
-    this._validateRule(rule);
-
-    this._rule = rule;
-  }
-
-  /**
-   * @returns The rule property of the WidgetItem.
-   */
-  get rule(): SearchRuleOptions | undefined {
-    return this._rule;
-  }
-
-  /**
-   * Sets rule to undefined
-   */
-  resetRule() {
-    this._rule = undefined;
-  }
-
-  private _validateRule(rule?: SearchRuleOptions) {
-    if (!rule) return;
-
-    if (rule.pin)
-      rule.pin.forEach((pin) => {
-        this._validateNonEmptyString(ErrorMessages.IV_0027, pin.id);
-        this._validatePositiveInteger(ErrorMessages.IV_0028, pin.slot);
-      });
-
-    if (rule.boost)
-      rule.boost.forEach((item) =>
-        item.slots?.forEach((slot) => this._validatePositiveInteger(ErrorMessages.IV_0028, slot))
-      );
-
-    if (rule.include)
-      rule.include.forEach((item) =>
-        item.slots.forEach((slot) => this._validatePositiveInteger(ErrorMessages.IV_0028, slot))
-      );
-  }
-
-  private _ruletoDTO(rule?: SearchRuleOptions) {
-    if (!rule) return;
-
-    return {
-      behaviors: rule.behaviors,
-      blacklist: rule.blacklist ? { filter: rule.blacklist.filter.toDTO() } : undefined,
-      boost: rule.boost
-        ? rule.boost.map((item) => ({ filter: item.filter.toDTO(), slots: item.slots, weight: item.weight }))
-        : undefined,
-      bury: rule.bury ? { filter: rule.bury.filter.toDTO() } : undefined,
-      include: rule.include
-        ? rule.include.map((item) => ({ filter: item.filter.toDTO(), slots: item.slots }))
-        : undefined,
-      pin: rule.pin ? rule.pin.map((item) => ({ id: item.id, slot: item.slot })) : undefined
-    } as SearchRuleOptions;
   }
 
   /**
@@ -202,7 +130,7 @@ export class ResultsWidgetItem extends WidgetItem {
       ...(this._filter && { filter: this._filter.toDTO() }),
       ...(this._groupBy && { group_by: this._groupBy }),
       ...(this._content && { content: this._content }),
-      ...(this._rule && { rule: this._ruletoDTO(this._rule) })
+      ...(this._rule && { rule: this._ruleToDTO(this._rule) })
     };
   }
 }
