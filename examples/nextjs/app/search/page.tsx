@@ -15,6 +15,7 @@ import {
 import { withAuthGuard } from '../../components/AuthGuard';
 import FacetCheckbox from '../../components/FacetCheckbox';
 import PaginationLoadMore from '../../components/Listing/PaginationLoadMore';
+import Sort from '../../components/Listing/Sort';
 import { useCart } from '../../context/Cart';
 import type { ApiResponseWithContent } from '../../types';
 
@@ -63,6 +64,7 @@ const SearchResultsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(PAGE_SIZE);
   const [products, setProducts] = useState([]);
+  const [sort, setSort] = useState<string>();
 
   const setPageQuery = (currentPage: number): void => {
     const queryParams = new URLSearchParams(searchParams.toString());
@@ -72,6 +74,12 @@ const SearchResultsPage = () => {
       queryParams.set('p', currentPage as any);
     }
     router.push(`${window.location.pathname}?${queryParams.toString()}`);
+  };
+
+  const handleSortChange = (sort: string) => {
+    setProducts([]);
+    setCurrentPage(1);
+    setSort(sort);
   };
 
   const handleFacetChange = ({
@@ -113,6 +121,14 @@ const SearchResultsPage = () => {
     return selectedFacets[facetName]?.values.some((facet) => facet.id === value) || false;
   };
 
+  const getSortArgs = () => {
+    const result = { choices: true } as any;
+    if (sort) {
+      result.value = [{ name: sort }];
+    }
+    return result;
+  };
+
   const getRequestData = (): SearchWidgetItem => {
     const facetTypes = Object.entries(selectedFacets).map(([key, facet]) => ({
       name: key,
@@ -125,6 +141,7 @@ const SearchResultsPage = () => {
       content: {},
       limit: perPage,
       offset: (currentPage - 1) * perPage,
+      sort: getSortArgs(),
       facet: {
         all: true,
         ...(facetTypes.length && { types: facetTypes as any })
@@ -187,6 +204,13 @@ const SearchResultsPage = () => {
   }, [currentPage]);
 
   useEffect(() => {
+    populateData().finally(() => {
+      setLoading(false);
+      setProductLoading(false);
+    });
+  }, [sort]);
+
+  useEffect(() => {
     setProductLoading(true);
     populateData().finally(() => {
       setLoading(false);
@@ -232,6 +256,11 @@ const SearchResultsPage = () => {
             Showing {products.length} results out of {searchData.total_item}
           </p>
         )}
+        <Sort
+          sortingOptions={searchData.sort.choices}
+          selectedSort={sort as string}
+          setSort={handleSortChange}
+        />
       </div>
       <div className='flex w-full gap-8'>
         <div className='w-[24%]'>
