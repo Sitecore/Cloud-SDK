@@ -2,8 +2,9 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-## [0.4.3](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/personalize-0.4.2...personalize-0.4.3) (2024-12-09)
+## [0.4.4](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/compare/personalize-0.4.3...personalize-0.4.4) (2025-01-08)
 
 ### Features
 
-- **events:** CDK-572 Add event functions under the events object in window ([#339](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/339)) ([ee05fad](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/ee05fadf066c21464f9148e8d9d324bf0d45a9fa))
+- **personalize:** CDK-193 Make currency field optional for personalize ([#347](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/347)) ([8f34546](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/8f345464992b38cd1cff8279ec47209d9322e1e9))
+- **personalize:** CDK-580 Expose the personalize() function to the window.scCloudSDK.personalize namespace ([#351](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/issues/351)) ([eaab322](https://github.com/Sitecore-PD/sitecore.cloudsdk.js/commit/eaab3221b4b78a424f50a93f20d6efe6fb81c56a))
