@@ -1,9 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { DebugResponse } from '../interfaces';
 import debug from 'debug';
 import { normalizeHeaders } from '@sitecore-cloudsdk/utils';
+import type { DebugResponse } from '../interfaces';
 
 if (
+  typeof process !== 'undefined' &&
   process.env &&
   process.env.DEBUG_MULTILINE === 'true' &&
   debug.formatters &&
