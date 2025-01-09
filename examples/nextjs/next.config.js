@@ -14,7 +14,7 @@ const nextConfig = {
     svgr: false
   },
   images: {
-    domains: ['delivery-sitecore.sitecorecontenthub.cloud', 'assets.biglots.com'],
+    domains: ['delivery-sitecore.sitecorecontenthub.cloud', 'assets.biglots.com', 'https://assets.biglots.com'],
     dangerouslyAllowSVG: true
   }
 };

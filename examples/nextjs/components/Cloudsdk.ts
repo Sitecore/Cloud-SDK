@@ -1,13 +1,15 @@
 'use client';
 
-import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
+import { usePathname } from 'next/navigation';
 import { useEffect } from 'react';
-
+import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import '@sitecore-cloudsdk/personalize/browser';
 import '@sitecore-cloudsdk/search-api-client/browser';
 
 export function CloudSDKComponent() {
+  const pathName = usePathname();
+
   useEffect(() => {
     CloudSDK({
       enableBrowserCookie: true,
@@ -16,7 +18,14 @@ export function CloudSDKComponent() {
     })
       .addEvents()
       .addSearch()
+      .addPersonalize({ webPersonalization: true })
       .initialize();
   }, []);
+
+  useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    window?.scCloudSDK?.personalize && (window?.scCloudSDK.personalize as any).triggerExperiences();
+  }, [pathName]);
+
   return null;
 }

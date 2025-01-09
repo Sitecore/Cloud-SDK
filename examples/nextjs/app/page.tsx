@@ -1,19 +1,18 @@
 'use client';
 
-import { Products, RecommendedProduct } from '../components/Products';
-import { PersonalizeBanner } from '../components/PersonalizeBanner';
-import { pageView } from '@sitecore-cloudsdk/events/browser';
-import { withAuthGuard } from '../components/AuthGuard';
-import { Newsletter } from '../components/Newsletter';
 import { useEffect, useState } from 'react';
-
+import { pageView } from '@sitecore-cloudsdk/events/browser';
 import {
-  RecommendationWidgetItem,
   Context,
   getWidgetData,
+  RecommendationWidgetItem,
   WidgetRequestData,
   widgetView
 } from '@sitecore-cloudsdk/search-api-client/browser';
+import { withAuthGuard } from '../components/AuthGuard';
+import { Newsletter } from '../components/Newsletter';
+import { PersonalizeBanner } from '../components/PersonalizeBanner';
+import { Products, RecommendedProduct } from '../components/Products';
 import type { ApiResponseWithContent } from '../types';
 
 function Index() {
@@ -28,7 +27,7 @@ function Index() {
 
     const fetchRecommendedProducts = async () => {
       const recWidget = new RecommendationWidgetItem('product', 'rfkid_2');
-      recWidget.content = {};
+      recWidget.content = { fields: ['name', 'image_url', 'price', 'id'] };
       recWidget.recipe = {
         id: '95811',
         version: 3
