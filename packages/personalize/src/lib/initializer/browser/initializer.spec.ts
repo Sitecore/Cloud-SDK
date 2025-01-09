@@ -2,10 +2,10 @@ import debug from 'debug';
 import * as internal from '@sitecore-cloudsdk/core/internal';
 import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
-import { PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import * as getCdnUrl from '../../web-personalization/get-cdn-url';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
-import { addPersonalize, sideEffects } from './initializer';
+import { addPersonalize, awaitInit, sideEffects } from './initializer';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -264,5 +264,26 @@ describe('addPersonalize', () => {
       sideEffects
     });
     expect(result).toEqual(fakeThis);
+  });
+  it('should throw with undefined initState', async () => {
+    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue(undefined);
+
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrow(ErrorMessages.IE_0016);
+  });
+
+  it('should not throw with defined initState', async () => {
+    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
+    await expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
+  });
+
+  it('should not throw if initState is a Promise', async () => {
+    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValueOnce({ initState: Promise.resolve() } as any);
+    expect(async () => {
+      await awaitInit();
+    }).not.toThrow();
   });
 });

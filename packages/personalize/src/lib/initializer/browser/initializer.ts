@@ -14,7 +14,7 @@ import {
   PACKAGE_INITIALIZER_METHOD_NAME
 } from '@sitecore-cloudsdk/events/browser';
 import { appendScriptWithAttributes } from '@sitecore-cloudsdk/utils';
-import { PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_NAME, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../../consts';
 import { personalize } from '../../personalization/personalize';
 import { getCdnUrl } from '../../web-personalization/get-cdn-url';
 import { createPersonalizeCookie } from './createPersonalizeCookie';
@@ -103,4 +103,15 @@ declare global {
     };
     version: string;
   }
+}
+
+/**
+ * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ */
+export async function awaitInit() {
+  const initState = getEnabledPackageBrowser(PACKAGE_NAME)?.initState;
+
+  if (!initState) throw new Error(ErrorMessages.IE_0016);
+
+  await initState;
 }
