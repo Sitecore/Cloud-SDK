@@ -1,15 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import {
-  getCloudSDKSettingsServer as getCloudSDKSettings,
-  getEnabledPackageServer as getEnabledPackage
-} from '@sitecore-cloudsdk/core/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
-import { PACKAGE_NAME } from '../../consts';
-import type { SearchEndpointResponse } from '../post-request';
-import type { ServerSettings } from '../../types';
+import { getCloudSDKSettingsServer as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
+import { verifySearchPackageExistence } from '../../initializer/server/initializer';
 import type { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
-import { getSettings } from '../../init/server/initializer';
+import type { SearchEndpointResponse } from '../post-request';
 import { sendPostRequest } from '../post-request';
+
 /**
  * This function requests widget data from server side.
  * @param widgetRequestData - An instance of {@link WidgetRequestData}.
@@ -18,10 +13,9 @@ import { sendPostRequest } from '../post-request';
 export async function getWidgetDataServer(
   widgetRequestData: WidgetRequestData
 ): Promise<SearchEndpointResponse | null> {
-  let settings: ServerSettings | CloudSDKSettings;
+  verifySearchPackageExistence();
 
-  if (getEnabledPackage(PACKAGE_NAME)) settings = getCloudSDKSettings();
-  else settings = getSettings();
+  const settings = getCloudSDKSettings();
 
   const body = JSON.stringify(widgetRequestData.toDTO());
 

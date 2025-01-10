@@ -1,11 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { getEnabledPackageServer as getEnabledPackage } from '@sitecore-cloudsdk/core/internal';
-import { event, init as initEvents } from '@sitecore-cloudsdk/events/server';
-import type { Request, Response } from '@sitecore-cloudsdk/utils';
-import { PACKAGE_NAME } from '../../consts';
+import { event } from '@sitecore-cloudsdk/events/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import type { WidgetFacetClickEventParams } from '../../events/interfaces';
 import { WidgetFacetClickEvent } from '../../events/widget-facet-click-event';
-import type { ServerSettings } from '../../types';
+import { verifySearchPackageExistence } from '../../initializer/server/initializer';
 
 /**
  * This function sends a widget facet click event from server.
@@ -17,7 +15,7 @@ export async function widgetFacetClickServer(
   httpRequest: Request,
   widgetFacetClickEventParams: WidgetFacetClickEventParams
 ) {
-  if (!getEnabledPackage(PACKAGE_NAME)) await initEvents({} as Request, {} as Response, {} as ServerSettings);
+  verifySearchPackageExistence();
 
   const widgetFacetClickEventDTO = new WidgetFacetClickEvent(widgetFacetClickEventParams).toDTO();
 

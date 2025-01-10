@@ -1,6 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as getSettingsModule from '../../init/server/initializer';
-import { initServer } from '../../init/server/initializer';
 import { WidgetItem } from '../../request-entities/widgets/widget-item';
 import { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
 import * as sendPostRequestModule from '../post-request';
@@ -23,60 +21,12 @@ describe('getWidgetDataServer', () => {
     jest.clearAllMocks();
   });
 
-  const req = {
-    cookies: {
-      get() {
-        return 'test';
-      },
-      set: () => undefined
-    },
-    headers: {
-      get: () => '',
-      host: ''
-    },
-    ip: undefined,
-    url: ''
-  };
-
-  const res = {
-    cookies: {
-      set() {
-        return 'test';
-      }
-    }
-  };
   const sendPostRequestSpy = jest.spyOn(sendPostRequestModule, 'sendPostRequest');
   sendPostRequestSpy.mockImplementation(async () => {
     return {} as unknown as sendPostRequestModule.SearchEndpointResponse;
   });
 
   it(`should construct the response and call sendPostRequest`, async () => {
-    const settings = {
-      siteName: 'siteName',
-      sitecoreEdgeContextId: 'sitecoreEdgeContextId,com',
-      userId: 'userId'
-    };
-
-    jest.spyOn(getSettingsModule, 'getSettings').mockReturnValue(settings);
-
-    const validWidgetItem = {
-      entity: 'test',
-      widgetId: 'test'
-    };
-
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
-    const widgetRequest = new WidgetRequestData([widget1]);
-
-    const expectedBody = JSON.stringify(widgetRequest.toDTO());
-
-    await initServer(req, res, settings);
-
-    await getWidgetDataServer(widgetRequest);
-
-    expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, settings);
-  });
-  it(`should construct the response and call sendPostRequest using new init`, async () => {
     const newSettings = {
       cookieSettings: {
         domain: 'cDomain',

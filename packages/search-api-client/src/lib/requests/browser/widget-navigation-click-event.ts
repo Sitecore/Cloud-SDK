@@ -1,11 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings } from '@sitecore-cloudsdk/core/internal';
-import { getEnabledPackageBrowser as getEnabledPackage } from '@sitecore-cloudsdk/core/internal';
-import { event, init as initEvents } from '@sitecore-cloudsdk/events/browser';
-import { PACKAGE_NAME } from '../../consts';
+import { event } from '@sitecore-cloudsdk/events/browser';
 import type { WidgetNavigationClickEventParams } from '../../events/interfaces';
 import { WidgetNavigationClickEvent } from '../../events/widget-navigation-click-event';
-import { awaitInit } from '../../init/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
 
 /**
  * This function sends a widget navigation click event from browser.
@@ -16,8 +13,6 @@ export async function widgetNavigationClick(widgetNavigationClickEventParams: Wi
   await awaitInit();
 
   const widgetNavigationClickEventDTO = new WidgetNavigationClickEvent(widgetNavigationClickEventParams).toDTO();
-
-  if (!getEnabledPackage(PACKAGE_NAME)) await initEvents({} as BrowserSettings);
 
   await event(widgetNavigationClickEventDTO);
 }

@@ -1,5 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventServerModule from '@sitecore-cloudsdk/events/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 import type { SearchEventRequest } from '../../events/interfaces';
 import { widgetFacetClickServer } from './widget-facet-click-event-server';
@@ -57,7 +56,6 @@ describe('widgetFacetClickServer', () => {
     request: widgetItemRequest,
     widgetId: '12345'
   };
-  const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -73,50 +71,10 @@ describe('widgetFacetClickServer', () => {
   });
 
   it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue(undefined);
-
-    await widgetFacetClickServer(httpRequest, widgetItemEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith(httpRequest, {
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'filter',
-        value: {
-          context: {
-            page: {
-              uri: 'https://www.sitecore.com/products/content-cloud'
-            }
-          },
-          filters: [],
-          request: {
-            advanced_query_text: widgetItemRequest.advancedQueryText,
-            keyword: widgetItemRequest.keyword,
-            modified_keyword: widgetItemRequest.modifiedKeyword,
-            num_requested: widgetItemRequest.numRequested,
-            num_results: widgetItemRequest.numResults,
-            page_number: widgetItemRequest.pageNumber,
-            page_size: widgetItemRequest.pageSize,
-            redirect_url: widgetItemRequest.redirectUrl,
-            total_results: widgetItemRequest.totalResults
-          },
-          rfk_id: '12345'
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_CLICK'
-    });
-  });
-
-  it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
 
     await widgetFacetClickServer(httpRequest, widgetItemEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith(httpRequest, {
       channel: 'WEB',

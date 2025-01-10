@@ -1,11 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { Request, Response } from '@sitecore-cloudsdk/utils';
-import { event, init as initEvents } from '@sitecore-cloudsdk/events/server';
+import { event } from '@sitecore-cloudsdk/events/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import { EntityViewEvent } from '../../events/entity-view-event';
 import type { EntityViewEventParams } from '../../events/interfaces';
-import { PACKAGE_NAME } from '../../consts';
-import type { ServerSettings } from '../../types';
-import { getEnabledPackageServer as getEnabledPackage } from '@sitecore-cloudsdk/core/internal';
+import { verifySearchPackageExistence } from '../../initializer/server/initializer';
 
 /**
  * This function sends an entity view event from server.
@@ -13,7 +11,7 @@ import { getEnabledPackageServer as getEnabledPackage } from '@sitecore-cloudsdk
  * @param entityViewEventParams - An object containing conversion event params from {@link EntityViewEventParams}
  */
 export async function entityViewServer(httpRequest: Request, entityViewEventParams: EntityViewEventParams) {
-  if (!getEnabledPackage(PACKAGE_NAME)) await initEvents({} as Request, {} as Response, {} as ServerSettings);
+  verifySearchPackageExistence();
 
   const conversionEventDTO = new EntityViewEvent(entityViewEventParams).toDTO();
 

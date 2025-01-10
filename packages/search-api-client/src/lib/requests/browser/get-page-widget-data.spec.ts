@@ -1,7 +1,5 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import { ErrorMessages } from '../../consts';
-import * as getSettingsModule from '../../init/browser/initializer';
-import { init } from '../../init/browser/initializer';
 import { Context } from '../../request-entities/context/context';
 import * as sendPostRequestModule from '../post-request';
 import { getPageWidgetData } from './get-page-widget-data';
@@ -27,26 +25,13 @@ describe('getPageWidgetData function', () => {
     return {} as unknown as sendPostRequestModule.SearchEndpointResponse;
   });
 
-  const getSettingsSpy = jest.spyOn(getSettingsModule, 'getSettings');
-  getSettingsSpy.mockReturnValue(settings);
+  jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it(`should construct the request and call sendPostRequest with context`, async () => {
-    const contextRequestData = new Context({ page: { uri: '/test' } });
-
-    const expectedBody = JSON.stringify(contextRequestData.toDTO());
-
-    init(settings);
-    await getPageWidgetData('/test');
-
-    expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, settings);
-  });
-
-  it(`should construct the request and call sendPostRequest with context using new init`, async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
     jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
 

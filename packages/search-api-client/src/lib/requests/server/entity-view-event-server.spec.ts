@@ -1,8 +1,7 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventServerModule from '@sitecore-cloudsdk/events/server';
+import { event } from '@sitecore-cloudsdk/events/server';
 import type { SearchEventEntity } from '../../events/interfaces';
 import { entityViewServer } from './entity-view-event-server';
-import { event } from '@sitecore-cloudsdk/events/server';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -54,7 +53,6 @@ describe('entityViewEventServer', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud'
   };
-  const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -69,46 +67,11 @@ describe('entityViewEventServer', () => {
     jest.clearAllMocks();
   });
 
-  it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue(undefined);
-
-    await entityViewServer(httpRequest, entityViewEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith(httpRequest, {
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        value: {
-          context: {
-            page: {
-              uri: entityViewEventData.pathname
-            }
-          },
-          entities: [
-            {
-              attributes: entityViewEventData.entity.attributes,
-              entity_subtype: entityViewEventData.entity.entityType,
-              entity_type: entityViewEventData.entity.entity,
-              id: entityViewEventData.entity.id,
-              source_id: entityViewEventData.entity.sourceId,
-              uri: entityViewEventData.entity.uri
-            }
-          ]
-        }
-      },
-      type: 'VIEW'
-    });
-  });
-
   it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
 
     await entityViewServer(httpRequest, entityViewEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith(httpRequest, {
       currency: 'EUR',

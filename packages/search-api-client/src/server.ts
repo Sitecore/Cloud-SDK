@@ -32,7 +32,6 @@ export type {
 } from './lib/request-entities/widgets/interfaces';
 export type { WidgetItem } from './lib/request-entities/widgets/widget-item';
 
-export { getSettings, initServer as init } from './lib/init/server/initializer';
 export { getWidgetDataServer as getWidgetData } from './lib/requests/server/get-widget-data-server';
 export { getPageWidgetDataServer as getPageWidgetData } from './lib/requests/server/get-page-widget-data-server';
 export { widgetViewServer as widgetView } from './lib/requests/server/widget-view-event-server';

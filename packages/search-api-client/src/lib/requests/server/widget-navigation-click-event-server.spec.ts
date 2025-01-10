@@ -1,5 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventServerModule from '@sitecore-cloudsdk/events/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 import { widgetNavigationClickServer } from './widget-navigation-click-event-server';
 
@@ -44,7 +43,6 @@ describe('widgetNavigationClickServer', () => {
     pathname: 'https://www.sitecore.com/products/content-cloud',
     widgetId: '12345'
   };
-  const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -60,40 +58,10 @@ describe('widgetNavigationClickServer', () => {
   });
 
   it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue(undefined);
-
-    await widgetNavigationClickServer(httpRequest, widgetNavigationEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith(httpRequest, {
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'navigation',
-        value: {
-          context: {
-            page: {
-              uri: widgetNavigationEventData.pathname
-            }
-          },
-          index: widgetNavigationEventData.itemPosition,
-
-          rfk_id: widgetNavigationEventData.widgetId
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_NAVIGATION_CLICK'
-    });
-  });
-
-  it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
 
     await widgetNavigationClickServer(httpRequest, widgetNavigationEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith(httpRequest, {
       channel: 'WEB',

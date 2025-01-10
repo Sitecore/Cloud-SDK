@@ -35,7 +35,6 @@ export type { WidgetItem } from './lib/request-entities/widgets/widget-item';
 export { getWidgetData } from './lib/requests/browser/get-widget-data';
 export { getPageWidgetData } from './lib/requests/browser/get-page-widget-data';
 export { widgetNavigationClick } from './lib/requests/browser/widget-navigation-click-event';
-export { getSettings, init } from './lib/init/browser/initializer';
 export { widgetItemClick } from './lib/requests/browser/widget-item-click-event';
 export { widgetSuggestionClick } from './lib/requests/browser/widget-suggestion-click-event';
 export { widgetFacetClick } from './lib/requests/browser/widget-facet-click-event';

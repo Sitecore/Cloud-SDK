@@ -1,5 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventServerModule from '@sitecore-cloudsdk/events/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 import type { SearchEventRequest } from '../../events/interfaces';
 import { widgetSuggestionClickServer } from './widget-suggestion-click-event-server';
@@ -68,7 +67,6 @@ describe('widgetSuggestionClickServer', () => {
     request: eventRequestData,
     widgetId: '12345'
   };
-  const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -84,49 +82,10 @@ describe('widgetSuggestionClickServer', () => {
   });
 
   it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue(undefined);
-    await widgetSuggestionClickServer(httpRequest, widgetSuggestionClickEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith(httpRequest, {
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'suggestion',
-        value: {
-          context: {
-            page: {
-              uri: widgetSuggestionClickEventData.pathname
-            }
-          },
-          filters: [],
-          request: {
-            advanced_query_text: widgetSuggestionClickEventData.request.advancedQueryText,
-            keyword: widgetSuggestionClickEventData.request.keyword,
-            modified_keyword: widgetSuggestionClickEventData.request.modifiedKeyword,
-            num_requested: widgetSuggestionClickEventData.request.numRequested,
-            num_results: widgetSuggestionClickEventData.request.numResults,
-            page_number: widgetSuggestionClickEventData.request.pageNumber,
-            page_size: widgetSuggestionClickEventData.request.pageSize,
-            redirect_url: widgetSuggestionClickEventData.request.redirectUrl,
-            total_results: widgetSuggestionClickEventData.request.totalResults
-          },
-          rfk_id: widgetSuggestionClickEventData.widgetId
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_CLICK'
-    });
-  });
-
-  it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
 
     await widgetSuggestionClickServer(httpRequest, widgetSuggestionClickEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith(httpRequest, {
       channel: 'WEB',

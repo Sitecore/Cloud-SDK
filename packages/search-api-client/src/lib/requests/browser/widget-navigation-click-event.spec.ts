@@ -1,7 +1,5 @@
-import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventsBrowserModule from '@sitecore-cloudsdk/events/browser';
 import { event } from '@sitecore-cloudsdk/events/browser';
-import * as initializerModule from '../../init/browser/initializer';
+import * as initializerModule from '../../initializer/browser/initializer';
 import { widgetNavigationClick } from './widget-navigation-click-event';
 
 jest.mock('@sitecore-cloudsdk/events/browser', () => {
@@ -28,8 +26,6 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
 });
 
 describe('widgetNavigationClick', () => {
-  jest.spyOn(coreInternalModule, 'getBrowserId').mockReturnValue('test_id');
-
   const widgetNavigationEventData = {
     channel: 'WEB',
     currency: 'EUR',
@@ -39,7 +35,6 @@ describe('widgetNavigationClick', () => {
     pathname: 'https://www.sitecore.com/products/content-cloud',
     widgetId: '12345'
   };
-  const initEventsSpy = jest.spyOn(eventsBrowserModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -55,42 +50,11 @@ describe('widgetNavigationClick', () => {
     jest.restoreAllMocks();
   });
 
-  it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue(undefined);
-
-    await widgetNavigationClick(widgetNavigationEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith({
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'navigation',
-        value: {
-          context: {
-            page: {
-              uri: widgetNavigationEventData.pathname
-            }
-          },
-          index: widgetNavigationEventData.itemPosition,
-          rfk_id: widgetNavigationEventData.widgetId
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_NAVIGATION_CLICK'
-    });
-  });
-
   it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
 
     await widgetNavigationClick(widgetNavigationEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith({
       channel: 'WEB',

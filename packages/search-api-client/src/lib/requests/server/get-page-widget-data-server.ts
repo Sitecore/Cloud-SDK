@@ -1,10 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import {
-  getCloudSDKSettingsServer as getCloudSDKSettings,
-  getEnabledPackageServer as getEnabledPackage
-} from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
-import { getSettings } from '../../init/server/initializer';
+import { getCloudSDKSettingsServer as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages } from '../../consts';
+import { verifySearchPackageExistence } from '../../initializer/server/initializer';
 import { Context } from '../../request-entities/context/context';
 import type { Pathname } from '../../types';
 import type { SearchEndpointResponse } from '../post-request';
@@ -23,7 +20,9 @@ export async function getPageWidgetDataServer(pathname: Pathname): Promise<Searc
  */
 export async function getPageWidgetDataServer(context: Context): Promise<SearchEndpointResponse | null>;
 export async function getPageWidgetDataServer(param: Pathname | Context): Promise<SearchEndpointResponse | null> {
-  const settings = getEnabledPackage(PACKAGE_NAME) ? getCloudSDKSettings() : getSettings();
+  verifySearchPackageExistence();
+
+  const settings = getCloudSDKSettings();
 
   let context: Context;
 

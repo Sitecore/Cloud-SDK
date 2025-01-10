@@ -1,11 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { ServerSettings } from '@sitecore-cloudsdk/core/internal';
-import { getEnabledPackageServer as getEnabledPackage } from '@sitecore-cloudsdk/core/internal';
-import { event, init as initEvents } from '@sitecore-cloudsdk/events/server';
-import type { Request, Response } from '@sitecore-cloudsdk/utils';
-import { PACKAGE_NAME } from '../../consts';
+import { event } from '@sitecore-cloudsdk/events/server';
+import type { Request } from '@sitecore-cloudsdk/utils';
 import type { WidgetItemClickEventParams } from '../../events/interfaces';
 import { WidgetItemClickEvent } from '../../events/widget-item-click-event';
+import { verifySearchPackageExistence } from '../../initializer/server/initializer';
 
 /**
  * This function sends a widget click event from server.
@@ -17,7 +15,7 @@ export async function widgetItemClickServer(
   httpRequest: Request,
   widgetItemClickEventParams: WidgetItemClickEventParams
 ) {
-  if (!getEnabledPackage(PACKAGE_NAME)) await initEvents({} as Request, {} as Response, {} as ServerSettings);
+  verifySearchPackageExistence();
 
   const widgetClickEventDTO = new WidgetItemClickEvent(widgetItemClickEventParams).toDTO();
 

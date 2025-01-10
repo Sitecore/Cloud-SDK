@@ -1,12 +1,17 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
+import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
+import {
+  debug,
+  enabledPackagesBrowser as enabledPackages,
+  getEnabledPackageBrowser as getEnabledPackage,
+  PackageInitializer
+} from '@sitecore-cloudsdk/core/internal';
 import {
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
   PACKAGE_INITIALIZER_METHOD_NAME
 } from '@sitecore-cloudsdk/events/browser';
-import { PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
-import { PackageInitializer, debug, enabledPackagesBrowser as enabledPackages } from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
 import type { BrowserSettings } from './interfaces';
-import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 
 // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
 export async function sideEffects() {
@@ -43,4 +48,15 @@ declare module '@sitecore-cloudsdk/core/browser' {
   interface CloudSDKBrowserInitializer {
     addSearch: typeof addSearch;
   }
+}
+
+/**
+ * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ */
+export async function awaitInit() {
+  const initState = getEnabledPackage(PACKAGE_NAME)?.initState;
+
+  if (!initState) throw new Error(ErrorMessages.IE_0018);
+
+  await initState;
 }

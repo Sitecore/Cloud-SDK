@@ -1,7 +1,7 @@
-import { addSearch, sideEffects } from './initializer';
-import { PackageInitializerServer } from '@sitecore-cloudsdk/core/internal';
-import { SEARCH_NAMESPACE } from '../../consts';
 import debug from 'debug';
+import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
+import { addSearch, sideEffects, verifySearchPackageExistence } from './initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -43,8 +43,8 @@ describe('addSearch', () => {
     const fakeThis = {};
     const result = addSearch.call(fakeThis as any);
 
-    expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
-    expect(PackageInitializerServer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects });
+    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledTimes(1);
+    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects });
     expect(result).toEqual(fakeThis);
   });
 
@@ -54,12 +54,28 @@ describe('addSearch', () => {
 
     const result = addSearch.call(fakeThis as any, mockSettings);
 
-    expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
-    expect(PackageInitializerServer).toHaveBeenCalledWith({
+    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledTimes(1);
+    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledWith({
       dependencies: pkgDeps,
       settings: mockSettings,
       sideEffects
     });
     expect(result).toEqual(fakeThis);
+  });
+});
+
+describe('verifySearchPackageExistence', () => {
+  it('should not throw an error when the package is enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(true as any);
+
+    expect(() => verifySearchPackageExistence()).not.toThrow();
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
+  });
+
+  it('should throw an error when the package is not enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(false as any);
+
+    expect(() => verifySearchPackageExistence()).toThrow(ErrorMessages.IE_0019);
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
   });
 });

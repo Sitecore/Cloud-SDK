@@ -1,6 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as getSettingsModule from '../../init/browser/initializer';
-import { init } from '../../init/browser/initializer';
 import { Context } from '../../request-entities/context/context';
 import { WidgetItem } from '../../request-entities/widgets/widget-item';
 import { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
@@ -24,19 +22,22 @@ describe('getWidgetData function', () => {
     siteName: 'siteName',
     sitecoreEdgeContextId: 'sitecoreEdgeContextId.com'
   };
+
   const sendPostRequestSpy = jest.spyOn(sendPostRequestModule, 'sendPostRequest');
   sendPostRequestSpy.mockImplementation(async () => {
     return {} as unknown as sendPostRequestModule.SearchEndpointResponse;
   });
 
-  const getSettingsSpy = jest.spyOn(getSettingsModule, 'getSettings');
-  getSettingsSpy.mockReturnValue(settings);
+  jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
 
   afterEach(() => {
     jest.clearAllMocks();
   });
 
   it(`should construct the response and call sendPostRequest without context`, async () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
+    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
+
     const validWidgetItem = {
       entity: 'test',
       widgetId: 'test'
@@ -47,7 +48,6 @@ describe('getWidgetData function', () => {
 
     const expectedBody = JSON.stringify(widgetRequest.toDTO());
 
-    init(settings);
     await getWidgetData(widgetRequest);
 
     expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
@@ -55,28 +55,9 @@ describe('getWidgetData function', () => {
   });
 
   it(`should construct the response and call sendPostRequest with context`, async () => {
-    const validWidgetItem = {
-      entity: 'test',
-      widgetId: 'test'
-    };
-
-    const widget1 = new WidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
-    const widgetRequest = new WidgetRequestData([widget1]);
-
-    const contextRequestData = new Context({ locale: { country: 'us', language: 'en' } });
-
-    const expectedBody = JSON.stringify({ ...contextRequestData.toDTO(), ...widgetRequest.toDTO() });
-
-    init(settings);
-    await getWidgetData(widgetRequest, contextRequestData);
-
-    expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, settings);
-  });
-
-  it(`should construct the response and call sendPostRequest with context using new init`, async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
     jest.spyOn(coreInternalModule, 'getCloudSDKSettingsBrowser').mockReturnValue(settings as any);
+
     const validWidgetItem = {
       entity: 'test',
       widgetId: 'test'

@@ -1,12 +1,13 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { PACKAGE_NAME as EVENTS_PACKAGE_NAME, PACKAGE_INITIALIZER_METHOD_NAME } from '@sitecore-cloudsdk/events/server';
-import { PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
 import {
-  PackageInitializerServer,
   debug,
-  enabledPackagesServer as enabledPackages
+  enabledPackagesServer as enabledPackages,
+  getEnabledPackageServer as getEnabledPackage,
+  PackageInitializerServer
 } from '@sitecore-cloudsdk/core/internal';
 import { CloudSDKServerInitializer } from '@sitecore-cloudsdk/core/server';
+import { PACKAGE_NAME as EVENTS_PACKAGE_NAME, PACKAGE_INITIALIZER_METHOD_NAME } from '@sitecore-cloudsdk/events/server';
+import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
 import type { ServerSettings } from './interfaces';
 
 export async function sideEffects() {
@@ -43,4 +44,8 @@ declare module '@sitecore-cloudsdk/core/server' {
   interface CloudSDKServerInitializer {
     addSearch: typeof addSearch;
   }
+}
+
+export function verifySearchPackageExistence() {
+  if (!getEnabledPackage(PACKAGE_NAME)) throw Error(ErrorMessages.IE_0019);
 }

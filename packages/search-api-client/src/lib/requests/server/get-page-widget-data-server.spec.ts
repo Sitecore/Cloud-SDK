@@ -1,7 +1,5 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import { ErrorMessages } from '../../consts';
-import * as getSettingsModule from '../../init/server/initializer';
-import { initServer } from '../../init/server/initializer';
 import { Context } from '../../request-entities/context/context';
 import * as sendPostRequestModule from '../post-request';
 import { getPageWidgetDataServer } from './get-page-widget-data-server';
@@ -23,59 +21,12 @@ describe('getPageWidgetDataServer', () => {
     jest.clearAllMocks();
   });
 
-  const req = {
-    cookies: {
-      get() {
-        return 'test';
-      },
-      set: () => undefined
-    },
-    headers: {
-      get: () => '',
-      host: ''
-    },
-    ip: undefined,
-    url: ''
-  };
-
-  const res = {
-    cookies: {
-      set() {
-        return 'test';
-      }
-    }
-  };
-
   const sendPostRequestSpy = jest.spyOn(sendPostRequestModule, 'sendPostRequest');
   sendPostRequestSpy.mockImplementation(async () => {
     return {} as unknown as sendPostRequestModule.SearchEndpointResponse;
   });
 
   it(`should construct the request and call sendPostRequest`, async () => {
-    const settings = {
-      siteName: 'siteName',
-      sitecoreEdgeContextId: 'sitecoreEdgeContextId,com',
-      userId: 'userId'
-    };
-
-    const getSettingsSpy = jest.spyOn(getSettingsModule, 'getSettings');
-    getSettingsSpy.mockReturnValue(settings);
-
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
-
-    const contextRequestData = new Context({ page: { uri: '/test' } });
-
-    const expectedBody = JSON.stringify(contextRequestData.toDTO());
-
-    await initServer(req, res, settings);
-
-    await getPageWidgetDataServer('/test');
-
-    expect(sendPostRequestSpy).toHaveBeenCalledTimes(1);
-    expect(sendPostRequestSpy).toHaveBeenCalledWith(expectedBody, settings);
-  });
-
-  it(`should construct the request and call sendPostRequest using new init`, async () => {
     const newSettings = {
       cookieSettings: {
         domain: 'cDomain',
@@ -102,6 +53,8 @@ describe('getPageWidgetDataServer', () => {
   });
 
   it('should throw an error if context is missing page property', async () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+
     const context = new Context({});
 
     await expect(getPageWidgetDataServer(context)).rejects.toThrow(ErrorMessages.MV_0006);

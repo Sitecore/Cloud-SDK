@@ -1,11 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { BrowserSettings } from '@sitecore-cloudsdk/core/internal';
-import { getEnabledPackageBrowser as getEnabledPackage } from '@sitecore-cloudsdk/core/internal';
-import { event, init as initEvents } from '@sitecore-cloudsdk/events/browser';
-import { PACKAGE_NAME } from '../../consts';
+import { event } from '@sitecore-cloudsdk/events/browser';
 import type { WidgetViewEventParams } from '../../events/interfaces';
 import { WidgetViewEvent } from '../../events/widget-view-event';
-import { awaitInit } from '../../init/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
 
 /**
  * This function sends a widget view event from browser.
@@ -15,8 +12,6 @@ export async function widgetView(widgetViewEventParams: WidgetViewEventParams) {
   await awaitInit();
 
   const widgetViewEventDTO = new WidgetViewEvent(widgetViewEventParams).toDTO();
-
-  if (!getEnabledPackage(PACKAGE_NAME)) await initEvents({} as BrowserSettings);
 
   await event(widgetViewEventDTO);
 }

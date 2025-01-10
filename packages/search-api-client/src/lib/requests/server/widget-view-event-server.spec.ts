@@ -1,5 +1,4 @@
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import * as eventServerModule from '@sitecore-cloudsdk/events/server';
 import { event } from '@sitecore-cloudsdk/events/server';
 import type { SearchEventEntity, SearchEventRequest, WidgetViewEventParams } from '../../events/interfaces';
 import { widgetViewServer } from './widget-view-event-server';
@@ -81,7 +80,6 @@ describe('widgetViewServer', () => {
     request: eventRequestData,
     widgetId: '12345'
   };
-  const initEventsSpy = jest.spyOn(eventServerModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -96,67 +94,11 @@ describe('widgetViewServer', () => {
     jest.clearAllMocks();
   });
 
-  it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValue(undefined);
-
-    await widgetViewServer(httpRequest, widgetViewEventData);
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith(httpRequest, {
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'entity',
-        value: {
-          context: {
-            page: {
-              uri: widgetViewEventData.pathname
-            }
-          },
-          entities: [
-            {
-              attributes: widgetViewEventData.entities[0].attributes,
-              entity_subtype: widgetViewEventData.entities[0].entityType,
-              entity_type: widgetViewEventData.entities[0].entity,
-              id: widgetViewEventData.entities[0].id,
-              source_id: widgetViewEventData.entities[0].sourceId,
-              uri: widgetViewEventData.entities[0].uri
-            },
-            {
-              attributes: widgetViewEventData.entities[1].attributes,
-              entity_subtype: widgetViewEventData.entities[1].entityType,
-              entity_type: widgetViewEventData.entities[1].entity,
-              id: widgetViewEventData.entities[1].id,
-              source_id: widgetViewEventData.entities[1].sourceId,
-              uri: widgetViewEventData.entities[1].uri
-            }
-          ],
-          request: {
-            advanced_query_text: widgetViewEventData.request.advancedQueryText,
-            keyword: widgetViewEventData.request.keyword,
-            modified_keyword: widgetViewEventData.request.modifiedKeyword,
-            num_requested: widgetViewEventData.request.numRequested,
-            num_results: widgetViewEventData.request.numResults,
-            page_number: widgetViewEventData.request.pageNumber,
-            page_size: widgetViewEventData.request.pageSize,
-            redirect_url: widgetViewEventData.request.redirectUrl,
-            total_results: widgetViewEventData.request.totalResults
-          },
-          rfk_id: widgetViewEventData.widgetId
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_VIEW'
-    });
-  });
-
   it('Sends a custom event with the correct values using new init', async () => {
     jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
 
     await widgetViewServer(httpRequest, widgetViewEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith(httpRequest, {
       channel: 'WEB',

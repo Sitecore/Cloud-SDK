@@ -1,8 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as eventsBrowserModule from '@sitecore-cloudsdk/events/browser';
 import { event } from '@sitecore-cloudsdk/events/browser';
 import type { SearchEventEntity, SearchEventRequest } from '../../events/interfaces';
-import * as initializerModule from '../../init/browser/initializer';
+import * as initializerModule from '../../initializer/browser/initializer';
 import { widgetItemClick } from './widget-item-click-event';
 
 jest.mock('@sitecore-cloudsdk/events/browser', () => {
@@ -29,9 +28,6 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
 });
 
 describe('widgetItemClick', () => {
-  jest.spyOn(core, 'getBrowserId').mockReturnValue('test_id');
-  const initEventsSpy = jest.spyOn(eventsBrowserModule, 'init');
-
   const eventRequestData: SearchEventRequest = {
     advancedQueryText: 'test1',
     keyword: 'test_keyword',
@@ -80,62 +76,12 @@ describe('widgetItemClick', () => {
     jest.clearAllMocks();
   });
 
-  it('Sends a custom event with the correct values', async () => {
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue(undefined);
-
-    await widgetItemClick(widgetItemClickEventData);
-
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledTimes(1);
-    expect(event).toHaveBeenCalledWith({
-      channel: 'WEB',
-      currency: 'EUR',
-      language: 'EN',
-      page: 'test',
-      searchData: {
-        action_cause: 'entity',
-        value: {
-          context: {
-            page: {
-              uri: widgetItemClickEventData.pathname
-            }
-          },
-          entities: [
-            {
-              attributes: widgetItemClickEventData.entity.attributes,
-              entity_subtype: widgetItemClickEventData.entity.entityType,
-              entity_type: widgetItemClickEventData.entity.entity,
-              id: widgetItemClickEventData.entity.id,
-              source_id: widgetItemClickEventData.entity.sourceId,
-              uri: widgetItemClickEventData.entity.uri
-            }
-          ],
-          index: widgetItemClickEventData.itemPosition,
-          request: {
-            advanced_query_text: widgetItemClickEventData.request.advancedQueryText,
-            keyword: widgetItemClickEventData.request.keyword,
-            modified_keyword: widgetItemClickEventData.request.modifiedKeyword,
-            num_requested: widgetItemClickEventData.request.numRequested,
-            num_results: widgetItemClickEventData.request.numResults,
-            page_number: widgetItemClickEventData.request.pageNumber,
-            page_size: widgetItemClickEventData.request.pageSize,
-            redirect_url: widgetItemClickEventData.request.redirectUrl,
-            total_results: widgetItemClickEventData.request.totalResults
-          },
-          rfk_id: widgetItemClickEventData.widgetId
-        }
-      },
-      type: 'SC_SEARCH_WIDGET_CLICK'
-    });
-  });
   it('Sends a custom event with the correct values using the new init', async () => {
     jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
     jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
 
     await widgetItemClick(widgetItemClickEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith({
       channel: 'WEB',

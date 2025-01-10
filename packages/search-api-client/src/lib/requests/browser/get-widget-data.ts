@@ -1,10 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage
+  getCloudSDKSettingsBrowser as getCloudSDKSettings // getEnabledPackageBrowser as getEnabledPackage
 } from '@sitecore-cloudsdk/core/internal';
-import { PACKAGE_NAME } from '../../consts';
-import { getSettings } from '../../init/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
 import type { Context } from '../../request-entities/context/context';
 import type { WidgetRequestData } from '../../request-entities/widgets/widget-request-data';
 import type { SearchEndpointResponse } from '../post-request';
@@ -19,7 +17,9 @@ export async function getWidgetData(
   widgetRequestData: WidgetRequestData,
   contextRequestData?: Context
 ): Promise<SearchEndpointResponse | null> {
-  const settings = getEnabledPackage(PACKAGE_NAME)?.initState ? getCloudSDKSettings() : getSettings();
+  await awaitInit();
+
+  const settings = getCloudSDKSettings();
 
   const widgetRequestBody = widgetRequestData.toDTO();
   const contextRequestBody = contextRequestData?.toDTO();

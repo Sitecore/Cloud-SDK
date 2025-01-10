@@ -1,9 +1,8 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
-import * as eventsBrowserModule from '@sitecore-cloudsdk/events/browser';
-import * as initializerModule from '../../init/browser/initializer';
-import type { SearchEventEntity } from '../../events/interfaces';
-import { entityView } from './entity-view-event';
 import { event } from '@sitecore-cloudsdk/events/browser';
+import type { SearchEventEntity } from '../../events/interfaces';
+import * as initializerModule from '../../initializer/browser/initializer';
+import { entityView } from './entity-view-event';
 
 jest.mock('@sitecore-cloudsdk/events/browser', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/events/browser');
@@ -49,7 +48,6 @@ describe('entityView', () => {
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud'
   };
-  const initEventsSpy = jest.spyOn(eventsBrowserModule, 'init');
 
   beforeEach(() => {
     const mockFetch = Promise.resolve({
@@ -70,7 +68,6 @@ describe('entityView', () => {
 
     const response = await entityView(entityViewEventData);
 
-    expect(initEventsSpy).toHaveBeenCalledTimes(1);
     expect(response).toBeNull();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith({
@@ -105,7 +102,6 @@ describe('entityView', () => {
 
     const response = await entityView(entityViewEventData);
 
-    expect(initEventsSpy).not.toHaveBeenCalled();
     expect(response).toBeNull();
     expect(event).toHaveBeenCalledTimes(1);
     expect(event).toHaveBeenCalledWith({
