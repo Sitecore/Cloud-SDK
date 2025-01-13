@@ -5,7 +5,7 @@
   ],
   "cucumberautocomplete.syncfeatures": "integration-tests/*-e2e/src/integration/*.feature",
   "cSpell.words": ["cloudsdk", "sitecore"],
-  "conventionalCommits.scopes": ["core", "utils", "events", "personalize", "search-api-client"],
+  "conventionalCommits.scopes": ["core", "utils", "events", "personalize", "search"],
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[feature]": {

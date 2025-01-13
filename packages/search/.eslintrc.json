@@ -1,0 +1,24 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "ignorePatterns": ["!**/*", "browser.cjs", "browser.js", "server.cjs", "server.js"],
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "parserOptions": {
+        "project": ["tsconfig.json", "tsconfig.spec.json"],
+        "tsconfigRootDir": "./packages/search"
+      },
+      "rules": {
+        "@typescript-eslint/naming-convention": [
+          "error",
+          {
+            "selector": "memberLike",
+            "modifiers": ["private"],
+            "format": ["camelCase"],
+            "leadingUnderscore": "require"
+          }
+        ]
+      }
+    }
+  ]
+}

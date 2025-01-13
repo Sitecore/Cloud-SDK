@@ -19,14 +19,14 @@ jobs:
         with:
           cache: 'npm'
       - run: npm ci
-      - name: Create npm link for personalize, events and search-api-client
+      - name: Create npm link for personalize, events and search
         run: |
-          npx nx run personalize:build && npx nx run events:build && npx nx run search-api-client:build
+          npx nx run personalize:build && npx nx run events:build && npx nx run search:build
           cd ./packages/events/          
           npm link
           cd ../personalize/
           npm link
-          cd ../search-api-client/
+          cd ../search/
           npm link
           cd ../core/
           npm link
@@ -50,7 +50,7 @@ jobs:
           npm link @sitecore-cloudsdk/core --save
           npm link @sitecore-cloudsdk/events --save
           npm link @sitecore-cloudsdk/personalize --save
-          npm link @sitecore-cloudsdk/search-api-client --save
+          npm link @sitecore-cloudsdk/search --save
           cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/page-template.tsx ./pages/index.tsx
           cp $GITHUB_WORKSPACE/tools/testing_resources/installation-test/app-templates/next-app/middleware-template.ts ./middleware.ts
       - name: Build Next app

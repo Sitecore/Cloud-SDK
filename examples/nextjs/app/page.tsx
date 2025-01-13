@@ -8,7 +8,7 @@ import {
   RecommendationWidgetItem,
   WidgetRequestData,
   widgetView
-} from '@sitecore-cloudsdk/search-api-client/browser';
+} from '@sitecore-cloudsdk/search/browser';
 import { withAuthGuard } from '../components/AuthGuard';
 import { Newsletter } from '../components/Newsletter';
 import { PersonalizeBanner } from '../components/PersonalizeBanner';

@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import '@sitecore-cloudsdk/personalize/browser';
-import '@sitecore-cloudsdk/search-api-client/browser';
+import '@sitecore-cloudsdk/search/browser';
 
 export function CloudSDKComponent() {
   const pathName = usePathname();

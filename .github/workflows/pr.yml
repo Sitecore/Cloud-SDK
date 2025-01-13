@@ -170,8 +170,8 @@ jobs:
         with:
           name: personalize-e2e-report
           path: integration-tests/personalize-e2e/cypress/results/
-  search-api-client-e2e-tests:
-    name: Run search-api-client e2e
+  search-e2e-tests:
+    name: Run search e2e
     runs-on: ubuntu-latest
     outputs:
       affected: ${{ steps.get-affected.outputs.affected }}
@@ -188,18 +188,18 @@ jobs:
         run: npx nx run cypress-utils:build
       - name: Get affected app
         id: get-affected
-        run: echo "affected=$(npx nx show projects --affected --with-target search-api-client-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        run: echo "affected=$(npx nx show projects --affected --with-target search-e2e --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
       - name: Run e2e tests
-        run: npx nx affected --target=search-api-client-e2e --base=remotes/origin/master --head=HEAD
-      - name: Generate search-api-client test report
+        run: npx nx affected --target=search-e2e --base=remotes/origin/master --head=HEAD
+      - name: Generate search test report
         if: always() && steps.get-affected.outputs.affected != '[]'
-        run: npm run generate-e2e-search-api-client-report
-      - name: Upload search-api-client test report
+        run: npm run generate-e2e-search-report
+      - name: Upload search test report
         if: always() && steps.get-affected.outputs.affected != '[]'
         uses: actions/upload-artifact@v4
         with:
-          name: search-api-client-e2e-report
-          path: integration-tests/search-api-client-e2e/cypress/results/
+          name: search-e2e-report
+          path: integration-tests/search-e2e/cypress/results/
   add-label:
     name: Create labels based on commits
     runs-on: ubuntu-latest
@@ -250,7 +250,7 @@ jobs:
           fetch-depth: 0
       - name: Check the title format
         run: |
-          pr_title_regex="^(build|chore|ci|docs|style|refactor|perf|test|revert|feat|fix)(\((core|utils|events|personalize|search-api-client)\))?!?: CDK-[0-9]+"
+          pr_title_regex="^(build|chore|ci|docs|style|refactor|perf|test|revert|feat|fix)(\((core|utils|events|personalize|search)\))?!?: CDK-[0-9]+"
           if [[ "${{ github.event.pull_request.title }}" =~ $pr_title_regex ]]; then
             echo "The title is properly formated."
             exit 0
@@ -270,7 +270,7 @@ jobs:
         core-e2e-tests,
         events-e2e-tests,
         personalize-e2e-tests,
-        search-api-client-e2e-tests,
+        search-e2e-tests,
         check-pr-title
       ]
     steps:

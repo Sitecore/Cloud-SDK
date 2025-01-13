@@ -3,7 +3,7 @@ import type { NextRequest } from 'next/server';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
 import '@sitecore-cloudsdk/events/server';
 import '@sitecore-cloudsdk/personalize/server';
-import '@sitecore-cloudsdk/search-api-client/server';
+import '@sitecore-cloudsdk/search/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();

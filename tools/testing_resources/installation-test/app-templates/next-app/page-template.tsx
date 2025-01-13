@@ -3,7 +3,7 @@ import React from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import { pageView } from '@sitecore-cloudsdk/events/browser';
 import { personalize } from '@sitecore-cloudsdk/personalize/browser';
-import { entityView, getPageWidgetData } from '@sitecore-cloudsdk/search-api-client/browser';
+import { entityView, getPageWidgetData } from '@sitecore-cloudsdk/search';
 
 function Home() {
   const eventData = {

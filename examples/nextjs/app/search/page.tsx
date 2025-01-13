@@ -11,7 +11,7 @@ import {
   widgetItemClick,
   WidgetRequestData,
   widgetView
-} from '@sitecore-cloudsdk/search-api-client/browser';
+} from '@sitecore-cloudsdk/search/browser';
 import { withAuthGuard } from '../../components/AuthGuard';
 import FacetCheckbox from '../../components/FacetCheckbox';
 import PaginationLoadMore from '../../components/Listing/PaginationLoadMore';

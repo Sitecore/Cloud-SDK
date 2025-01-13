@@ -1,0 +1,55 @@
+{
+  "name": "integration-tests/search-next",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "integration-tests/search-next",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/next:build",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "outputPath": "dist/integration-tests/search-next"
+      },
+      "configurations": {
+        "development": {
+          "outputPath": "integration-tests/search-next"
+        },
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/next:server",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "integration-tests/search-next:build",
+        "dev": true,
+        "port": 4300
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "integration-tests/search-next:build:development",
+          "dev": true
+        },
+        "production": {
+          "buildTarget": "integration-tests/search-next:build:production",
+          "dev": false
+        }
+      }
+    },
+    "export": {
+      "executor": "@nx/next:export",
+      "options": {
+        "buildTarget": "integration-tests/search-next:build:production"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["integration-tests/search-next/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  },
+  "tags": []
+}
