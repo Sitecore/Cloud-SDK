@@ -1,15 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
-import {
-  getBrowserId,
-  getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage,
-  getSettings,
-  handleGetSettingsError
-} from '@sitecore-cloudsdk/core/internal';
+import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
-import { awaitInit } from '../../init/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 import type { EventData } from './custom-event';
@@ -23,25 +16,13 @@ import type { EventData } from './custom-event';
 export async function event(eventData: EventData): Promise<EPResponse | null> {
   await awaitInit();
 
-  if (getEnabledPackage(PACKAGE_NAME)?.initState) {
-    const settings = getCloudSDKSettings();
-    const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const settings = getCloudSDKSettings();
+  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
 
-    return new CustomEvent({
-      eventData,
-      id,
-      sendEvent,
-      settings: settings as unknown as Settings
-    }).send();
-  } else {
-    const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0014);
-    const id = getBrowserId();
-
-    return new CustomEvent({
-      eventData,
-      id,
-      sendEvent,
-      settings
-    }).send();
-  }
+  return new CustomEvent({
+    eventData,
+    id,
+    sendEvent,
+    settings: settings as unknown as Settings
+  }).send();
 }

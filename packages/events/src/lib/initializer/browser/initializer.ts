@@ -1,7 +1,12 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
-import { debug, enabledPackagesBrowser as enabledPackages, PackageInitializer } from '@sitecore-cloudsdk/core/internal';
-import { EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
+import {
+  debug,
+  enabledPackagesBrowser as enabledPackages,
+  getEnabledPackageBrowser as getEnabledPackage,
+  PackageInitializer
+} from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_NAME, PACKAGE_VERSION } from '../../consts';
 import { event } from '../../events/custom-event/event';
 import { form } from '../../events/custom-event/form';
 import { identity } from '../../events/identity/identity';
@@ -60,4 +65,12 @@ declare global {
     processEventQueue?: typeof processEventQueue;
     clearEventQueue?: typeof clearEventQueue;
   }
+}
+
+export async function awaitInit() {
+  const initState = getEnabledPackage(PACKAGE_NAME)?.initState;
+
+  if (!initState) throw new Error(ErrorMessages.IE_0014);
+
+  await initState;
 }

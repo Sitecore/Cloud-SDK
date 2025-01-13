@@ -5,7 +5,6 @@ import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
 import { pageViewServer } from './page-view-server';
 
-jest.mock('../../init/server/initializer');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
 
@@ -75,55 +74,6 @@ describe('pageViewServer', () => {
       language: 'EN',
       page: 'races'
     };
-    jest.clearAllMocks();
-  });
-
-  describe('old init', () => {
-    const getSettingsServerSpy = jest.spyOn(coreInternalModule, 'getSettingsServer');
-    const getCookieNameFromRequestSpy = jest
-      .spyOn(coreInternalModule, 'getCookieValueFromRequest')
-      .mockReturnValueOnce('1234');
-
-    beforeEach(() => {
-      (coreInternalModule as any).builderInstanceServer = null;
-    });
-
-    it('should send a PageViewEvent to the server', async () => {
-      const mockSettings = {
-        cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: ''
-      };
-      getSettingsServerSpy.mockReturnValue(mockSettings);
-
-      const response = await pageViewServer(req, { ...pageViewData, extensionData });
-
-      expect(getCookieNameFromRequestSpy).toHaveBeenCalled();
-      expect(PageViewEvent).toHaveBeenCalledWith({
-        id: '1234',
-        pageViewData: { ...pageViewData, extensionData },
-        searchParams: '',
-        sendEvent,
-        settings: mockSettings
-      });
-      expect(response).toBe('mockedResponse');
-    });
-
-    it('should throw error if settings have not been configured properly', async () => {
-      getSettingsServerSpy.mockImplementation(() => {
-        throw new Error(ErrorMessages.IE_0008);
-      });
-
-      await expect(async () => await pageViewServer(req, { ...pageViewData, extensionData })).rejects.toThrow(
-        ErrorMessages.IE_0015
-      );
-    });
   });
 
   describe('new init', () => {
@@ -146,6 +96,7 @@ describe('pageViewServer', () => {
 
     beforeEach(() => {
       (coreInternalModule as any).builderInstanceServer = {};
+      jest.clearAllMocks();
     });
 
     it('should send a PageViewEvent to the server', async () => {
@@ -163,17 +114,14 @@ describe('pageViewServer', () => {
       });
       expect(response).toBe('mockedResponse');
     });
+
     it('should throw error new init used but events not initialized', async () => {
       jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
-      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockImplementationOnce(
-        () =>
-          ({
-            cookieSettings: { names: { browserId: 'test' } }
-          } as any)
-      );
+      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValueOnce({
+        cookieSettings: { name: { browserId: 'test' } }
+      } as any);
 
       await expect(async () => await pageViewServer(req)).rejects.toThrow(ErrorMessages.IE_0015);
-
       expect(PageViewEvent).not.toHaveBeenCalled();
     });
   });

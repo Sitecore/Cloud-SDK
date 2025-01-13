@@ -1,8 +1,7 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../consts';
 import type { EventData } from '../events/custom-event/custom-event';
-import * as initializerModule from '../init/browser/initializer';
+import * as initializerModule from '../initializer/browser/initializer';
 import { addToEventQueue } from './addToEventQueue';
 import * as eventQueue from './eventStorage';
 
@@ -45,39 +44,6 @@ const eventData: EventData = {
 };
 
 describe('addToEventQueue', () => {
-  describe('old init', () => {
-    const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
-    global.fetch = jest.fn().mockImplementation(() => mockFetch);
-
-    beforeEach(() => {
-      jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue(undefined);
-    });
-    afterEach(() => {
-      jest.clearAllMocks();
-    });
-    it('should add an event to the queue with the correct payload', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      jest.spyOn(core, 'getSettings').mockReturnValueOnce({} as core.Settings);
-      jest.spyOn(core, 'getBrowserId').mockReturnValueOnce('id');
-
-      const enqueueEventSpy = jest.spyOn(eventQueue.eventQueue, 'enqueueEvent');
-
-      await addToEventQueue(eventData);
-
-      expect(enqueueEventSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should throw error if settings have not been configured properly', async () => {
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getSettingsSpy = jest.spyOn(core, 'getSettings');
-
-      getSettingsSpy.mockImplementation(() => {
-        throw new Error(ErrorMessages.IE_0008);
-      });
-
-      await expect(async () => await addToEventQueue(eventData)).rejects.toThrow(ErrorMessages.IE_0014);
-    });
-  });
   describe('new init', () => {
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' } as core.EPResponse) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);

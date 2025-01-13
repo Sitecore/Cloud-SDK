@@ -1,18 +1,16 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  builderInstanceServer,
   getCloudSDKSettingsServer,
   getCookieValueFromRequest,
-  getEnabledPackageServer,
-  getSettingsServer,
-  handleGetSettingsError
+  getEnabledPackageServer
 } from '@sitecore-cloudsdk/core/internal';
 import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import type { Request } from '@sitecore-cloudsdk/utils';
 import { isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PACKAGE_NAME } from '../consts';
+import { PACKAGE_NAME } from '../consts';
 import type { PersonalizeSettings } from '../initializer/browser/interfaces';
+import { verifyPersonalizePackageExistence } from '../initializer/server/initializer';
 import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
@@ -30,6 +28,7 @@ export function personalizeServer<T extends Request>(
   personalizeData: PersonalizeData,
   opts?: { timeout?: number }
 ): Promise<unknown | null | FailedCalledFlowsResponse> {
+  verifyPersonalizePackageExistence();
   const requestUrl = new URL(request.url as string, `https://localhost`);
   const userAgent = isNextJsMiddlewareRequest(request)
     ? request.headers.get('user-agent')
@@ -38,24 +37,16 @@ export function personalizeServer<T extends Request>(
   if (!personalizeData.geo && isNextJsMiddlewareRequest(request) && request.geo && Object.keys(request.geo).length)
     personalizeData.geo = request.geo as PersonalizeGeolocation;
 
-  let settings: Settings | CloudSDKSettings, id: string, guestId: string;
+  const settings: CloudSDKSettings = getCloudSDKSettingsServer();
+
   const personalizeSettings = getEnabledPackageServer(PACKAGE_NAME)?.settings as PersonalizeSettings;
 
-  if (builderInstanceServer) {
-    if (!getEnabledPackageServer(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0017);
+  const browserId: string = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
+  const guestId: string = getCookieValueFromRequest(request, personalizeSettings.cookieSettings.name.guestId);
 
-    settings = getCloudSDKSettingsServer();
-    id = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
-    guestId = getCookieValueFromRequest(request, personalizeSettings.cookieSettings.name.guestId);
-  } else {
-    settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0017);
-    id = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
-    guestId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.guestId);
-  }
-
-  return new Personalizer(id, guestId).getInteractiveExperienceData(
+  return new Personalizer(browserId, guestId).getInteractiveExperienceData(
     personalizeData,
-    settings as Settings,
+    settings as unknown as Settings,
     requestUrl.search,
     {
       timeout: opts?.timeout,

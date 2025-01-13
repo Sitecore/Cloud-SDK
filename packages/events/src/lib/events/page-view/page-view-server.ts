@@ -1,15 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { type EPResponse, handleGetSettingsError, type Settings } from '@sitecore-cloudsdk/core/internal';
-import {
-  builderInstanceServer,
-  getCloudSDKSettingsServer,
-  getCookieValueFromRequest,
-  getEnabledPackageServer as getEnabledPackage,
-  getSettingsServer
-} from '@sitecore-cloudsdk/core/internal';
+import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import { getCloudSDKSettingsServer, getCookieValueFromRequest } from '@sitecore-cloudsdk/core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import type { Request } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
+import { verifyEventsPackageExistence } from '../../initializer/server/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import type { PageViewData } from './page-view-event';
 import { PageViewEvent } from './page-view-event';
@@ -22,27 +16,18 @@ import { PageViewEvent } from './page-view-event';
  * @returns The response object that Sitecore EP returns
  */
 export function pageViewServer<T extends Request>(request: T, pageViewData?: PageViewData): Promise<EPResponse | null> {
-  let settings: Settings | CloudSDKSettings;
-  let browserId: string;
+  verifyEventsPackageExistence();
+  const settings: CloudSDKSettings = getCloudSDKSettingsServer();
+  const browserId: string = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
 
   // Host is irrelevant but necessary to support relative URL
   const requestUrl = new URL(request.url as string, `https://localhost`);
-
-  if (builderInstanceServer) {
-    if (!getEnabledPackage(PACKAGE_NAME)) throw new Error(ErrorMessages.IE_0015);
-
-    settings = getCloudSDKSettingsServer();
-    browserId = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
-  } else {
-    settings = handleGetSettingsError(getSettingsServer, ErrorMessages.IE_0015);
-    browserId = getCookieValueFromRequest(request, settings.cookieSettings.cookieNames.browserId);
-  }
 
   return new PageViewEvent({
     id: browserId,
     pageViewData,
     searchParams: requestUrl.search,
     sendEvent,
-    settings: settings as Settings
+    settings: settings as unknown as Settings
   }).send();
 }

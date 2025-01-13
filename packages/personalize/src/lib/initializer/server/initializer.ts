@@ -10,7 +10,7 @@ import {
   PackageInitializerServer
 } from '@sitecore-cloudsdk/core/internal';
 import { CloudSDKServerInitializer } from '@sitecore-cloudsdk/core/server';
-import { PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
 import { createPersonalizeCookie } from './createPersonalizeCookie';
 import type { PersonalizeSettings, ServerSettings } from './interfaces';
 
@@ -56,4 +56,8 @@ declare module '@sitecore-cloudsdk/core/server' {
   interface CloudSDKServerInitializer {
     addPersonalize: typeof addPersonalize;
   }
+}
+
+export function verifyPersonalizePackageExistence() {
+  if (!getEnabledPackageServer(PACKAGE_NAME)) throw Error(ErrorMessages.IE_0017);
 }

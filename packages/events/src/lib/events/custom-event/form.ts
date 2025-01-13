@@ -1,15 +1,8 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
-import {
-  getBrowserId,
-  getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage,
-  getSettings,
-  handleGetSettingsError
-} from '@sitecore-cloudsdk/core/internal';
+import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PACKAGE_NAME } from '../../consts';
-import { awaitInit } from '../../init/browser/initializer';
+import { awaitInit } from '../../initializer/browser/initializer';
 import { sendEvent } from '../send-event/sendEvent';
 import { CustomEvent } from './custom-event';
 
@@ -28,45 +21,23 @@ export async function form(
 ): Promise<EPResponse | null> {
   await awaitInit();
 
-  if (getEnabledPackage(PACKAGE_NAME)?.initState) {
-    const settings = getCloudSDKSettings();
-    const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
-    const formEvent = new CustomEvent({
-      eventData: {
-        extensionData: {
-          componentInstanceId,
-          formId,
-          interactionType: interactionType.toUpperCase()
-        },
-        type: 'FORM'
+  const settings = getCloudSDKSettings();
+  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const formEvent = new CustomEvent({
+    eventData: {
+      extensionData: {
+        componentInstanceId,
+        formId,
+        interactionType: interactionType.toUpperCase()
       },
-      id,
-      sendEvent,
-      settings: settings as unknown as Settings
-    });
+      type: 'FORM'
+    },
+    id,
+    sendEvent,
+    settings: settings as unknown as Settings
+  });
 
-    formEvent.page = undefined as unknown as string;
+  formEvent.page = undefined as unknown as string;
 
-    return formEvent.send();
-  } else {
-    const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0014);
-    const id = getBrowserId();
-    const formEvent = new CustomEvent({
-      eventData: {
-        extensionData: {
-          componentInstanceId,
-          formId,
-          interactionType: interactionType.toUpperCase()
-        },
-        type: 'FORM'
-      },
-      id,
-      sendEvent,
-      settings
-    });
-
-    formEvent.page = undefined as unknown as string;
-
-    return formEvent.send();
-  }
+  return formEvent.send();
 }

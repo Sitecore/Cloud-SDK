@@ -1,7 +1,9 @@
 import debug from 'debug';
 import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
-import { EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
-import { addEvents, sideEffects } from './initializer';
+import * as core from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_VERSION } from '../../consts';
+import { addEvents, awaitInit, sideEffects } from './initializer';
+import * as initModule from './initializer';
 
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -70,5 +72,31 @@ describe('addEvents', () => {
     expect(PackageInitializer).toHaveBeenCalledTimes(1);
     expect(PackageInitializer).toHaveBeenCalledWith({ sideEffects });
     expect(result).toEqual(fakeThis);
+  });
+});
+
+describe('awaitInit', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+  it('should throw error if initState promise is null', async () => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line import/namespace
+    initModule.initState = null;
+    jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValueOnce(null as any);
+    await expect(async () => {
+      await awaitInit();
+    }).rejects.toThrow(ErrorMessages.IE_0014);
+  });
+
+  it('should not throw if initState is a Promise', async () => {
+    const getEnabledPackageSpy = jest
+      .spyOn(core, 'getEnabledPackageBrowser')
+      .mockReturnValueOnce({ initState: Promise.resolve() } as any);
+
+    await initModule.awaitInit();
+
+    expect(getEnabledPackageSpy).toHaveBeenCalledTimes(1);
   });
 });

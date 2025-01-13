@@ -1,9 +1,10 @@
 import debug from 'debug';
 import { PackageInitializerServer } from '@sitecore-cloudsdk/core/internal';
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
-import { PERSONALIZE_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_NAME, PERSONALIZE_NAMESPACE } from '../../consts';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 import * as initializerModule from './initializer';
+import { verifyPersonalizePackageExistence } from './initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -93,5 +94,21 @@ describe('addPersonalize', () => {
       sideEffects: initializerModule.sideEffects
     });
     expect(result).toEqual(fakeThis);
+  });
+});
+
+describe('verifyPersonalizePackageExistence', () => {
+  it('should not throw an error when the package is enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(true as any);
+
+    expect(() => verifyPersonalizePackageExistence()).not.toThrow();
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
+  });
+
+  it('should throw an error when the package is not enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(false as any);
+
+    expect(() => verifyPersonalizePackageExistence()).toThrow(ErrorMessages.IE_0017);
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
   });
 });

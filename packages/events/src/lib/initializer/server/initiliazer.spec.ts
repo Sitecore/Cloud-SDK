@@ -1,7 +1,8 @@
-import { addEvents, sideEffects } from './initializer';
-import { EVENTS_NAMESPACE } from '../../consts';
-import { PackageInitializerServer } from '@sitecore-cloudsdk/core/internal';
 import debug from 'debug';
+import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
+import { PackageInitializerServer } from '@sitecore-cloudsdk/core/internal';
+import { ErrorMessages, EVENTS_NAMESPACE, PACKAGE_NAME } from '../../consts';
+import { addEvents, sideEffects, verifyEventsPackageExistence } from './initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/core/internal');
@@ -42,5 +43,21 @@ describe('addEvents', () => {
     expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
     expect(PackageInitializerServer).toHaveBeenCalledWith({ sideEffects });
     expect(result).toEqual(fakeThis);
+  });
+});
+
+describe('verifyEventsPackageExistence', () => {
+  it('should not throw an error when the package is enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(true as any);
+
+    expect(() => verifyEventsPackageExistence()).not.toThrow();
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
+  });
+
+  it('should throw an error when the package is not enabled', () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(false as any);
+
+    expect(() => verifyEventsPackageExistence()).toThrow(ErrorMessages.IE_0015);
+    expect(coreInternalModule.getEnabledPackageServer).toHaveBeenCalledWith(PACKAGE_NAME);
   });
 });

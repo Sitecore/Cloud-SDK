@@ -6,7 +6,6 @@ import type { IdentityData } from './identity-event';
 import { IdentityEvent } from './identity-event';
 import { identityServer } from './identityServer';
 
-jest.mock('../../init/server/initializer');
 jest.mock('./identity-event');
 jest.mock('@sitecore-cloudsdk/utils', () => {
   const originalModule = jest.requireActual('@sitecore-cloudsdk/utils');
@@ -77,62 +76,6 @@ describe('identityServer', () => {
     };
   });
 
-  describe('old init', () => {
-    const getCookieValueFromRequestSpy = jest
-      .spyOn(coreInternalModule, 'getCookieValueFromRequest')
-      .mockReturnValueOnce('1234');
-    const getSettingsServerSpy = jest.spyOn(coreInternalModule, 'getSettingsServer');
-
-    beforeEach(() => {
-      (coreInternalModule as any).builderInstanceServer = null;
-    });
-
-    it('should send a custom event to the server', async () => {
-      getSettingsServerSpy.mockReturnValue({
-        cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: ''
-      });
-
-      await identityServer(req, { ...identityData, extensionData });
-
-      expect(getCookieValueFromRequestSpy).toHaveBeenCalled();
-      expect(IdentityEvent).toHaveBeenCalledTimes(1);
-      expect(IdentityEvent).toHaveBeenCalledWith({
-        id: '1234',
-        identityData: { ...identityData, extensionData },
-        sendEvent,
-        settings: {
-          cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
-          },
-          siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: ''
-        }
-      });
-    });
-
-    it('should throw error if settings have not been configured properly', async () => {
-      getSettingsServerSpy.mockImplementation(() => {
-        throw new Error(ErrorMessages.IE_0008);
-      });
-
-      await expect(async () => await identityServer(req, { ...identityData, extensionData })).rejects.toThrow(
-        ErrorMessages.IE_0015
-      );
-    });
-  });
-
   describe('new init', () => {
     const newSettings = {
       cookieSettings: {
@@ -180,14 +123,12 @@ describe('identityServer', () => {
         'Test error'
       );
     });
+
     it('should throw error new init used but events not initialized', async () => {
       jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
-      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockImplementationOnce(
-        () =>
-          ({
-            cookieSettings: { names: { browserId: 'test' } }
-          } as any)
-      );
+      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValueOnce({
+        cookieSettings: { name: { browserId: 'test' } }
+      } as any);
 
       await expect(async () => await identityServer(req, { ...identityData, extensionData })).rejects.toThrow(
         ErrorMessages.IE_0015

@@ -1,15 +1,10 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  getBrowserId,
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
-  getEnabledPackageBrowser as getEnabledPackage,
-  getGuestId as getGuestIdFromCore,
-  getSettings,
-  handleGetSettingsError
+  getGuestId as getGuestIdFromCore
 } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages, PACKAGE_NAME } from '../consts';
-import { awaitInit } from '../init/browser/initializer';
+import { awaitInit } from '../initializer/browser/initializer';
 
 /**
  * A function that returns the guest ID.
@@ -23,15 +18,8 @@ import { awaitInit } from '../init/browser/initializer';
 export async function getGuestId(): Promise<string> {
   await awaitInit();
 
-  if (getEnabledPackage(PACKAGE_NAME)?.initState) {
-    const settings = getCloudSDKSettings();
-    const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
+  const settings = getCloudSDKSettings();
+  const id = getCookieValueClientSide(settings.cookieSettings.name.browserId);
 
-    return getGuestIdFromCore(id, settings.sitecoreEdgeContextId, settings.sitecoreEdgeUrl);
-  } else {
-    const settings = handleGetSettingsError(getSettings, ErrorMessages.IE_0014);
-    const id = getBrowserId();
-
-    return getGuestIdFromCore(id, settings.sitecoreEdgeContextId, settings.sitecoreEdgeUrl);
-  }
+  return getGuestIdFromCore(id, settings.sitecoreEdgeContextId, settings.sitecoreEdgeUrl);
 }
