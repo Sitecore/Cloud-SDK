@@ -20,7 +20,6 @@ export const CORRELATION_ID_HEADER = 'x-sc-correlation-id';
 export enum ErrorMessages {
   IE_0001 = `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`,
   IE_0003 = '[IE-0003] Unable to set the "sc_{SitecoreEdgeContextId}" cookie because the browser ID could not be retrieved from the server. Make sure to set the correct values for "sitecoreEdgeContextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
-  IE_0008 = '[IE-0008] You must first initialize the "core" package. Run the "init" function.',
   IE_0011 = '[IE-0011] Unable to set the "sc_{SitecoreEdgeContextId}_personalize" cookie because the guest ID could not be retrieved from the server. Make sure to set the correct values for "sitecoreEdgeContextId" and "siteName". If the issue persists, try again later or use try-catch blocks to handle this error.',
   IE_0012 = '[IE-0012] You must first initialize the Cloud SDK. Import "CloudSDK" from "@sitecore-cloudsdk/core/browser", then run "CloudSDK().initialize()".',
   IE_0013 = '[IE-0013] You must first initialize the Cloud SDK. Import "CloudSDK" from "@sitecore-cloudsdk/core/server", then run "await CloudSDK().initialize()".',

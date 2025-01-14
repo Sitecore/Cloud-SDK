@@ -1,7 +1,7 @@
+import debug from 'debug';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { EVENTS_NAMESPACE, PACKAGE_VERSION, X_CLIENT_SOFTWARE_ID } from '../../consts';
-import debug from 'debug';
 import { sendEvent } from './sendEvent';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
@@ -34,10 +34,10 @@ jest.mock('debug', () => {
 
 const settingsObj: core.Settings = {
   cookieSettings: {
-    cookieDomain: 'cDomain',
-    cookieExpiryDays: 730,
-    cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-    cookiePath: '/'
+    domain: 'cDomain',
+    expiryDays: 730,
+    name: { browserId: 'bid_name' },
+    path: '/'
   },
   siteName: 'site',
   sitecoreEdgeContextId: '123',

@@ -39,10 +39,10 @@ describe('sendCallFlowsRequest', () => {
 
   const settingsObj: core.Settings = {
     cookieSettings: {
-      cookieDomain: 'cDomain',
-      cookieExpiryDays: 730,
-      cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-      cookiePath: '/'
+      domain: 'cDomain',
+      expiryDays: 730,
+      name: { browserId: 'bid_name' },
+      path: '/'
     },
     siteName: 'site',
     sitecoreEdgeContextId: '123',

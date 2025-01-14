@@ -7,8 +7,6 @@ export const SEARCH_NAMESPACE = 'sitecore-cloudsdk:search';
 /* eslint-disable max-len */
 export enum ErrorMessages {
   IE_0001 = `[IE-0001] You are trying to run a browser-side function on the server side. On the server side, run the server-side equivalent of the function, available in "server" modules.`,
-  IE_0009 = '[IE-0009] You must first initialize the "search/browser" package. Run the "init" function.',
-  IE_0010 = '[IE-0010] You must first initialize the "search/server" package. Run the "init" function.',
   IE_0018 = '[IE-0018] You must first initialize the Cloud SDK and the "search" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/browser", and import "@sitecore-cloudsdk/search/browser". Then, run "CloudSDK().addEvents().addSearch().initialize()".',
   IE_0019 = '[IE-0019] You must first initialize the Cloud SDK and the "search" package. First, import "CloudSDK" from "@sitecore-cloudsdk/core/server", and import "@sitecore-cloudsdk/search/server". Then, run "await CloudSDK().addEvents().addSearch().initialize()".',
   IV_0007 = '[IV-0007] Incorrect value for "limit". Set the value to an integer between 1 and 100 inclusive.',

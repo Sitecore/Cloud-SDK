@@ -1,7 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import type { EPResponse } from '@sitecore-cloudsdk/core/internal';
 import { getCloudSDKSettingsServer, getCookieValueFromRequest } from '@sitecore-cloudsdk/core/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import type { Request } from '@sitecore-cloudsdk/utils';
 import { verifyEventsPackageExistence } from '../../initializer/server/initializer';
 import { sendEvent } from '../send-event/sendEvent';
@@ -17,7 +16,7 @@ import { PageViewEvent } from './page-view-event';
  */
 export function pageViewServer<T extends Request>(request: T, pageViewData?: PageViewData): Promise<EPResponse | null> {
   verifyEventsPackageExistence();
-  const settings: CloudSDKSettings = getCloudSDKSettingsServer();
+  const settings = getCloudSDKSettingsServer();
   const browserId: string = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
 
   // Host is irrelevant but necessary to support relative URL
@@ -28,6 +27,6 @@ export function pageViewServer<T extends Request>(request: T, pageViewData?: Pag
     pageViewData,
     searchParams: requestUrl.search,
     sendEvent,
-    settings: settings as unknown as Settings
+    settings
   }).send();
 }

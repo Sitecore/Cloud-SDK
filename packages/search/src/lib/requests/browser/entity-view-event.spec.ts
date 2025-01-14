@@ -1,3 +1,4 @@
+import * as browser from '@sitecore-cloudsdk/core/browser';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import { event } from '@sitecore-cloudsdk/events/browser';
 import type { SearchEventEntity } from '../../events/interfaces';
@@ -27,8 +28,19 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
   };
 });
 
+jest.mock('@sitecore-cloudsdk/core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/browser');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+    getBrowserId: jest.fn()
+  };
+});
+
 describe('entityView', () => {
-  jest.spyOn(core, 'getBrowserId').mockReturnValue('test_id');
+  jest.spyOn(browser, 'getBrowserId').mockReturnValue('test_id');
 
   const eventEntityData: SearchEventEntity = {
     attributes: {

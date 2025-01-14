@@ -3,7 +3,6 @@ import {
   getCloudSDKSettingsBrowser as getCloudSDKSettings,
   getEnabledPackageBrowser as getEnabledPackage
 } from '@sitecore-cloudsdk/core/internal';
-import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 import { PACKAGE_NAME } from '../consts';
 import { awaitInit } from '../initializer/browser/initializer';
@@ -31,7 +30,7 @@ export async function personalize(
 
   return new Personalizer(browserId, guestId).getInteractiveExperienceData(
     personalizeData,
-    cloudSDKSettings as unknown as Settings,
+    cloudSDKSettings,
     window.location.search,
     {
       timeout: opts?.timeout

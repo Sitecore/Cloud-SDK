@@ -40,27 +40,44 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
 });
 
 describe('event', () => {
-  describe('new init', () => {
-    afterEach(() => {
-      jest.clearAllMocks();
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should send a custom event to the server', async () => {
+    const id = 'test_id';
+    const eventData = {
+      channel: 'WEB',
+      currency: 'EUR',
+      extensionData: {
+        extKey: 'extValue'
+      },
+      language: 'EN',
+      page: 'races',
+      type: 'CUSTOM_TYPE'
+    };
+    jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const getCookieValueClientSideSpy = jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce(id);
+    const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockReturnValue({
+      cookieSettings: {
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: ''
     });
 
-    it('should send a custom event to the server', async () => {
-      const id = 'test_id';
-      const eventData = {
-        channel: 'WEB',
-        currency: 'EUR',
-        extensionData: {
-          extKey: 'extValue'
-        },
-        language: 'EN',
-        page: 'races',
-        type: 'CUSTOM_TYPE'
-      };
-      jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: true } as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-      const getCookieValueClientSideSpy = jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce(id);
-      const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockReturnValue({
+    await event(eventData);
+
+    expect(CustomEvent).toHaveBeenCalledWith({
+      eventData,
+      id,
+      sendEvent,
+      settings: {
         cookieSettings: {
           domain: 'cDomain',
           expiryDays: 730,
@@ -70,43 +87,24 @@ describe('event', () => {
         siteName: '456',
         sitecoreEdgeContextId: '123',
         sitecoreEdgeUrl: ''
-      });
-
-      await event(eventData);
-
-      expect(CustomEvent).toHaveBeenCalledWith({
-        eventData,
-        id,
-        sendEvent,
-        settings: {
-          cookieSettings: {
-            domain: 'cDomain',
-            expiryDays: 730,
-            name: { browserId: 'bid_name' },
-            path: '/'
-          },
-          siteName: '456',
-          sitecoreEdgeContextId: '123',
-          sitecoreEdgeUrl: ''
-        }
-      });
-
-      expect(CustomEvent).toHaveBeenCalledTimes(1);
-      expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+      }
     });
+
+    expect(CustomEvent).toHaveBeenCalledTimes(1);
+    expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
+    expect(getSettingsSpy).toHaveBeenCalledTimes(1);
   });
-  it('should throw error if settings have not been configured properly', async () => {
-    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
-    const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser');
-    getSettingsSpy.mockImplementation(() => {
-      throw new Error(ErrorMessages.IE_0014);
-    });
-    const eventData: EventData = {
-      channel: 'WEB',
-      currency: 'EUR',
-      type: 'CUSTOM_TYPE'
-    };
-    await expect(async () => await event(eventData)).rejects.toThrow(ErrorMessages.IE_0014);
+});
+it('should throw error if settings have not been configured properly', async () => {
+  jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+  const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser');
+  getSettingsSpy.mockImplementation(() => {
+    throw new Error(ErrorMessages.IE_0014);
   });
+  const eventData: EventData = {
+    channel: 'WEB',
+    currency: 'EUR',
+    type: 'CUSTOM_TYPE'
+  };
+  await expect(async () => await event(eventData)).rejects.toThrow(ErrorMessages.IE_0014);
 });

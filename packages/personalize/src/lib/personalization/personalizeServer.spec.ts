@@ -46,7 +46,6 @@ describe('personalizeServer', () => {
     jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValue(newSettings);
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
-    jest.spyOn(coreInternalModule, 'createCookies').mock;
     const getInteractiveExperienceDataSpy = jest.spyOn(Personalizer.prototype, 'getInteractiveExperienceData');
 
     const originalReq = {

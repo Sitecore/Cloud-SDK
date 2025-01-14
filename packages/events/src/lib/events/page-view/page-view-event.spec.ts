@@ -67,10 +67,10 @@ describe('PageViewEvent', () => {
 
     settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',

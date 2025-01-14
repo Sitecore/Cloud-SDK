@@ -1,3 +1,4 @@
+import type { ServerSettings } from '../types';
 import { sendPostRequest } from './post-request';
 
 describe('sendPostRequest', () => {
@@ -18,7 +19,7 @@ describe('sendPostRequest', () => {
       siteName: 'test',
       sitecoreEdgeContextId: 'test',
       sitecoreEdgeUrl: 'http://testurl.com'
-    };
+    } as ServerSettings;
 
     const result = await sendPostRequest(expectedBody, settings);
 
@@ -44,7 +45,7 @@ describe('sendPostRequest', () => {
       siteName: 'test',
       sitecoreEdgeContextId: 'test',
       sitecoreEdgeUrl: 'test'
-    };
+    } as ServerSettings;
 
     const result = await sendPostRequest(expectedBody, settings);
 

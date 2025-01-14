@@ -3,7 +3,7 @@ import {
   getCookiesValuesFromEdgeServer,
   getCookieValueFromMiddlewareRequest,
   getDefaultCookieAttributes,
-  getGuestId
+  getGuestIdServer
 } from '@sitecore-cloudsdk/core/internal';
 import type { Settings } from '@sitecore-cloudsdk/core/server';
 import type { MiddlewareNextResponse, MiddlewareRequest, Request, Response } from '@sitecore-cloudsdk/utils';
@@ -39,11 +39,7 @@ export async function handleNextJsMiddlewareCookie(
   if (guestIdCookieValue) guestIdValue = guestIdCookieValue;
   else if (cookiesValuesFromEdgeServer?.guestId) guestIdValue = cookiesValuesFromEdgeServer.guestId;
   else if (browserIdCookieValue) {
-    const guestIdCookieValueFromEdgeProxy = await getGuestId(
-      browserIdCookieValue,
-      cloudSDKSettings.sitecoreEdgeContextId,
-      cloudSDKSettings.sitecoreEdgeUrl
-    );
+    const guestIdCookieValueFromEdgeProxy = await getGuestIdServer(browserIdCookieValue);
     guestIdValue = guestIdCookieValueFromEdgeProxy;
   } else return;
 

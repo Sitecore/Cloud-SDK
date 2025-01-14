@@ -1,3 +1,4 @@
+import * as browserModule from '@sitecore-cloudsdk/core/browser';
 import * as internalModule from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
 import * as createPersonalizeCookieModule from './createPersonalizeCookie';
@@ -7,6 +8,12 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => ({
   __esModule: true,
   getCookiesValuesFromEdgeBrowser: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
+  getGuestId: jest.fn()
+}));
+
+jest.mock('@sitecore-cloudsdk/core/browser', () => ({
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  __esModule: true,
   getGuestId: jest.fn()
 }));
 
@@ -82,7 +89,7 @@ describe('createPersonalizeCookie', () => {
       .mockReturnValueOnce('browser_id_from_proxy');
     jest.spyOn(internalModule, 'getCookiesValuesFromEdgeBrowser').mockReturnValueOnce(undefined as any);
 
-    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
+    const getGuestIdSpy = jest.spyOn(browserModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
     const createCookieStringSpy = jest
       .spyOn(utilsModule, 'createCookieString')
       .mockReturnValueOnce('sc_123_personalize=guest_id_from_proxy');
@@ -102,7 +109,7 @@ describe('createPersonalizeCookie', () => {
       .spyOn(internalModule, 'getCookiesValuesFromEdgeBrowser')
       .mockReturnValueOnce({ browserId: '', guestId: '' } as any);
 
-    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestId');
+    const getGuestIdSpy = jest.spyOn(browserModule, 'getGuestId');
     const createCookieStringSpy = jest.spyOn(utilsModule, 'createCookieString');
 
     await createPersonalizeCookieModule.createPersonalizeCookie(mockSettings, mockCloudSDKSettings);

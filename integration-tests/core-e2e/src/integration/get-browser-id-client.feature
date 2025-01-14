@@ -14,4 +14,4 @@ Feature: Get Browser Id
     Scenario: Developer retrieves browser id using the corresponding method from the window without initializing CloudSDK
         Given the '/get-browser-id' page is loaded
         And the "getBrowserIdFromWindow" button is clicked
-        Then an error is thrown: '[IE-0008] You must first initialize the "core" package. Run the "init" function.'
+        Then an error is thrown: '[IE-0012] You must first initialize the Cloud SDK. Import "CloudSDK" from "@sitecore-cloudsdk/core/browser", then run "CloudSDK().initialize()".'

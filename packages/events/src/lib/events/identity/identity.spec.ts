@@ -88,46 +88,42 @@ describe('identity', () => {
     jest.clearAllMocks();
   });
 
-  describe('new init', () => {
-    it('should send an IdentityEvent to the server', async () => {
-      jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: Promise.resolve() } as any);
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValue();
-      const getCookieValueClientSideSpy = jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce(id);
-      const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockReturnValue({
-        cookieSettings: {
-          domain: 'cDomain',
-          expiryDays: 730,
-          name: { browserId: 'bid_name' },
-          path: '/'
-        },
-        siteName: '456',
-        sitecoreEdgeContextId: '123',
-        sitecoreEdgeUrl: ''
-      });
-
-      const response = await identity({ ...identityData, extensionData });
-
-      expect(IdentityEvent).toHaveBeenCalledWith({
-        id,
-        identityData: { ...identityData, extensionData },
-        sendEvent: sendEventModule.sendEvent,
-        settings: expect.objectContaining({})
-      });
-      expect(response).toBe('mockedResponse');
-      expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
-      expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+  it('should send an IdentityEvent to the server', async () => {
+    jest.spyOn(core, 'getEnabledPackageBrowser').mockReturnValue({ initState: Promise.resolve() } as any);
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValue();
+    const getCookieValueClientSideSpy = jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce(id);
+    const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser').mockReturnValue({
+      cookieSettings: {
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
+      },
+      siteName: '456',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: ''
     });
 
-    it('should throw error if settings have not been configured properly', async () => {
-      const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser');
-      jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+    const response = await identity({ ...identityData, extensionData });
 
-      getSettingsSpy.mockImplementation(() => {
-        throw new Error(ErrorMessages.IE_0014);
-      });
-      await expect(async () => await identity({ ...identityData, extensionData })).rejects.toThrow(
-        ErrorMessages.IE_0014
-      );
+    expect(IdentityEvent).toHaveBeenCalledWith({
+      id,
+      identityData: { ...identityData, extensionData },
+      sendEvent: sendEventModule.sendEvent,
+      settings: expect.objectContaining({})
     });
+    expect(response).toBe('mockedResponse');
+    expect(getCookieValueClientSideSpy).toHaveBeenCalledTimes(1);
+    expect(getSettingsSpy).toHaveBeenCalledTimes(1);
+  });
+
+  it('should throw error if settings have not been configured properly', async () => {
+    const getSettingsSpy = jest.spyOn(core, 'getCloudSDKSettingsBrowser');
+    jest.spyOn(initializerModule, 'awaitInit').mockResolvedValueOnce();
+
+    getSettingsSpy.mockImplementation(() => {
+      throw new Error(ErrorMessages.IE_0014);
+    });
+    await expect(async () => await identity({ ...identityData, extensionData })).rejects.toThrow(ErrorMessages.IE_0014);
   });
 });

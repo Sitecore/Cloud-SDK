@@ -8,7 +8,7 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => ({
   getCookieServerSide: jest.fn(),
   getCookiesValuesFromEdgeServer: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
-  getGuestId: jest.fn()
+  getGuestIdServer: jest.fn()
 }));
 
 jest.mock('@sitecore-cloudsdk/utils', () => ({
@@ -19,6 +19,16 @@ jest.mock('@sitecore-cloudsdk/utils', () => ({
   isNextJsMiddlewareRequest: jest.fn(),
   isNextJsMiddlewareResponse: jest.fn()
 }));
+
+jest.mock('@sitecore-cloudsdk/core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/browser');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule
+  };
+});
 
 describe('handleHttpCookie', () => {
   const mockSettings = {
@@ -125,7 +135,7 @@ describe('handleHttpCookie', () => {
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce({ name: 'sc_123', value: 'browser_id_from_proxy' });
 
-    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
+    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestIdServer').mockResolvedValueOnce('guest_id_from_proxy');
 
     const createCookieStringSpy = jest
       .spyOn(utilsModule, 'createCookieString')

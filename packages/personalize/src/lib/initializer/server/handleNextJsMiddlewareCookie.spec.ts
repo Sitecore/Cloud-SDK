@@ -7,7 +7,7 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => ({
   getCookieValueFromMiddlewareRequest: jest.fn(),
   getCookiesValuesFromEdgeServer: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
-  getGuestId: jest.fn()
+  getGuestIdServer: jest.fn()
 }));
 
 describe('handleMiddlewareRequest', () => {
@@ -84,7 +84,7 @@ describe('handleMiddlewareRequest', () => {
       .spyOn(internalModule, 'getCookiesValuesFromEdgeServer')
       .mockReturnValueOnce({ browserId: 'browser_id_from_proxy', guestId: 'guest_id_from_proxy' } as any);
 
-    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestId');
+    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestIdServer');
 
     await handleNextJsMiddlewareCookieModule.handleNextJsMiddlewareCookie(
       mockRequest,
@@ -119,7 +119,7 @@ describe('handleMiddlewareRequest', () => {
       .spyOn(internalModule, 'getCookiesValuesFromEdgeServer')
       .mockReturnValueOnce({ browserId: '', guestId: '' } as any);
 
-    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
+    const getGuestIdSpy = jest.spyOn(internalModule, 'getGuestIdServer').mockResolvedValueOnce('guest_id_from_proxy');
 
     await handleNextJsMiddlewareCookieModule.handleNextJsMiddlewareCookie(
       mockRequest,

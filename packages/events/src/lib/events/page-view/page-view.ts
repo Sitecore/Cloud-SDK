@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import type { EPResponse } from '@sitecore-cloudsdk/core/internal';
 import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 import { awaitInit } from '../../initializer/browser/initializer';
@@ -25,6 +25,6 @@ export async function pageView(pageViewData?: PageViewData): Promise<EPResponse 
     pageViewData,
     searchParams: window.location.search,
     sendEvent,
-    settings: settings as unknown as Settings
+    settings
   }).send();
 }

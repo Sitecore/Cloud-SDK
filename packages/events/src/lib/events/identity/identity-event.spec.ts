@@ -58,10 +58,10 @@ describe('Test Identity', () => {
 
     settingsMock = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -413,10 +413,10 @@ describe('Test Identity', () => {
     const extensionData = { test: { a: { b: 'b' }, c: 11 }, testz: 22 };
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -454,10 +454,10 @@ describe('Test Identity', () => {
     };
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -494,10 +494,10 @@ describe('Test Identity', () => {
     };
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -534,10 +534,10 @@ describe('Test Identity', () => {
     };
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -573,10 +573,10 @@ describe('Test Identity', () => {
 
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',

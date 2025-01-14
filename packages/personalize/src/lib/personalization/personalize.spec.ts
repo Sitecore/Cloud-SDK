@@ -1,3 +1,4 @@
+import * as coreBrowserModule from '@sitecore-cloudsdk/core/browser';
 import * as coreInternalModule from '@sitecore-cloudsdk/core/internal';
 import * as utilsModule from '@sitecore-cloudsdk/utils';
 import * as initializerModule from '../initializer/browser/initializer';
@@ -23,7 +24,8 @@ jest.mock('@sitecore-cloudsdk/core/browser', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     __esModule: true,
-    ...originalModule
+    ...originalModule,
+    getBrowserId: jest.fn()
   };
 });
 
@@ -74,10 +76,8 @@ describe('personalize', () => {
 
     const mockFetch = Promise.resolve({ json: () => Promise.resolve({ ref: 'ref' }) });
     global.fetch = jest.fn().mockImplementation(() => mockFetch);
-    jest.spyOn(coreInternalModule, 'getBrowserId').mockReturnValue(browserId);
+    jest.spyOn(coreBrowserModule, 'getBrowserId').mockReturnValue(browserId);
     jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue(guestId);
-
-    jest.spyOn(coreInternalModule, 'createCookies').mock;
 
     beforeEach(() => {
       jest.clearAllMocks();

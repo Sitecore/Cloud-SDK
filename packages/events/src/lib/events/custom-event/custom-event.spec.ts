@@ -1,4 +1,5 @@
 import * as core from '@sitecore-cloudsdk/core/internal';
+import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import * as utils from '@sitecore-cloudsdk/utils';
 import { ErrorMessages } from '../../consts';
 import { MAX_EXT_ATTRIBUTES } from '../consts';
@@ -42,12 +43,12 @@ describe('CustomEvent', () => {
 
   describe('constructor', () => {
     let eventData: EventData;
-    const settings: core.Settings = {
+    const settings: Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -144,10 +145,10 @@ describe('CustomEvent', () => {
   describe('send', () => {
     const settings: core.Settings = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -289,12 +290,12 @@ describe('CustomEvent', () => {
   });
   describe('search data', () => {
     it('should include sc_search if searchData is provided', async () => {
-      const settings: core.Settings = {
+      const settings: Settings = {
         cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
+          domain: 'cDomain',
+          expiryDays: 730,
+          name: { browserId: 'bid_name' },
+          path: '/'
         },
         siteName: '456',
         sitecoreEdgeContextId: '123',

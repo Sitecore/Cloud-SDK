@@ -2,7 +2,7 @@
 import {
   getCookiesValuesFromEdgeServer,
   getDefaultCookieAttributes,
-  getGuestId
+  getGuestIdServer
 } from '@sitecore-cloudsdk/core/internal';
 import type { Settings } from '@sitecore-cloudsdk/core/server';
 import {
@@ -52,11 +52,7 @@ export async function handleHttpCookie(
       defaultCookieAttributes
     );
   else if (browserIdCookie) {
-    const guestIdCookieValueFromEdgeProxy = await getGuestId(
-      browserIdCookie.value,
-      cloudSDKSettings.sitecoreEdgeContextId,
-      cloudSDKSettings.sitecoreEdgeUrl
-    );
+    const guestIdCookieValueFromEdgeProxy = await getGuestIdServer(browserIdCookie.value);
     guestIdCookieString = createCookieString(
       settings.cookieSettings.name.guestId,
       guestIdCookieValueFromEdgeProxy,

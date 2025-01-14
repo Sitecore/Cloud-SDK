@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { getCloudSDKSettingsBrowser as getCloudSDKSettings } from '@sitecore-cloudsdk/core/internal';
-import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import { getCookieValueClientSide } from '@sitecore-cloudsdk/utils';
 import type { EventData } from '../events';
 import { awaitInit } from '../initializer/browser/initializer';
@@ -20,7 +19,7 @@ export async function addToEventQueue(eventData: EventData): Promise<void> {
   const queueEventPayload: QueueEventPayload = {
     eventData,
     id,
-    settings: settings as unknown as Settings
+    settings
   };
 
   eventQueue.enqueueEvent(queueEventPayload);

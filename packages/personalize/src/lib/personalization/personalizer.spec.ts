@@ -1,4 +1,5 @@
 import debug from 'debug';
+import * as coreBrowserModule from '@sitecore-cloudsdk/core/browser';
 import * as core from '@sitecore-cloudsdk/core/internal';
 import { ErrorMessages as UtilsErrorMessages } from '@sitecore-cloudsdk/utils';
 import { ErrorMessages, PACKAGE_VERSION, PERSONALIZE_NAMESPACE } from '../consts';
@@ -17,6 +18,17 @@ jest.mock('@sitecore-cloudsdk/core/internal', () => {
   };
 });
 
+jest.mock('@sitecore-cloudsdk/core/browser', () => {
+  const originalModule = jest.requireActual('@sitecore-cloudsdk/core/browser');
+
+  return {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    __esModule: true,
+    ...originalModule,
+    getBrowserId: jest.fn()
+  };
+});
+
 jest.mock('debug', () => {
   return {
     // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -32,7 +44,7 @@ describe('Test Personalizer Class', () => {
   const browserId = 'browserId';
   const guestId = 'guestId';
 
-  jest.spyOn(core, 'getBrowserId').mockReturnValue(browserId);
+  jest.spyOn(coreBrowserModule, 'getBrowserId').mockReturnValue(browserId);
 
   beforeEach(() => {
     jest.spyOn(core as any, 'language').mockImplementation(() => 'EN');
@@ -45,10 +57,10 @@ describe('Test Personalizer Class', () => {
 
     settingsMock = {
       cookieSettings: {
-        cookieDomain: 'cDomain',
-        cookieExpiryDays: 730,
-        cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-        cookiePath: '/'
+        domain: 'cDomain',
+        expiryDays: 730,
+        name: { browserId: 'bid_name' },
+        path: '/'
       },
       siteName: '456',
       sitecoreEdgeContextId: '123',
@@ -199,10 +211,10 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
           siteName: '456',
           sitecoreEdgeContextId: '123',
@@ -252,10 +264,10 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
 
           siteName: '456',
@@ -301,10 +313,10 @@ describe('Test Personalizer Class', () => {
 
       settingsMock = {
         cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
+          domain: 'cDomain',
+          expiryDays: 730,
+          name: { browserId: 'bid_name' },
+          path: '/'
         },
 
         siteName: '456',
@@ -344,10 +356,10 @@ describe('Test Personalizer Class', () => {
 
       settingsMock = {
         cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
+          domain: 'cDomain',
+          expiryDays: 730,
+          name: { browserId: 'bid_name' },
+          path: '/'
         },
 
         siteName: '456',
@@ -383,10 +395,10 @@ describe('Test Personalizer Class', () => {
 
       settingsMock = {
         cookieSettings: {
-          cookieDomain: 'cDomain',
-          cookieExpiryDays: 730,
-          cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-          cookiePath: '/'
+          domain: 'cDomain',
+          expiryDays: 730,
+          name: { browserId: 'bid_name' },
+          path: '/'
         },
 
         siteName: '456',
@@ -594,10 +606,10 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
 
           siteName: '456',
@@ -646,10 +658,10 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
 
           siteName: '456',
@@ -719,10 +731,10 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
 
           siteName: '456',
@@ -775,12 +787,11 @@ describe('Test Personalizer Class', () => {
         },
         {
           cookieSettings: {
-            cookieDomain: 'cDomain',
-            cookieExpiryDays: 730,
-            cookieNames: { browserId: 'bid_name', guestId: 'gid_name' },
-            cookiePath: '/'
+            domain: 'cDomain',
+            expiryDays: 730,
+            name: { browserId: 'bid_name' },
+            path: '/'
           },
-
           siteName: '456',
           sitecoreEdgeContextId: '123',
           sitecoreEdgeUrl: core.SITECORE_EDGE_URL

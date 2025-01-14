@@ -4,7 +4,6 @@ import {
   getCookieValueFromRequest,
   getEnabledPackageServer
 } from '@sitecore-cloudsdk/core/internal';
-import type { Settings } from '@sitecore-cloudsdk/core/internal';
 import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import type { Request } from '@sitecore-cloudsdk/utils';
 import { isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
@@ -46,7 +45,7 @@ export function personalizeServer<T extends Request>(
 
   return new Personalizer(browserId, guestId).getInteractiveExperienceData(
     personalizeData,
-    settings as unknown as Settings,
+    settings,
     requestUrl.search,
     {
       timeout: opts?.timeout,

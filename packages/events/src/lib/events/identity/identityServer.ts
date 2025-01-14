@@ -1,10 +1,9 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import type { EPResponse, Settings } from '@sitecore-cloudsdk/core/internal';
+import type { EPResponse } from '@sitecore-cloudsdk/core/internal';
 import {
   getCloudSDKSettingsServer as getCloudSDKSettings,
   getCookieValueFromRequest
 } from '@sitecore-cloudsdk/core/internal';
-import type { Settings as CloudSDKSettings } from '@sitecore-cloudsdk/core/server';
 import type { Request } from '@sitecore-cloudsdk/utils';
 import { verifyEventsPackageExistence } from '../../initializer/server/initializer';
 import { sendEvent } from '../send-event/sendEvent';
@@ -20,13 +19,13 @@ import { IdentityEvent } from './identity-event';
  */
 export function identityServer(request: Request, identityData: IdentityData): Promise<EPResponse | null> {
   verifyEventsPackageExistence();
-  const settings: CloudSDKSettings = getCloudSDKSettings();
+  const settings = getCloudSDKSettings();
   const browserId: string = getCookieValueFromRequest(request, settings.cookieSettings.name.browserId);
 
   return new IdentityEvent({
     id: browserId,
     identityData,
     sendEvent,
-    settings: settings as unknown as Settings
+    settings
   }).send();
 }

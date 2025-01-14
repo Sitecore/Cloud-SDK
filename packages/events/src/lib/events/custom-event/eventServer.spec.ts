@@ -72,59 +72,57 @@ describe('eventServer', () => {
     };
   });
 
-  describe('new init', () => {
-    const newSettings = {
-      cookieSettings: {
-        domain: 'cDomain',
-        expiryDays: 730,
-        name: { browserId: 'bid_name' },
-        path: '/'
-      },
-      siteName: '456',
-      sitecoreEdgeContextId: '123',
-      sitecoreEdgeUrl: ''
-    };
+  const newSettings = {
+    cookieSettings: {
+      domain: 'cDomain',
+      expiryDays: 730,
+      name: { browserId: 'bid_name' },
+      path: '/'
+    },
+    siteName: '456',
+    sitecoreEdgeContextId: '123',
+    sitecoreEdgeUrl: ''
+  };
 
-    const getCookieValueFromRequestSpy = jest
-      .spyOn(coreInternalModule, 'getCookieValueFromRequest')
-      .mockReturnValueOnce('1234');
-    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValue(newSettings);
+  const getCookieValueFromRequestSpy = jest
+    .spyOn(coreInternalModule, 'getCookieValueFromRequest')
+    .mockReturnValueOnce('1234');
+  jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValue(newSettings);
 
-    beforeEach(() => {
-      (coreInternalModule as any).builderInstanceServer = {};
+  beforeEach(() => {
+    (coreInternalModule as any).builderInstanceServer = {};
+  });
+  it('should send a custom event to the server', async () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+
+    await eventServer(req, eventData);
+
+    expect(getCookieValueFromRequestSpy).toHaveBeenCalled();
+    expect(CustomEvent).toHaveBeenCalledTimes(1);
+    expect(CustomEvent).toHaveBeenCalledWith({
+      eventData,
+      id: '1234',
+      sendEvent,
+      settings: newSettings
     });
-    it('should send a custom event to the server', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+  });
 
-      await eventServer(req, eventData);
-
-      expect(getCookieValueFromRequestSpy).toHaveBeenCalled();
-      expect(CustomEvent).toHaveBeenCalledTimes(1);
-      expect(CustomEvent).toHaveBeenCalledWith({
-        eventData,
-        id: '1234',
-        sendEvent,
-        settings: newSettings
-      });
-    });
-
-    it('should throw error if settings have not been configured properly', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
-      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockImplementationOnce(() => {
-        throw new Error('Test error');
-      });
-
-      await expect(async () => await eventServer(req, eventData)).rejects.toThrow('Test error');
+  it('should throw error if settings have not been configured properly', async () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce({} as any);
+    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockImplementationOnce(() => {
+      throw new Error('Test error');
     });
 
-    it('should throw error new init used but events not initialized', async () => {
-      jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
-      jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValueOnce({
-        cookieSettings: { name: { browserId: 'test' } }
-      } as any);
-      await expect(async () => await eventServer(req, eventData)).rejects.toThrow(ErrorMessages.IE_0015);
+    await expect(async () => await eventServer(req, eventData)).rejects.toThrow('Test error');
+  });
 
-      expect(CustomEvent).not.toHaveBeenCalled();
-    });
+  it('should throw error new init used but events not initialized', async () => {
+    jest.spyOn(coreInternalModule, 'getEnabledPackageServer').mockReturnValueOnce(undefined);
+    jest.spyOn(coreInternalModule, 'getCloudSDKSettingsServer').mockReturnValueOnce({
+      cookieSettings: { name: { browserId: 'test' } }
+    } as any);
+    await expect(async () => await eventServer(req, eventData)).rejects.toThrow(ErrorMessages.IE_0015);
+
+    expect(CustomEvent).not.toHaveBeenCalled();
   });
 });
