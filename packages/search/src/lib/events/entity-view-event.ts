@@ -4,9 +4,9 @@ import { ErrorMessages } from '../consts';
 import type { EntityViewEventParams, SearchEventEntity, SearchEventEntityDTO } from './interfaces';
 
 export class EntityViewEvent {
-  protected page: string;
-  protected currency: string;
-  protected language: string;
+  protected page?: string;
+  protected currency?: string;
+  protected language?: string;
   protected pathname: string;
   protected entity: SearchEventEntity;
 
@@ -24,9 +24,9 @@ export class EntityViewEvent {
     this.entity = entity;
   }
 
-  private _validate(currency: string, language: string) {
-    if (currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language.length !== 2) throw new Error(ErrorMessages.IV_0011);
+  private _validate(currency?: string, language?: string) {
+    if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
+    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   toDTO() {

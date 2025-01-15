@@ -71,4 +71,22 @@ describe('conversion event class', () => {
 
     expect(() => new EntityViewEvent(invalidConversionEventData)).toThrow(ErrorMessages.IV_0015);
   });
+
+  it(`should not throw an error if 'language' is undefined`, () => {
+    const widgetItemEventData = {
+      ...entityViewEventData,
+      language: undefined
+    };
+
+    expect(() => new EntityViewEvent(widgetItemEventData)).not.toThrow();
+  });
+
+  it(`should not throw an error if 'currency' is undefined`, () => {
+    const widgetItemEventData = {
+      ...entityViewEventData,
+      currency: undefined
+    };
+
+    expect(() => new EntityViewEvent(widgetItemEventData)).not.toThrow();
+  });
 });

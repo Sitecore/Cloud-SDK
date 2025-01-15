@@ -146,9 +146,9 @@ export interface WidgetViewEventParams {
 }
 
 export interface EntityViewEventParams {
-  page: string;
-  currency: string;
-  language: string;
+  page?: string;
+  currency?: string;
+  language?: string;
   pathname: string;
   entity: SearchEventEntity;
 }
