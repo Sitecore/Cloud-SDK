@@ -1,11 +1,14 @@
 'use client';
 
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useCart } from '../context/Cart';
-import { useAuth } from '../context/Auth';
-import { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useRef, useState } from 'react';
+import { useAuth } from '../context/Auth';
+import { useCart } from '../context/Cart';
+import { Preview } from './search/Preview';
+import { ProductItem } from './search/Product';
+import { SearchInput } from './search/SearchInput';
 
 export function Header() {
   const { isLoggedIn, logout } = useAuth();
@@ -13,9 +16,12 @@ export function Header() {
   const router = useRouter();
   const accountDialogRef = useRef<HTMLDialogElement>(null);
   const searchParams = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('q') ?? '');
+  const [searchPreviewProducts, setSearchPreviewProducts] = useState<ProductItem[]>([]);
 
-  const handleSearch = (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === 'Enter') {
+      setSearchPreviewProducts([]);
       const value = (event.target as HTMLInputElement).value;
       router.push(`/search?q=${value}`);
     }
@@ -44,36 +50,14 @@ export function Header() {
             priority
           />
         </Link>
-
+        <Preview items={searchPreviewProducts} />
         <div className='flex gap-x-4'>
-          <div className='relative w-[15rem]'>
-            <input
-              defaultValue={searchParams.get('q') ?? ''}
-              onKeyDown={handleSearch}
-              className='border border-gray-300 rounded-xl px-3 py-2 w-full focus:outline-none focus:ring-2 focus:ring-red-500'
-              placeholder='Search'
-            />
-            <svg
-              className='absolute top-2 right-3 text-gray-400'
-              xmlns='http://www.w3.org/2000/svg'
-              width='25'
-              height='25'
-              viewBox='0 0 24 24'
-              strokeWidth='1.5'
-              stroke='#2c3e50'
-              fill='none'
-              strokeLinecap='round'
-              strokeLinejoin='round'>
-              <path
-                stroke='none'
-                d='M0 0h24v24H0z'
-                fill='none'
-              />
-              <path d='M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0' />
-              <path d='M21 21l-6 -6' />
-            </svg>
-          </div>
-
+          <SearchInput
+            search={search}
+            setSearch={setSearch}
+            handleSearchKeyDown={handleSearchKeyDown}
+            setSearchPreviewProducts={setSearchPreviewProducts}
+          />
           <nav>
             <ul className='flex space-x-4 items-center'>
               {isLoggedIn ? (
