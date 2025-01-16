@@ -18,7 +18,17 @@ export { LogicalFacetFilter } from './lib/request-entities/filters/facet/logical
 export { NotFacetFilter } from './lib/request-entities/filters/facet/not-facet-filter';
 
 export type { BrowserSettings } from './lib/types';
-export type { GeoData } from './lib/request-entities/context/interfaces';
+export type {
+  GeoData,
+  BrowserData,
+  LocaleData,
+  PageData,
+  UserData,
+  StoreData,
+  IdsData,
+  ContextData,
+  CampaignData
+} from './lib/request-entities/context/interfaces';
 export type {
   FacetOptions,
   QueryOptions,
@@ -28,7 +38,14 @@ export type {
   RecommendationOptions,
   QuestionsAnswersOptions,
   ExactAnswerOptions,
-  RelatedQuestionsOptions
+  RelatedQuestionsOptions,
+  FacetSort,
+  SortValue,
+  SearchRankingOptions,
+  SearchPersonalizationOptions,
+  SearchSortOptions,
+  SearchSuggestionOptions,
+  SearchRuleOptions
 } from './lib/request-entities/widgets/interfaces';
 export type { WidgetItem } from './lib/request-entities/widgets/widget-item';
 
@@ -42,3 +59,32 @@ export { widgetView } from './lib/requests/browser/widget-view-event';
 export { entityView } from './lib/requests/browser/entity-view-event';
 
 export { SEARCH_NAMESPACE } from './lib/consts';
+
+export type {
+  SearchEventEntity,
+  SearchEventRequest,
+  SuggestionFilterEventParams,
+  FacetFilterEventParams,
+  RangeFacetFilterEventParams,
+  EventFilter,
+  WidgetNavigationClickEventParams,
+  WidgetItemClickEventParams,
+  WidgetSuggestionClickEventParams,
+  WidgetFacetClickEventParams,
+  WidgetViewEventParams,
+  EntityViewEventParams
+} from './lib/events/interfaces';
+
+export type {
+  Filter,
+  GeoFilterData,
+  ComparisonOperators,
+  LogicalOperators,
+  ListOperators,
+  GeoOperator,
+  GeoWithinOperator,
+  Operators,
+  LogicalFilterValues,
+  DistanceString,
+  GeoWithinFilterData
+} from './lib/request-entities/filters/interfaces';
