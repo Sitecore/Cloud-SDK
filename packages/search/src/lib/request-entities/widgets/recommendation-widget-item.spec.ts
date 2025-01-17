@@ -58,7 +58,7 @@ describe('recommendation widget item class', () => {
 
     it('should set the full object from constructor', () => {
       const uut = new RecommendationWidgetItem('test', 'test', {
-        content: { fields: ['test'] },
+        content: { attributes: ['test'] },
         filter: new LogicalFilter('not', new ComparisonFilter('test', 'eq', 'te')),
         groupBy: 'groupBy',
         limit: 10,
@@ -80,7 +80,7 @@ describe('recommendation widget item class', () => {
 
     it('should set values from result item', () => {
       const uut = new RecommendationWidgetItem('test', 'test', {
-        content: { fields: ['test'] },
+        content: { attributes: ['test'] },
         filter: new LogicalFilter('not', new ComparisonFilter('test', 'eq', 'te')),
         groupBy: 'groupBy',
         limit: 10
@@ -196,7 +196,7 @@ describe('recommendation widget item class', () => {
 
     it('should combine recipe with other properties in toDTO', () => {
       const recommendationWidgetItem = new RecommendationWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
-      recommendationWidgetItem.content = { fields: ['test1'] };
+      recommendationWidgetItem.content = { attributes: ['test1'] };
       recommendationWidgetItem.recipe = { id: 'recipe-id', version: 1 };
       recommendationWidgetItem.limit = 5;
       const dto = recommendationWidgetItem.toDTO();

@@ -27,7 +27,7 @@ function Index() {
 
     const fetchRecommendedProducts = async () => {
       const recWidget = new RecommendationWidgetItem('product', 'rfkid_2');
-      recWidget.content = { fields: ['name', 'image_url', 'price', 'id'] };
+      recWidget.content = { attributes: ['name', 'image_url', 'price', 'id'] };
       recWidget.recipe = {
         id: '95811',
         version: 3

@@ -27,7 +27,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .addSearch()
         .initialize();
 
-      widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { fields: ['id'] } });
+      widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { attributes: ['id'] } });
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
-      widget.content = { fields: ['id'] };
+      widget.content = { attributes: ['id'] };
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

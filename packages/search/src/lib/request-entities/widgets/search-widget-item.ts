@@ -12,6 +12,7 @@ import type {
   SearchDTO,
   SearchOptions,
   SearchPersonalizationOptions,
+  SearchPersonalizationOptionsDto,
   SearchRankingOptions,
   SearchSortOptions,
   SearchSuggestionOptions,
@@ -101,20 +102,30 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   /**
    *
    * @param personalization - the object of the `personalization` property
-   * @throws IV_0030 if `personalization.fields` contains an empty or whitespace string
+   * @throws IV_0030 if `personalization.attributes` contains an empty or whitespace string
    * @throws IV_0031 if `personalization.ids` contains an empty string
    */
   private _validatePersonalization(personalization?: SearchPersonalizationOptions): void {
     if (!personalization) return;
 
-    personalization.fields.forEach((field) => {
-      this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0030, field);
+    personalization.attributes.forEach((attribute) => {
+      this._validateNonEmptyNoWhitespaceString(ErrorMessages.IV_0030, attribute);
     });
 
     if (personalization.algorithm === 'mlt')
       personalization.ids.forEach((id) => {
         this._validateNonEmptyString(ErrorMessages.IV_0031, id);
       });
+  }
+
+  /**
+   *
+   * @returns The personalization property in its DTO format.
+   */
+  private _personalizationToDTO(): SearchPersonalizationOptionsDto | undefined {
+    if (!this._personalization) return undefined;
+    const { attributes, ...rest } = this._personalization;
+    return { fields: attributes, ...rest };
   }
 
   /**
@@ -392,15 +403,13 @@ export class SearchWidgetItem extends ResultsWidgetItem {
         ...this._facetSortToDTO(type)
       })) as ArrayOfAtLeastOne<FacetTypeDTO>;
 
-    const suggestionDTO = this._suggestionToDTO();
-
     const search: SearchDTO = {
       ...{ offset: this._offset },
       ...(this._query && { query: this._query }),
       ...(Object.values(facet).filter((value) => value !== undefined).length && { facet }),
-      ...{ personalization: this._personalization },
+      ...{ personalization: this._personalizationToDTO() },
       ...{ ranking: this._ranking },
-      ...{ suggestion: suggestionDTO },
+      ...{ suggestion: this._suggestionToDTO() },
       ...{ sort: this._sort },
       ...resultsDTO
     };

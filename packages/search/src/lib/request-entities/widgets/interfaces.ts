@@ -23,7 +23,12 @@ export interface WidgetItemDTO {
 /**
  * Represents the content options property of the results widget item.
  */
-export type ContentOptions = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
+export type ContentOptions = { attributes?: ArrayOfAtLeastOne<string> } | Record<string, never>;
+
+/**
+ * Represents the content options property of the results widget item in DTO Format.
+ */
+export type ContentOptionsDto = { fields?: ArrayOfAtLeastOne<string> } | Record<string, never>;
 
 /**
  * Represents a results widget item object.
@@ -43,7 +48,7 @@ export interface ResultsItemDTO {
   limit?: number;
   filter?: FilterDTO;
   group_by?: string;
-  content?: ContentOptions;
+  content?: ContentOptionsDto;
   rule?: SearchRuleDTO;
 }
 
@@ -227,7 +232,7 @@ export interface SearchRankingOptionsDto {
  * Typescript restriction for the `personalization` property.
  * if `algorithm` = affinity, `ids` should not be present.
  */
-export type SearchPersonalizationOptions = { fields: ArrayOfAtLeastOne<string> } & (
+export type SearchPersonalizationOptions = { attributes: ArrayOfAtLeastOne<string> } & (
   | { algorithm: 'affinity' }
   | { algorithm: 'mlt'; ids: ArrayOfAtLeastOne<string> }
 );

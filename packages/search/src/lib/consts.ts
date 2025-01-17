@@ -32,7 +32,7 @@ export enum ErrorMessages {
   IV_0027 = '[IV-0027] Incorrect value for pin item "id". Set the value to a non-empty string.',
   IV_0028 = '[IV-0028] Incorrect value for "slot". Set the value to an integer greater than or equal to 0.',
   IV_0029 = '[IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive.',
-  IV_0030 = '[IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces.',
+  IV_0030 = '[IV-0030] Incorrect value in "personalization.attributes". Set the value to a non-empty string, and do not include spaces.',
   IV_0031 = '[IV-0031] Incorrect value in "personalization.ids". Set the value to a non-empty string.',
   MV_0006 = '[MV-0006] "context.page.uri" is required.',
   MV_0009 = '[MV-0009] You must set values for both "groupId" and "id" if you set a value for one of them.',

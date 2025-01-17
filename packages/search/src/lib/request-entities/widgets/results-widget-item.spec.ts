@@ -147,9 +147,9 @@ describe('widget item class', () => {
       widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
     });
 
-    it('should set content to fields array when provided an array', () => {
-      widgetItem.content = { fields: ['name', 'description'] };
-      expect(widgetItem['_content']).toEqual({ fields: ['name', 'description'] });
+    it('should set content to attributes array when provided an array', () => {
+      widgetItem.content = { attributes: ['name', 'description'] };
+      expect(widgetItem['_content']).toEqual({ attributes: ['name', 'description'] });
       expect(widgetItem['_resultsToDTO']().content).toEqual({ fields: ['name', 'description'] });
     });
 
@@ -160,9 +160,9 @@ describe('widget item class', () => {
 
     it('should overwrite previous content with empty object', () => {
       widgetItem.content = {};
-      const fieldsArray: ArrayOfAtLeastOne<string> = ['name', 'description'];
-      widgetItem.content = { fields: fieldsArray };
-      expect(widgetItem?.['_content']).toEqual({ fields: fieldsArray });
+      const attributesArray: ArrayOfAtLeastOne<string> = ['name', 'description'];
+      widgetItem.content = { attributes: attributesArray };
+      expect(widgetItem?.['_content']).toEqual({ attributes: attributesArray });
     });
   });
 
@@ -174,7 +174,7 @@ describe('widget item class', () => {
     };
     beforeEach(() => {
       widgetItem = new ResultsWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
-      widgetItem.content = { fields: ['item1', 'item2'] };
+      widgetItem.content = { attributes: ['item1', 'item2'] };
     });
     it('should reset the content if resetSearchContent is called', () => {
       widgetItem.resetContent();
@@ -333,11 +333,18 @@ describe('widget item class', () => {
       expect(widgetItem['_resultsToDTO']().rule).toBeUndefined();
     });
 
+    describe('_contentToDTO', () => {
+      it('should return undefined if no content is passed', () => {
+        const widgetItem = new ResultsWidgetItem('test', 'test');
+        const result = widgetItem['_contentToDTO']();
+        expect(result).toBeUndefined();
+      });
+    });
+
     describe('_resultsToDTO', () => {
       it('should include rule in DTO when _rule is set', () => {
         const widgetItem = new ResultsWidgetItem('test', 'test');
         widgetItem['_rule'] = { behaviors: true };
-
         const dto = widgetItem['_resultsToDTO']();
         expect(dto.rule).toStrictEqual(widgetItem['_rule']);
       });
@@ -392,7 +399,7 @@ describe('widget item class', () => {
   describe('ResultsWidgetItem getters', () => {
     it('should get all properties', () => {
       const limit = 10;
-      const content: ContentOptions = { fields: ['test'] };
+      const content: ContentOptions = { attributes: ['test'] };
       const filter = new ComparisonFilter('test', 'eq', 'te');
       const groupBy = 'groupBy';
       const rule: SearchRuleOptions = {

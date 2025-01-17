@@ -7,6 +7,7 @@ import type {
   FacetOptions,
   FacetOptionsDTO,
   SearchPersonalizationOptions,
+  SearchPersonalizationOptionsDto,
   SearchRankingOptions,
   SearchSortOptions,
   SearchSortOptionsDTO,
@@ -724,7 +725,7 @@ describe('search widget item class', () => {
   describe('results data', () => {
     it('should set all the results properties when given a valid value', () => {
       const uut = new SearchWidgetItem('test', 'test', {
-        content: { fields: ['test'] },
+        content: { attributes: ['test'] },
         filter: new LogicalFilter('not', new ComparisonFilter('test', 'eq', 'te')),
         groupBy: 'groupBy',
         limit: 10
@@ -1032,14 +1033,32 @@ describe('search widget item class', () => {
   describe('Personalization Testing Suite', () => {
     const validPersonalization1: SearchPersonalizationOptions = {
       algorithm: 'affinity',
+      attributes: ['somefield']
+    };
+
+    const validPersonalization1Result: SearchPersonalizationOptionsDto = {
+      algorithm: 'affinity',
       fields: ['somefield']
     };
+
     const validPersonalization2: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      attributes: ['somefield'],
+      ids: ['someid']
+    };
+
+    const validPersonalization2Result: SearchPersonalizationOptionsDto = {
       algorithm: 'mlt',
       fields: ['somefield'],
       ids: ['someid']
     };
     const validPersonalization3: SearchPersonalizationOptions = {
+      algorithm: 'mlt',
+      attributes: ['somefield'],
+      ids: ['someid']
+    };
+
+    const validPersonalization3Result: SearchPersonalizationOptionsDto = {
       algorithm: 'mlt',
       fields: ['somefield'],
       ids: ['someid']
@@ -1047,18 +1066,18 @@ describe('search widget item class', () => {
 
     const invalidPersonalization1: SearchPersonalizationOptions = {
       algorithm: 'mlt',
-      fields: ['somefield', ''],
+      attributes: ['somefield', ''],
       ids: ['someid']
     };
 
     const invalidPersonalization2: SearchPersonalizationOptions = {
       algorithm: 'mlt',
-      fields: ['somefield', ' '],
+      attributes: ['somefield', ' '],
       ids: ['someid']
     };
     const invalidPersonalization3: SearchPersonalizationOptions = {
       algorithm: 'mlt',
-      fields: ['somefield'],
+      attributes: ['somefield'],
       ids: ['']
     };
 
@@ -1066,15 +1085,16 @@ describe('search widget item class', () => {
       it('should return valid personalization if valid personalization is given', () => {
         const searchWidgetItem1 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization1 });
         const actual1 = searchWidgetItem1.toDTO();
-        expect(actual1.search?.personalization).toEqual(validPersonalization1);
+
+        expect(actual1.search?.personalization).toEqual(validPersonalization1Result);
 
         const searchWidgetItem2 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization2 });
         const actual2 = searchWidgetItem2.toDTO();
-        expect(actual2.search?.personalization).toEqual(validPersonalization2);
+        expect(actual2.search?.personalization).toEqual(validPersonalization2Result);
 
         const searchWidgetItem3 = new SearchWidgetItem('test', 'test', { personalization: validPersonalization3 });
         const actual3 = searchWidgetItem3.toDTO();
-        expect(actual3.search?.personalization).toEqual(validPersonalization3);
+        expect(actual3.search?.personalization).toEqual(validPersonalization3Result);
       });
       it('should not throw error when valid personalization is given', () => {
         expect(() => {
@@ -1111,7 +1131,7 @@ describe('search widget item class', () => {
       it('should reset personalization property', () => {
         const searchWidgetItem = new SearchWidgetItem('test', 'test', { personalization: validPersonalization1 });
         const actual = searchWidgetItem.toDTO();
-        expect(actual.search?.personalization).toEqual(validPersonalization1);
+        expect(actual.search?.personalization).toEqual(validPersonalization1Result);
         searchWidgetItem.resetPersonalization();
         const actual2 = searchWidgetItem.toDTO();
         expect(actual2.search?.personalization).toBeUndefined();
@@ -1128,15 +1148,15 @@ describe('search widget item class', () => {
       it('should return valid personalization if valid personalization is given', () => {
         searchWidgetItem.personalization = validPersonalization1;
         const actual1 = searchWidgetItem.toDTO();
-        expect(actual1.search?.personalization).toEqual(validPersonalization1);
+        expect(actual1.search?.personalization).toEqual(validPersonalization1Result);
 
         searchWidgetItem.personalization = validPersonalization2;
         const actual2 = searchWidgetItem.toDTO();
-        expect(actual2.search?.personalization).toEqual(validPersonalization2);
+        expect(actual2.search?.personalization).toEqual(validPersonalization2Result);
 
         searchWidgetItem.personalization = validPersonalization3;
         const actual3 = searchWidgetItem.toDTO();
-        expect(actual3.search?.personalization).toEqual(validPersonalization3);
+        expect(actual3.search?.personalization).toEqual(validPersonalization3Result);
       });
       it('should not throw error when valid personalization is given', () => {
         expect(() => {
@@ -1164,7 +1184,7 @@ describe('search widget item class', () => {
       it('should reset personalization property', () => {
         searchWidgetItem.personalization = validPersonalization1;
         const actual = searchWidgetItem.toDTO();
-        expect(actual.search?.personalization).toEqual(validPersonalization1);
+        expect(actual.search?.personalization).toEqual(validPersonalization1Result);
         searchWidgetItem.resetPersonalization();
         const actual2 = searchWidgetItem.toDTO();
         expect(actual2.search?.personalization).toBeUndefined();
@@ -1326,7 +1346,7 @@ describe('search widget item class', () => {
       const facet = { all: true };
       const personalization: SearchPersonalizationOptions = {
         algorithm: 'mlt',
-        fields: ['color'],
+        attributes: ['color'],
         ids: ['someid']
       };
       const ranking: ArrayOfAtLeastOne<SearchRankingOptions> = [

@@ -71,7 +71,7 @@ const SearchResultsPage = () => {
     if (currentPage === 1) {
       queryParams.delete('p');
     } else {
-      queryParams.set('p', currentPage as any);
+      queryParams.set('p', currentPage.toString());
     }
     router.push(`${window.location.pathname}?${queryParams.toString()}`);
   };

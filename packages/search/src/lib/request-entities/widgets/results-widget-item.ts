@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
 import type { Filter } from '../filters/interfaces';
-import type { ContentOptions, ResultsItemDTO, ResultsOptions } from './interfaces';
+import type { ContentOptions, ContentOptionsDto, ResultsItemDTO, ResultsOptions } from './interfaces';
 import { RuleWidgetItem } from './rule-widget-item';
 
 export class ResultsWidgetItem extends RuleWidgetItem {
@@ -58,8 +58,8 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   /**
    * Sets the search content for the ResultsItem.
    * This method updates the `content` property within the ResultsItem instance.
-   * The fields is used to define specific search criteria or filters.
-   * @param contentOptions - The array fields that specifies the search criteria.
+   * The attributes is used to define specific search criteria or filters.
+   * @param contentOptions - The array attributes that specifies the search criteria.
    */
   set content(contentOptions: ContentOptions) {
     this._content = contentOptions;
@@ -122,6 +122,16 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   }
 
   /**
+   *
+   * @returns The content property in its DTO format.
+   */
+  private _contentToDTO(): ContentOptionsDto | undefined {
+    if (!this._content) return undefined;
+    const { attributes, ...rest } = this._content;
+    return { fields: attributes, ...rest };
+  }
+
+  /**
    * Maps the results item to its DTO format.
    */
   protected _resultsToDTO(): ResultsItemDTO {
@@ -129,7 +139,7 @@ export class ResultsWidgetItem extends RuleWidgetItem {
       ...(this._limit && { limit: this._limit }),
       ...(this._filter && { filter: this._filter.toDTO() }),
       ...(this._groupBy && { group_by: this._groupBy }),
-      ...(this._content && { content: this._content }),
+      ...(this._content && { content: this._contentToDTO() }),
       ...(this._rule && { rule: this._ruleToDTO(this._rule) })
     };
   }

@@ -3,7 +3,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
-import { getWidgetData, RecommendationWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search/browser';
+import { Context, getWidgetData, RecommendationWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search/browser';
 import { createFilter } from '../../src/utils';
 
 export default function GetRecommendationWidgetData() {
@@ -30,7 +30,7 @@ export default function GetRecommendationWidgetData() {
   };
 
   const requestRecommendationWidgetData = async () => {
-    let contextRequestData;
+    const contextRequestData = new Context({ locale: { language: 'en', country: 'US' } });
 
     const parsedInputWidgetItemsData = JSON.parse(inputWidgetItemsData);
 
@@ -58,7 +58,7 @@ export default function GetRecommendationWidgetData() {
   };
 
   const requestRecommendationWidgetDataWithRule = async () => {
-    let contextRequestData;
+    const contextRequestData = new Context({ locale: { language: 'en', country: 'US' } });
 
     const ruleObject = { boost: [], include: [], pin: [] } as any;
     const parsedInputWidgetItemsData = JSON.parse(inputWidgetItemsData);

@@ -36,7 +36,7 @@ export async function getRecommendationWidgetDataMiddleware(
         .addSearch()
         .initialize();
 
-      widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { fields: ['id'] } });
+      widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { attributes: ['id'] } });
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);
@@ -54,7 +54,7 @@ export async function getRecommendationWidgetDataMiddleware(
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
-      widget.content = { fields: ['id'] };
+      widget.content = { attributes: ['id'] };
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);
