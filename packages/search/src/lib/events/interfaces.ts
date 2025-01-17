@@ -114,10 +114,10 @@ export interface WidgetItemClickEventParams {
 
 export interface WidgetSuggestionClickEventParams {
   request: SearchEventRequest;
-  filters: Array<SuggestionFilterEventParams>;
+  filters?: Array<SuggestionFilterEventParams>;
   pathname: string;
   widgetId: string;
-  page: string;
+  page?: string;
   currency?: string;
   language?: string;
   channel?: string;

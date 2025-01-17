@@ -114,4 +114,15 @@ describe('widget suggestion click event class', () => {
 
     expect(() => new WidgetSuggestionClickEvent(invalidWidgetSuggestionClickEventData)).not.toThrow();
   });
+
+  it(`should return widgetSuggestionClickEvent object with 'filters' property as undefined`, () => {
+    const widgetSuggestionClickEventDataEmptyFilters = {
+      ...widgetSuggestionClickEventData,
+      filters: undefined
+    };
+
+    const widgetItemEventDTO = new WidgetSuggestionClickEvent(widgetSuggestionClickEventDataEmptyFilters).toDTO();
+
+    expect(widgetItemEventDTO.searchData.value).toEqual(expect.objectContaining({ filters: undefined }));
+  });
 });

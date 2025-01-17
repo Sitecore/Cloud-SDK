@@ -11,9 +11,9 @@ import type {
 
 export class WidgetSuggestionClickEvent {
   protected request: SearchEventRequest;
-  protected filters: Array<SuggestionFilterEventParams>;
+  protected filters?: Array<SuggestionFilterEventParams>;
   protected pathname: string;
-  protected page: string;
+  protected page?: string;
   protected widgetIdentifier: string;
   protected currency?: string;
   protected language?: string;
@@ -51,8 +51,8 @@ export class WidgetSuggestionClickEvent {
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
-  private _mapFiltersToDTO(): Array<SuggestionFilterEventParamsDTO> {
-    return this.filters.map((filter) => ({
+  private _mapFiltersToDTO(): Array<SuggestionFilterEventParamsDTO> | undefined {
+    return this.filters?.map((filter) => ({
       display_name: [filter.displayName],
       name: filter.name,
       title: filter.title,
