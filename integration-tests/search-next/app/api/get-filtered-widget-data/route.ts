@@ -24,7 +24,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7');

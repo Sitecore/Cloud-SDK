@@ -34,7 +34,6 @@ export enum ErrorMessages {
   IV_0029 = '[IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive.',
   IV_0030 = '[IV-0030] Incorrect value in "personalization.fields". Set the value to a non-empty string, and do not include spaces.',
   IV_0031 = '[IV-0031] Incorrect value in "personalization.ids". Set the value to a non-empty string.',
-  MV_0005 = '[MV-0005] "userId" is required.',
   MV_0006 = '[MV-0006] "context.page.uri" is required.',
   MV_0009 = '[MV-0009] You must set values for both "groupId" and "id" if you set a value for one of them.',
   MV_0010 = '[MV-0010] "entity" is required.',

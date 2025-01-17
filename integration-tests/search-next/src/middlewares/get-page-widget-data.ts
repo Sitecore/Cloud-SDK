@@ -18,7 +18,7 @@ export async function getPageWidgetDataMiddleware(request: NextRequest, response
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       await getPageWidgetData('/test');
@@ -31,7 +31,7 @@ export async function getPageWidgetDataMiddleware(request: NextRequest, response
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       await getPageWidgetData(new Context({ page: { uri: '/test' } }));

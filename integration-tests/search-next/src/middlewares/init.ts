@@ -17,7 +17,7 @@ export async function initMiddleware(request: NextRequest, response: NextRespons
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: '123' })
+        .addSearch()
         .initialize();
       break;
 
@@ -28,7 +28,7 @@ export async function initMiddleware(request: NextRequest, response: NextRespons
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: '123' })
+        .addSearch()
         .initialize();
       break;
 
@@ -38,7 +38,7 @@ export async function initMiddleware(request: NextRequest, response: NextRespons
         siteName: 'TestSite',
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
-        .addSearch({ userId: '123' })
+        .addSearch()
         .initialize();
       break;
 

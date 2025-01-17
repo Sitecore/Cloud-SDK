@@ -11,7 +11,7 @@ export default async function Page() {
       siteName: 'TestSite',
       enableBrowserCookie: true
     })
-      .addSearch({ userId: 'user123' })
+      .addSearch()
       .addEvents()
       .initialize();
   }
@@ -21,7 +21,7 @@ export default async function Page() {
       siteName: 'TestSite',
       enableBrowserCookie: false
     })
-      .addSearch({ userId: 'user123' })
+      .addSearch()
       .addEvents()
       .initialize();
   }
@@ -32,7 +32,7 @@ export default async function Page() {
       siteName: 'TestSite',
       enableBrowserCookie: true
     })
-      .addSearch({ userId: 'user123' })
+      .addSearch()
       .initialize();
   }
 

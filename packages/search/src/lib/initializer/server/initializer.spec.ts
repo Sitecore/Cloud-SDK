@@ -47,21 +47,6 @@ describe('addSearch', () => {
     expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects });
     expect(result).toEqual(fakeThis);
   });
-
-  it('should run the addSearch function with settings', async () => {
-    const fakeThis = {};
-    const mockSettings = { userId: '123' };
-
-    const result = addSearch.call(fakeThis as any, mockSettings);
-
-    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledTimes(1);
-    expect(coreInternalModule.PackageInitializerServer).toHaveBeenCalledWith({
-      dependencies: pkgDeps,
-      settings: mockSettings,
-      sideEffects
-    });
-    expect(result).toEqual(fakeThis);
-  });
 });
 
 describe('verifySearchPackageExistence', () => {

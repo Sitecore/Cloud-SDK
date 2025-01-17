@@ -11,7 +11,6 @@ import {
   PACKAGE_INITIALIZER_METHOD_NAME
 } from '@sitecore-cloudsdk/events/browser';
 import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
-import type { BrowserSettings } from './interfaces';
 
 // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
 export async function sideEffects() {
@@ -22,7 +21,6 @@ export async function sideEffects() {
  * Makes the functionality of the search package available.
  *  This functionality also requires the events package.
  *
- * @param settings - The optional settings to initialize the search
  * @returns An instance of {@link CloudSDKBrowserInitializer}
  *
  * @example
@@ -30,10 +28,9 @@ export async function sideEffects() {
  * CloudSDK().addEvents().addSearch().initialize()
  * ```
  */
-export function addSearch(this: CloudSDKBrowserInitializer, settings?: BrowserSettings): CloudSDKBrowserInitializer {
+export function addSearch(this: CloudSDKBrowserInitializer): CloudSDKBrowserInitializer {
   const searchInitializer = new PackageInitializer({
     dependencies: [{ method: PACKAGE_INITIALIZER_METHOD_NAME, name: EVENTS_PACKAGE_NAME }],
-    settings,
     sideEffects
   });
 

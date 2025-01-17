@@ -22,7 +22,7 @@ export async function widgetNavigationClickMiddleware(request: NextRequest, resp
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       // eslint-disable-next-line no-case-declarations

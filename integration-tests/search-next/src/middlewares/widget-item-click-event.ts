@@ -53,7 +53,7 @@ export async function widgetItemClickMiddleware(request: NextRequest, response: 
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       await widgetItemClick(request, widgetItemEventData);

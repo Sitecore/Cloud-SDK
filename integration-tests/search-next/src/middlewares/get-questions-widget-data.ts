@@ -30,7 +30,7 @@ export async function getQuestionsWidgetDataMiddleware(request: NextRequest, res
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', { keyphrase: 'test' });
@@ -47,7 +47,7 @@ export async function getQuestionsWidgetDataMiddleware(request: NextRequest, res
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', { keyphrase: 'original' });
@@ -65,7 +65,7 @@ export async function getQuestionsWidgetDataMiddleware(request: NextRequest, res
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', { keyphrase: 'original' });
@@ -90,7 +90,7 @@ export async function getQuestionsWidgetDataMiddleware(request: NextRequest, res
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new QuestionsAnswersWidgetItem('content', 'rfkid_qa', {

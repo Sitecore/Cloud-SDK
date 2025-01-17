@@ -33,7 +33,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7', { content: { fields: ['id'] } });
@@ -50,7 +50,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -68,7 +68,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -89,7 +89,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -108,7 +108,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');
@@ -127,7 +127,7 @@ export async function getRecommendationWidgetDataMiddleware(
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new RecommendationWidgetItem('content', 'rfkid_7');

@@ -8,7 +8,6 @@ import {
 import { CloudSDKServerInitializer } from '@sitecore-cloudsdk/core/server';
 import { PACKAGE_NAME as EVENTS_PACKAGE_NAME, PACKAGE_INITIALIZER_METHOD_NAME } from '@sitecore-cloudsdk/events/server';
 import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
-import type { ServerSettings } from './interfaces';
 
 export async function sideEffects() {
   debug(SEARCH_NAMESPACE)('searchServer library initialized');
@@ -26,10 +25,9 @@ export async function sideEffects() {
  * CloudSDK().addEvents().addSearch().initialize()
  * ```
  */
-export function addSearch(this: CloudSDKServerInitializer, settings?: ServerSettings): CloudSDKServerInitializer {
+export function addSearch(this: CloudSDKServerInitializer): CloudSDKServerInitializer {
   const searchInitializer = new PackageInitializerServer({
     dependencies: [{ method: PACKAGE_INITIALIZER_METHOD_NAME, name: EVENTS_PACKAGE_NAME }],
-    settings,
     sideEffects
   });
 

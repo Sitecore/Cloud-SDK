@@ -13,7 +13,7 @@ export default function WidgetView() {
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
     }
     initSearch();

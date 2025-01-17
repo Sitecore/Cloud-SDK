@@ -5,7 +5,6 @@ import type { Settings } from '@sitecore-cloudsdk/core/internal';
  * Defines the configuration settings for the search.
  */
 export interface BrowserSettings extends Settings {
-  userId?: string;
   enableBrowserCookie?: boolean;
 }
 
@@ -13,7 +12,6 @@ export interface BrowserSettings extends Settings {
  * Represents the server-specific configuration settings for the search.
  */
 export interface ServerSettings extends Settings {
-  userId: string;
   enableServerCookie?: boolean;
 }
 

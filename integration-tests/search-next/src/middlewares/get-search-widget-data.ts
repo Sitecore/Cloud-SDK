@@ -21,7 +21,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7', {
@@ -66,7 +66,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7');

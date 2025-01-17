@@ -39,7 +39,7 @@ function Home() {
     })
       .addEvents()
       .addPersonalize()
-      .addSearch({ userId: 'test' })
+      .addSearch()
       .initialize();
   }, []);
 

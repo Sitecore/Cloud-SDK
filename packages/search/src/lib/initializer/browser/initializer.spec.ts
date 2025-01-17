@@ -49,20 +49,6 @@ describe('addSearch', () => {
     expect(PackageInitializer).toHaveBeenCalledWith({ dependencies: pkgDeps, sideEffects: initModule.sideEffects });
     expect(result).toEqual(fakeThis);
   });
-  it('should run the addSearch function with settings', async () => {
-    const fakeThis = {};
-    const mockSettings = { userId: '123' };
-
-    const result = initModule.addSearch.call(fakeThis as any, mockSettings);
-
-    expect(PackageInitializer).toHaveBeenCalledTimes(1);
-    expect(PackageInitializer).toHaveBeenCalledWith({
-      dependencies: pkgDeps,
-      settings: mockSettings,
-      sideEffects: initModule.sideEffects
-    });
-    expect(result).toEqual(fakeThis);
-  });
 });
 
 describe('awaitInit', () => {

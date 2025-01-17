@@ -20,7 +20,7 @@ export default function SearchFilters() {
       sitecoreEdgeContextId: process.env.CONTEXT_ID as string
     })
       .addEvents()
-      .addSearch({ userId: 'test' })
+      .addSearch()
       .initialize();
   }, []);
 

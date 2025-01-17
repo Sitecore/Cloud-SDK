@@ -15,7 +15,7 @@ export async function middleware(request: NextRequest) {
   })
     .addEvents()
     .addPersonalize()
-    .addSearch({ userId: 'test' })
+    .addSearch()
     .initialize();
 
   return response;

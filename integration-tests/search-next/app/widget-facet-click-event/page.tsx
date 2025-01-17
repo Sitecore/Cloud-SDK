@@ -13,7 +13,7 @@ export default function WidgetFacetClickEvent() {
         sitecoreEdgeContextId: process.env.CONTEXT_ID as string
       })
         .addEvents()
-        .addSearch({ userId: 'test' })
+        .addSearch()
         .initialize();
     }
     initSearch();
