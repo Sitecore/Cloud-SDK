@@ -2,12 +2,12 @@
 
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useEffect, useRef } from 'react';
 import { useAuth } from '../context/Auth';
 import { useCart } from '../context/Cart';
+import { useSearch } from '../context/Search';
 import { Preview } from './search/Preview';
-import { ProductItem } from './search/Product';
 import { SearchInput } from './search/SearchInput';
 
 export function Header() {
@@ -15,17 +15,20 @@ export function Header() {
   const cart = useCart();
   const router = useRouter();
   const accountDialogRef = useRef<HTMLDialogElement>(null);
-  const searchParams = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get('q') ?? '');
-  const [searchPreviewProducts, setSearchPreviewProducts] = useState<ProductItem[]>([]);
+  const { updateSearchResults } = useSearch();
+  const headerRef = useRef<HTMLElement | null>(null);
 
-  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      setSearchPreviewProducts([]);
-      const value = (event.target as HTMLInputElement).value;
-      router.push(`/search?q=${value}`);
-    }
+  const handleClickOutside = (e: MouseEvent) => {
+    if (!headerRef.current?.contains(e.target as Node)) updateSearchResults(null);
   };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className='shadow-sm'>
@@ -40,7 +43,9 @@ export function Header() {
         </button>
       </dialog>
 
-      <header className='container mx-auto flex justify-between items-center p-4'>
+      <header
+        className='container mx-auto flex justify-between items-center p-4'
+        ref={headerRef}>
         <Link href='/'>
           <Image
             src='https://delivery-sitecore.sitecorecontenthub.cloud/api/public/content/logo-sitecore?t=sc42h'
@@ -50,14 +55,9 @@ export function Header() {
             priority
           />
         </Link>
-        <Preview items={searchPreviewProducts} />
+        <Preview />
         <div className='flex gap-x-4'>
-          <SearchInput
-            search={search}
-            setSearch={setSearch}
-            handleSearchKeyDown={handleSearchKeyDown}
-            setSearchPreviewProducts={setSearchPreviewProducts}
-          />
+          <SearchInput />
           <nav>
             <ul className='flex space-x-4 items-center'>
               {isLoggedIn ? (

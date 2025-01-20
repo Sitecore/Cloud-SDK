@@ -1,12 +1,12 @@
 import { DM_Sans as fontSans } from 'next/font/google';
-import { CartProvider } from '../context/Cart';
+import { CloudSDKComponent } from '../components/Cloudsdk';
 import { Footer } from '../components/Footer';
 import { Header } from '../components/Header';
-import './global.css';
-
-import { CloudSDKComponent } from '../components/Cloudsdk';
-import { AuthProvider } from '../context/Auth';
 import { Sidebar } from '../components/Sidebar';
+import { AuthProvider } from '../context/Auth';
+import { CartProvider } from '../context/Cart';
+import { SearchProvider } from '../context/Search';
+import './global.css';
 
 const font = fontSans({ subsets: ['latin'] });
 
@@ -20,10 +20,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <div>
           <AuthProvider>
             <CartProvider>
-              <Header />
-              <Sidebar />
-              {children}
-              <Footer />
+              <SearchProvider>
+                <Header />
+                <Sidebar />
+                {children}
+                <Footer />
+              </SearchProvider>
             </CartProvider>
           </AuthProvider>
         </div>

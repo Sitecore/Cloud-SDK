@@ -1,36 +1,39 @@
 'use client';
 
-import { type Dispatch, type SetStateAction, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useRef } from 'react';
 import { Context, getWidgetData, SearchWidgetItem, WidgetRequestData } from '@sitecore-cloudsdk/search/browser';
-import { DebounceSearch, GetWidgetDataResponse } from '../../utils/debounce-search';
-import { ProductItem } from './Product';
+import { useSearch } from '../../context/Search';
+import { debounceSearch, GetWidgetDataResponse } from '../../utils/debounce-search';
 
-export function SearchInput({
-  search,
-  setSearch,
-  setSearchPreviewProducts,
-  handleSearchKeyDown
-}: {
-  search: string;
-  setSearch: Dispatch<SetStateAction<string>>;
-  setSearchPreviewProducts: Dispatch<SetStateAction<ProductItem[]>>;
-  handleSearchKeyDown: (event: React.KeyboardEvent<HTMLInputElement>) => void;
-}) {
+export function SearchInput() {
+  const router = useRouter();
+  const { search, updateSearch, updateSearchResults, searchWidgetId } = useSearch();
+
+  const handleSearchKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      updateSearchResults(null);
+      const value = (event.target as HTMLInputElement).value;
+      router.push(`/search?q=${value}`);
+    }
+  };
+
   const handleSearchChange = async (q: string) => {
     try {
       const previewProducts = await debouncedSearch.current.call(q);
 
-      setSearchPreviewProducts(previewProducts);
+      updateSearchResults(previewProducts);
     } catch (error) {
-      setSearchPreviewProducts([]);
+      updateSearchResults(null);
     }
   };
 
-  const fetchRecommendations = async (query: string) => {
-    const searchWidgetItem = new SearchWidgetItem('product', 'rfkid_6', {
+  const fetchPreview = async (query: string) => {
+    const searchWidgetItem = new SearchWidgetItem('product', searchWidgetId, {
       content: {},
       limit: 6,
-      query: { keyphrase: query }
+      query: { keyphrase: query },
+      suggestion: [{ name: 'trending_searches', max: 5 }]
     });
 
     const result = (await getWidgetData(
@@ -41,7 +44,7 @@ export function SearchInput({
     return result;
   };
 
-  const debouncedSearch = useRef(DebounceSearch(fetchRecommendations, 300));
+  const debouncedSearch = useRef(debounceSearch(fetchPreview, 300));
 
   return (
     <div className='relative w-[15rem] '>
@@ -53,7 +56,7 @@ export function SearchInput({
         onChange={async (e) => {
           const inputValue = e.target.value;
 
-          setSearch(inputValue);
+          updateSearch(inputValue);
           handleSearchChange(inputValue);
         }}
         onKeyDown={handleSearchKeyDown}
@@ -83,8 +86,8 @@ export function SearchInput({
       ) : (
         <svg
           onClick={() => {
-            setSearch('');
-            setSearchPreviewProducts([]);
+            updateSearch('');
+            updateSearchResults(null);
           }}
           className='absolute top-2 right-3 text-gray-400 cursor-pointer'
           xmlns='http://www.w3.org/2000/svg'
