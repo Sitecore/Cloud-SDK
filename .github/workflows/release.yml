@@ -50,7 +50,7 @@ jobs:
 
       - name: Clean CHANGELOG.md files
         run: |
-          packages=("events" "personalize" "utils" "core")
+          packages=("events" "personalize" "utils" "core" "search")
           for package in "${packages[@]}"; do
               file_path="./packages/$package/CHANGELOG.md"
               if [ -e $file_path ]; then
@@ -69,6 +69,9 @@ jobs:
 
       - name: Bump version Personalize
         run: npx nx run personalize:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+
+      - name: Bump version Search
+        run: npx nx run search:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
 
       - name: Get new release version
         if: ${{ github.event.inputs.dryRun == 'false' }}
@@ -117,7 +120,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build NPM packages
-        run: npx nx run-many -t build -p 'events,personalize'
+        run: npx nx run-many -t build -p 'events,personalize,search'
 
       - name: Upload NPM package artifact
         uses: actions/upload-artifact@v4
@@ -130,7 +133,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        package-folder: [utils, core, events, personalize]
+        package-folder: [utils, core, events, personalize, search]
     needs: bump-and-build
     steps:
       - name: Download package artifact
