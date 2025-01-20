@@ -1,4 +1,18 @@
-import type { SearchEndpointResponse } from 'packages/search/src/lib/requests/post-request';
-import type { RecommendedProduct } from '../components/Products';
+export type RecommendedProduct = {
+  id: string;
+  name: string;
+  price: string;
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  image_url: string;
+  brand: string;
+  sku: string;
+};
 
-export type ApiResponseWithContent = SearchEndpointResponse & { content: RecommendedProduct[] };
+export type Product = {
+  id: string;
+  title: string;
+  price: number;
+  discount?: number;
+  imageUrl: string;
+  slug: string;
+};

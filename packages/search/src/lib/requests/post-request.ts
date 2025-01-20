@@ -29,6 +29,27 @@ export async function sendPostRequest(
     });
 }
 
+interface FacetValueResponse {
+  id: string;
+  text: string;
+  count: number;
+}
+
+interface SortingResponse {
+  choices: Array<{ name: string; label: string }>;
+}
+
+interface QuestionsAnswersResponse {
+  id: string;
+  question: string;
+  answer: string;
+  type: string;
+}
+
+interface SuggestionResponse {
+  [key: string]: Array<{ text: string; freq: number }>;
+}
+
 /**
  * The response object that Sitecore EP returns
  */
@@ -42,5 +63,18 @@ export interface SearchEndpointResponse {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     used_in: string;
     entity: string;
+    facet?: {
+      name: string;
+      label: string;
+      value: FacetValueResponse[];
+    };
+    content?: Array<unknown>;
+    sort?: SortingResponse;
+    total_item?: number;
+    limit?: number;
+    offset?: number;
+    suggestion: SuggestionResponse;
+    related_questions?: QuestionsAnswersResponse[];
+    answer?: QuestionsAnswersResponse;
   }[];
 }

@@ -6,6 +6,8 @@ import '@sitecore-cloudsdk/events/browser';
 import {
   Context,
   getWidgetData,
+  SearchEndpointResponse,
+  SearchEventEntity,
   SearchWidgetItem,
   widgetFacetClick,
   widgetItemClick,
@@ -17,7 +19,6 @@ import FacetCheckbox from '../../components/FacetCheckbox';
 import PaginationLoadMore from '../../components/Listing/PaginationLoadMore';
 import Sort from '../../components/Listing/Sort';
 import { useCart } from '../../context/Cart';
-import type { ApiResponseWithContent } from '../../types';
 
 type SelectedFacetsType = {
   [facetName: string]: {
@@ -175,9 +176,9 @@ const SearchResultsPage = () => {
     const { widgets } = (await getWidgetData(
       new WidgetRequestData([searchWidget]),
       new Context({ locale: { language: 'EN', country: 'us' } })
-    )) as ApiResponseWithContent;
+    )) as SearchEndpointResponse;
 
-    const response = widgets[0] as unknown as ApiResponseWithContent;
+    const response = widgets[0];
 
     if (!response) return console.warn('No search results found');
 
@@ -185,7 +186,7 @@ const SearchResultsPage = () => {
     setProducts(products.concat(response.content as any));
     widgetView({
       request: {},
-      entities: response.content?.map((product) => ({ entity: 'product', id: product.id })),
+      entities: response.content?.map((product: any) => ({ entity: 'product', id: product.id })) as SearchEventEntity[],
       pathname: '/search',
       widgetId: 'rfkid_7'
     });

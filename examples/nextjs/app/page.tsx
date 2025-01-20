@@ -6,14 +6,15 @@ import {
   Context,
   getWidgetData,
   RecommendationWidgetItem,
+  SearchEventEntity,
   WidgetRequestData,
   widgetView
 } from '@sitecore-cloudsdk/search/browser';
 import { withAuthGuard } from '../components/AuthGuard';
 import { Newsletter } from '../components/Newsletter';
 import { PersonalizeBanner } from '../components/PersonalizeBanner';
-import { Products, RecommendedProduct } from '../components/Products';
-import type { ApiResponseWithContent } from '../types';
+import { Products } from '../components/Products';
+import { RecommendedProduct } from '../types';
 
 function Index() {
   const [recommendedProducts, setRecommendedProducts] = useState<RecommendedProduct[]>([]);
@@ -43,13 +44,16 @@ function Index() {
 
       try {
         const apiData = await getWidgetData(new WidgetRequestData([recWidget]), context);
-        const recWidgetData = apiData?.widgets[0] as ApiResponseWithContent | undefined;
+        const recWidgetData = apiData?.widgets[0];
         if (!recWidgetData) return console.warn('No recommended products found');
-        setRecommendedProducts(recWidgetData.content);
+        setRecommendedProducts(recWidgetData.content as RecommendedProduct[]);
         await widgetView({
           pathname: '/',
           widgetId: 'rfkid_2',
-          entities: recWidgetData.content.map((product) => ({ entity: 'product', id: product.id })),
+          entities: recWidgetData.content?.map((product: any) => ({
+            entity: 'product',
+            id: product.id
+          })) as SearchEventEntity[],
           request: {}
         });
       } catch (error) {

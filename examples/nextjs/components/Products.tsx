@@ -1,28 +1,11 @@
 'use client';
 
-import AddToCartButton from './AddToCartButton';
-import { useCart } from '../context/Cart';
-import PriceTag from './PriceTag';
 import Image from 'next/image';
 import React from 'react';
-
-export type RecommendedProduct = {
-  id: string;
-  name: string;
-  price: string;
-  image_url: string;
-  brand: string;
-  sku: string;
-};
-
-export type Product = {
-  id: string;
-  title: string;
-  price: number;
-  discount?: number;
-  imageUrl: string;
-  slug: string;
-};
+import { useCart } from '../context/Cart';
+import { RecommendedProduct } from '../types';
+import AddToCartButton from './AddToCartButton';
+import PriceTag from './PriceTag';
 
 type ProductsProps = {
   products?: RecommendedProduct[];

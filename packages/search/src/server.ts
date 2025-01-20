@@ -91,3 +91,5 @@ export type {
   DistanceString,
   GeoWithinFilterData
 } from './lib/request-entities/filters/interfaces';
+
+export type { SearchEndpointResponse } from './lib/requests/post-request';
