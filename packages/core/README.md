@@ -13,6 +13,7 @@ To initialize other Cloud SDK packages, first install them:
 ```bash
 npm install @sitecore-cloudsdk/events
 npm install @sitecore-cloudsdk/personalize
+npm install @sitecore-cloudsdk/search
 ```
 
 ## Usage
@@ -40,7 +41,11 @@ export default function Home() {
       enableBrowserCookie: true
     })
       .addEvents() // Initialize the `events` package.
-      .addPersonalize({ enablePersonalizeCookie: true, webPersonalization: true }) // Initialize the `personalize` package and enable web personalization.
+      .addPersonalize({
+        enablePersonalizeCookie: true,
+        webPersonalization: true
+      }) // Initialize the `personalize` package and enable web personalization.
+      .addSearch() // Initialize the `search` package.
       .initialize();
   }, []);
 
@@ -53,8 +58,8 @@ Initialize the Cloud SDK and its packages on the server side:
 ```ts
 import type { NextRequest, NextResponse } from 'next/server';
 import { CloudSDK } from '@sitecore-cloudsdk/core/server';
-import '@sitecore-cloudsdk/events/browser';
-import '@sitecore-cloudsdk/personalize/browser';
+import '@sitecore-cloudsdk/events/server';
+import '@sitecore-cloudsdk/personalize/server';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
@@ -66,6 +71,7 @@ export async function middleware(request: NextRequest) {
   })
     .addEvents() // Initialize the `events` package.
     .addPersonalize({ enablePersonalizeCookie: true }) // Initialize the `personalize` package.
+    .addSearch() // Initialize the `search` package.
     .initialize();
 
   return response;
