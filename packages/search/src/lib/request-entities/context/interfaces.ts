@@ -28,10 +28,6 @@ export interface StoreData {
   id: string;
 }
 
-export interface IdsData {
-  [key: string]: ArrayOfAtLeastOne<string>;
-}
-
 export interface IdsDTO {
   [key: string]: ArrayOfAtLeastOne<string>;
 }
@@ -44,7 +40,6 @@ export interface ContextData {
   campaign?: CampaignData;
   geo?: GeoData;
   browser?: BrowserData;
-  ids?: IdsData;
 }
 
 export interface BrowserDTO {

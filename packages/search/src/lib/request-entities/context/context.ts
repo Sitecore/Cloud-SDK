@@ -7,7 +7,6 @@ import type {
   ContextData,
   ContextDTO,
   GeoData,
-  IdsData,
   LocaleData,
   LocationData,
   PageData,
@@ -28,7 +27,6 @@ export class Context {
   private _geo?: GeoData;
   private _user?: UserData;
   private _browser?: BrowserData;
-  private _ids?: IdsData;
 
   /**
    * @param context - The context object.
@@ -44,7 +42,6 @@ export class Context {
     this._geo = context.geo;
     this._browser = context.browser;
     this._user = context.user;
-    this._ids = context.ids;
   }
 
   /**
@@ -241,28 +238,6 @@ export class Context {
   }
 
   /**
-   * Sets the ids data.
-   * @param ids -New value for ids {@Link IdsData}
-   */
-  set ids(ids: IdsData) {
-    this._ids = ids;
-  }
-
-  /**
-   * @returns The ids data.
-   */
-  get ids(): IdsData | undefined {
-    return this._ids;
-  }
-
-  /**
-   * Unset the value for ids.
-   */
-  removeIds() {
-    this._ids = undefined;
-  }
-
-  /**
    * Validate context object.
    */
   private _validateContext(context: ContextData): void {
@@ -343,8 +318,6 @@ export class Context {
         utm_source: this._campaign.source,
         utm_term: this._campaign.term
       };
-    if (this._ids && Object.keys(this._ids).length > 0) dto.context.ids = this._ids;
-    /* eslint-enable @typescript-eslint/naming-convention */
 
     return dto;
   }

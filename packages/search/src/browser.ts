@@ -25,7 +25,6 @@ export type {
   PageData,
   UserData,
   StoreData,
-  IdsData,
   ContextData,
   CampaignData
 } from './lib/request-entities/context/interfaces';
