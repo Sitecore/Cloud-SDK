@@ -1,14 +1,15 @@
 'use client';
 
 import Image from 'next/image';
+import Link from 'next/link';
 import React from 'react';
 import { useCart } from '../context/Cart';
-import { RecommendedProduct } from '../types';
 import AddToCartButton from './AddToCartButton';
 import PriceTag from './PriceTag';
+import { ProductItem } from './search/Product';
 
 type ProductsProps = {
-  products?: RecommendedProduct[];
+  products?: ProductItem[];
 };
 
 export function Products({ products }: ProductsProps) {
@@ -35,24 +36,13 @@ export function Products({ products }: ProductsProps) {
           <div className='flex-1 flex flex-col'>
             <div>
               <span className='text-sm font-medium text-red-600'>{product.brand}</span>
-              <h2 className='text-base sm:text-lg font-semibold text-gray-900 mt-1 line-clamp-2'>{product.name}</h2>
+              <Link href={`/product/${product.id}`}>
+                <h2 className='text-base sm:text-lg font-semibold text-gray-900 mt-1 line-clamp-2'>{product.name}</h2>
+              </Link>
             </div>
             <div className='mt-auto'>
               <PriceTag price={product.price} />
-              <AddToCartButton
-                onClick={() =>
-                  cart.addProductItem(
-                    {
-                      id: product.id,
-                      title: product.name,
-                      price: parseFloat(product.price) || 0,
-                      imageUrl: product.image_url,
-                      slug: product.sku
-                    },
-                    1
-                  )
-                }
-              />
+              <AddToCartButton onClick={() => cart.addProductItem(product, 1)} />
             </div>
           </div>
         </div>

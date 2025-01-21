@@ -1,9 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState } from 'react';
-import { Product } from '../types';
+import { ProductItem } from '../components/search/Product';
 
-interface CartProduct extends Product {
+interface CartProduct extends ProductItem {
   quantity: number;
 }
 
@@ -15,8 +15,7 @@ const contextDefaultValues: CartContext = {
   isSidebarOpen: false,
   openSidebar: () => null,
   productItems: [],
-  removeProductItem: () => null,
-  calculateDiscountPrice: () => 0
+  removeProductItem: () => null
 };
 
 const CartContext = createContext<CartContext>(contextDefaultValues);
@@ -33,12 +32,12 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     setIsSidebarOpen(false);
   };
 
-  const addProductItem = (product: Product, quantity: number) => {
+  const addProductItem = (product: ProductItem, quantity: number) => {
     const isProductOnCart = productItems.some((item) => item.id === product.id);
     if (isProductOnCart) {
       const updatedItems = productItems.map((item) => {
         if (item.id === product.id) {
-          item.quantity = quantity;
+          item.quantity += quantity;
         }
         return item;
       });
@@ -60,25 +59,9 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
     return totalItems;
   };
 
-  /**
-   * Calculate the price of a product with discount applied.
-   * @param price The price of the product
-   * @param discount The discount percentage (0-100)
-   * @returns The price of the product with discount applied
-   */
-  const calculateDiscountPrice = (price: number, discount: number | undefined) => {
-    if (discount) {
-      const discounted = ((100 - discount) / 100) * price;
-      return discounted;
-    }
-    return price;
-  };
-
   const calculateTotalCost = () => {
     const totalCost = productItems.reduce((acc, product) => {
-      return product.quantity
-        ? acc + calculateDiscountPrice(product.price, product.discount) * product.quantity
-        : acc + 0;
+      return product.quantity ? acc + parseFloat(product.price) * product.quantity : acc;
     }, 0);
 
     return totalCost;
@@ -94,8 +77,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({ children }) => {
         isSidebarOpen,
         openSidebar,
         productItems,
-        removeProductItem,
-        calculateDiscountPrice
+        removeProductItem
       }}>
       {children}
     </CartContext.Provider>
@@ -107,15 +89,14 @@ export const useCart = () => {
 };
 
 interface CartContext {
-  addProductItem: (product: Product, quantity: number) => void;
+  addProductItem: (product: ProductItem, quantity: number) => void;
   calculateTotalCost: () => number;
   calculateTotalItems: () => number;
   isSidebarOpen: boolean;
   openSidebar: () => void;
   removeProductItem: (productId: string) => void;
   closeSidebar: () => void;
-  productItems: Product[];
-  calculateDiscountPrice: (price: number, discount: number | undefined) => number;
+  productItems: CartProduct[];
 }
 
 interface CartProviderProps {

@@ -14,10 +14,10 @@ import { withAuthGuard } from '../components/AuthGuard';
 import { Newsletter } from '../components/Newsletter';
 import { PersonalizeBanner } from '../components/PersonalizeBanner';
 import { Products } from '../components/Products';
-import { RecommendedProduct } from '../types';
+import { ProductItem } from '../components/search/Product';
 
 function Index() {
-  const [recommendedProducts, setRecommendedProducts] = useState<RecommendedProduct[]>([]);
+  const [recommendedProducts, setRecommendedProducts] = useState<ProductItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -46,7 +46,7 @@ function Index() {
         const apiData = await getWidgetData(new WidgetRequestData([recWidget]), context);
         const recWidgetData = apiData?.widgets[0];
         if (!recWidgetData) return console.warn('No recommended products found');
-        setRecommendedProducts(recWidgetData.content as RecommendedProduct[]);
+        setRecommendedProducts(recWidgetData.content as ProductItem[]);
         await widgetView({
           pathname: '/',
           widgetId: 'rfkid_2',
@@ -76,7 +76,6 @@ function Index() {
             <Products products={recommendedProducts} />
           </>
         )}
-
         <Newsletter />
       </div>
     </div>

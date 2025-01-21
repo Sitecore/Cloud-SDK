@@ -1,11 +1,11 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '../context/Cart';
 
 export function Sidebar() {
-  const { isSidebarOpen, productItems, closeSidebar, removeProductItem, calculateDiscountPrice, calculateTotalCost } =
-    useCart();
+  const { isSidebarOpen, productItems, closeSidebar, removeProductItem, calculateTotalCost } = useCart();
   return (
     <aside
       style={{ width: isSidebarOpen ? '400px' : '0' }}
@@ -24,22 +24,16 @@ export function Sidebar() {
             key={product.id}
             className='flex justify-between items-center mt-4'>
             <div className='flex gap-x-4'>
-              <img
-                src={product.imageUrl}
-                alt={product.title}
-                className='w-20 h-20 object-cover rounded-lg'
+              <Image
+                src={product.image_url}
+                width={100}
+                height={100}
+                alt={product.name}
               />
               <div>
-                <h3 className='text-lg font-semibold'>{product.title}</h3>
-                <p className='text-sm text-gray-400'>Lorem ipsum...</p>
-                <p className={`text-lg font-semibold ${product.discount && 'line-through'}`}>
-                  ${product.price.toFixed(2)}
-                </p>
-                {product.discount && (
-                  <p className='text-lg font-semibold'>
-                    ${calculateDiscountPrice(product.price, product.discount).toFixed(2)}
-                  </p>
-                )}
+                <h3 className='text-lg font-semibold'>{product.name}</h3>
+                <div>Qty:{product.quantity}</div>
+                <div>Unit Price: €{product.price}</div>
               </div>
             </div>
             <div>
@@ -59,7 +53,7 @@ export function Sidebar() {
         ) : (
           <>
             <br />
-            <h1 className='text-lg'>Total: ${calculateTotalCost().toFixed(2)}</h1>
+            <h1 className='text-lg'>Total: €{calculateTotalCost()}</h1>
             <br />
             <Link
               href='/checkout'

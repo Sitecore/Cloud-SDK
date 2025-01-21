@@ -1,11 +1,13 @@
 'use client';
 
+import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import '@sitecore-cloudsdk/events/browser';
 import {
   Context,
   getWidgetData,
+  SearchSortOptions,
   SearchEndpointResponse,
   SearchEventEntity,
   SearchWidgetItem,
@@ -18,6 +20,7 @@ import { withAuthGuard } from '../../components/AuthGuard';
 import FacetCheckbox from '../../components/FacetCheckbox';
 import PaginationLoadMore from '../../components/Listing/PaginationLoadMore';
 import Sort from '../../components/Listing/Sort';
+import { ProductItem } from '../../components/search/Product';
 import { useCart } from '../../context/Cart';
 
 type SelectedFacetsType = {
@@ -64,7 +67,7 @@ const SearchResultsPage = () => {
   const [selectedFacets, setSelectedFacets] = useState<SelectedFacetsType>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(PAGE_SIZE);
-  const [products, setProducts] = useState([]);
+  const [products, setProducts] = useState<ProductItem[]>([]);
   const [sort, setSort] = useState<string>();
 
   const setPageQuery = (currentPage: number): void => {
@@ -123,7 +126,7 @@ const SearchResultsPage = () => {
   };
 
   const getSortArgs = () => {
-    const result = { choices: true } as any;
+    const result = { choices: true } as SearchSortOptions;
     if (sort) {
       result.value = [{ name: sort }];
     }
@@ -183,7 +186,7 @@ const SearchResultsPage = () => {
     if (!response) return console.warn('No search results found');
 
     setSearchData(response);
-    setProducts(products.concat(response.content as any));
+    setProducts(products.concat(response.content as ProductItem[]));
     widgetView({
       request: {},
       entities: response.content?.map((product: any) => ({ entity: 'product', id: product.id })) as SearchEventEntity[],
@@ -317,8 +320,7 @@ const SearchResultsPage = () => {
         <div className='flex-1 relative'>
           {productLoading ? <div className='absolute inset-0 flex justify-center bg-white bg-opacity-75'></div> : null}
           <div className='grid grid-cols-1 gap-6'>
-            {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-            {products?.map((item: any, index: number) => (
+            {products?.map((item: ProductItem, index: number) => (
               <div
                 key={item.id}
                 className='product-item bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200'
@@ -345,28 +347,18 @@ const SearchResultsPage = () => {
                     <div className='flex justify-between items-start'>
                       <div>
                         <span className='text-sm text-gray-500'>{item.brand}</span>
-                        <h2 className='text-xl font-semibold text-gray-900 mt-1'>{item.name}</h2>
+                        <Link href={`/product/${item.id}`}>
+                          <h2 className='text-xl font-semibold text-gray-900 mt-1'>{item.name}</h2>
+                        </Link>
                         <span>{item.id}</span>
                         <p className='text-lg font-medium text-red-600 mt-2'>€ {item.price}</p>
                       </div>
                       <button
-                        onClick={() =>
-                          cart.addProductItem(
-                            {
-                              id: item.id,
-                              title: item.name,
-                              price: parseFloat(item.price) || 0,
-                              imageUrl: item.image_url,
-                              slug: item.sku
-                            },
-                            1
-                          )
-                        }
+                        onClick={() => cart.addProductItem(item, 1)}
                         className='bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'>
                         Add to Cart
                       </button>
                     </div>
-                    {item.description && <p className='text-gray-600 mt-3 text-sm line-clamp-2'>{item.description}</p>}
                   </div>
                 </div>
               </div>

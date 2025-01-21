@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import React from 'react';
 import { widgetItemClick } from '@sitecore-cloudsdk/search/browser';
 import { useCart } from '../../context/Cart';
@@ -28,22 +29,15 @@ export function Product({ item, index }: { item: ProductItem; index: number }) {
         />
       </div>
       <div className='flex-1 flex flex-col'>
-        <h2 className='text-lg font-semibold text-gray-900'>{item.name}</h2>
+        <Link href={`/product/${item.id}`}>
+          <h2 className='text-xl font-semibold text-gray-900 mt-1'>{item.name}</h2>
+        </Link>
         <p className='text-lg font-medium text-red-600 mt-2'>€ {item.price}</p>
       </div>
       <div className='grid items-center'>
         <button
           onClick={() => {
-            cart.addProductItem(
-              {
-                id: item.id,
-                title: item.name,
-                price: parseFloat(item.price) || 0,
-                imageUrl: item.image_url,
-                slug: item.name.replaceAll(' ', '-').toLowerCase()
-              },
-              1
-            );
+            cart.addProductItem(item, 1);
           }}
           className='bg-red-600 text-white px-6 py-2 rounded-lg hover:bg-red-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2'>
           Add to Cart

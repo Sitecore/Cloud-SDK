@@ -1,10 +1,11 @@
 'use client';
 
 import { withAuthGuard } from '../../components/AuthGuard';
+import { ProductItem } from '../../components/search/Product';
 import { useCart } from '../../context/Cart';
 
 function CheckoutPage() {
-  const { productItems, calculateDiscountPrice, removeProductItem, calculateTotalCost } = useCart();
+  const { productItems, removeProductItem, calculateTotalCost } = useCart();
 
   if (productItems.length === 0) {
     return (
@@ -42,27 +43,19 @@ function CheckoutPage() {
     <section className='container my-16'>
       <div className='flex gap-x-36'>
         <div className='w-1/3'>
-          {productItems.map((product) => (
+          {productItems.map((product: ProductItem) => (
             <div
               key={product.id}
               className='flex justify-between items-center mt-4'>
               <div className='flex gap-x-4'>
                 <img
-                  src={product.imageUrl}
-                  alt={product.title}
+                  src={product.image_url}
+                  alt={product.name}
                   className='w-20 h-20 object-cover rounded-lg'
                 />
                 <div>
-                  <h3 className='text-lg font-semibold'>{product.title}</h3>
+                  <h3 className='text-lg font-semibold'>{product.name}</h3>
                   <p className='text-sm text-gray-400'>Lorem ipsum...</p>
-                  <p className={`text-lg font-semibold ${product.discount && 'line-through'}`}>
-                    ${product.price.toFixed(2)}
-                  </p>
-                  {product.discount && (
-                    <p className='text-lg font-semibold'>
-                      ${calculateDiscountPrice(product.price, product.discount).toFixed(2)}
-                    </p>
-                  )}
                 </div>
               </div>
               <div>
@@ -77,7 +70,7 @@ function CheckoutPage() {
         </div>
         <div className='w-2/3 flex flex-col gap-y-5'>
           <h1 className='text-2xl font-semibold'>Checkout</h1>
-          <h1 className='text-lg'>Total: ${calculateTotalCost().toFixed(2)}</h1>
+          <h1 className='text-lg'>Total: €{calculateTotalCost().toFixed(2)}</h1>
 
           {/* Stripe Card Element */}
           <form>
