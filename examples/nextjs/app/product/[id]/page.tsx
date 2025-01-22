@@ -1,7 +1,9 @@
 'use client';
 
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import { entityView } from '@sitecore-cloudsdk/search/browser';
 import { withAuthGuard } from '../../../components/AuthGuard';
 import ReviewCount from '../../../components/ProductPage/review-rating';
 import { ProductItem } from '../../../components/search/Product';
@@ -9,6 +11,7 @@ import { useCart } from '../../../context/Cart';
 import { getProductById } from '../../../utils/product-repository';
 
 function ProductPage({ params }: { params: { id: string } }) {
+  const pathname = usePathname();
   const [product, setProduct] = useState<ProductItem>();
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1); // Initial quantity is 1
@@ -18,10 +21,12 @@ function ProductPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     getProductById(params.id)
       .then((product) => {
+        if (product) entityView({ entity: { entity: 'product', id: product.id }, pathname });
+
         setProduct(product);
       })
       .finally(() => setLoading(false));
-  }, [params.id]);
+  }, [params.id, pathname]);
 
   const getRandomInt = (min: number, max: number) => {
     min = Math.ceil(min);
