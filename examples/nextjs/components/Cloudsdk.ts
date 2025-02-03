@@ -1,14 +1,19 @@
 'use client';
 
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { CloudSDK } from '@sitecore-cloudsdk/core/browser';
 import '@sitecore-cloudsdk/events/browser';
 import '@sitecore-cloudsdk/personalize/browser';
 import '@sitecore-cloudsdk/search/browser';
 
+type TriggerExperiences = Personalize & {
+  triggerExperiences: () => void;
+};
+
 export function CloudSDKComponent() {
-  const pathName = usePathname();
+  const [personalizeInstance, setPersonalizeInstance] = useState<TriggerExperiences | null>(null);
+  const pathname = usePathname();
 
   useEffect(() => {
     CloudSDK({
@@ -20,12 +25,13 @@ export function CloudSDKComponent() {
       .addSearch()
       .addPersonalize({ webPersonalization: true })
       .initialize();
+
+    setPersonalizeInstance(window.scCloudSDK.personalize as TriggerExperiences);
   }, []);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    window?.scCloudSDK?.personalize && (window?.scCloudSDK.personalize as any).triggerExperiences();
-  }, [pathName]);
+    if (personalizeInstance) personalizeInstance.triggerExperiences();
+  }, [pathname]);
 
   return null;
 }
