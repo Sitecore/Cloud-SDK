@@ -1,15 +1,17 @@
 'use client';
 
 import Link from 'next/link';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import '@sitecore-cloudsdk/events/browser';
 import {
+  ComparisonFacetFilter,
   Context,
+  FacetOptions,
   getWidgetData,
-  SearchSortOptions,
   SearchEndpointResponse,
   SearchEventEntity,
+  SearchSortOptions,
   SearchWidgetItem,
   widgetFacetClick,
   widgetItemClick,
@@ -23,28 +25,6 @@ import Sort from '../../components/Listing/Sort';
 import { ProductItem } from '../../components/search/Product';
 import { useCart } from '../../context/Cart';
 
-type SelectedFacetsType = {
-  [facetName: string]: {
-    facetPosition: number;
-    facetLabel: string;
-    values: {
-      id: string;
-      position: number;
-      text: string;
-    }[];
-  };
-};
-
-type CheckboxFacetChangeType = {
-  facetPosition: number;
-  facetName: string;
-  facetLabel: string;
-  valueId: string;
-  valueText: string;
-  valuePosition: number;
-  isChecked: boolean;
-};
-
 type FacetClickFilterType = {
   displayName: string;
   facetPosition: number;
@@ -54,7 +34,16 @@ type FacetClickFilterType = {
   valuePosition: number;
 };
 
+interface SelectedFacets {
+  [key: string]: string[];
+}
+
+type WidgetItem = SearchEndpointResponse['widgets'][number];
+type WidgetItemFacets = SearchEndpointResponse['widgets'][number]['facet'];
+
 const PAGE_SIZE = 12;
+const QUERY_PARAM = 'q';
+const PAGE_PARAM = 'p';
 
 const SearchResultsPage = () => {
   const router = useRouter();
@@ -63,21 +52,51 @@ const SearchResultsPage = () => {
   const [loading, setLoading] = useState(true);
   const [productLoading, setProductLoading] = useState(false);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const [searchData, setSearchData] = useState<any>({});
-  const [selectedFacets, setSelectedFacets] = useState<SelectedFacetsType>({});
+  const [searchData, setSearchData] = useState<WidgetItem>();
+  const [facets, setFacets] = useState<WidgetItemFacets>();
+  const [selectedFacets, setSelectedFacets] = useState<SelectedFacets>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(PAGE_SIZE);
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [sort, setSort] = useState<string>();
+  const pathName = usePathname();
 
-  const setPageQuery = (currentPage: number): void => {
+  const setPageQueryParam = (): void => {
     const queryParams = new URLSearchParams(searchParams.toString());
     if (currentPage === 1) {
-      queryParams.delete('p');
+      queryParams.delete(PAGE_PARAM);
     } else {
-      queryParams.set('p', currentPage.toString());
+      queryParams.set(PAGE_PARAM, currentPage.toString());
     }
-    router.push(`${window.location.pathname}?${queryParams.toString()}`);
+    router.push(`${pathName}?${queryParams.toString()}`);
+  };
+
+  const clearFilters = (): void => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    for (const [key] of searchParams) {
+      if ([QUERY_PARAM, PAGE_PARAM].includes(key)) {
+        continue;
+      }
+      params.delete(key);
+    }
+    setProducts([]);
+    router.push(`${pathName}?${params.toString()}`);
+  };
+
+  const setFilterQueryParams = (facetName: string, facetOption: string): void => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    const existingValue = params.get(facetName);
+    if (existingValue) {
+      const currentValues = existingValue.split(',');
+      const index = currentValues.indexOf(facetOption);
+      index !== -1 ? currentValues.splice(index, 1) : currentValues.push(facetOption);
+      currentValues.length ? params.set(facetName, currentValues.join(',')) : params.delete(facetName);
+    } else {
+      params.set(facetName, facetOption);
+    }
+    router.push(`${pathName}?${params.toString()}`);
   };
 
   const handleSortChange = (sort: string) => {
@@ -86,43 +105,22 @@ const SearchResultsPage = () => {
     setSort(sort);
   };
 
-  const handleFacetChange = ({
-    facetName,
-    facetLabel,
-    facetPosition,
-    valueId,
-    valueText,
-    valuePosition,
-    isChecked
-  }: CheckboxFacetChangeType) => {
-    setSelectedFacets((prev) => {
-      const newFacets = { ...prev };
-      if (!newFacets[facetName]) {
-        newFacets[facetName] = {
-          facetPosition: facetPosition,
-          facetLabel: facetLabel,
-          values: []
-        };
+  const updateSelectedFacets = () => {
+    const params = new URLSearchParams(searchParams.toString());
+
+    const selected: SelectedFacets = {};
+    for (const param of params) {
+      if ([QUERY_PARAM, PAGE_PARAM].includes(param[0])) {
+        continue;
       }
-      if (isChecked) {
-        if (!newFacets[facetName].values.find((facet) => facet.id === valueId)) {
-          newFacets[facetName].values = [
-            ...newFacets[facetName].values,
-            { id: valueId, text: valueText, position: valuePosition }
-          ];
-        }
-      } else {
-        newFacets[facetName].values = newFacets[facetName]?.values.filter((facet) => facet.id !== valueId);
-      }
-      if (newFacets[facetName].values.length === 0) {
-        delete newFacets[facetName];
-      }
-      return newFacets;
-    });
+      selected[param[0]] = param[1].split(',');
+    }
+
+    setSelectedFacets(selected);
   };
 
   const isFacetSelected = (facetName: string, value: string): boolean => {
-    return selectedFacets[facetName]?.values.some((facet) => facet.id === value) || false;
+    return !!selectedFacets[facetName]?.includes(value);
   };
 
   const getSortArgs = () => {
@@ -134,13 +132,25 @@ const SearchResultsPage = () => {
   };
 
   const getRequestData = (): SearchWidgetItem => {
-    const facetTypes = Object.entries(selectedFacets).map(([key, facet]) => ({
-      name: key,
-      filter: {
-        type: 'or',
-        values: facet.values.map((f) => f.id)
+    const filters = [];
+    for (const [key, values] of searchParams) {
+      if ([QUERY_PARAM, PAGE_PARAM].includes(key)) {
+        continue;
       }
-    }));
+
+      const filter = {
+        name: key,
+        filter: {
+          type: 'or',
+          values: values.split(',').map((value: string) => {
+            if (key !== 'price') return new ComparisonFacetFilter('eq', value);
+            return value;
+          })
+        }
+      };
+      filters.push(filter);
+    }
+
     return new SearchWidgetItem('product', 'rfkid_7', {
       content: {},
       limit: perPage,
@@ -148,26 +158,35 @@ const SearchResultsPage = () => {
       sort: getSortArgs(),
       facet: {
         all: true,
-        ...(facetTypes.length && { types: facetTypes as any })
-      },
+        ...(filters.length && { types: filters })
+      } as FacetOptions,
       ...(query && { query: { keyphrase: query } })
     });
   };
 
   const generateFacetClickFilters = function () {
-    return Object.entries(selectedFacets).reduce((prev, [key, facet]) => {
-      const facetList = facet.values.map(
-        (value): FacetClickFilterType => ({
-          displayName: facet.facetLabel,
-          facetPosition: facet.facetPosition,
+    const facetClickFilters: FacetClickFilterType[] = [];
+    if (!facets || !selectedFacets) return;
+    for (const key of Object.keys(selectedFacets)) {
+      const values = selectedFacets[key];
+      const filterIndex = facets.findIndex((item) => item.name === key);
+      if (filterIndex === -1) continue;
+      const currentFilter = facets[filterIndex];
+
+      for (const value of values) {
+        facetClickFilters.push({
+          displayName: currentFilter.label,
+          title: currentFilter.label,
+          facetPosition: filterIndex,
           name: key,
-          title: key,
-          value: value.text,
-          valuePosition: value.position
-        })
-      );
-      return [...prev, ...facetList];
-    }, [] as any);
+          value,
+          valuePosition: facets[filterIndex].value.findIndex((item) =>
+            key === 'price' ? item.id === value : item.text === value
+          )
+        });
+      }
+    }
+    return facetClickFilters;
   };
 
   const searchParams = useSearchParams();
@@ -176,20 +195,21 @@ const SearchResultsPage = () => {
   const populateData = async function () {
     const searchWidget = getRequestData();
 
-    const { widgets } = (await getWidgetData(
+    const response = (await getWidgetData(
       new WidgetRequestData([searchWidget]),
       new Context({ locale: { language: 'EN', country: 'us' } })
     )) as SearchEndpointResponse;
 
-    const response = widgets[0];
+    const widget = response.widgets[0];
 
-    if (!response) return console.warn('No search results found');
+    if (!widget) return console.warn('No search results found');
 
-    setSearchData(response);
-    setProducts(products.concat(response.content as ProductItem[]));
+    setSearchData(widget);
+    setFacets(widget.facet);
+    setProducts(products.concat(widget.content as ProductItem[]));
     widgetView({
       request: {},
-      entities: response.content?.map((product: any) => ({ entity: 'product', id: product.id })) as SearchEventEntity[],
+      entities: products?.map((product: ProductItem) => ({ entity: 'product', id: product.id })) as SearchEventEntity[],
       pathname: '/search',
       widgetId: 'rfkid_7'
     });
@@ -197,30 +217,17 @@ const SearchResultsPage = () => {
 
   useEffect(() => {
     setProductLoading(true);
+    setPageQueryParam();
     populateData().finally(() => {
       setLoading(false);
       setProductLoading(false);
     });
-  }, [query, currentPage]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [query, currentPage, sort, searchParams]);
 
   useEffect(() => {
-    setPageQuery(currentPage);
-  }, [currentPage]);
-
-  useEffect(() => {
-    populateData().finally(() => {
-      setLoading(false);
-      setProductLoading(false);
-    });
-  }, [sort]);
-
-  useEffect(() => {
-    setProductLoading(true);
-    populateData().finally(() => {
-      setLoading(false);
-      setProductLoading(false);
-    });
     const facetClickFilters = generateFacetClickFilters();
+    if (!facetClickFilters) return;
     widgetFacetClick({
       request: {
         ...(query && { keyword: query })
@@ -229,9 +236,15 @@ const SearchResultsPage = () => {
       pathname: '/search',
       widgetId: 'rfkid_7'
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedFacets]);
 
-  if (loading) {
+  useEffect(() => {
+    updateSelectedFacets();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [facets]);
+
+  if (loading || !searchData) {
     return (
       <div className='container mx-auto px-4 py-8'>
         <div className='animate-pulse'>
@@ -260,11 +273,13 @@ const SearchResultsPage = () => {
             Showing {products.length} results out of {searchData.total_item}
           </p>
         )}
-        <Sort
-          sortingOptions={searchData.sort.choices}
-          selectedSort={sort as string}
-          setSort={handleSortChange}
-        />
+        {searchData.sort?.choices && (
+          <Sort
+            sortingOptions={searchData.sort.choices}
+            selectedSort={sort as string}
+            setSort={handleSortChange}
+          />
+        )}
       </div>
       <div className='flex w-full gap-8'>
         <div className='w-[24%]'>
@@ -273,7 +288,7 @@ const SearchResultsPage = () => {
               <h3 className='font-semibold text-gray-900'>Filters</h3>
               {Object.keys(selectedFacets).length > 0 && (
                 <button
-                  onClick={() => setSelectedFacets({})}
+                  onClick={() => clearFilters()}
                   className='text-sm text-red-600 hover:text-red-700 mt-2'>
                   Clear all filters
                 </button>
@@ -281,7 +296,7 @@ const SearchResultsPage = () => {
             </div>
             <div className='divide-y divide-gray-200'>
               {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-              {searchData.facet?.map((facet: any, facetPosition: number) => (
+              {facets?.map((facet, facetPosition: number) => (
                 <div
                   key={`facet-${facetPosition}`}
                   className='py-4'>
@@ -289,24 +304,16 @@ const SearchResultsPage = () => {
                   {facet.value.length > 0 && (
                     <div className='space-y-1'>
                       {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                      {facet.value.map((value: any, valuePosition: number) => (
+                      {facet.value.map((value) => (
                         <FacetCheckbox
                           key={`facetValue-${value.id}`}
                           label={value.text}
                           count={value.count}
-                          checked={isFacetSelected(facet.name, value.id)}
-                          onChange={(checked) => {
+                          checked={isFacetSelected(facet.name, facet.name === 'price' ? value.id : value.text)}
+                          onChange={() => {
                             setProducts([]);
                             setCurrentPage(1);
-                            handleFacetChange({
-                              facetPosition: facetPosition,
-                              facetName: facet.name,
-                              facetLabel: facet.label,
-                              valueId: value.id,
-                              valueText: value.text,
-                              valuePosition: valuePosition,
-                              isChecked: checked
-                            });
+                            setFilterQueryParams(facet.name, facet.name === 'price' ? value.id : value.text);
                           }}
                         />
                       ))}
@@ -367,14 +374,16 @@ const SearchResultsPage = () => {
         </div>
       </div>
       <div>
-        <PaginationLoadMore
-          pages={Math.ceil(searchData.total_item / perPage)}
-          current={currentPage}
-          totalItems={searchData.total_item}
-          currentItems={products.length}
-          setCurrentPage={setCurrentPage}
-          loading={productLoading}
-        />
+        {searchData.total_item && (
+          <PaginationLoadMore
+            pages={Math.ceil(searchData.total_item / perPage)}
+            current={currentPage}
+            totalItems={searchData.total_item}
+            currentItems={products.length}
+            setCurrentPage={setCurrentPage}
+            loading={productLoading}
+          />
+        )}
       </div>
     </div>
   );

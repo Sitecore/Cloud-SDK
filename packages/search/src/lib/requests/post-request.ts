@@ -29,10 +29,18 @@ export async function sendPostRequest(
     });
 }
 
+interface FacetResponse {
+  name: string;
+  label: string;
+  value: FacetValueResponse[];
+}
+
 interface FacetValueResponse {
   id: string;
   text: string;
   count: number;
+  min?: number;
+  max?: number;
 }
 
 interface SortingResponse {
@@ -63,11 +71,7 @@ export interface SearchEndpointResponse {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     used_in: string;
     entity: string;
-    facet?: {
-      name: string;
-      label: string;
-      value: FacetValueResponse[];
-    };
+    facet?: FacetResponse[];
     content?: Array<unknown>;
     sort?: SortingResponse;
     total_item?: number;

@@ -5,7 +5,7 @@ function Sort({
   selectedSort,
   setSort
 }: {
-  sortingOptions: [{ name: string; label: string }];
+  sortingOptions: { name: string; label: string }[];
   selectedSort: string;
   setSort: (string: string) => void;
 }) {
