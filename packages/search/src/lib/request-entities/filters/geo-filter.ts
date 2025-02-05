@@ -15,7 +15,7 @@ export class GeoFilter extends BaseFilter {
 
   /**
    * @param attributeName - The name of the attribute to filter.
-   * @param geoFilterData - The geo filter data like location and distance.
+   * @param geoFilterData - The {@link GeoFilterData} like location and distance.
    */
   constructor(attributeName: string, geoFilterData?: GeoFilterData) {
     super(GEO_FILTER_TYPE, geoFilterData);
@@ -25,6 +25,11 @@ export class GeoFilter extends BaseFilter {
     this._attributeName = attributeName;
   }
 
+  /**
+   * Throws an error if latitude or longitude are not present.
+   * @param location - {@link LocationData}
+   * @throws - {@link ErrorMessages.IV_0012} | {@link ErrorMessages.IV_0013}
+   */
   private _validateLocation(location: LocationData) {
     const result = isValidLocation(location);
 
@@ -34,7 +39,7 @@ export class GeoFilter extends BaseFilter {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link GeoFilterDTO}.
    */
   toDTO(): GeoFilterDTO {
     const dto: GeoFilterDTO = {

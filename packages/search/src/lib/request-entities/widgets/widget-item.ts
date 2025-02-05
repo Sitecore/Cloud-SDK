@@ -34,11 +34,16 @@ export class WidgetItem {
   /**
    * @returns The entity property of the WidgetItem.
    */
-  get entity() {
+  get entity(): string {
     return this._entity;
   }
 
-  private _validateEntity(entity: string) {
+  /**
+   *
+   * @param entity - the string to validate
+   * @throws - {@link ErrorMessages.MV_0010}
+   */
+  private _validateEntity(entity: string): void {
     if (!entity || entity.trim().length === 0) throw new Error(ErrorMessages.MV_0010);
   }
 
@@ -46,7 +51,8 @@ export class WidgetItem {
    * Sets the id for the WidgetItem.
    * This method updates the `widgetId` property of WidgetItem instance.
    *
-   * @param widgetId - The entity to set.
+   * @param widgetId - The widgetId to set.
+   * @throws - {@link ErrorMessages.MV_0011}
    */
   set widgetId(widgetId: string) {
     this._validateWidgetId(widgetId);
@@ -56,15 +62,25 @@ export class WidgetItem {
   /**
    * @returns The id property of the WidgetItem.
    */
-  get widgetId() {
+  get widgetId(): string {
     return this._widgetId;
   }
 
-  private _validateWidgetId(widgetId: string) {
+  /**
+   *
+   * @param widgetId - the string to validate
+   * @throws - {@link ErrorMessages.MV_0011}
+   */
+  private _validateWidgetId(widgetId: string): void {
     if (!widgetId || widgetId.trim().length === 0) throw new Error(ErrorMessages.MV_0011);
   }
 
-  protected _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number) {
+  /**
+   *
+   * @param errorMessage - {@link ErrorMessages}
+   * @param num - the number to validate
+   */
+  protected _validateNumberInRange1To100(errorMessage: ErrorMessages, num?: number): void {
     if (num === undefined || (num >= 1 && num <= 100)) return;
 
     throw new Error(errorMessage);
@@ -72,10 +88,9 @@ export class WidgetItem {
 
   /**
    *
-   * @param errorMessage - The error message
+   * @param errorMessage - The error message {@link ErrorMessages}
    * @param range - min and max range
    * @param num - number to test
-   * @returns void
    */
   protected _validateNumberInRange(
     errorMessage: ErrorMessages,
@@ -107,7 +122,7 @@ export class WidgetItem {
 
   /**
    * Tests if passed string is defined, is not empty string and does not contain whitespaces.
-   * @param errorMessage - Error Message
+   * @param errorMessage - Error Message {@link ErrorMessages}
    * @param string - the string to test
    * @returns void
    * @throws Error when failed
@@ -119,7 +134,7 @@ export class WidgetItem {
   }
 
   /**
-   * Maps the widget item to its DTO format.
+   * Maps the widget item to its DTO format {@link WidgetItemDTO}.
    */
   toDTO(): WidgetItemDTO {
     return {

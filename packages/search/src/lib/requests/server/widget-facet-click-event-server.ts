@@ -7,7 +7,7 @@ import { verifySearchPackageExistence } from '../../initializer/server/initializ
 
 /**
  * This function sends a widget facet click event from server.
- * @param httpRequest - An  http request object. Either HttpRequest or MiddlewareRequest.
+ * @param httpRequest - An  http {@link Request} object. Either HttpRequest or MiddlewareRequest.
  * @param widgetFacetClickEventParams - An object containing widget facet click event params
  * from {@link WidgetFacetClickEventParams}
  */

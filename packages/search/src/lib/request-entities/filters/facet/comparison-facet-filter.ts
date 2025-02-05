@@ -10,7 +10,7 @@ export class ComparisonFacetFilter implements FacetFilterBase {
   private _value: string;
 
   /**
-   * @param operator - The operator to be applied on attribute.
+   * @param operator - The {@link ComparisonOperators} to be applied on attribute.
    * @param value - The value to check against of.
    */
   constructor(operator: ComparisonOperators, value: string) {
@@ -19,7 +19,7 @@ export class ComparisonFacetFilter implements FacetFilterBase {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link ComparisonFacetFilterDTO}.
    */
   toDTO(): ComparisonFacetFilterDTO {
     return {

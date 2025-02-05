@@ -14,11 +14,6 @@ import type {
   UserData
 } from './interfaces';
 
-/**
- * Create context object.
- * @param context - The context object.
- * @returns the validated and mapped context object
- */
 export class Context {
   private _campaign?: CampaignData;
   private _locale?: LocaleData;
@@ -29,8 +24,7 @@ export class Context {
   private _browser?: BrowserData;
 
   /**
-   * @param context - The context object.
-   * @returns the validated and mapped context object
+   * @param context - {@link ContextData} The context object.
    */
   constructor(context: ContextData) {
     this._validateContext(context);
@@ -46,15 +40,14 @@ export class Context {
 
   /**
    * Sets the campaign data.
-   * @param campaign - The new value to set.
-   *
+   * @param campaign - {@link CampaignData} The new value to set.
    */
   set campaign(campaign: CampaignData) {
     this._campaign = campaign;
   }
 
   /**
-   * @returns The campaign data.
+   * @returns The campaign data {@link CampaignData}.
    */
   get campaign(): CampaignData | undefined {
     return this._campaign;
@@ -63,13 +56,13 @@ export class Context {
   /**
    * Sets the campaign data to undefined
    */
-  removeCampaign() {
+  removeCampaign(): void {
     this._campaign = undefined;
   }
 
   /**
    * Sets the locale data.
-   * @param locale - The new value to set.
+   * @param locale - The new value to set. {@link LocaleData}
    *
    */
   set locale(locale: LocaleData) {
@@ -79,7 +72,7 @@ export class Context {
   }
 
   /**
-   * @returns The locale data.
+   * @returns the locale data. {@link LocaleData}
    */
   get locale(): LocaleData | undefined {
     return this._locale;
@@ -88,14 +81,13 @@ export class Context {
   /**
    * Sets the campaign data to undefined
    */
-  removeLocale() {
+  removeLocale(): void {
     this._locale = undefined;
   }
 
   /**
    * Sets the page data.
-   * @param page - The new value to set.
-   *
+   * @param page - The new value to set {@link PageData}.
    */
   set page(page: PageData) {
     this._validatePage(page);
@@ -104,7 +96,7 @@ export class Context {
   }
 
   /**
-   * @returns The page data.
+   * @returns The page data {@link PageData}.
    */
   get page(): PageData | undefined {
     return this._page;
@@ -113,12 +105,15 @@ export class Context {
   /**
    * Sets the page data to undefined
    */
-  removePage() {
+  removePage(): void {
     this._page = undefined;
   }
 
   /**
    * Validate context locale object.
+   *
+   * @param locale - the locale object {@link LocaleData}.
+   * @throws - {@link ErrorMessages.IV_0010} | {@link ErrorMessages.IV_0011}.
    */
   private _validateContextLocale(locale?: LocaleData): void {
     if (!locale) return;
@@ -137,7 +132,7 @@ export class Context {
   }
 
   /**
-   * @returns The store data.
+   * @returns The store data {@link StoreData}.
    */
   get store(): StoreData | undefined {
     return this._store;
@@ -146,13 +141,13 @@ export class Context {
   /**
    * Sets the store data to undefined
    */
-  removeStore() {
+  removeStore(): void {
     this._store = undefined;
   }
 
   /**
    * Sets the geo data.
-   * @param geo - The new value to set.
+   * @param geo - The new value to set {@link GeoData}.
    *
    */
   set geo(geo: GeoData) {
@@ -171,12 +166,15 @@ export class Context {
   /**
    * Sets the geo data to undefined
    */
-  removeGeo() {
+  removeGeo(): void {
     this._geo = undefined;
   }
 
   /**
    * Validate location object.
+   *
+   * @param location - the location object {@link LocationData}.
+   * @throws - {@link ErrorMessages.IV_0012} | {@link ErrorMessages.IV_0013}.
    */
   private _validateLocation(location: LocationData) {
     const result = isValidLocation(location);
@@ -188,7 +186,7 @@ export class Context {
 
   /**
    * Sets the user data.
-   * @param user - The new value to set.
+   * @param user - The new value to set {@link UserData}.
    */
   set user(user: UserData | undefined) {
     this._validateUser(user);
@@ -196,21 +194,21 @@ export class Context {
   }
 
   /**
-   * @returns The user data.
+   * @returns The user data {@link UserData}.
    */
   get user(): UserData | undefined {
     return this._user;
   }
 
   /** Simply removes the user data from the context */
-  removeUser() {
+  removeUser(): void {
     this._user = undefined;
   }
 
   /**
    * Validate user object, which is part of the context object.
    * We need to ensure that the user object has `userId` or `uuid`, but not neither.
-   * @param user - The user object to validate.
+   * @param user - The user object to validate {@link UserData}.
    */
   private _validateUser(user?: UserData): void {
     if (typeof user !== 'undefined' && !user.userId && !user.uuid) throw new Error(ErrorMessages.MV_0013);
@@ -224,7 +222,7 @@ export class Context {
   }
 
   /**
-   * @returns The browser data.
+   * @returns The browser data {@link BrowserData}.
    */
   get browser(): BrowserData | undefined {
     return this._browser;
@@ -233,12 +231,13 @@ export class Context {
   /**
    * Sets the browser dta to undefined.
    */
-  removeBrowser() {
+  removeBrowser(): void {
     this._browser = undefined;
   }
 
   /**
-   * Validate context object.
+   * Validate context object {@link ContextData}.
+   * @throws - {@link ErrorMessages.MV_0009} | {@link ErrorMessages.IV_0012} | {@link ErrorMessages.IV_0013}
    */
   private _validateContext(context: ContextData): void {
     this._validateContextLocale(context.locale);
@@ -253,7 +252,8 @@ export class Context {
 
   /**
    * Validate the `page` object which required a `uri` property.
-   * @param page - The page object to validate.
+   * @param page - The page object to validate {@link PageData}.
+   * @throws - {@link ErrorMessages.IV_0025}.
    */
   private _validatePage(page?: PageData): void {
     if (!page) return;
@@ -262,7 +262,7 @@ export class Context {
 
   /**
    * Map context object to DTO.
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link ContextDTO}.
    */
   toDTO(): ContextDTO {
     /* eslint-disable @typescript-eslint/naming-convention */

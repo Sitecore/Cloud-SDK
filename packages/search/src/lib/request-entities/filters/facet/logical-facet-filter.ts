@@ -11,8 +11,8 @@ export class LogicalFacetFilter implements FacetFilterBase {
   private _value: Array<FacetFilter>;
 
   /**
-   * @param operator - The operator to be applied on attribute.
-   * @param value - The value to check against of.
+   * @param operator - The {@link LogicalOperators} to be applied on attribute excluding `not`.
+   * @param value - The {@link FacetFilter}[] to check against of.
    */
   constructor(operator: Exclude<LogicalOperators, 'not'>, value: Array<FacetFilter>) {
     this._operator = operator;
@@ -20,7 +20,7 @@ export class LogicalFacetFilter implements FacetFilterBase {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link LogicalFacetFilterDTO}.
    */
   toDTO(): LogicalFacetFilterDTO {
     return {

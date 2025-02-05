@@ -7,7 +7,7 @@ import { verifySearchPackageExistence } from '../../initializer/server/initializ
 
 /**
  * This function sends an entity view event from server.
- * @param httpRequest - An  http request object. Either HttpRequest or MiddlewareRequest.
+ * @param httpRequest - An  http {@link Request} object. Either HttpRequest or MiddlewareRequest.
  * @param entityViewEventParams - An object containing conversion event params from {@link EntityViewEventParams}
  */
 export async function entityViewServer(httpRequest: Request, entityViewEventParams: EntityViewEventParams) {

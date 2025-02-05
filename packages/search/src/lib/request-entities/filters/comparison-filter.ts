@@ -10,7 +10,7 @@ export class ComparisonFilter extends BaseFilter {
 
   /**
    * @param attributeName - The name of the attribute to filter.
-   * @param operator - The operator to be applied on attribute.
+   * @param operator - The {@link ComparisonOperators} to be applied on attribute.
    * @param value - The value to check against of.
    */
   constructor(attributeName: string, operator: ComparisonOperators, value: unknown) {
@@ -20,7 +20,7 @@ export class ComparisonFilter extends BaseFilter {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link ComparisonFilterDTO}.
    */
   toDTO(): ComparisonFilterDTO {
     return {

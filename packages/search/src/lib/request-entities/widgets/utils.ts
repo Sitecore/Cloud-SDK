@@ -4,7 +4,7 @@ import type { FacetFilter } from './interfaces';
 
 /**
  * Checks if the provided filters are facet filters.
- * @param filters - The filters to check.
+ * @param filters - The {@link FacetFilter}[] | string[] to check.
  * @returns True if the filters are facet filters, false otherwise.
  */
 export function isFacetFilter(

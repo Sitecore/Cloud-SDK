@@ -9,16 +9,23 @@ import { sendPostRequest } from '../post-request';
 
 /**
  * This function requests widget data for a page.
- * @param pathname - The path of the URL.
- * @returns The response object.
+ * @param pathname - The {@link Pathname} of the URL.
+ * @returns The response object promise:{@link SearchEndpointResponse} | null.
  */
 export async function getPageWidgetData(pathname: Pathname): Promise<SearchEndpointResponse | null>;
 /**
  * This function requests widget data for a page.
- * @param context - The context.
- * @returns The response object.
+ * @param context - The {@link Context}.
+ * @returns The response object promise:{@link SearchEndpointResponse} | null.
+ *
  */
 export async function getPageWidgetData(context: Context): Promise<SearchEndpointResponse | null>;
+
+/**
+ *
+ * @param param - {@link Pathname} | {@link Context}
+ * @returns The response object promise:{@link SearchEndpointResponse} | null.
+ */
 export async function getPageWidgetData(param: Pathname | Context): Promise<SearchEndpointResponse | null> {
   await awaitInit();
 

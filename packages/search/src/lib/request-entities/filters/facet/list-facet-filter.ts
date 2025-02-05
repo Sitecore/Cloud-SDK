@@ -10,8 +10,8 @@ export class ListFacetFilter implements FacetFilterBase {
   private _values: ArrayOfAtLeastOne<string>;
 
   /**
-   * @param operator - The operator to be applied on attribute.
-   * @param values - The values to check against of.
+   * @param operator - The {@link ListOperators} to be applied on attribute.
+   * @param values - The values[] to check against of.
    */
   constructor(operator: ListOperators, values: ArrayOfAtLeastOne<string>) {
     this._operator = operator;
@@ -19,7 +19,7 @@ export class ListFacetFilter implements FacetFilterBase {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link ListFacetFilterDTO}.
    */
   toDTO(): ListFacetFilterDTO {
     return {

@@ -4,7 +4,8 @@ import type { BrowserSettings, ServerSettings } from '../types';
 /**
  * This function sends a post request to Sitecore EP
  * @param body - A stringified version of the body to send
- * @param settings - The global settings
+ * @param settings - The global settings {@link BrowserSettings} | {@link ServerSettings}
+ * @returns promise: {@link SearchEndpointResponse}
  */
 export async function sendPostRequest(
   body: string,

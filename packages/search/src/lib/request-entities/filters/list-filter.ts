@@ -10,8 +10,8 @@ export class ListFilter extends BaseFilter {
 
   /**
    * @param attributeName - The name of the attribute to filter.
-   * @param operator - The operator to be applied on attribute.
-   * @param value - The value to check against of.
+   * @param operator - The {@link ListOperators} to be applied on attribute.
+   * @param value - The value[] to check against of.
    */
   constructor(attributeName: string, operator: ListOperators, value: unknown[]) {
     super(operator, value);
@@ -20,7 +20,7 @@ export class ListFilter extends BaseFilter {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link ListFilterDTO}.
    */
   toDTO(): ListFilterDTO {
     return {

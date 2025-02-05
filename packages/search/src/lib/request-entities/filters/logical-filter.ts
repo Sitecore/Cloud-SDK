@@ -8,14 +8,15 @@ import type { LogicalFilterValues, PickLogicalDTO } from './interfaces';
 export class LogicalFilter<T extends keyof LogicalFilterValues> extends BaseFilter {
   /**
    * @param operator - The operator to be applied on attribute.
-   * @param value - The value to check against. Using "and" or the "or" filter, you must include minimum 2 filters.
+   * @param value - The {@link LogicalFilterValues} to check against.
+   * Using "and" or the "or" filter, you must include minimum 2 filters.
    */
   constructor(operator: T, value: LogicalFilterValues[T]) {
     super(operator, value);
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link PickLogicalDTO}.
    */
   toDTO(): PickLogicalDTO<T> {
     if (this.operator === 'not')

@@ -7,7 +7,7 @@ import { verifySearchPackageExistence } from '../../initializer/server/initializ
 
 /**
  * This function sends a widget view event from server.
- * @param httpRequest - An  http request object. Either HttpRequest or MiddlewareRequest.
+ * @param httpRequest - An http {@link Request} object. Either HttpRequest or MiddlewareRequest.
  * @param widgetViewEventParams - An object containing widget view event params
  * from {@link WidgetViewEventParams}
  */

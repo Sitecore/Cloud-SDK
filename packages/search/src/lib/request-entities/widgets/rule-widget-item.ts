@@ -8,6 +8,13 @@ import { WidgetItem } from './widget-item';
 export class RuleWidgetItem extends WidgetItem {
   protected _rule?: SearchRuleOptions;
 
+  /**
+   *
+   * @param entity - the entity value of the RuleWidgetItem.
+   * @param widgetId - the widgetId value of the RuleWidgetItem.
+   * @param rule - the {@link SearchRuleOptions} of the RuleWidgetItem.
+   * @throws - {@link ErrorMessages.IV_0027} | {@link ErrorMessages.IV_0028}
+   */
   constructor(entity: string, widgetId: string, rule?: SearchRuleOptions) {
     super(entity, widgetId);
 
@@ -17,11 +24,19 @@ export class RuleWidgetItem extends WidgetItem {
     }
   }
 
+  /**
+   * Sets the `rule` property
+   * @param rule - the {@link SearchRuleOptions} value to be applied.
+   * @throws - {@link ErrorMessages.IV_0027} | {@link ErrorMessages.IV_0028}
+   */
   set rule(rule: SearchRuleOptions) {
     this._validateRule(rule);
     this._rule = rule;
   }
 
+  /**
+   * @returns the {@link SearchRuleOptions} `rule` property of the RuleWidgetItem.
+   */
   get rule(): SearchRuleOptions | undefined {
     return this._rule;
   }
@@ -30,6 +45,11 @@ export class RuleWidgetItem extends WidgetItem {
     this._rule = undefined;
   }
 
+  /**
+   * Throws error if on of the rule properties has invalid data.
+   * @param rule - {@link SearchRuleOptions}
+   * @throws - {@link ErrorMessages.IV_0027} | {@link ErrorMessages.IV_0028}
+   */
   protected _validateRule(rule?: SearchRuleOptions): void {
     if (!rule) return;
 
@@ -50,6 +70,11 @@ export class RuleWidgetItem extends WidgetItem {
     );
   }
 
+  /**
+   *
+   * @param rules - array of {@link ArrayOfAtLeastOne} object with properties `filter` `slots` `weight`
+   * @returns the rule property in a boost rule DTO format {@link BoostRuleDTO}[].
+   */
   private _convertToBoostRuleDTO(
     rules: ArrayOfAtLeastOne<{
       filter: Filter;
@@ -64,6 +89,11 @@ export class RuleWidgetItem extends WidgetItem {
     })) as ArrayOfAtLeastOne<BoostRuleDTO>;
   }
 
+  /**
+   *
+   * @param rules - array of {@link ArrayOfAtLeastOne} object with properties `filter` `slots`
+   * @returns the rule property in IncludeRuleDTO format {@link IncludeRuleDTO}[].
+   */
   private _convertToIncludeRuleDTO(
     rules: ArrayOfAtLeastOne<{
       filter: Filter;
@@ -76,6 +106,11 @@ export class RuleWidgetItem extends WidgetItem {
     })) as ArrayOfAtLeastOne<IncludeRuleDTO>;
   }
 
+  /**
+   *
+   * @param rule - {@link SearchRuleOptions}
+   * @returns - returns RuleWidgetItem in its DTO format {@link SearchRuleDTO}.
+   */
   protected _ruleToDTO(rule?: SearchRuleOptions): SearchRuleDTO | undefined {
     if (!rule) return undefined;
 

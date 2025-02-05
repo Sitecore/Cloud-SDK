@@ -6,7 +6,7 @@ import type { Operators } from './interfaces';
  */
 export abstract class BaseFilter {
   /**
-   * @param operator - The operator to be applied on attribute.
+   * @param operator - The {@link Operators} to be applied on attribute.
    * @param value - The value to check against of.
    */
   constructor(protected operator: Operators, protected value: unknown) {}

@@ -12,7 +12,7 @@ export class EntityViewEvent {
 
   /**
    * Creates an entity view event.
-   * @param entityViewEventParams - An object with the entity view event params {@link EntityViewEventParams}
+   * @param entityViewEventParams - {@link EntityViewEventParams} An object with the entity view event params
    */
   constructor({ page, currency, language, pathname, entity }: EntityViewEventParams) {
     this._validate(currency, language);
@@ -24,11 +24,20 @@ export class EntityViewEvent {
     this.entity = entity;
   }
 
-  private _validate(currency?: string, language?: string) {
+  /**
+   * @param currency - three-letter currency code in the ISO 4217 format.
+   * @param language - two-letter language code in the ISO 639-1 format.
+   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
+   */
+  private _validate(currency?: string, language?: string): void {
     if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
+  /**
+   *
+   * @returns - map of EntityViewEvent in its DTO format.
+   */
   toDTO() {
     const eventEntityDTO: SearchEventEntityDTO = {
       attributes: this.entity.attributes,

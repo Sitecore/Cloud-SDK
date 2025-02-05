@@ -5,10 +5,17 @@ import type { FacetFilterBase, NotFacetFilterDTO } from './interfaces';
 export class NotFacetFilter implements FacetFilterBase {
   private _value: string | FacetFilter;
 
+  /**
+   * @param value - the {@link FacetFilter} | string to check against to.
+   */
   constructor(value: string | FacetFilter) {
     this._value = value;
   }
 
+  /**
+   *
+   * @returns the DTO represantation of notFacetFilter {@link NotFacetFilterDTO}.
+   */
   toDTO(): NotFacetFilterDTO {
     /**
      * If the value is a string, it probably means that it is a facet filter id.

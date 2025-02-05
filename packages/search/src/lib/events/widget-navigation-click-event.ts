@@ -35,11 +35,20 @@ export class WidgetNavigationClickEvent {
     this.channel = channel;
   }
 
-  private _validate(currency?: string, language?: string) {
+  /**
+   * @param currency - three-letter currency code in the ISO 4217 format.
+   * @param language - two-letter language code in the ISO 639-1 format.
+   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
+   */
+  private _validate(currency?: string, language?: string): void {
     if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
+  /**
+   *
+   * @returns map of WidgetNavigationClickEvent in its DTO format.
+   */
   toDTO() {
     return {
       channel: this.channel,

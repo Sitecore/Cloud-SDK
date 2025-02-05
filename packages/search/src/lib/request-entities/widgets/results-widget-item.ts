@@ -14,7 +14,8 @@ export class ResultsWidgetItem extends RuleWidgetItem {
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
-   * @param resultOptions - The widget's results options object.
+   * @param resultOptions - The widget's {@link ResultsOptions} object.
+   * @throws - {@link ErrorMessages.IV_0007} | {@link ErrorMessages.IV_0022}
    */
   constructor(entity: string, widgetId: string, resultOptions?: ResultsOptions) {
     super(entity, widgetId, resultOptions?.rule);
@@ -51,7 +52,7 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   /**
    * Sets the limit to undefined
    */
-  resetLimit() {
+  resetLimit(): void {
     this._limit = undefined;
   }
 
@@ -59,7 +60,7 @@ export class ResultsWidgetItem extends RuleWidgetItem {
    * Sets the search content for the ResultsItem.
    * This method updates the `content` property within the ResultsItem instance.
    * The attributes is used to define specific search criteria or filters.
-   * @param contentOptions - The array attributes that specifies the search criteria.
+   * @param contentOptions - The array attributes {@link ContentOptions} that specifies the search criteria.
    */
   set content(contentOptions: ContentOptions) {
     this._content = contentOptions;
@@ -75,7 +76,7 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   /**
    * Sets the content to undefined
    */
-  resetContent() {
+  resetContent(): void {
     this._content = undefined;
   }
 
@@ -98,10 +99,15 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   }
 
   /** Sets the groupBy to undefined */
-  resetGroupBy() {
+  resetGroupBy(): void {
     this._groupBy = undefined;
   }
 
+  /**
+   *
+   * @param groupBy - the groupBy string.
+   * @throws - {@link ErrorMessages.IV_0022}
+   */
   private _validateGroupBy(groupBy?: string): void {
     if (typeof groupBy === 'string' && groupBy.trim().length === 0) throw new Error(ErrorMessages.IV_0022);
   }
@@ -111,19 +117,19 @@ export class ResultsWidgetItem extends RuleWidgetItem {
     this._filter = filter;
   }
 
-  /** @returns The filter property of the WidgetItem */
+  /** @returns The {@link Filter} filter property of the WidgetItem */
   get filter(): Filter | undefined {
     return this._filter;
   }
 
   /** Sets the filter to undefined */
-  resetFilter() {
+  resetFilter(): void {
     this._filter = undefined;
   }
 
   /**
    *
-   * @returns The content property in its DTO format.
+   * @returns The content property in its DTO format {@link ContentOptionsDto}.
    */
   private _contentToDTO(): ContentOptionsDto | undefined {
     if (!this._content) return undefined;
@@ -132,7 +138,7 @@ export class ResultsWidgetItem extends RuleWidgetItem {
   }
 
   /**
-   * Maps the results item to its DTO format.
+   * Maps the results item to its DTO format {@link ResultsItemDTO}.
    */
   protected _resultsToDTO(): ResultsItemDTO {
     return {

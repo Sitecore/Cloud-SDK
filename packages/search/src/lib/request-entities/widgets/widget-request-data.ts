@@ -16,12 +16,17 @@ export class WidgetRequestData {
     this._widgetItems = widgetItems;
   }
 
-  private _validateWidgetItems(widgetItems: WidgetItem[]) {
+  /**
+   *
+   * @param widgetItems - the widget items.
+   * @throws - {@link ErrorMessages.MV_0012}
+   */
+  private _validateWidgetItems(widgetItems: WidgetItem[]): void {
     if (widgetItems.length === 0) throw new Error(ErrorMessages.MV_0012);
   }
 
   /**
-   * Maps the widget items to their DTO format.
+   * Maps the widget items to their DTO format {@link WidgetDTO}.
    */
   toDTO(): WidgetDTO {
     return {

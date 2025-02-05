@@ -49,6 +49,7 @@ declare module '@sitecore-cloudsdk/core/browser' {
 
 /**
  * A function that handles the async browser init logic. Throws an error or awaits the promise.
+ * @throws - {@link ErrorMessages.IE_0018}
  */
 export async function awaitInit() {
   const initState = getEnabledPackage(PACKAGE_NAME)?.initState;

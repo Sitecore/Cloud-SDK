@@ -15,7 +15,7 @@ export class GeoWithinFilter extends BaseFilter {
 
   /**
    * @param attributeName - The name of the attribute to filter.
-   * @param geoWithinFilterData - The geo within filter data. Array of location objects.
+   * @param geoWithinFilterData - The {@link GeoWithinFilterData}. Array of location objects.
    */
   constructor(attributeName: string, geoWithinFilterData: GeoWithinFilterData) {
     super(GEO_FILTER_TYPE, geoWithinFilterData);
@@ -25,6 +25,12 @@ export class GeoWithinFilter extends BaseFilter {
     this._attributeName = attributeName;
   }
 
+  /**
+   * Throws an error if latitude or longitude are not present.
+   *
+   * @param location - {@link LocationData}
+   * @throws - {@link ErrorMessages.IV_0012} | {@link ErrorMessages.IV_0013}
+   */
   private _validateLocation(location: LocationData) {
     const result = isValidLocation(location);
 
@@ -34,7 +40,7 @@ export class GeoWithinFilter extends BaseFilter {
   }
 
   /**
-   * @returns The DTO representation of the filter.
+   * @returns The DTO representation of the filter {@link GeoWithinFilterDTO}.
    */
   toDTO(): GeoWithinFilterDTO {
     const dto: GeoWithinFilterDTO = {

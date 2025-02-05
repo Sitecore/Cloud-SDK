@@ -16,7 +16,8 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
    * Creates and holds the functionality of a recommendation widget item.
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
-   * @param recommendationOptions - The widget's recommendation options object.
+   * @param recommendationOptions - The widget's {@link RecommendationOptions} object.
+   * @throws - {@link ErrorMessages.IV_0023} | {@link ErrorMessages.IV_0024}
    */
   constructor(entity: string, widgetId: string, recommendationOptions?: RecommendationOptions) {
     const { recipe, ...rest } = recommendationOptions || {};
@@ -38,7 +39,7 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   /**
    * Sets the recommendations to an empty object.
    */
-  resetRecommendations() {
+  resetRecommendations(): void {
     this._recommendation = {};
   }
 
@@ -49,7 +50,7 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
    * If not provided, the API uses the recipe specified in CEC.
    *
    * @param recipe - {@link Recipe} The recipe configuration with id and version.
-   * @throws Error If the recipe id is empty or version is less than 1.
+   * @throws - {@link ErrorMessages.IV_0023} | {@link ErrorMessages.IV_0024}
    */
   set recipe(recipe: Recipe) {
     this._validateRecipe(recipe);
@@ -61,7 +62,7 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   }
 
   /**
-   * @returns The recipe property of the RecommendationWidgetItem.
+   * @returns The {@link Recipe} recipe property of the RecommendationWidgetItem.
    */
   get recipe(): Recipe | undefined {
     return this._recommendation?.recipe;
@@ -70,10 +71,15 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   /**
    * Sets the recipe to undefined
    */
-  resetRecipe() {
+  resetRecipe(): void {
     this._recommendation = undefined;
   }
 
+  /**
+   * Throws an error if recipe exists but is an empty string or has wrong version.
+   * @param recipe - {@link Recipe}
+   * @throws - {@link ErrorMessages.IV_0023} | {@link ErrorMessages.IV_0024}
+   */
   private _validateRecipe(recipe?: Recipe) {
     if (!recipe) return;
 
@@ -82,7 +88,7 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
   }
 
   /**
-   * Maps the recommendation widget item to its DTO format.
+   * Maps the recommendation widget item to its DTO format {@link WidgetItemRecommendationDTO}.
    */
   toDTO(): WidgetItemRecommendationDTO {
     const baseDTO = super.toDTO();

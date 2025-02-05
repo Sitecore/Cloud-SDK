@@ -48,11 +48,20 @@ export class WidgetFacetClickEvent {
     this.widgetId = widgetId;
   }
 
-  private _validate(currency?: string, language?: string) {
+  /**
+   * @param currency - three-letter currency code in the ISO 4217 format.
+   * @param language - two-letter language code in the ISO 639-1 format.
+   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
+   */
+  private _validate(currency?: string, language?: string): void {
     if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
     if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
+  /**
+   *
+   * @returns - {@link FacetFilterEventParamsDTO}[] | {@link RangeFacetFilterEventParamsDTO}[]
+   */
   private _mapFiltersToDTO(): Array<FacetFilterEventParamsDTO | RangeFacetFilterEventParamsDTO> {
     return this.filters.map((filter) => {
       if (this._rangeFacetFilterTypeGuard(filter))
@@ -78,6 +87,9 @@ export class WidgetFacetClickEvent {
     });
   }
 
+  /**
+   * @returns a search event request in DTO format {@link SearchEventRequestDTO}.
+   */
   private _mapRequestToDTO(): SearchEventRequestDTO {
     return {
       advanced_query_text: this.request.advancedQueryText,
@@ -92,12 +104,19 @@ export class WidgetFacetClickEvent {
     };
   }
 
+  /**
+   * @param filter - {@link FacetFilterEventParams} | {@link RangeFacetFilterEventParams}
+   * @returns true if `filter` is {@link RangeFacetFilterEventParams}
+   */
   private _rangeFacetFilterTypeGuard(
     filter: FacetFilterEventParams | RangeFacetFilterEventParams
   ): filter is RangeFacetFilterEventParams {
     return 'startValue' in filter;
   }
 
+  /**
+   * @returns map of WidgetFacetClickEvent in its DTO format.
+   */
   toDTO() {
     const filtersDTO = this._mapFiltersToDTO();
     const requestDTO = this._mapRequestToDTO();

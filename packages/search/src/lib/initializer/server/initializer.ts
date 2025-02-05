@@ -44,6 +44,10 @@ declare module '@sitecore-cloudsdk/core/server' {
   }
 }
 
+/**
+ * verifies if the search packages exists.
+ * @throws - {@link ErrorMessages.IE_0019}
+ */
 export function verifySearchPackageExistence() {
   if (!getEnabledPackage(PACKAGE_NAME)) throw Error(ErrorMessages.IE_0019);
 }
