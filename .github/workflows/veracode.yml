@@ -7,17 +7,10 @@ on:
 
 jobs:
   veracode-scan:
-    strategy:
-      matrix:
-        package:
-          - core
-          - utils
-          - events
-          - personalize
-          - search
-    name: Run Veracode for ${{ matrix.package }} package
+    name: Run Veracode
     uses: Sitecore-Internal/sitecore.devops.github.workflow.veracodescan.raw/.github/workflows/VeracodeScanRaw.yaml@V1
     secrets: inherit
     with:
-      ProjectName: engage
-      DirectoryToScan: packages/${{ matrix.package }}
+      ProjectName: cloudSDK
+      DirectoryToScan: packages
+      SeverityRequirement: '"High, Very High"'
