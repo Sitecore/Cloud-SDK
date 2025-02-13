@@ -1,44 +1,35 @@
-## PR Checklist
+## 📌 Description
 
-Please check if your PR fulfills the following requirements:
+ <!-- Please include a summary of the changes and the related issue. Please also include relevant motivation and context.
+-->
 
-- [ ] The commit message follows our guidelines: https://www.conventionalcommits.org/en/v1.0.0/#specification
-- [ ] Tests for the changes have been added (for bug fixes / features)
-- [ ] Docs have been added / updated (for bug fixes / features)
+### 🔍 Related issues
 
-## PR Type
+<!-- If any, add a link to an issue that describes this -->
 
-What kind of change does this PR introduce?
+### 📦Affected Packages
 
-<!-- Please check the one that applies to this PR using "x". -->
+<!-- Mark one or more of the following list
+-->
 
-Must be one of the following:
+- [ ] Utils
+- [ ] Core
+- [ ] Events
+- [ ] Personalize
+- [ ] Search
+- [ ] Examples/nextjs app
+- [ ] Github Workflows
+- [ ] Others
 
-- **build**: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)
-- **ci**: Changes to our CI configuration files and scripts (example scopes: Travis, Circle, BrowserStack, SauceLabs)
-- **docs**: Documentation only changes
-- **feat**: A new feature
-- **fix**: A bug fix
-- **perf**: A code change that improves performance
-- **refactor**: A code change that neither fixes a bug nor adds a feature
-- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
-- **test**: Adding missing tests or correcting existing tests
+## ⤵️ Dependencies Introduced
 
-## What is the current behavior?
+<!-- If any, describe dependencies introduced and why
+-->
 
-<!-- Please describe the current behavior that you are modifying, or link to a relevant issue. -->
+## 📸 Screenshots
 
-Issue Number: N/A
+<!-- Add screenshots, recordings or code examples to illustrate your changes. -->
 
-## What is the new behavior?
+## 💬 Additional Notes
 
-## Does this PR introduce a breaking change?
-
-```
-[ ] Yes
-[ ] No
-```
-
-<!-- If this PR contains a breaking change, please describe the impact and migration path for existing applications below. -->
-
-## Other information
+ <!-- Provide any other relevant information, like breaking changes or workarounds. -->
