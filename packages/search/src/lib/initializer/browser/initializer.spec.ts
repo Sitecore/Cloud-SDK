@@ -1,7 +1,7 @@
 import debug from 'debug';
 import { PackageInitializer } from '@sitecore-cloudsdk/core/internal';
 import * as core from '@sitecore-cloudsdk/core/internal';
-import { ErrorMessages, SEARCH_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_VERSION, SEARCH_NAMESPACE } from '../../consts';
 import * as initModule from './initializer';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => {
@@ -26,8 +26,18 @@ jest.mock('debug', () => {
 
 describe('sideEffects', () => {
   const debugMock = debug as unknown as jest.Mock;
-  it('should run the side effects for the library', async () => {
+
+  it('should run the side effects for the library and add the search object to the window', async () => {
+    const searchProperties = ['version'];
+
+    global.window.scCloudSDK = undefined as any;
+    expect(global.window.scCloudSDK).toBeUndefined();
+
     await initModule.sideEffects();
+    expect(global.window.scCloudSDK.search.version).toEqual(PACKAGE_VERSION);
+    searchProperties.forEach((property) => {
+      expect((window.scCloudSDK.search as any)[property]).toBeDefined();
+    });
 
     expect(debugMock).toHaveBeenCalled();
     expect(debugMock).toHaveBeenLastCalledWith(SEARCH_NAMESPACE);

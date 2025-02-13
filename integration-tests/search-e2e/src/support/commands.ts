@@ -1,4 +1,6 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { loadCommands } from '@sitecore-cloudsdk/cypress-utils';
+import searchPackageJson from '../../../../packages/search/package.json';
 
 /* eslint-disable @nx/enforce-module-boundaries */
 export {};
@@ -9,6 +11,7 @@ declare global {
   namespace Cypress {
     interface Chainable {
       visit(url: string, options: string): void;
+      getSearchPackageVersion(): any;
     }
   }
 
@@ -25,4 +28,8 @@ Cypress.Commands.overwrite('visit', (originalFn, url, options) => {
   //Overwriting cy.visit behaves faster than the original function so a cy.wait is necessary
   // eslint-disable-next-line cypress/no-unnecessary-waiting
   cy.wait(600);
+});
+
+Cypress.Commands.add('getSearchPackageVersion', () => {
+  return searchPackageJson.version;
 });

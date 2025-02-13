@@ -184,6 +184,8 @@ declare global {
   interface Personalize {}
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface Events {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-interface
+  interface Search {}
   // eslint-disable-next-line no-unused-vars
   interface Window {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -191,6 +193,7 @@ declare global {
       core: Core;
       personalize: Personalize;
       events: Events;
+      search: Search;
     };
   }
 }

@@ -15,6 +15,15 @@ export default async function Page() {
       .addEvents()
       .initialize();
   }
+
+  async function initWithoutSearch() {
+    CloudSDK({
+      sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
+      siteName: 'TestSite'
+    })
+      .addEvents()
+      .initialize();
+  }
   async function initSearchWithEnableBrowserCookieFalse() {
     CloudSDK({
       sitecoreEdgeContextId: process.env.CONTEXT_ID as string,
@@ -72,6 +81,12 @@ export default async function Page() {
         data-testid='initCloudSDKWithoutAddSearch'
         onClick={initCloudSDKWithoutAddSearch}>
         initCloudSDKWithoutAddSearch
+      </button>
+      <button
+        type='button'
+        data-testid='initWithoutSearch'
+        onClick={initWithoutSearch}>
+        initSearchWithoutEvents
       </button>
     </div>
   );

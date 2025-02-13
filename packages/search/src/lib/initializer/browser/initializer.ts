@@ -10,10 +10,17 @@ import {
   PACKAGE_NAME as EVENTS_PACKAGE_NAME,
   PACKAGE_INITIALIZER_METHOD_NAME
 } from '@sitecore-cloudsdk/events/browser';
-import { ErrorMessages, PACKAGE_NAME, SEARCH_NAMESPACE } from '../../consts';
+import { ErrorMessages, PACKAGE_NAME, PACKAGE_VERSION, SEARCH_NAMESPACE } from '../../consts';
 
 // eslint-disable-next-line no-empty-function, @typescript-eslint/no-empty-function
 export async function sideEffects() {
+  window.scCloudSDK = {
+    ...window.scCloudSDK,
+    search: {
+      version: PACKAGE_VERSION
+    }
+  };
+
   debug(SEARCH_NAMESPACE)('searchClient library initialized');
 }
 
@@ -44,6 +51,12 @@ CloudSDKBrowserInitializer.prototype.addSearch = addSearch;
 declare module '@sitecore-cloudsdk/core/browser' {
   interface CloudSDKBrowserInitializer {
     addSearch: typeof addSearch;
+  }
+}
+
+declare global {
+  interface Search {
+    version: string;
   }
 }
 

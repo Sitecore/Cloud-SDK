@@ -3,6 +3,7 @@ import packageJson from '../../package.json';
 
 export const PACKAGE_NAME = packageJson.name;
 export const SEARCH_NAMESPACE = 'sitecore-cloudsdk:search';
+export const PACKAGE_VERSION = packageJson.version;
 
 /* eslint-disable max-len */
 export enum ErrorMessages {

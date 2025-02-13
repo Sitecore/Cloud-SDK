@@ -13,3 +13,13 @@ Feature: Init CloudSDK client-side
         Then client: debug log is printed out in the console with message including 'CloudSDK was initialized with no packages'
 
 
+    Scenario: Init search package and check if search object exists on the window
+        Given the '/init' page is loaded
+        And the 'initSearchWithEnableBrowserCookieTrue' button is clicked
+        Then the scCloudSDK.search object is injected to the window object
+
+
+    Scenario: Init without search package and check if search object does not exists on the window
+        Given the '/init' page is loaded
+        And the 'initWithoutSearch' button is clicked
+        Then the scCloudSDK.search does not exist in the window object
