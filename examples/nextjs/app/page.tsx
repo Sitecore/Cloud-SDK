@@ -50,10 +50,10 @@ function Index() {
         await widgetView({
           pathname: '/',
           widgetId: 'rfkid_2',
-          entities: recWidgetData.content?.map((product: any) => ({
+          entities: (recWidgetData.content as SearchEventEntity[])?.map((product) => ({
             entity: 'product',
             id: product.id
-          })) as SearchEventEntity[],
+          })),
           request: {}
         });
       } catch (error) {

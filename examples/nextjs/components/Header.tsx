@@ -18,17 +18,17 @@ export function Header() {
   const { updateSearchResults } = useSearch();
   const headerRef = useRef<HTMLElement | null>(null);
 
-  const handleClickOutside = (e: MouseEvent) => {
-    if (!headerRef.current?.contains(e.target as Node)) updateSearchResults(null);
-  };
-
   useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!headerRef.current?.contains(event.target as Node)) updateSearchResults(null);
+    };
+
     document.addEventListener('click', handleClickOutside);
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [updateSearchResults]);
 
   return (
     <div className='shadow-sm'>

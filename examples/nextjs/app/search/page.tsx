@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import '@sitecore-cloudsdk/events/browser';
 import {
   ComparisonFacetFilter,
@@ -51,25 +51,16 @@ const SearchResultsPage = () => {
   const { get } = useSearchParams();
   const [loading, setLoading] = useState(true);
   const [productLoading, setProductLoading] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [searchData, setSearchData] = useState<WidgetItem>();
   const [facets, setFacets] = useState<WidgetItemFacets>();
   const [selectedFacets, setSelectedFacets] = useState<SelectedFacets>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(PAGE_SIZE);
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [sort, setSort] = useState<string>();
   const pathName = usePathname();
-
-  const setPageQueryParam = (): void => {
-    const queryParams = new URLSearchParams(searchParams.toString());
-    if (currentPage === 1) {
-      queryParams.delete(PAGE_PARAM);
-    } else {
-      queryParams.set(PAGE_PARAM, currentPage.toString());
-    }
-    router.push(`${pathName}?${queryParams.toString()}`);
-  };
+  const searchParams = useSearchParams();
+  const query = get('q') as string;
+  const lastWidgetContent = useRef<ProductItem[]>([]);
 
   const clearFilters = (): void => {
     const params = new URLSearchParams(searchParams.toString());
@@ -105,34 +96,17 @@ const SearchResultsPage = () => {
     setSort(sort);
   };
 
-  const updateSelectedFacets = () => {
-    const params = new URLSearchParams(searchParams.toString());
-
-    const selected: SelectedFacets = {};
-    for (const param of params) {
-      if ([QUERY_PARAM, PAGE_PARAM].includes(param[0])) {
-        continue;
-      }
-      selected[param[0]] = param[1].split(',');
-    }
-
-    setSelectedFacets(selected);
-  };
-
   const isFacetSelected = (facetName: string, value: string): boolean => {
     return !!selectedFacets[facetName]?.includes(value);
   };
 
-  const getSortArgs = () => {
-    const result = { choices: true } as SearchSortOptions;
-    if (sort) {
-      result.value = [{ name: sort }];
-    }
-    return result;
+  const getSortArgs = (sort?: string): SearchSortOptions => {
+    return sort ? { choices: true, value: [{ name: sort }] } : { choices: true };
   };
 
-  const getRequestData = (): SearchWidgetItem => {
+  const getRequestData = useCallback((): SearchWidgetItem => {
     const filters = [];
+
     for (const [key, values] of searchParams) {
       if ([QUERY_PARAM, PAGE_PARAM].includes(key)) {
         continue;
@@ -153,96 +127,127 @@ const SearchResultsPage = () => {
 
     return new SearchWidgetItem('product', 'rfkid_7', {
       content: {},
-      limit: perPage,
-      offset: (currentPage - 1) * perPage,
-      sort: getSortArgs(),
+      limit: PAGE_SIZE,
+      offset: (currentPage - 1) * PAGE_SIZE,
+      sort: getSortArgs(sort),
       facet: {
         all: true,
         ...(filters.length && { types: filters })
       } as FacetOptions,
       ...(query && { query: { keyphrase: query } })
     });
-  };
+  }, [searchParams, query, currentPage, sort]);
 
-  const generateFacetClickFilters = function () {
-    const facetClickFilters: FacetClickFilterType[] = [];
-    if (!facets || !selectedFacets) return;
-    for (const key of Object.keys(selectedFacets)) {
+  const setPageQueryParam = useCallback(() => {
+    const queryParams = new URLSearchParams(searchParams.toString());
+    currentPage === 1 ? queryParams.delete(PAGE_PARAM) : queryParams.set(PAGE_PARAM, currentPage.toString());
+    router.push(`${pathName}?${queryParams.toString()}`);
+  }, [currentPage, searchParams, router, pathName]);
+
+  useEffect(() => {
+    setPageQueryParam();
+  }, [setPageQueryParam]);
+
+  useEffect(() => {
+    const populateData = async function () {
+      setProductLoading(true);
+
+      try {
+        const searchWidget = getRequestData();
+
+        const response = (await getWidgetData(
+          new WidgetRequestData([searchWidget]),
+          new Context({ locale: { language: 'EN', country: 'us' } })
+        )) as SearchEndpointResponse;
+
+        const widget = response.widgets[0];
+
+        if (JSON.stringify(lastWidgetContent.current) === JSON.stringify(widget.content)) return;
+
+        if (!widget) return console.warn('No search results found');
+
+        setSearchData(widget);
+        setFacets(widget.facet);
+        setProducts((prevProducts) => {
+          const newProducts = [...prevProducts, ...(widget.content as ProductItem[])];
+
+          widgetView({
+            request: {},
+            entities: newProducts?.map((product) => ({
+              entity: 'product',
+              id: product.id
+            })) as SearchEventEntity[],
+            pathname: '/search',
+            widgetId: 'rfkid_7'
+          });
+
+          return newProducts;
+        });
+
+        lastWidgetContent.current = widget.content as ProductItem[];
+      } finally {
+        setLoading(false);
+        setProductLoading(false);
+      }
+    };
+
+    populateData();
+  }, [getRequestData]);
+
+  const facetClickFilters = useMemo((): FacetClickFilterType[] => {
+    if (!facets || !selectedFacets) return [];
+
+    return Object.keys(selectedFacets).flatMap((key) => {
       const values = selectedFacets[key];
       const filterIndex = facets.findIndex((item) => item.name === key);
-      if (filterIndex === -1) continue;
+
+      if (filterIndex === -1) return [];
+
       const currentFilter = facets[filterIndex];
 
-      for (const value of values) {
-        facetClickFilters.push({
-          displayName: currentFilter.label,
-          title: currentFilter.label,
-          facetPosition: filterIndex,
-          name: key,
-          value,
-          valuePosition: facets[filterIndex].value.findIndex((item) =>
-            key === 'price' ? item.id === value : item.text === value
-          )
-        });
-      }
-    }
-    return facetClickFilters;
-  };
-
-  const searchParams = useSearchParams();
-  const query = get('q') as string;
-
-  const populateData = async function () {
-    const searchWidget = getRequestData();
-
-    const response = (await getWidgetData(
-      new WidgetRequestData([searchWidget]),
-      new Context({ locale: { language: 'EN', country: 'us' } })
-    )) as SearchEndpointResponse;
-
-    const widget = response.widgets[0];
-
-    if (!widget) return console.warn('No search results found');
-
-    setSearchData(widget);
-    setFacets(widget.facet);
-    setProducts(products.concat(widget.content as ProductItem[]));
-    widgetView({
-      request: {},
-      entities: products?.map((product: ProductItem) => ({ entity: 'product', id: product.id })) as SearchEventEntity[],
-      pathname: '/search',
-      widgetId: 'rfkid_7'
+      return values.map((value) => ({
+        displayName: currentFilter.label,
+        title: currentFilter.label,
+        facetPosition: filterIndex,
+        name: key,
+        value,
+        valuePosition: facets[filterIndex].value.findIndex((item) =>
+          key === 'price' ? item.id === value : item.text === value
+        )
+      }));
     });
-  };
+  }, [selectedFacets, facets]);
 
   useEffect(() => {
-    setProductLoading(true);
-    setPageQueryParam();
-    populateData().finally(() => {
-      setLoading(false);
-      setProductLoading(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [query, currentPage, sort, searchParams]);
+    if (!facetClickFilters.length) return;
 
-  useEffect(() => {
-    const facetClickFilters = generateFacetClickFilters();
-    if (!facetClickFilters) return;
     widgetFacetClick({
       request: {
         ...(query && { keyword: query })
       },
-      filters: [...facetClickFilters],
+      filters: facetClickFilters,
       pathname: '/search',
       widgetId: 'rfkid_7'
     });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedFacets]);
+  }, [query, facetClickFilters]);
 
   useEffect(() => {
+    const updateSelectedFacets = () => {
+      const params = new URLSearchParams(searchParams.toString());
+
+      const selected: SelectedFacets = {};
+      for (const param of params) {
+        if ([QUERY_PARAM, PAGE_PARAM].includes(param[0])) {
+          continue;
+        }
+        selected[param[0]] = param[1].split(',');
+      }
+
+      setSelectedFacets(selected);
+    };
+
     updateSelectedFacets();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [facets]);
+  }, [searchParams]);
 
   if (loading || !searchData) {
     return (
@@ -376,7 +381,7 @@ const SearchResultsPage = () => {
       <div>
         {searchData.total_item && (
           <PaginationLoadMore
-            pages={Math.ceil(searchData.total_item / perPage)}
+            pages={Math.ceil(searchData.total_item / PAGE_SIZE)}
             current={currentPage}
             totalItems={searchData.total_item}
             currentItems={products.length}
