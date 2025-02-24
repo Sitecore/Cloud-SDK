@@ -10,7 +10,7 @@ import { isNextJsMiddlewareRequest } from '@sitecore-cloudsdk/utils';
 import { PACKAGE_NAME } from '../consts';
 import type { PersonalizeSettings } from '../initializer/browser/interfaces';
 import { verifyPersonalizePackageExistence } from '../initializer/server/initializer';
-import type { PersonalizeData, PersonalizeGeolocation } from './personalizer';
+import type { PersonalizeData } from './personalizer';
 import { Personalizer } from './personalizer';
 import type { FailedCalledFlowsResponse } from './send-call-flows-request';
 
@@ -32,9 +32,6 @@ export function personalizeServer<T extends Request>(
   const userAgent = isNextJsMiddlewareRequest(request)
     ? request.headers.get('user-agent')
     : request.headers['user-agent'];
-
-  if (!personalizeData.geo && isNextJsMiddlewareRequest(request) && request.geo && Object.keys(request.geo).length)
-    personalizeData.geo = request.geo as PersonalizeGeolocation;
 
   const settings: CloudSDKSettings = getCloudSDKSettingsServer();
 
