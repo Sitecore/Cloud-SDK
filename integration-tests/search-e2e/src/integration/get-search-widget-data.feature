@@ -435,3 +435,25 @@ Feature: Request search widget data from Search REST API
             | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 101 }]}}]                                         | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
             | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 0 }]}}]                                           | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
             | [{"widgetId":"rfkid_7","entity":"content", "search": {"ranking": [{"name": "somename", "weight": 10 }, {"name": "someothername", "weight": -1}]}}] | [IV-0029] Incorrect value for "ranking.weight". Set the value to an integer or float between 0.1 and 100 inclusive. |
+
+    Scenario Outline: Developer requests search widget data from browser for disableGrouping with a valid payload
+        Given the '/get-search-widget-data' page is loaded
+        When the widget item parameters are:
+            """
+            {
+                "items": <items>
+            }
+            """
+        And the 'getSearchWidgetData' button is clicked
+        Then the widget data request is sent with parameters:
+            """
+            {
+                "items": <items_payload>
+            }
+            """
+
+        Examples:
+            | items                                                                             | items_payload                                                                      |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"disableGrouping": false}}] | [{"widgetId":"rfkid_7","entity":"content", "search": {"disable_grouping": false}}] |
+            | [{"widgetId":"rfkid_7","entity":"content", "search": {"disableGrouping": true}}]  | [{"widgetId":"rfkid_7","entity":"content", "search": {"disable_grouping": true}}]  |
+

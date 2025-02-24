@@ -1339,6 +1339,63 @@ describe('search widget item class', () => {
     });
   });
 
+  describe('DisableGrouping', () => {
+    let widgetItem: SearchWidgetItem;
+    const validWidgetItem = {
+      entity: 'test',
+      widgetId: 'test'
+    };
+
+    beforeEach(() => {
+      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should set the disableGrouping when given valid values', () => {
+      widgetItem.disableGrouping = true;
+
+      expect(
+        new SearchWidgetItem('test', 'test', { disableGrouping: widgetItem.disableGrouping }).toDTO().search
+          ?.disable_grouping
+      ).toEqual(true);
+
+      widgetItem.disableGrouping = false;
+
+      expect(
+        new SearchWidgetItem('test', 'test', { disableGrouping: widgetItem.disableGrouping }).toDTO().search
+          ?.disable_grouping
+      ).toEqual(false);
+    });
+
+    it('should reflect the disableGrouping as undefined when not set', () => {
+      widgetItem.disableGrouping = undefined as unknown as boolean;
+      expect(widgetItem.disableGrouping).toBe(undefined);
+    });
+
+    it('should reflect the disable_grouping (DTO) as undefined when not set', () => {
+      expect(widgetItem.toDTO().search?.disable_grouping).toBe(undefined);
+    });
+
+    it('should set the disableGrouping when provided in constructor', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', { disableGrouping: true });
+
+      expect(widgetItem.toDTO().search?.disable_grouping).toBe(true);
+    });
+
+    it('should reset the disableGrouping', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', { disableGrouping: true });
+
+      expect(widgetItem.toDTO().search?.disable_grouping).toBe(true);
+
+      widgetItem.resetDisableGrouping();
+
+      expect(widgetItem.toDTO().search?.disable_grouping).toBeUndefined();
+    });
+  });
+
   describe('SearchWidgetItem getters', () => {
     it('should get all properties', () => {
       const query = { keyphrase: 'test' };
@@ -1357,8 +1414,10 @@ describe('search widget item class', () => {
       ];
       const sort: SearchSortOptions = { choices: true, value: [{ name: 'test' }] };
       const suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions> = [{ name: 'test' }];
+      const disableGrouping = true;
 
       const widgetItem = new SearchWidgetItem('content', 'rfkid_qa', {
+        disableGrouping,
         facet,
         offset,
         personalization,
@@ -1375,6 +1434,7 @@ describe('search widget item class', () => {
       expect(widgetItem.ranking).toEqual(ranking);
       expect(widgetItem.sort).toEqual(sort);
       expect(widgetItem.suggestion).toEqual(suggestion);
+      expect(widgetItem.disableGrouping).toEqual(disableGrouping);
     });
   });
 });

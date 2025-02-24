@@ -30,6 +30,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
   private _ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
   private _personalization?: SearchPersonalizationOptions;
+  private _disableGrouping?: boolean;
 
   /**
    * Creates and holds the functionality of a search widget item.
@@ -81,6 +82,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
 
     this._validateSuggestion(searchOptions.suggestion);
     this._suggestion = searchOptions.suggestion;
+
+    this._disableGrouping = searchOptions.disableGrouping;
   }
 
   /**
@@ -255,6 +258,28 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    */
   resetOffset(): void {
     this._offset = undefined;
+  }
+
+  /**
+   * Sets the disable grouping property of the SearchWidgetItem.
+   * @param disableGrouping - A boolean indicating if grouping has been enabled in Sitecore Search.
+   */
+  set disableGrouping(disableGrouping: boolean) {
+    this._disableGrouping = disableGrouping;
+  }
+
+  /**
+   * @returns The disableGrouping property of the SearchWidgetItem.
+   */
+  get disableGrouping(): boolean | undefined {
+    return this._disableGrouping;
+  }
+
+  /**
+   * Sets the `disableGrouping` property to undefined.
+   */
+  resetDisableGrouping(): void {
+    this._disableGrouping = undefined;
   }
 
   /**
@@ -439,6 +464,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       ...{ ranking: this._ranking },
       ...{ suggestion: this._suggestionToDTO() },
       ...{ sort: this._sort },
+      ...{ disable_grouping: this._disableGrouping },
       ...resultsDTO
     };
 

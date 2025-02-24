@@ -78,6 +78,9 @@ export default function GetSearchWidgetData() {
             widget.ranking = item.search?.rankingSetter;
             return widget;
           }
+          if (item.search?.disableGrouping !== undefined) {
+            return new SearchWidgetItem(item.entity, item.widgetId, { disableGrouping: item.search?.disableGrouping });
+          }
 
           return new SearchWidgetItem(item.entity, item.widgetId);
         });

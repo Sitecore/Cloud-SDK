@@ -174,6 +174,7 @@ export interface SearchOptions extends ResultsOptions {
   suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptions>;
   ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
   personalization?: SearchPersonalizationOptions;
+  disableGrouping?: boolean;
 }
 
 /**
@@ -187,6 +188,7 @@ export interface SearchDTO extends ResultsItemDTO {
   suggestion?: ArrayOfAtLeastOne<SearchSuggestionOptionsDTO>;
   ranking?: ArrayOfAtLeastOne<SearchRankingOptionsDto>;
   personalization?: SearchPersonalizationOptionsDto;
+  disable_grouping?: boolean;
 }
 
 /**
