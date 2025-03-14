@@ -48,8 +48,16 @@ jobs:
             exit 1
           fi
 
+          ISSUE_DESCRIPTION=$(echo "$ISSUE_DESCRIPTION" | \
+          sed -E 's/^###### (.*)/h6. \1/' | \
+          sed -E 's/^##### (.*)/h5. \1/' | \
+          sed -E 's/^#### (.*)/h4. \1/' | \
+          sed -E 's/^### (.*)/h3. \1/' | \
+          sed -E 's/^## (.*)/h2. \1/' | \
+          sed -E 's/^# (.*)/h1. \1/')
           echo "Issue/Discussion Title: $ISSUE_TITLE"
           echo "Issue/Discussion Description: $ISSUE_DESCRIPTION"
+          
           # Debug: Show the raw JSON content
           echo "Raw Labels JSON:"
           cat labels.json
