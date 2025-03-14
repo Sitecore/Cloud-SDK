@@ -73,16 +73,16 @@ jobs:
                   ISSUE_TYPE="$ISSUE_TYPE_BUG"
                   ;;
                 "documentation")
-                  CUSTOM_FIELD="$SPRINT_QUESTIONS"
-                  ISSUE_TYPE="$ISSUE_TYPE_QUESTION"
+                  CUSTOM_FIELD="$SPRINT_DOCUMENTATION"
+                  ISSUE_TYPE="$ISSUE_TYPE_DOCUMENTATION"
                   ;;
                 "idea")
                   CUSTOM_FIELD="$SPRINT_PRODUCT_INPUT"
                   ISSUE_TYPE="$ISSUE_TYPE_FEEDBACK"
                   ;;
                 "help")
-                  CUSTOM_FIELD="$SPRINT_DOCUMENTATION"
-                  ISSUE_TYPE="$ISSUE_TYPE_DOCUMENTATION"
+                  CUSTOM_FIELD="$SPRINT_QUESTIONS"
+                  ISSUE_TYPE="$ISSUE_TYPE_QUESTION"
                   ;;
               esac
             done
