@@ -1,0 +1,112 @@
+name: Create Jira Issue
+
+on:
+  issues:
+    types:
+      - opened
+  discussion:
+    types:
+      - created
+
+jobs:
+  send_webhook:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Values & Send Webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          WEBHOOK_TOKEN: ${{ secrets.WEBHOOK_TOKEN }}
+
+          # Assignees
+          ASSIGNEE_BUGS: ${{ secrets.ASSIGNEE_BUGS }}
+          ASSIGNEE_STORIES: ${{ secrets.ASSIGNEE_STORIES }}
+
+          # Custom Fields
+          SPRINT_BUGS: ${{ secrets.SPRINT_BUGS }}
+          SPRINT_QUESTIONS: ${{ secrets.SPRINT_QUESTIONS }}
+          SPRINT_PRODUCT_INPUT: ${{ secrets.SPRINT_PRODUCT_INPUT }}
+          SPRINT_DOCUMENTATION: ${{ secrets.SPRINT_DOCUMENTATION }}
+
+          # Issue Types
+          ISSUE_TYPE_BUG: ${{ secrets.ISSUE_TYPE_BUG }}
+          ISSUE_TYPE_QUESTION: ${{ secrets.ISSUE_TYPE_QUESTION }}
+          ISSUE_TYPE_FEEDBACK: ${{ secrets.ISSUE_TYPE_FEEDBACK }}
+          ISSUE_TYPE_DOCUMENTATION: ${{ secrets.ISSUE_TYPE_DOCUMENTATION }}
+
+        run: |
+          # Determine if the event is an issue or a discussion
+          if [[ -n "${{ github.event.issue }}" ]]; then
+            ISSUE_TITLE="${{ github.event.issue.title }}"
+            ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
+            echo '${{ toJson(github.event.issue.labels) }}' > labels.json
+          elif [[ -n "${{ github.event.discussion }}" ]]; then
+            ISSUE_TITLE="${{ github.event.discussion.title }}"
+            ISSUE_DESCRIPTION="${{ github.event.discussion.body }}"
+            echo '${{ toJson(github.event.discussion.labels) }}' > labels.json
+          else
+            echo "No issue or discussion found, exiting."
+            exit 1
+          fi
+
+          echo "Issue/Discussion Title: $ISSUE_TITLE"
+          echo "Issue/Discussion Description: $ISSUE_DESCRIPTION"
+          # Debug: Show the raw JSON content
+          echo "Raw Labels JSON:"
+          cat labels.json
+
+          # Extract label names safely
+          LABELS=$(jq -r '.[].name' labels.json)
+
+          ASSIGNEE="$ASSIGNEE_STORIES"
+          CUSTOM_FIELD="$SPRINT_BUGS"
+          ISSUE_TYPE="$ISSUE_TYPE_BUG"
+          echo "Labels: $LABELS"
+
+          if [[ -z "$LABELS" || "$LABELS" == "[]" ]]; then
+            echo "No labels found, using default values."
+          else
+            for row in $LABELS; do
+              case "$row" in
+                "bug")
+                  ASSIGNEE="$ASSIGNEE_BUGS"
+                  CUSTOM_FIELD="$SPRINT_BUGS"
+                  ISSUE_TYPE="$ISSUE_TYPE_BUG"
+                  ;;
+                "documentation")
+                  CUSTOM_FIELD="$SPRINT_QUESTIONS"
+                  ISSUE_TYPE="$ISSUE_TYPE_QUESTION"
+                  ;;
+                "idea")
+                  CUSTOM_FIELD="$SPRINT_PRODUCT_INPUT"
+                  ISSUE_TYPE="$ISSUE_TYPE_FEEDBACK"
+                  ;;
+                "help")
+                  CUSTOM_FIELD="$SPRINT_DOCUMENTATION"
+                  ISSUE_TYPE="$ISSUE_TYPE_DOCUMENTATION"
+                  ;;
+              esac
+            done
+          fi
+
+          JSON_PAYLOAD=$(jq -n \
+            --arg summary "$ISSUE_TITLE" \
+            --arg description "$ISSUE_DESCRIPTION" \
+            --arg issuetype "$ISSUE_TYPE" \
+            --arg assignee "$ASSIGNEE" \
+            --arg customfield "$CUSTOM_FIELD" \
+            '{
+              summary: $summary,
+              description: $description,
+              issuetype: $issuetype,
+              assignee: $assignee,
+              fields: {
+                team: "659396d5-5200-49f5-9508-29cbc1412b3d-45",
+                customfield_10400: $customfield
+              }
+            }')
+
+          # Send POST Request
+          curl -X POST "$WEBHOOK_URL" \
+            -H "Content-Type: application/json" \
+            -H "X-Automation-Webhook-Token: $WEBHOOK_TOKEN" \
+            -d "$JSON_PAYLOAD"
