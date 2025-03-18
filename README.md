@@ -3,7 +3,7 @@
 Repo owners:
 Please refer to the CODEOWNERS file
 
-## Contributions
+## [Contributions](CONTRIBUTING.md)
 
 We are very grateful to the community for contributing bug fixes and improvements. We welcome all efforts to evolve and improve the Sitecore Cloud SDK; read below to learn how to participate in those efforts.
 
