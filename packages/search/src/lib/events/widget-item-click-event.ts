@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../consts';
+import { BaseSearchEvent } from './base-widget-event';
 import type {
   SearchEventEntity,
   SearchEventEntityDTO,
@@ -9,54 +9,23 @@ import type {
   WidgetItemClickEventParams
 } from './interfaces';
 
-export class WidgetItemClickEvent {
+export class WidgetItemClickEvent extends BaseSearchEvent {
   protected request: SearchEventRequest;
   protected entity: SearchEventEntity;
   protected itemPosition: number;
-  protected pathname: string;
   protected widgetId: string;
-  protected page?: string;
-  protected currency?: string;
-  protected language?: string;
-  protected channel?: string;
 
   /**
    * Creates a search widget item event.
    * @param widgetItemClickEventParams - An object with the widget item click params
    * {@link WidgetItemClickEventParams}
    */
-  constructor({
-    request,
-    entity,
-    itemPosition,
-    pathname,
-    widgetId,
-    page,
-    currency,
-    language,
-    channel
-  }: WidgetItemClickEventParams) {
-    this._validate(currency, language);
-
+  constructor({ request, entity, itemPosition, widgetId, ...rest }: WidgetItemClickEventParams) {
+    super(rest);
     this.entity = entity;
     this.itemPosition = itemPosition;
-    this.page = page;
     this.request = request;
-    this.pathname = pathname;
     this.widgetId = widgetId;
-    this.currency = currency;
-    this.language = language;
-    this.channel = channel;
-  }
-
-  /**
-   * @param currency - three-letter currency code in the ISO 4217 format.
-   * @param language - two-letter language code in the ISO 639-1 format.
-   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
-   */
-  private _validate(currency?: string, language?: string): void {
-    if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   /**
@@ -93,11 +62,7 @@ export class WidgetItemClickEvent {
       searchData: {
         action_cause: 'entity',
         value: {
-          context: {
-            page: {
-              uri: this.pathname
-            }
-          },
+          ...this._searchContextToDTO(),
           entities: [eventEntityDTO],
           index: this.itemPosition,
           request: eventRequestDTO,

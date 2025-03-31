@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../consts';
+import { BaseSearchEvent } from './base-widget-event';
 import type {
   SearchEventEntity,
   SearchEventEntityDTO,
@@ -9,41 +9,20 @@ import type {
   WidgetViewEventParams
 } from './interfaces';
 
-export class WidgetViewEvent {
+export class WidgetViewEvent extends BaseSearchEvent {
   protected request: SearchEventRequest;
   protected entities: SearchEventEntity[];
-  protected pathname: string;
   protected widgetIdentifier: string;
-  protected page?: string;
-  protected currency?: string;
-  protected language?: string;
-  protected channel?: string;
 
   /**
    * Creates a search widget view event.
    * @param widgetViewEventParams - An object with the widget view events params {@link WidgetViewEventParams}
    */
-  constructor({ request, entities, pathname, widgetId, page, currency, language, channel }: WidgetViewEventParams) {
-    this._validate(currency, language);
-
+  constructor({ request, entities, widgetId, ...rest }: WidgetViewEventParams) {
+    super(rest);
     this.entities = entities;
-    this.page = page;
     this.request = request;
-    this.pathname = pathname;
     this.widgetIdentifier = widgetId;
-    this.currency = currency;
-    this.language = language;
-    this.channel = channel;
-  }
-
-  /**
-   * @param currency - three-letter currency code in the ISO 4217 format.
-   * @param language - two-letter language code in the ISO 639-1 format.
-   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
-   */
-  private _validate(currency?: string, language?: string): void {
-    if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   /**
@@ -95,11 +74,7 @@ export class WidgetViewEvent {
       searchData: {
         action_cause: 'entity',
         value: {
-          context: {
-            page: {
-              uri: this.pathname
-            }
-          },
+          ...this._searchContextToDTO(),
           entities: entitiesDTO,
           request: requestDTO,
           rfk_id: this.widgetIdentifier

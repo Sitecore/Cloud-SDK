@@ -36,6 +36,7 @@ describe('widgetNavigationClickServer', () => {
 
   const widgetNavigationEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     itemPosition: 1,
     language: 'EN',
@@ -73,6 +74,9 @@ describe('widgetNavigationClickServer', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetNavigationEventData.pathname
             }
           },

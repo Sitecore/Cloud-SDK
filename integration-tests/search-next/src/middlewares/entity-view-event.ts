@@ -22,11 +22,13 @@ export async function entityViewMiddleware(request: NextRequest, response: NextR
   };
 
   const entityViewEventData = {
+    country: 'US',
     currency: 'EUR',
     entity: eventEntityData,
     language: 'EN',
     page: 'test',
-    pathname: 'https://www.sitecore.com/products/content-cloud'
+    pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud'
   };
 
   switch (testID) {

@@ -6,6 +6,7 @@ Feature: Send widget item click event
             """
             {
                 "channel": "WEB",
+                "country": "US",
                 "currency": "EUR",
                 "entity": {
                     "attributes": {
@@ -21,6 +22,7 @@ Feature: Send widget item click event
                 "language": "EN",
                 "page": "test",
                 "pathname": "https://www.sitecore.com/products/content-cloud",
+                "referrer": "https://www.sitecore.com/products/content-cloud",
                 "request": {
                     "advancedQueryText": "test1",
                     "keyword": "test_keyword",
@@ -46,6 +48,10 @@ Feature: Send widget item click event
                         "value": {
                             "context": {
                                 "page": {
+                                    "locale_country": "us",
+                                    "locale_currency": "eur",
+                                    "locale_language": "en",
+                                    "referrer": "https://www.sitecore.com/products/content-cloud",
                                     "uri": "https://www.sitecore.com/products/content-cloud"
                                 }
                             },
@@ -93,5 +99,5 @@ Feature: Send widget item click event
         Given the '/widget-item-click-event' page is loaded with 'testID' name and 'widgetItemClickFromMiddleware' value query parameter
         Then the request with id 'widgetItemClickFromMiddleware' will contain:
             """
-            "sc_search":{"data":{"action_cause":"entity","value":{"context":{"page":{"uri":"https://www.sitecore.com/products/content-cloud"}},"entities":[{"attributes":{"author":"ABC"},"entity_subtype":"subcat","entity_type":"category","id":"123","source_id":"534","uri":"https://www.sitecore.com/products/content-cloud3333333"}],"index":1,"request":{"advanced_query_text":"test1","keyword":"test_keyword","modified_keyword":"test2","num_requested":20,"num_results":10,"page_number":2,"page_size":1,"redirect_url":"test3","total_results":10},"rfk_id":"12345"}},"metadata":{"ut_api_version":"1.0"}
+            "sc_search":{"data":{"action_cause":"entity","value":{"context":{"page":{"locale_country":"us","locale_currency":"eur","locale_language":"en","referrer":"https://www.sitecore.com/products/content-cloud","uri":"https://www.sitecore.com/products/content-cloud"}},"entities":[{"attributes":{"author":"ABC"},"entity_subtype":"subcat","entity_type":"category","id":"123","source_id":"534","uri":"https://www.sitecore.com/products/content-cloud3333333"}],"index":1,"request":{"advanced_query_text":"test1","keyword":"test_keyword","modified_keyword":"test2","num_requested":20,"num_results":10,"page_number":2,"page_size":1,"redirect_url":"test3","total_results":10},"rfk_id":"12345"}},"metadata":{"ut_api_version":"1.0"}
             """

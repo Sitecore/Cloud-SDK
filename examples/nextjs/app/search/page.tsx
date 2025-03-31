@@ -172,6 +172,8 @@ const SearchResultsPage = () => {
           const newProducts = [...prevProducts, ...(widget.content as ProductItem[])];
 
           widgetView({
+            language: 'EN',
+            country: 'US',
             request: {},
             entities: newProducts?.map((product) => ({
               entity: 'product',
@@ -222,6 +224,8 @@ const SearchResultsPage = () => {
     if (!facetClickFilters.length) return;
 
     widgetFacetClick({
+      language: 'EN',
+      country: 'US',
       request: {
         ...(query && { keyword: query })
       },
@@ -338,6 +342,8 @@ const SearchResultsPage = () => {
                 className='product-item bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition-shadow duration-200'
                 onClick={() => {
                   widgetItemClick({
+                    language: 'EN',
+                    country: 'US',
                     request: {},
                     pathname: '/search',
                     widgetId: 'rfkid_7',

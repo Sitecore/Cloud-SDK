@@ -10,7 +10,13 @@ export function Suggestion({ item, index }: { item: SuggestionItem; index: numbe
 
   const handleClick = () => {
     updateSearch(item.text);
-    widgetSuggestionClick({ request: { keyword: item.text }, pathname, widgetId: searchWidgetId });
+    widgetSuggestionClick({
+      language: 'EN',
+      country: 'US',
+      request: { keyword: item.text },
+      pathname,
+      widgetId: searchWidgetId
+    });
   };
 
   return (

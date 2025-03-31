@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import type { NestedObject } from '@sitecore-cloudsdk/utils';
-import { ErrorMessages } from '../consts';
+import { BaseSearchEvent } from './base-widget-event';
 import type {
   SearchEventRequest,
   SearchEventRequestDTO,
@@ -9,51 +9,21 @@ import type {
   WidgetSuggestionClickEventParams
 } from './interfaces';
 
-export class WidgetSuggestionClickEvent {
+export class WidgetSuggestionClickEvent extends BaseSearchEvent {
   protected request: SearchEventRequest;
   protected filters?: Array<SuggestionFilterEventParams>;
-  protected pathname: string;
-  protected page?: string;
   protected widgetIdentifier: string;
-  protected currency?: string;
-  protected language?: string;
-  protected channel?: string;
 
   /**
    * Creates a widget suggestion click event.
    * @param widgetSuggestionClickEventParams - An object with the widget suggestion click event params
    *  {@link WidgetSuggestionClickEventParams}
    */
-  constructor({
-    request,
-    filters,
-    pathname,
-    page,
-    widgetId,
-    currency,
-    language,
-    channel
-  }: WidgetSuggestionClickEventParams) {
-    this._validate(currency, language);
-
+  constructor({ request, filters, widgetId, ...rest }: WidgetSuggestionClickEventParams) {
+    super(rest);
     this.request = request;
     this.filters = filters;
-    this.pathname = pathname;
-    this.page = page;
     this.widgetIdentifier = widgetId;
-    this.currency = currency;
-    this.language = language;
-    this.channel = channel;
-  }
-
-  /**
-   * @param currency - three-letter currency code in the ISO 4217 format.
-   * @param language - two-letter language code in the ISO 639-1 format.
-   * @throws - {@link ErrorMessages.IV_0015} | {@link ErrorMessages.IV_0011}
-   */
-  private _validate(currency?: string, language?: string): void {
-    if (currency !== undefined && currency.length !== 3) throw new Error(ErrorMessages.IV_0015);
-    if (language !== undefined && language.length !== 2) throw new Error(ErrorMessages.IV_0011);
   }
 
   /**
@@ -104,11 +74,7 @@ export class WidgetSuggestionClickEvent {
       searchData: {
         action_cause: 'suggestion',
         value: {
-          context: {
-            page: {
-              uri: this.pathname
-            }
-          },
+          ...this._searchContextToDTO(),
           filters: filtersDTO,
           request: requestDTO,
           rfk_id: this.widgetIdentifier

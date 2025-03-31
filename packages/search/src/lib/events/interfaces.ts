@@ -90,65 +90,46 @@ export interface RangeFacetFilterEventParamsDTO extends SuggestionFilterEventPar
 
 export type EventFilter = SuggestionFilterEventParams | FacetFilterEventParams | RangeFacetFilterEventParams;
 
-export interface WidgetNavigationClickEventParams {
-  pathname: string;
-  page?: string;
-  itemPosition: number;
-  currency?: string;
-  language?: string;
-  channel?: string;
-  widgetId: string;
-}
-
-export interface WidgetItemClickEventParams {
-  request: SearchEventRequest;
-  entity: SearchEventEntity;
-  itemPosition: number;
-  pathname: string;
-  widgetId: string;
+export interface BaseSearchEventParams {
   page?: string;
   currency?: string;
   language?: string;
   channel?: string;
-}
-
-export interface WidgetSuggestionClickEventParams {
-  request: SearchEventRequest;
-  filters?: Array<SuggestionFilterEventParams>;
+  country?: string;
+  referrer?: string;
   pathname: string;
-  widgetId: string;
-  page?: string;
-  currency?: string;
-  language?: string;
-  channel?: string;
 }
 
-export interface WidgetFacetClickEventParams {
-  request: SearchEventRequest;
-  filters: Array<FacetFilterEventParams | RangeFacetFilterEventParams>;
-  pathname: string;
-  widgetId: string;
-  page?: string;
-  currency?: string;
-  language?: string;
-  channel?: string;
-}
-
-export interface WidgetViewEventParams {
+export interface WidgetViewEventParams extends BaseSearchEventParams {
   request: SearchEventRequest;
   entities: Array<SearchEventEntity>;
-  pathname: string;
   widgetId: string;
-  page?: string;
-  currency?: string;
-  language?: string;
-  channel?: string;
 }
 
-export interface EntityViewEventParams {
-  page?: string;
-  currency?: string;
-  language?: string;
-  pathname: string;
+export interface EntityViewEventParams extends BaseSearchEventParams {
   entity: SearchEventEntity;
+}
+
+export interface WidgetFacetClickEventParams extends BaseSearchEventParams {
+  request: SearchEventRequest;
+  filters: Array<FacetFilterEventParams | RangeFacetFilterEventParams>;
+  widgetId: string;
+}
+
+export interface WidgetItemClickEventParams extends BaseSearchEventParams {
+  request: SearchEventRequest;
+  entity: SearchEventEntity;
+  itemPosition: number;
+  widgetId: string;
+}
+
+export interface WidgetNavigationClickEventParams extends BaseSearchEventParams {
+  itemPosition: number;
+  widgetId: string;
+}
+
+export interface WidgetSuggestionClickEventParams extends BaseSearchEventParams {
+  request: SearchEventRequest;
+  filters?: Array<SuggestionFilterEventParams>;
+  widgetId: string;
 }

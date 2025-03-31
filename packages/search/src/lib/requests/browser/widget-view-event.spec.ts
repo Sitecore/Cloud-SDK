@@ -102,6 +102,8 @@ describe('widgetView', () => {
         value: {
           context: {
             page: {
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetViewEventData.pathname
             }
           },

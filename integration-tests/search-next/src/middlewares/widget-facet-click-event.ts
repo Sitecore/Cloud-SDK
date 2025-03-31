@@ -23,6 +23,7 @@ export async function widgetFacetClickMiddleware(request: NextRequest, response:
 
       await widgetFacetClick(request, {
         channel: 'WEB',
+        country: 'US',
         currency: 'EUR',
         filters: [
           {
@@ -46,6 +47,7 @@ export async function widgetFacetClickMiddleware(request: NextRequest, response:
         language: 'EN',
         page: 'test',
         pathname: 'https://www.sitecore.com/products/content-cloud',
+        referrer: 'https://www.sitecore.com/products/content-cloud',
         request: {
           advancedQueryText: 'test1',
           keyword: 'test_keyword',

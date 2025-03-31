@@ -24,6 +24,7 @@ export async function widgetSuggestionClickMiddleware(request: NextRequest, resp
 
   const widgetSuggestionClickEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     filters: [
       {
@@ -37,6 +38,7 @@ export async function widgetSuggestionClickMiddleware(request: NextRequest, resp
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
     widgetId: '12345'
   };

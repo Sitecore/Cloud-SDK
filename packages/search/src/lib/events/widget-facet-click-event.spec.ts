@@ -17,6 +17,7 @@ describe('widget item event class', () => {
 
   const widgetItemEventData: WidgetFacetClickEventParams = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     filters: [
       {
@@ -56,6 +57,9 @@ describe('widget item event class', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetItemEventData.pathname
             }
           },

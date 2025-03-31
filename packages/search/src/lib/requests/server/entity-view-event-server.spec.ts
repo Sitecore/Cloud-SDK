@@ -81,6 +81,8 @@ describe('entityViewEventServer', () => {
         value: {
           context: {
             page: {
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: entityViewEventData.pathname
             }
           },

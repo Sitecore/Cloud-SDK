@@ -41,6 +41,7 @@ describe('widgetSuggestionClick', () => {
 
   const widgetSuggestionClickEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     filters: [],
     language: 'EN',
@@ -80,6 +81,9 @@ describe('widgetSuggestionClick', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetSuggestionClickEventData.pathname
             }
           },

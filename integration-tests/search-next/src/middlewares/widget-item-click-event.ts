@@ -35,12 +35,14 @@ export async function widgetItemClickMiddleware(request: NextRequest, response: 
 
   const widgetItemEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     entity: eventEntityData,
     itemPosition: 1,
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
     widgetId: '12345'
   };

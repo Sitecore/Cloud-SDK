@@ -4,6 +4,7 @@ import { WidgetNavigationClickEvent } from './widget-navigation-click-event';
 describe('widget navigation event class', () => {
   const widgetNavigationEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     itemPosition: 1,
     language: 'EN',
@@ -23,6 +24,9 @@ describe('widget navigation event class', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetNavigationEventData.pathname
             }
           },

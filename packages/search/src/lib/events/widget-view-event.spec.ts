@@ -40,11 +40,13 @@ describe('widget view event class', () => {
 
   const widgetViewEventData: WidgetViewEventParams = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     entities: eventEntitiesData,
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
     widgetId: '12345'
   };
@@ -60,6 +62,10 @@ describe('widget view event class', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
+              referrer: 'https://www.sitecore.com/products/content-cloud',
               uri: widgetViewEventData.pathname
             }
           },
@@ -112,6 +118,15 @@ describe('widget view event class', () => {
     expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).toThrow(ErrorMessages.IV_0011);
   });
 
+  it(`should throw an error if 'country' provided is invalid`, () => {
+    const invalidWidgetViewEventData = {
+      ...widgetViewEventData,
+      country: 'USA'
+    };
+
+    expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).toThrow(ErrorMessages.IV_0010);
+  });
+
   it(`should throw an error if 'currency' provided is invalid`, () => {
     const invalidWidgetViewEventData = {
       ...widgetViewEventData,
@@ -134,6 +149,24 @@ describe('widget view event class', () => {
     const invalidWidgetViewEventData = {
       ...widgetViewEventData,
       currency: undefined
+    };
+
+    expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).not.toThrow();
+  });
+
+  it(`should not throw an error if 'country' is undefined`, () => {
+    const invalidWidgetViewEventData = {
+      ...widgetViewEventData,
+      country: undefined
+    };
+
+    expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).not.toThrow();
+  });
+
+  it(`should not throw an error if 'referrer' is undefined`, () => {
+    const invalidWidgetViewEventData = {
+      ...widgetViewEventData,
+      referrer: undefined
     };
 
     expect(() => new WidgetViewEvent(invalidWidgetViewEventData)).not.toThrow();

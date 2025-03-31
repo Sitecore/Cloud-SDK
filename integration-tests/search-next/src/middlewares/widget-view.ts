@@ -52,11 +52,13 @@ export async function widgetViewMiddleware(request: NextRequest, response: NextR
 
   const widgetViewEventData: WidgetViewEventParams = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     entities: eventEntitiesData,
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
     widgetId: '12345'
   };

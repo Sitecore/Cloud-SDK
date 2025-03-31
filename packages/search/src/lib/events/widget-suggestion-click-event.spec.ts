@@ -17,6 +17,7 @@ describe('widget suggestion click event class', () => {
 
   const widgetSuggestionClickEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     filters: [
       {
@@ -30,6 +31,7 @@ describe('widget suggestion click event class', () => {
     language: 'EN',
     page: 'test',
     pathname: 'https://www.sitecore.com/products/content-cloud',
+    referrer: 'https://www.sitecore.com/products/content-cloud',
     request: eventRequestData,
     widgetId: '12345'
   };
@@ -45,6 +47,10 @@ describe('widget suggestion click event class', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
+              referrer: 'https://www.sitecore.com/products/content-cloud',
               uri: widgetSuggestionClickEventData.pathname
             }
           },

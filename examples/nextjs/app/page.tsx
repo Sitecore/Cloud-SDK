@@ -48,6 +48,8 @@ function Index() {
         if (!recWidgetData) return console.warn('No recommended products found');
         setRecommendedProducts(recWidgetData.content as ProductItem[]);
         await widgetView({
+          country: 'US',
+          language: 'EN',
           pathname: '/',
           widgetId: 'rfkid_2',
           entities: (recWidgetData.content as SearchEventEntity[])?.map((product) => ({

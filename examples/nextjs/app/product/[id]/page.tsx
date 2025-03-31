@@ -21,7 +21,8 @@ function ProductPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     getProductById(params.id)
       .then((product) => {
-        if (product) entityView({ entity: { entity: 'product', id: product.id }, pathname });
+        if (product)
+          entityView({ language: 'EN', country: 'US', entity: { entity: 'product', id: product.id }, pathname });
 
         setProduct(product);
       })

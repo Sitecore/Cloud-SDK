@@ -28,11 +28,13 @@ export async function widgetNavigationClickMiddleware(request: NextRequest, resp
       // eslint-disable-next-line no-case-declarations
       const payload = {
         channel: 'WEB',
+        country: 'US',
         currency: 'EUR',
         itemPosition: 1,
         language: 'EN',
         page: 'test',
         pathname: 'https://www.sitecore.com/products/content-cloud',
+        referrer: 'https://www.sitecore.com/products/content-cloud',
         widgetId: '12345'
       };
 

@@ -48,6 +48,7 @@ describe('widgetFacetClickServer', () => {
 
   const widgetItemEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     filters: [],
     language: 'EN',
@@ -86,6 +87,9 @@ describe('widgetFacetClickServer', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: 'https://www.sitecore.com/products/content-cloud'
             }
           },

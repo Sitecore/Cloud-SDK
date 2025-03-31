@@ -60,6 +60,7 @@ describe('widgetItemClickServer', () => {
 
   const widgetItemClickEventData = {
     channel: 'WEB',
+    country: 'US',
     currency: 'EUR',
     entity: eventEntityData,
     itemPosition: 1,
@@ -99,6 +100,9 @@ describe('widgetItemClickServer', () => {
         value: {
           context: {
             page: {
+              locale_country: 'us',
+              locale_currency: 'eur',
+              locale_language: 'en',
               uri: widgetItemClickEventData.pathname
             }
           },
