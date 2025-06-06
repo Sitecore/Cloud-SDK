@@ -37,6 +37,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
    * @param searchOptions - The widget's {@link SearchOptions} object.
+   * @param sources - The widget's sources.
    * @throws - {@link ErrorMessages.IV_0008} | {@link ErrorMessages.IV_0009};
    * @throws - {@link ErrorMessages.IV_0014} | {@link ErrorMessages.IV_0016};
    * @throws - {@link ErrorMessages.IV_0017} | {@link ErrorMessages.IV_0018};
@@ -45,14 +46,19 @@ export class SearchWidgetItem extends ResultsWidgetItem {
    * @throws - {@link ErrorMessages.IV_0029} | {@link ErrorMessages.IV_0030};
    * @throws - {@link ErrorMessages.IV_0031}
    */
-  constructor(entity: string, widgetId: string, searchOptions?: SearchOptions) {
-    super(entity, widgetId, {
-      content: searchOptions?.content,
-      filter: searchOptions?.filter,
-      groupBy: searchOptions?.groupBy,
-      limit: searchOptions?.limit,
-      rule: searchOptions?.rule
-    });
+  constructor(entity: string, widgetId: string, searchOptions?: SearchOptions, sources?: ArrayOfAtLeastOne<string>) {
+    super(
+      entity,
+      widgetId,
+      {
+        content: searchOptions?.content,
+        filter: searchOptions?.filter,
+        groupBy: searchOptions?.groupBy,
+        limit: searchOptions?.limit,
+        rule: searchOptions?.rule
+      },
+      sources
+    );
 
     if (!searchOptions) return;
 
@@ -472,7 +478,6 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       ...baseDTO,
       search: Object.values(search).filter((value) => value !== undefined).length ? search : undefined
     };
-
     return dto;
   }
 }

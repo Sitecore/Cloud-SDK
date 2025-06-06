@@ -82,7 +82,7 @@ export default function GetSearchWidgetData() {
             return new SearchWidgetItem(item.entity, item.widgetId, { disableGrouping: item.search?.disableGrouping });
           }
 
-          return new SearchWidgetItem(item.entity, item.widgetId);
+          return new SearchWidgetItem(item.entity, item.widgetId, {}, item.sources);
         });
 
     const widgetRequestData = new WidgetRequestData(widgets);

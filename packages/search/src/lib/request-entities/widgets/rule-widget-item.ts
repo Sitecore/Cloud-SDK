@@ -13,10 +13,11 @@ export class RuleWidgetItem extends WidgetItem {
    * @param entity - the entity value of the RuleWidgetItem.
    * @param widgetId - the widgetId value of the RuleWidgetItem.
    * @param rule - the {@link SearchRuleOptions} of the RuleWidgetItem.
+   * @param sources - The widget's sources.
    * @throws - {@link ErrorMessages.IV_0027} | {@link ErrorMessages.IV_0028}
    */
-  constructor(entity: string, widgetId: string, rule?: SearchRuleOptions) {
-    super(entity, widgetId);
+  constructor(entity: string, widgetId: string, rule?: SearchRuleOptions, sources?: ArrayOfAtLeastOne<string>) {
+    super(entity, widgetId, sources);
 
     if (rule) {
       this._validateRule(rule);

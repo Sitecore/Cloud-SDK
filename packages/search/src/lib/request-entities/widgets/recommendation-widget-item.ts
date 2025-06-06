@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import type {
   Recipe,
   Recommendation,
@@ -17,12 +18,18 @@ export class RecommendationWidgetItem extends ResultsWidgetItem {
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
    * @param recommendationOptions - The widget's {@link RecommendationOptions} object.
+   * @param sources - The widget's sources.
    * @throws - {@link ErrorMessages.IV_0023} | {@link ErrorMessages.IV_0024}
    */
-  constructor(entity: string, widgetId: string, recommendationOptions?: RecommendationOptions) {
+  constructor(
+    entity: string,
+    widgetId: string,
+    recommendationOptions?: RecommendationOptions,
+    sources?: ArrayOfAtLeastOne<string>
+  ) {
     const { recipe, ...rest } = recommendationOptions || {};
 
-    super(entity, widgetId, rest);
+    super(entity, widgetId, rest, sources);
 
     if (!recommendationOptions) return;
 

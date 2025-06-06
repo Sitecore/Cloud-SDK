@@ -64,10 +64,11 @@ defineStep('the widget data request is sent with parameters:', (params: string) 
 
     for (let index = 0; index < length; index++) {
       const { widgetId, entity, search: searchParam } = parameters.items[index];
-      const { rfk_id: reqRfkId, entity: reqEntity, search } = request.body.widget.items[index];
+      const { rfk_id: reqRfkId, entity: reqEntity, sources, search } = request.body.widget.items[index];
 
       expect(reqRfkId).to.equal(widgetId);
       expect(reqEntity).to.equal(entity);
+      expect(sources).to.equal(sources);
       expect(search).to.deep.equal(searchParam);
     }
 

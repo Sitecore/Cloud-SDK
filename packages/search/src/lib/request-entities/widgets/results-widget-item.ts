@@ -1,6 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
-import type { Filter } from '../filters/interfaces';
+import type { ArrayOfAtLeastOne, Filter } from '../filters/interfaces';
 import type { ContentOptions, ContentOptionsDto, ResultsItemDTO, ResultsOptions } from './interfaces';
 import { RuleWidgetItem } from './rule-widget-item';
 
@@ -15,10 +15,11 @@ export class ResultsWidgetItem extends RuleWidgetItem {
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
    * @param resultOptions - The widget's {@link ResultsOptions} object.
+   * @param sources - The widget's sources.
    * @throws - {@link ErrorMessages.IV_0007} | {@link ErrorMessages.IV_0022}
    */
-  constructor(entity: string, widgetId: string, resultOptions?: ResultsOptions) {
-    super(entity, widgetId, resultOptions?.rule);
+  constructor(entity: string, widgetId: string, resultOptions?: ResultsOptions, sources?: ArrayOfAtLeastOne<string>) {
+    super(entity, widgetId, resultOptions?.rule, sources);
 
     this._validateNumberInRange1To100(ErrorMessages.IV_0007, resultOptions?.limit);
     this._validateGroupBy(resultOptions?.groupBy);

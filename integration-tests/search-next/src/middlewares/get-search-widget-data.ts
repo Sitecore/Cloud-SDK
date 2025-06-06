@@ -23,39 +23,42 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
         .addEvents()
         .addSearch()
         .initialize();
-
-      widget = new SearchWidgetItem('content', 'rfkid_7', {
-        facet: {
-          all: true,
-          coverage: true,
-          max: 50,
-          sort: { name: 'count', order: 'asc' },
-          types: [
-            {
-              exclude: ['type'],
-              filter: {
-                type: 'and',
-                values: [
-                  'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
-                  'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
-                ]
-              },
-              filteringOptions: 'Dynamic AND',
-              keyphrase: 'test',
-              max: 1,
-              minCount: 1,
-              name: 'type',
-              sort: {
-                after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
-                name: 'text',
-                order: 'asc'
+      widget = new SearchWidgetItem(
+        'content',
+        'rfkid_7',
+        {
+          facet: {
+            all: true,
+            coverage: true,
+            max: 50,
+            sort: { name: 'count', order: 'asc' },
+            types: [
+              {
+                exclude: ['type'],
+                filter: {
+                  type: 'and',
+                  values: [
+                    'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=',
+                    'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9'
+                  ]
+                },
+                filteringOptions: 'Dynamic AND',
+                keyphrase: 'test',
+                max: 1,
+                minCount: 1,
+                name: 'type',
+                sort: {
+                  after: 'facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9',
+                  name: 'text',
+                  order: 'asc'
+                }
               }
-            }
-          ]
-        }
-      });
+            ]
+          }
+        },
+        ['source1', 'source2']
+      );
       widgetRequestData = new WidgetRequestData([widget]);
-
       await getWidgetData(widgetRequestData);
 
       break;
@@ -98,6 +101,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
           }
         ]
       };
+      widget.sources = ['source1', 'source2'];
       widgetRequestData = new WidgetRequestData([widget]);
 
       await getWidgetData(widgetRequestData);

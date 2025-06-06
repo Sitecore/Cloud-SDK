@@ -1,4 +1,5 @@
 import { ErrorMessages } from '../../consts';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import { WidgetItem } from './widget-item';
 
 describe('widget item class', () => {
@@ -6,6 +7,13 @@ describe('widget item class', () => {
     entity: 'test',
     // eslint-disable-next-line @typescript-eslint/naming-convention
     rfk_id: 'test'
+  };
+
+  const expectedWithSources = {
+    entity: 'test',
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    rfk_id: 'test',
+    sources: ['source1']
   };
 
   beforeEach(() => {
@@ -95,6 +103,32 @@ describe('widget item class', () => {
     });
   });
 
+  describe('constructor with sources', () => {
+    it('should create widget item with sources when provided', () => {
+      const sources = ['source1', 'source2'] as ArrayOfAtLeastOne<string>;
+      const widgetItem = new WidgetItem('test', 'test', sources);
+
+      expect(widgetItem.sources).toEqual(sources);
+      expect(widgetItem.entity).toBe('test');
+      expect(widgetItem.widgetId).toBe('test');
+    });
+
+    it('should create widget item with undefined sources when not provided', () => {
+      const widgetItem = new WidgetItem('test', 'test');
+
+      expect(widgetItem.sources).toBeUndefined();
+      expect(widgetItem.entity).toBe('test');
+      expect(widgetItem.widgetId).toBe('test');
+    });
+
+    it('should create widget item with single source', () => {
+      const sources = ['source1'] as ArrayOfAtLeastOne<string>;
+      const widgetItem = new WidgetItem('test', 'test', sources);
+
+      expect(widgetItem.sources).toEqual(sources);
+    });
+  });
+
   describe('mapper', () => {
     it('should return the original widget item mapped', () => {
       const validWidgetItem = {
@@ -106,6 +140,38 @@ describe('widget item class', () => {
 
       expect(result).toStrictEqual(expected);
     });
+
+    it('should return the widget item mapped with sources when provided', () => {
+      const sources = ['source1'] as ArrayOfAtLeastOne<string>;
+      const widgetItem = new WidgetItem('test', 'test', sources);
+
+      const result = widgetItem.toDTO();
+
+      expect(result).toStrictEqual(expectedWithSources);
+    });
+
+    it('should return the widget item mapped with multiple sources', () => {
+      const sources: ArrayOfAtLeastOne<string> = ['source1', 'source2', 'source3'];
+      const widgetItem = new WidgetItem('test', 'test', sources);
+
+      const result = widgetItem.toDTO();
+
+      expect(result).toStrictEqual({
+        entity: 'test',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rfk_id: 'test',
+        sources: ['source1', 'source2', 'source3']
+      });
+    });
+
+    it('should not include sources in DTO when sources is undefined', () => {
+      const widgetItem = new WidgetItem('test', 'test');
+
+      const result = widgetItem.toDTO();
+
+      expect(result).toStrictEqual(expected);
+      expect(result).not.toHaveProperty('sources');
+    });
   });
 
   describe('setters', () => {
@@ -115,6 +181,51 @@ describe('widget item class', () => {
       widgetItem.widgetId = 'test2';
 
       expect(widgetItem.toDTO()).toEqual({ entity: 'test2', rfk_id: 'test2' });
+    });
+
+    it('should set the sources', () => {
+      const widgetItem = new WidgetItem('test', 'test');
+      const sources = ['source1', 'source2'] as ArrayOfAtLeastOne<string>;
+
+      widgetItem.sources = sources;
+
+      expect(widgetItem.sources).toEqual(sources);
+      expect(widgetItem.toDTO()).toEqual({
+        entity: 'test',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rfk_id: 'test',
+        sources: sources
+      });
+    });
+
+    it('should reset the sources', () => {
+      const widgetItem = new WidgetItem('test', 'test');
+      const sources = ['source1', 'source2'] as ArrayOfAtLeastOne<string>;
+
+      widgetItem.sources = sources;
+      widgetItem.resetSources();
+      expect(widgetItem.sources).toEqual(undefined);
+      expect(widgetItem.toDTO()).toEqual({
+        entity: 'test',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rfk_id: 'test'
+      });
+    });
+
+    it('should update sources when changed', () => {
+      const initialSources: ArrayOfAtLeastOne<string> = ['source1'];
+      const newSources: ArrayOfAtLeastOne<string> = ['source2', 'source3'];
+      const widgetItem = new WidgetItem('test', 'test', initialSources);
+
+      widgetItem.sources = newSources;
+
+      expect(widgetItem.sources).toEqual(newSources);
+      expect(widgetItem.toDTO()).toEqual({
+        entity: 'test',
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        rfk_id: 'test',
+        sources: newSources
+      });
     });
   });
 
@@ -127,6 +238,29 @@ describe('widget item class', () => {
 
       expect(widgetItem.entity).toBe(entity);
       expect(widgetItem.widgetId).toBe(widgetId);
+    });
+
+    it('should get all properties including sources', () => {
+      const entity = 'content';
+      const widgetId = 'rfkid';
+      const sources = ['source1', 'source2'] as ArrayOfAtLeastOne<string>;
+
+      const widgetItem = new WidgetItem(entity, widgetId, sources);
+
+      expect(widgetItem.entity).toBe(entity);
+      expect(widgetItem.widgetId).toBe(widgetId);
+      expect(widgetItem.sources).toEqual(sources);
+    });
+
+    it('should return undefined for sources when not provided', () => {
+      const entity = 'content';
+      const widgetId = 'rfkid';
+
+      const widgetItem = new WidgetItem(entity, widgetId);
+
+      expect(widgetItem.entity).toBe(entity);
+      expect(widgetItem.widgetId).toBe(widgetId);
+      expect(widgetItem.sources).toBeUndefined();
     });
   });
 });

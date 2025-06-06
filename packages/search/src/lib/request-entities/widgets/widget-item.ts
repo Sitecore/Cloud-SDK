@@ -1,23 +1,26 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import type { WidgetItemDTO } from './interfaces';
 
 export class WidgetItem {
   protected _entity: string;
   protected _widgetId: string;
+  protected _sources?: ArrayOfAtLeastOne<string>;
 
   /**
    * Creates and holds the functionality of a widget item.
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
-   *
+   * @param sources - The widget's sources.
    */
-  constructor(entity: string, widgetId: string) {
+  constructor(entity: string, widgetId: string, sources?: ArrayOfAtLeastOne<string>) {
     this._validateWidgetId(widgetId);
     this._validateEntity(entity);
 
     this._entity = entity;
     this._widgetId = widgetId;
+    this._sources = sources;
   }
 
   /**
@@ -38,6 +41,27 @@ export class WidgetItem {
     return this._entity;
   }
 
+  /**
+   * @returns The sources property of the WidgetItem.
+   */
+  get sources(): ArrayOfAtLeastOne<string> | undefined {
+    return this._sources;
+  }
+
+  /**
+   * Sets the sources for the WidgetItem.
+   * This method updates the `sources` property within the WidgetItem instance.
+   * The sources are used to define specific search criteria or filters.
+   * @param sources - The array of sources {@link ArrayOfAtLeastOne} that specifies the search criteria.
+   */
+
+  set sources(sources: ArrayOfAtLeastOne<string>) {
+    this._sources = sources;
+  }
+
+  resetSources(): void {
+    this._sources = undefined;
+  }
   /**
    *
    * @param entity - the string to validate
@@ -140,7 +164,8 @@ export class WidgetItem {
     return {
       entity: this._entity,
       // eslint-disable-next-line @typescript-eslint/naming-convention
-      rfk_id: this._widgetId
+      rfk_id: this._widgetId,
+      ...(this._sources && { sources: this._sources })
     };
   }
 }

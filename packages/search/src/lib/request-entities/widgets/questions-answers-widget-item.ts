@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import { ErrorMessages } from '../../consts';
+import type { ArrayOfAtLeastOne } from '../filters/interfaces';
 import type {
   ExactAnswerOptions,
   QuestionsAnswersOptions,
@@ -18,10 +19,16 @@ export class QuestionsAnswersWidgetItem extends RuleWidgetItem {
    * @param entity - The widget's item entity.
    * @param widgetId - The widget's item id.
    * @param questionsAnswersOptions - The widget's {@link QuestionsAnswersOptions} object.
+   * @param sources - The widget's sources.
    * @throws - {@link ErrorMessages.IV_0007} | {@link ErrorMessages.IV_0008} | {@link ErrorMessages.IV_0009}
    */
-  constructor(entity: string, widgetId: string, questionsAnswersOptions: QuestionsAnswersOptions) {
-    super(entity, widgetId, questionsAnswersOptions.rule);
+  constructor(
+    entity: string,
+    widgetId: string,
+    questionsAnswersOptions: QuestionsAnswersOptions,
+    sources?: ArrayOfAtLeastOne<string>
+  ) {
+    super(entity, widgetId, questionsAnswersOptions.rule, sources);
 
     this._validateStringLengthInRange1To100(ErrorMessages.IV_0009, questionsAnswersOptions.keyphrase);
     this._keyphrase = questionsAnswersOptions.keyphrase;

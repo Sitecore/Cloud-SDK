@@ -18,6 +18,7 @@ export interface WidgetItemDTO {
   entity: string;
   // eslint-disable-next-line @typescript-eslint/naming-convention
   rfk_id: string;
+  sources?: ArrayOfAtLeastOne<string>;
 }
 
 /**
