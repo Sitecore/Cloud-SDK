@@ -54,7 +54,8 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
                 }
               }
             ]
-          }
+          },
+          responseContext: true
         },
         ['source1', 'source2']
       );
@@ -101,6 +102,7 @@ export async function getSearchWidgetDataMiddleware(request: NextRequest, respon
           }
         ]
       };
+      widget.responseContext = true;
       widget.sources = ['source1', 'source2'];
       widgetRequestData = new WidgetRequestData([widget]);
 

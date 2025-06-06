@@ -4,7 +4,7 @@ Feature: Request search widget data from Search REST API
         Given the '/get-search-widget-data' page is loaded with 'testID' name and '<testID>' value query parameter
         Then the request with id '<testID>' will contain:
             """
-            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","sources":["source1","source2"],"search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"filter":{"type":"and","values":["facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=","facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9"]},"filtering_options":["hard_filters","other_facet_values","own_values"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}]}
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","sources":["source1","source2"],"search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"filter":{"type":"and","values":["facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=","facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9"]},"filtering_options":["hard_filters","other_facet_values","own_values"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]},"response_context":{}}}]}
             """
 
         Examples:
@@ -17,7 +17,7 @@ Feature: Request search widget data from Search REST API
         And the 'getSearchWidgetDataFromAPIWithValidPayload' button is clicked
         Then the request with id '<testID>' will contain:
             """
-            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","sources":["source1","source2"],"search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"filter":{"type":"and","values":["facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=","facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9"]},"filtering_options":["hard_filters","other_facet_values","own_values"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]}}}]}
+            "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7","sources":["source1","source2"],"search":{"facet":{"all":true,"coverage":true,"max":50,"sort":{"name":"count","order":"asc"},"types":[{"exclude":["type"],"filter":{"type":"and","values":["facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiR3VpZGVzIn0=","facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiRG9jdW1lbnRhdGlvbiJ9"]},"filtering_options":["hard_filters","other_facet_values","own_values"],"keyphrase":"test","max":1,"min_count":1,"name":"type","after":"facetid_eyJ0eXBlIjoiZXEiLCJuYW1lIjoidHlwZSIsInZhbHVlIjoiUHJvZHVjdCJ9","sort":{"name":"text","order":"asc"}}]},"response_context":{}}}]}
             """
 
         Examples:

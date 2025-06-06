@@ -176,6 +176,7 @@ export interface SearchOptions extends ResultsOptions {
   ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
   personalization?: SearchPersonalizationOptions;
   disableGrouping?: boolean;
+  responseContext?: boolean;
 }
 
 /**
@@ -190,6 +191,7 @@ export interface SearchDTO extends ResultsItemDTO {
   ranking?: ArrayOfAtLeastOne<SearchRankingOptionsDto>;
   personalization?: SearchPersonalizationOptionsDto;
   disable_grouping?: boolean;
+  response_context?: Record<string, never>;
 }
 
 /**

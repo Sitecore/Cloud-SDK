@@ -31,7 +31,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   private _ranking?: ArrayOfAtLeastOne<SearchRankingOptions>;
   private _personalization?: SearchPersonalizationOptions;
   private _disableGrouping?: boolean;
-
+  private _responseContext?: boolean;
   /**
    * Creates and holds the functionality of a search widget item.
    * @param entity - The widget's item entity.
@@ -90,6 +90,8 @@ export class SearchWidgetItem extends ResultsWidgetItem {
     this._suggestion = searchOptions.suggestion;
 
     this._disableGrouping = searchOptions.disableGrouping;
+
+    this._responseContext = searchOptions.responseContext;
   }
 
   /**
@@ -289,6 +291,28 @@ export class SearchWidgetItem extends ResultsWidgetItem {
   }
 
   /**
+   * Sets the `responseContext` property of the SearchWidgetItem.
+   * @param responseContext - A boolean indicating if response context has been enabled in Sitecore Search.
+   */
+  set responseContext(responseContext: boolean) {
+    this._responseContext = responseContext;
+  }
+
+  /**
+   * @returns The `responseContext` property of the SearchWidgetItem.
+   */
+  get responseContext(): boolean | undefined {
+    return this._responseContext;
+  }
+
+  /**
+   * Resets the `responseContext` property to undefined.
+   */
+  resetResponseContext(): void {
+    this._responseContext = undefined;
+  }
+
+  /**
    * Sets the suggestion property for SearchWidgetItem
    * @param suggestion - the {@link SearchSuggestionOptions}[] of objects for the suggestion param
    * @throws - {@link ErrorMessages.IV_0014} | {@link ErrorMessages.IV_0016}
@@ -471,6 +495,7 @@ export class SearchWidgetItem extends ResultsWidgetItem {
       ...{ suggestion: this._suggestionToDTO() },
       ...{ sort: this._sort },
       ...{ disable_grouping: this._disableGrouping },
+      ...(this._responseContext ? { response_context: {} } : undefined),
       ...resultsDTO
     };
 

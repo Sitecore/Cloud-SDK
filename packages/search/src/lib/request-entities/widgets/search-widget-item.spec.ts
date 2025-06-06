@@ -1396,6 +1396,101 @@ describe('search widget item class', () => {
     });
   });
 
+  describe('ResponseContext', () => {
+    let widgetItem: SearchWidgetItem;
+    const validWidgetItem = {
+      entity: 'test',
+      widgetId: 'test'
+    };
+
+    beforeEach(() => {
+      widgetItem = new SearchWidgetItem(validWidgetItem.entity, validWidgetItem.widgetId);
+    });
+
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+
+    it('should set the responseContext when given valid values', () => {
+      widgetItem.responseContext = true;
+
+      expect(
+        new SearchWidgetItem('test', 'test', { responseContext: widgetItem.responseContext }).toDTO().search
+          ?.response_context
+      ).toEqual({});
+
+      widgetItem.responseContext = false;
+
+      expect(
+        new SearchWidgetItem('test', 'test', { responseContext: widgetItem.responseContext }).toDTO().search
+          ?.response_context
+      ).toBeUndefined();
+    });
+
+    it('should reflect the responseContext as undefined when not set', () => {
+      widgetItem.responseContext = undefined as unknown as boolean;
+      expect(widgetItem.responseContext).toBe(undefined);
+    });
+
+    it('should reflect the response_context (DTO) as undefined when not set', () => {
+      expect(widgetItem.toDTO().search?.response_context).toBe(undefined);
+    });
+
+    it('should set the responseContext when provided in constructor', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', { responseContext: true });
+
+      expect(widgetItem.toDTO().search?.response_context).toEqual({});
+    });
+
+    it('should not include response_context in DTO when responseContext is false', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', { responseContext: false });
+
+      expect(widgetItem.toDTO().search?.response_context).toBeUndefined();
+    });
+
+    it('should reset the responseContext', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', { responseContext: true });
+
+      expect(widgetItem.toDTO().search?.response_context).toEqual({});
+
+      widgetItem.resetResponseContext();
+
+      expect(widgetItem.toDTO().search?.response_context).toBeUndefined();
+    });
+
+    it('should update responseContext when changed via setter', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test');
+
+      // Initially undefined
+      expect(widgetItem.responseContext).toBeUndefined();
+      expect(widgetItem.toDTO().search?.response_context).toBeUndefined();
+
+      // Set to true
+      widgetItem.responseContext = true;
+      expect(widgetItem.responseContext).toBe(true);
+      expect(widgetItem.toDTO().search?.response_context).toEqual({});
+
+      // Set to false
+      widgetItem.responseContext = false;
+      expect(widgetItem.responseContext).toBe(false);
+      expect(widgetItem.toDTO().search?.response_context).toBeUndefined();
+    });
+
+    it('should work correctly with other search options', () => {
+      const widgetItem = new SearchWidgetItem('test', 'test', {
+        offset: 10,
+        query: { keyphrase: 'test query' },
+        responseContext: true
+      });
+
+      const dto = widgetItem.toDTO();
+
+      expect(dto.search?.response_context).toEqual({});
+      expect(dto.search?.query).toEqual({ keyphrase: 'test query' });
+      expect(dto.search?.offset).toBe(10);
+    });
+  });
+
   describe('SearchWidgetItem getters', () => {
     it('should get all properties', () => {
       const query = { keyphrase: 'test' };
@@ -1415,6 +1510,7 @@ describe('search widget item class', () => {
       const sort: SearchSortOptions = { choices: true, value: [{ name: 'test' }] };
       const suggestion: ArrayOfAtLeastOne<SearchSuggestionOptions> = [{ name: 'test' }];
       const disableGrouping = true;
+      const responseContext = true;
 
       const widgetItem = new SearchWidgetItem('content', 'rfkid_qa', {
         disableGrouping,
@@ -1423,6 +1519,7 @@ describe('search widget item class', () => {
         personalization,
         query,
         ranking,
+        responseContext,
         sort,
         suggestion
       });
@@ -1435,6 +1532,7 @@ describe('search widget item class', () => {
       expect(widgetItem.sort).toEqual(sort);
       expect(widgetItem.suggestion).toEqual(suggestion);
       expect(widgetItem.disableGrouping).toEqual(disableGrouping);
+      expect(widgetItem.responseContext).toEqual(responseContext);
     });
   });
 });

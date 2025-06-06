@@ -58,7 +58,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
                 }
               }
             ]
-          }
+          },
+          responseContext: true
         },
         ['source1', 'source2']
       );
@@ -77,6 +78,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
         .initialize();
 
       widget = new SearchWidgetItem('content', 'rfkid_7');
+      widget.responseContext = true;
       widget.facet = {
         all: true,
         coverage: true,
