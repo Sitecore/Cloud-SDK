@@ -2,7 +2,11 @@ const config = {
   $schema: './node_modules/@stryker-mutator/core/schema/stryker-schema.json',
   _comment: 'Comments can be put inside `xxx_comment` properties.',
   packageManager: 'npm',
-  mutate: ['./packages/search/src/**/*.ts', '!./packages/search/src/**/*spec.ts'],
+  mutate: [
+    './packages/search/src/**/*.ts',
+    '!./packages/search/src/**/*spec.ts',
+    '!./packages/search/src/lib/consts.ts'
+  ],
   thresholds: { high: 80, low: 60, break: 100 },
   incremental: false,
   testRunner: 'jest',

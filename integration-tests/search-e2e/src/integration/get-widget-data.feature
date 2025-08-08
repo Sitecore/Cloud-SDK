@@ -7,6 +7,14 @@ Feature: Request widget data from Search REST API
             "widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
             """
 
+    Scenario: Developer requests widget data from Middleware with a valid context payload
+        Given the '/get-widget-data' page is loaded with 'testID' name and 'getWidgetDataFromMiddlewareWithValidContextPayload' value query parameter
+        Then the request with id 'getWidgetDataFromMiddlewareWithValidContextPayload' will contain:
+            """
+            "context":{"locale":{"country":"us","language":"en"}},"widget":{"items":[{"entity":"content","rfk_id":"rfkid_7"}]}
+            """
+
+
     Scenario: Developer requests widget data from API with a valid payload
         Given the '/get-widget-data' page is loaded
         And the 'getWidgetDataFromAPIWithValidPayload' button is clicked
