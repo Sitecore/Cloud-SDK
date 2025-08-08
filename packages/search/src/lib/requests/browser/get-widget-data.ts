@@ -11,6 +11,7 @@ import { sendPostRequest } from '../post-request';
 /**
  * This function requests widget data.
  * @param widgetRequestData - An instance of {@link WidgetRequestData}.
+ * @param contextRequestData - An instance of {@link Context}.
  * @returns The response object promise: {@link SearchEndpointResponse} | null.
  */
 export async function getWidgetData(
