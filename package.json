@@ -9,13 +9,7 @@
   "scripts": {
     "build": "nx affected --target=build",
     "build-all": "tsc --build",
-    "generate-e2e-core-report": "mochawesome-merge integration-tests/core-e2e/cypress/results/*.json --o integration-tests/core-e2e/cypress/results/reports/test-results.json && marge integration-tests/core-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/core-e2e/cypress/results/reports/ --inline && rm integration-tests/core-e2e/cypress/results/*.json",
-    "generate-e2e-events-report": "mochawesome-merge integration-tests/events-e2e/cypress/results/*.json --o integration-tests/events-e2e/cypress/results/reports/test-results.json && marge integration-tests/events-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/events-e2e/cypress/results/reports/ --inline && rm integration-tests/events-e2e/cypress/results/*.json",
-    "generate-e2e-personalize-report": "mochawesome-merge integration-tests/personalize-e2e/cypress/results/*.json --o integration-tests/personalize-e2e/cypress/results/reports/test-results.json && marge integration-tests/personalize-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/personalize-e2e/cypress/results/reports/ --inline && rm integration-tests/personalize-e2e/cypress/results/*.json",
-    "generate-e2e-search-report": "mochawesome-merge integration-tests/search-e2e/cypress/results/*.json --o integration-tests/search-e2e/cypress/results/reports/test-results.json && marge integration-tests/search-e2e/cypress/results/reports/test-results.json --reportDir integration-tests/search-e2e/cypress/results/reports/ --inline && rm integration-tests/search-e2e/cypress/results/*.json",
     "lint": "nx affected --target=lint",
-    "mutation-local": "nx run-many --target=stryker",
-    "mutation-tests": "nx affected --target=stryker",
     "prepare": "husky install",
     "unit-tests": "nx affected --target=test",
     "test": "nx affected --target=test"
@@ -42,9 +36,6 @@
     "@nx/next": "16.10.0",
     "@nx/react": "16.10.0",
     "@nx/workspace": "16.8.0",
-    "@stryker-mutator/core": "^8.2.5",
-    "@stryker-mutator/jest-runner": "^8.2.5",
-    "@stryker-mutator/typescript-checker": "^8.2.5",
     "@stylistic/eslint-plugin-js": "^1.7.0",
     "@swc/cli": "~0.1.62",
     "@swc/core": "~1.3.51",

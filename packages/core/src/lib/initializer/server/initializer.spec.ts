@@ -341,6 +341,41 @@ describe('initializer server', () => {
         });
         expect(request.headers.cookie).toBe('random=123456789; sc_123=browser_id_from_proxy');
       });
+
+      it('should set cookie header directly when no existing cookie header exists', async () => {
+        const mockFetch = Promise.resolve({
+          json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
+        });
+
+        global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
+        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
+        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
+        isHttpRequestSpy.mockReturnValueOnce(true);
+        isHttpResponseSpy.mockReturnValueOnce(true);
+
+        request = {
+          headers: {} as any // No cookie header - this should trigger the uncovered line 181
+        };
+
+        response = {
+          setHeader: jest.fn()
+        };
+
+        jest.spyOn(utils, 'getCookieServerSide').mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
+        const createCookieStringSpy = jest
+          .spyOn(utils, 'createCookieString')
+          .mockReturnValueOnce('sc_123=browser_id_from_proxy');
+
+        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
+
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123', 'browser_id_from_proxy', { test: true });
+        expect(initializerModule.getCookiesValuesFromEdge()).toEqual({
+          browserId: 'browser_id_from_proxy',
+          guestId: 'guest_id_from_proxy'
+        });
+        // This should test the uncovered line 181 where cookie header is falsy
+        expect(request.headers.cookie).toBe('sc_123=browser_id_from_proxy');
+      });
     });
 
     it(`should NOT call createCookies method upon initialization when enableServerCookie is false`, () => {
