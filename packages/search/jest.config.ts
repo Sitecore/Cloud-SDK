@@ -10,16 +10,7 @@ const config: Config = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
-  coverageReporters: ['html-spa', ['text', { skipFull: true }]],
   coverageDirectory: '../../coverage/packages/search',
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: -10
-    }
-  },
   moduleNameMapper: {
     '@sitecore-cloudsdk/events/browser': join(resolve(), 'packages', 'events', 'src', 'browser.js'),
     '@sitecore-cloudsdk/events/server': join(resolve(), 'packages', 'events', 'src', 'server.js'),

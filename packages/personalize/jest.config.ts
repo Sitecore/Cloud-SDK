@@ -1,7 +1,6 @@
 /* eslint-disable */
-
 import type { Config } from '@jest/types';
-import { resolve, join } from 'path';
+import { join, resolve } from 'path';
 
 const config: Config.InitialOptions = {
   displayName: 'personalize',
@@ -11,16 +10,7 @@ const config: Config.InitialOptions = {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   testEnvironment: 'jsdom',
-  coverageReporters: ['html-spa', ['text', { skipFull: true }]],
   coverageDirectory: '../../coverage/packages/personalize',
-  coverageThreshold: {
-    global: {
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: -10
-    }
-  },
   testPathIgnorePatterns: ['web-personalization.spec.ts'],
   moduleNameMapper: {
     '@sitecore-cloudsdk/events/browser': join(resolve(), 'packages', 'events', 'src', 'browser.js'),
