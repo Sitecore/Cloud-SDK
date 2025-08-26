@@ -111,7 +111,7 @@ jobs:
           fetch-depth: 0
       - name: Check the title format
         run: |
-          pr_title_regex="^(build|chore|ci|docs|style|refactor|perf|test|revert|feat|fix)(\((core|utils|events|personalize|search)\))?!?: CDK-[0-9]+"
+          pr_title_regex="^(build|chore|ci|docs|style|refactor|perf|test|revert|feat|fix)(\((core|utils|events|personalize|search)\))?!?: .+"
           if [[ "${{ github.event.pull_request.title }}" =~ $pr_title_regex ]]; then
             echo "The title is properly formated."
             exit 0
