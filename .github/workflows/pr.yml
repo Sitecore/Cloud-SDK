@@ -27,9 +27,9 @@ jobs:
       - name: Install Dependencies
         run: npm ci
       - name: Build Packages
-        run: npx nx affected --target=build --base=remotes/origin/master --head=HEAD
+        run: npx nx affected --target=build --base=remotes/origin/main --head=HEAD
       - name: Run Linting
-        run: npx nx affected --target=lint --base=remotes/origin/master --head=HEAD
+        run: npx nx affected --target=lint --base=remotes/origin/main --head=HEAD
   unit-test:
     runs-on: ubuntu-latest
     name: Run unit tests
@@ -44,7 +44,7 @@ jobs:
           cache: 'npm'
       - run: npm ci
       - name: Run Test
-        run: npx nx affected --target=test --base=remotes/origin/master --head=HEAD
+        run: npx nx affected --target=test --base=remotes/origin/main --head=HEAD
   prepare-matrix:
     runs-on: ubuntu-latest
     outputs:
@@ -60,7 +60,7 @@ jobs:
       - run: npm ci
       - name: Create affected packages matrix
         id: set-matrix
-        run: echo "matrix=$(npx nx show projects --affected --with-target stryker --base=remotes/origin/master --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
+        run: echo "matrix=$(npx nx show projects --affected --base=remotes/origin/main --head=HEAD | sed 's/\/$//' | jq -R -s -c 'split("\n")[:-1]')" >> $GITHUB_OUTPUT
   add-label:
     name: Create labels based on commits
     runs-on: ubuntu-latest
