@@ -43,8 +43,6 @@ Every package includes the following tasks:
 
 `test`: Runs all the unit tests.
 
-`stryker`: Runs all the mutation tests using [Stryker](https://stryker-mutator.io/docs/).
-
 `build`: Builds the package in both CommonJS (`cjs`) and ESM (`esm`) formats.
 
 ### Developing

@@ -59,19 +59,19 @@ jobs:
           done
 
       - name: Bump version Utils
-        run: npx nx run utils:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run utils:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch main
 
       - name: Bump version Core
-        run: npx nx run core:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run core:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch main
 
       - name: Bump version Events
-        run: npx nx run events:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run events:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch main
 
       - name: Bump version Personalize
-        run: npx nx run personalize:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run personalize:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch main
 
       - name: Bump version Search
-        run: npx nx run search:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch master
+        run: npx nx run search:version --verbose --trackDeps --releaseAs=${{inputs.release_type}} --preid=rc --skipRootChangelog --skipCommit --baseBranch main
 
       - name: Get new release version
         if: ${{ github.event.inputs.dryRun == 'false' }}
