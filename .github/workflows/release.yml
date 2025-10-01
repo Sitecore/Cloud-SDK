@@ -131,6 +131,7 @@ jobs:
   publish-npm-packages:
     name: 'Publish packages to NPM registry'
     runs-on: ubuntu-latest
+    environment: Publish
     strategy:
       matrix:
         package-folder: [utils, core, events, personalize, search]
