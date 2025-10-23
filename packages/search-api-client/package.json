@@ -20,9 +20,9 @@
     "build:es": "tsc -b ."
   },
   "dependencies": {
-    "@sitecore-cloudsdk/core": "^0.4.4",
-    "@sitecore-cloudsdk/events": "^0.4.4",
-    "@sitecore-cloudsdk/utils": "^0.4.4"
+    "@sitecore-cloudsdk/core": "^0.4.5-rc.0",
+    "@sitecore-cloudsdk/events": "^0.4.5-rc.0",
+    "@sitecore-cloudsdk/utils": "^0.4.5-rc.0"
   },
   "files": [
     "dist",
