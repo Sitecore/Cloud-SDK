@@ -89,6 +89,34 @@ describe('sideEffects', () => {
     });
     jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({
       settings: {
+        webPersonalization: { async: true, defer: false, language: 'en' }
+      }
+    } as any);
+
+    const appendScriptWithAttributesMock = jest.spyOn(utilsModule, 'appendScriptWithAttributes');
+
+    global.window.scCloudSDK = undefined as any;
+    expect(global.window.scCloudSDK).toBeUndefined();
+    await sideEffects();
+    expect(global.window.scCloudSDK.personalize).toBeDefined();
+    expect(global.window.scCloudSDK.personalize.version).toEqual(PACKAGE_VERSION);
+    expect(global.window.scCloudSDK.personalize.settings).toEqual({ async: true, defer: false, language: 'en' });
+    expect(global.window.scCloudSDK.personalize.personalize).toBeDefined();
+    expect(appendScriptWithAttributesMock).toHaveBeenCalledWith({ async: true, src: 'https://test' });
+    expect(debugMock).toHaveBeenCalled();
+    expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
+    expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
+  });
+
+  // eslint-disable-next-line max-len
+  it('should add the library properties to window.scCloudSDK object and inject the script without language', async () => {
+    jest.spyOn(getCdnUrl, 'getCdnUrl').mockResolvedValueOnce('https://test');
+    jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValue('test');
+    jest.spyOn(internal, 'getCloudSDKSettingsBrowser').mockImplementation(() => {
+      return { cookieSettings: { name: { browserId: 'bid' } } } as any;
+    });
+    jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({
+      settings: {
         webPersonalization: { async: true, defer: false }
       }
     } as any);
@@ -107,6 +135,7 @@ describe('sideEffects', () => {
     expect(debugMock).toHaveBeenLastCalledWith(PERSONALIZE_NAMESPACE);
     expect(debugMock.mock.results[0].value.mock.calls[0][0]).toBe('personalizeClient library initialized');
   });
+
   it('should not inject the script if the getCdnUrl returns null', async () => {
     jest.spyOn(getCdnUrl, 'getCdnUrl').mockResolvedValueOnce(null);
     jest.spyOn(internal, 'getEnabledPackageBrowser').mockReturnValue({
