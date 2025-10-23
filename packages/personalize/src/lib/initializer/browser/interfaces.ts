@@ -1,5 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-export type WebPersonalizationSettings = { async: boolean; defer: boolean };
+export type WebPersonalizationSettings = { async: boolean; defer: boolean; language?: string };
 
 export interface BrowserSettings {
   webPersonalization?: boolean | Partial<WebPersonalizationSettings>;

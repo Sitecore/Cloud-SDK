@@ -69,7 +69,8 @@ export function addPersonalize(
 
     webPersonalization = {
       async: (settings.webPersonalization as WebPersonalizationSettings).async ?? true,
-      defer: (settings.webPersonalization as WebPersonalizationSettings).defer ?? false
+      defer: (settings.webPersonalization as WebPersonalizationSettings).defer ?? false,
+      language: (settings.webPersonalization as WebPersonalizationSettings).language ?? undefined
     };
   }
 
