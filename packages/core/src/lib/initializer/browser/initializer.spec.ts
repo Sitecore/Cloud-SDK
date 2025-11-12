@@ -45,7 +45,7 @@ const mockSettingsParamsInternal: Settings = {
     domain: 'cDomain',
     enableBrowserCookie: true,
     expiryDays: 730,
-    name: { browserId: `${COOKIE_NAME_PREFIX}123` },
+    name: { browserId: `${COOKIE_NAME_PREFIX}rid` },
     path: '/'
   },
   siteName: '456',
@@ -131,7 +131,7 @@ describe('initializer browser', () => {
       expect(result.cookieSettings.enableBrowserCookie).toBe(false);
       expect(result.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       expect(result.cookieSettings.path).toBe('/');
-      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}123`);
+      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}rid`);
       expect(result.sitecoreEdgeUrl).toBe(SITECORE_EDGE_URL);
     });
   });
@@ -245,7 +245,7 @@ describe('initializer browser', () => {
       mockSettingsParamsPublic.enableBrowserCookie = true;
 
       const debugMock = debug as unknown as jest.Mock;
-      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
+      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}rid`;
       const expectedBrowserIdValue = 'bid_value';
 
       jest.spyOn(getDefaultCookieAttributes, 'getDefaultCookieAttributes').mockReturnValueOnce(mockCookieAttributes);
@@ -271,7 +271,7 @@ describe('initializer browser', () => {
     it(`should NOT call 'debug' third-party lib with 'sitecore-cloudsdk:core' as a namespace 
       when there are enabledPackages`, async () => {
       const debugMock = debug as unknown as jest.Mock;
-      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
+      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}rid`;
       const expectedBrowserIdValue = 'bid_value';
 
       const getDefaultCookieAttributesSpy = jest
@@ -303,7 +303,7 @@ describe('initializer browser', () => {
     });
 
     it('should create the cookie and add it to document.cookie', async () => {
-      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}123`;
+      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}rid`;
       const expectedBrowserIdValue = 'bid_value';
 
       const getDefaultCookieAttributesSpy = jest
@@ -338,7 +338,7 @@ describe('initializer browser', () => {
     it(`should not create a browserId cookie if cookieName exists`, async () => {
       const getCookieSpy = jest
         .spyOn(utils, 'getCookie')
-        .mockReturnValueOnce({ name: `${COOKIE_NAME_PREFIX}123`, value: 'bid_value' });
+        .mockReturnValueOnce({ name: `${COOKIE_NAME_PREFIX}rid`, value: 'bid_value' });
 
       const fetchBrowserIdFromEdgeProxySpy = jest
         .spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy')

@@ -106,7 +106,7 @@ export class CloudSDKServerInitializer {
         enableServerCookie: enableServerCookie ?? false,
         expiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
         name: {
-          browserId: `${COOKIE_NAME_PREFIX}${sitecoreEdgeContextId}`
+          browserId: `${COOKIE_NAME_PREFIX}rid`
         },
         path: cookiePath || '/'
       },
