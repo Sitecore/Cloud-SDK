@@ -16,7 +16,13 @@ import {
   isNextJsMiddlewareResponse
 } from '@sitecore-cloudsdk/utils';
 import { fetchBrowserIdFromEdgeProxy } from '../../browser-id/fetch-browser-id-from-edge-proxy';
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
+import {
+  BROWSER_ID_COOKIE_NAME,
+  COOKIE_NAME_PREFIX,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  ErrorMessages,
+  SITECORE_EDGE_URL
+} from '../../consts';
 import { getCookieValueFromMiddlewareRequest } from '../../cookie/get-cookie-value-from-middleware-request';
 import { getDefaultCookieAttributes } from '../../cookie/get-default-cookie-attributes';
 import { debug } from '../../debug/debug';
@@ -106,7 +112,7 @@ export class CloudSDKServerInitializer {
         enableServerCookie: enableServerCookie ?? false,
         expiryDays: cookieExpiryDays || DEFAULT_COOKIE_EXPIRY_DAYS,
         name: {
-          browserId: `${COOKIE_NAME_PREFIX}rid`
+          browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`
         },
         path: cookiePath || '/'
       },

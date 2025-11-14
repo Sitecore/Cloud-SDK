@@ -1,7 +1,13 @@
 import debug from 'debug';
 import * as utils from '@sitecore-cloudsdk/utils';
 import * as fetchBrowserIdFromEdgeProxy from '../../browser-id/fetch-browser-id-from-edge-proxy';
-import { COOKIE_NAME_PREFIX, DEFAULT_COOKIE_EXPIRY_DAYS, ErrorMessages, SITECORE_EDGE_URL } from '../../consts';
+import {
+  BROWSER_ID_COOKIE_NAME,
+  COOKIE_NAME_PREFIX,
+  DEFAULT_COOKIE_EXPIRY_DAYS,
+  ErrorMessages,
+  SITECORE_EDGE_URL
+} from '../../consts';
 import * as getCookieValueFromMiddlewareRequestModule from '../../cookie/get-cookie-value-from-middleware-request';
 import * as getDefaultCookieAttributes from '../../cookie/get-default-cookie-attributes';
 import { CORE_NAMESPACE } from '../../debug/namespaces';
@@ -44,7 +50,7 @@ describe('initializer server', () => {
       domain: 'cDomain',
       enableServerCookie: true,
       expiryDays: 730,
-      name: { browserId: `${COOKIE_NAME_PREFIX}rid` },
+      name: { browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}` },
       path: '/'
     },
     siteName: '456',
@@ -77,7 +83,7 @@ describe('initializer server', () => {
       expect(result.cookieSettings.enableServerCookie).toBe(false);
       expect(result.cookieSettings.expiryDays).toBe(DEFAULT_COOKIE_EXPIRY_DAYS);
       expect(result.cookieSettings.path).toBe('/');
-      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}rid`);
+      expect(result.cookieSettings.name.browserId).toBe(`${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`);
       expect(result.sitecoreEdgeUrl).toBe(SITECORE_EDGE_URL);
     });
   });
@@ -498,7 +504,7 @@ describe('getCloudSDKSettings', () => {
       domain: 'cDomain',
       enableServerCookie: true,
       expiryDays: 730,
-      name: { browserId: `${COOKIE_NAME_PREFIX}rid` },
+      name: { browserId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}` },
       path: '/'
     },
     siteName: '456',
