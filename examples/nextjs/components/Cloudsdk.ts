@@ -22,7 +22,7 @@ export function CloudSDKComponent() {
     })
       .addEvents()
       .addSearch()
-      .addPersonalize({ webPersonalization: { language: 'en' } })
+      .addPersonalize({ enablePersonalizeCookie: true, webPersonalization: { language: 'en' } })
       .initialize();
   }, []);
 
