@@ -1,6 +1,6 @@
 {
   "name": "@sitecore-cloudsdk/core",
-  "version": "0.5.6",
+  "version": "0.5.7-rc.0",
   "license": "Apache-2.0",
   "exports": {
     "./browser": {
@@ -20,7 +20,7 @@
     }
   },
   "dependencies": {
-    "@sitecore-cloudsdk/utils": "^0.5.6",
+    "@sitecore-cloudsdk/utils": "^0.5.7-rc.0",
     "debug": "^4.3.4"
   },
   "scripts": {
