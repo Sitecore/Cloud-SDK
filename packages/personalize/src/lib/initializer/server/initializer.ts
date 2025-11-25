@@ -1,6 +1,5 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
-  BROWSER_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   debug,
   enabledPackagesServer as enabledPackages,
@@ -37,7 +36,7 @@ export function addPersonalize(
 ): CloudSDKServerInitializer {
   const cookieSettings = {
     name: {
-      guestId: `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}_personalize`
+      guestId: `${COOKIE_NAME_PREFIX}${getCloudSDKSettingsServer().sitecoreEdgeContextId}_personalize`
     }
   };
 
