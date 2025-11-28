@@ -88,7 +88,7 @@ describe('addPersonalize', () => {
     expect(PackageInitializerServer).toHaveBeenCalledTimes(1);
     expect(PackageInitializerServer).toHaveBeenCalledWith({
       settings: {
-        cookieSettings: { name: { guestId: 'sc_rid_personalize' } },
+        cookieSettings: { name: { guestId: 'sc_undefined_personalize' } },
         enablePersonalizeCookie: false
       },
       sideEffects: initializerModule.sideEffects

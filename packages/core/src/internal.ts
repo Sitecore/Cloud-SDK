@@ -10,7 +10,6 @@ export { debug, processDebugResponse } from './lib/debug/debug';
 export {
   API_VERSION,
   COOKIE_NAME_PREFIX,
-  BROWSER_ID_COOKIE_NAME,
   DAILY_SECONDS,
   DEFAULT_COOKIE_EXPIRY_DAYS,
   LIBRARY_VERSION,
