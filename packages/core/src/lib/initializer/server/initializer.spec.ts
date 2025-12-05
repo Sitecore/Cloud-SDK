@@ -261,7 +261,7 @@ describe('initializer server', () => {
         const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
         global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
-        const mockBrowserIdCookie = { name: 'sc_bid', value: 'browser_id_from_proxy' };
+        const mockBrowserIdCookie = { name: 'sc_cid', value: 'browser_id_from_proxy' };
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
@@ -306,9 +306,9 @@ describe('initializer server', () => {
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_bid', '123456789', { test: true });
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_cid', '123456789', { test: true });
 
-        expect(request.headers.cookie).toBe('sc_bid=123456789');
+        expect(request.headers.cookie).toBe('sc_cid=123456789');
         expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_bid=123456789');
       });
 
@@ -340,7 +340,7 @@ describe('initializer server', () => {
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_bid', 'browser_id_from_proxy', { test: true });
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_cid', 'browser_id_from_proxy', { test: true });
         expect(initializerModule.getCookiesValuesFromEdge()).toEqual({
           browserId: 'browser_id_from_proxy',
           guestId: 'guest_id_from_proxy'
@@ -374,7 +374,7 @@ describe('initializer server', () => {
 
         await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
 
-        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_bid', 'browser_id_from_proxy', { test: true });
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_cid', 'browser_id_from_proxy', { test: true });
         expect(initializerModule.getCookiesValuesFromEdge()).toEqual({
           browserId: 'browser_id_from_proxy',
           guestId: 'guest_id_from_proxy'
