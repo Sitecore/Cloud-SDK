@@ -2,9 +2,8 @@
 
 This file was generated using [@jscutlery/semver](https://github.com/jscutlery/semver).
 
-## [0.6.0-rc.0](https://github.com/Sitecore/Cloud-SDK/compare/personalize-0.5.7...personalize-0.6.0-rc.0) (2025-12-05)
+## [0.6.0-rc.1](https://github.com/Sitecore/Cloud-SDK/compare/personalize-0.6.0-rc.0...personalize-0.6.0-rc.1) (2025-12-15)
 
 ### Bug Fixes
 
-- rename cookie name ([#24](https://github.com/Sitecore/Cloud-SDK/issues/24)) ([161d7d2](https://github.com/Sitecore/Cloud-SDK/commit/161d7d28026a431e46578db79ff7aff82f83c743))
-- reverted cookie rename ([#22](https://github.com/Sitecore/Cloud-SDK/issues/22)) ([adff89f](https://github.com/Sitecore/Cloud-SDK/commit/adff89f6d328854a59040302c781559a93733c94))
+- fixed relative imports on personalize ([#26](https://github.com/Sitecore/Cloud-SDK/issues/26)) ([aa45675](https://github.com/Sitecore/Cloud-SDK/commit/aa45675a213774f56519b5b8c6112a66381e38b2))
