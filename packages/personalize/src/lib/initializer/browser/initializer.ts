@@ -1,7 +1,7 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
-import { BROWSER_ID_COOKIE_NAME } from 'packages/core/src/lib/consts';
 import { CloudSDKBrowserInitializer } from '@sitecore-cloudsdk/core/browser';
 import {
+  BROWSER_ID_COOKIE_NAME,
   COOKIE_NAME_PREFIX,
   debug,
   enabledPackagesBrowser as enabledPackages,
