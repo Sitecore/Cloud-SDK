@@ -2,16 +2,27 @@
   "name": "@sitecore-cloudsdk/search",
   "version": "0.6.0-rc.0",
   "license": "Apache-2.0",
+  "type": "module",
   "exports": {
     "./server": {
-      "import": "./server.js",
-      "require": "./server.cjs",
-      "types": "./server.d.ts"
+      "import": {
+        "types": "./server.d.ts",
+        "default": "./server.js"
+      },
+      "require": {
+        "types": "./server.d.ts",
+        "default": "./server.cjs"
+      }
     },
     "./browser": {
-      "import": "./browser.js",
-      "require": "./browser.cjs",
-      "types": "./browser.d.ts"
+      "import": {
+        "types": "./browser.d.ts",
+        "default": "./browser.js"
+      },
+      "require": {
+        "types": "./browser.d.ts",
+        "default": "./browser.cjs"
+      }
     }
   },
   "scripts": {
