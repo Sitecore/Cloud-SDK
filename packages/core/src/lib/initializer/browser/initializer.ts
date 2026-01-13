@@ -129,6 +129,25 @@ export class CloudSDKBrowserInitializer {
       cloudSDKSettings.cookieSettings.expiryDays,
       cloudSDKSettings.cookieSettings.domain
     );
+    const legacyCookie = getCookie(
+      window.document.cookie,
+      `${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}`
+    );
+
+    if (legacyCookie) {
+      document.cookie = createCookieString(
+        cloudSDKSettings.cookieSettings.name.browserId,
+        legacyCookie.value,
+        attributes
+      );
+      // Remove legacy cookie
+      document.cookie = createCookieString(`${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}`, '', {
+        ...attributes,
+        maxAge: 0
+      });
+
+      return;
+    }
 
     const browserIdCookie = getCookie(window.document.cookie, cloudSDKSettings.cookieSettings.name.browserId);
 
