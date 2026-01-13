@@ -143,6 +143,10 @@ export class CloudSDKServerInitializer {
     if (legacyBrowserIdCookie) {
       request.cookies.set(browserIdName, legacyBrowserIdCookie, defaultCookieAttributes);
       response.cookies.set(browserIdName, legacyBrowserIdCookie, defaultCookieAttributes);
+      // Remove legacy cookie by setting maxAge to 0
+      request.cookies.set(legacyBrowserIdName, '', { ...defaultCookieAttributes, maxAge: 0 });
+      response.cookies.set(legacyBrowserIdName, '', { ...defaultCookieAttributes, maxAge: 0 });
+
       return;
     }
     let browserIdCookieValue = getCookieValueFromMiddlewareRequest(request, browserIdName);
@@ -172,7 +176,6 @@ export class CloudSDKServerInitializer {
     const browserIdName = cloudSDKSettings.cookieSettings.name.browserId;
     const legacyBrowserIdName = `${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}`;
     const legacyBrowserIdCookie = getCookieServerSide(request.headers.cookie, legacyBrowserIdName);
-
     if (legacyBrowserIdCookie) {
       request.headers.cookie = request.headers.cookie?.replace(legacyBrowserIdCookie.name, browserIdName);
       response.setHeader('Set-Cookie', [

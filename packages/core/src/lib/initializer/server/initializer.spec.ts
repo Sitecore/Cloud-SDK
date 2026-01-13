@@ -279,6 +279,7 @@ describe('initializer server', () => {
 
       it('should migrate legacy cookie to new browserId cookie when legacy cookie exists', async () => {
         mockSettingsParamsPublic.enableServerCookie = true;
+        const legacyCookieName = `${COOKIE_NAME_PREFIX}123`;
         const browserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
         const legacyBrowserIdValue = 'legacy_browser_id_value';
 
@@ -297,9 +298,14 @@ describe('initializer server', () => {
         // Should not fetch from edge proxy
         expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
 
-        // Should set the new browserId cookie with legacy value in both request and response
+        // Should set the new browserId cookie with legacy value in request
         expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, legacyBrowserIdValue, { test: true });
-        expect(setSpy).toHaveBeenCalledTimes(1);
+
+        // Should also set the legacy cookie with maxAge: 0 to delete it in request
+        expect(setSpy).toHaveBeenCalledWith(legacyCookieName, '', { maxAge: 0, test: true });
+
+        // Total of 2 calls on request.cookies.set: 1 for new cookie, 1 for deleting legacy
+        expect(setSpy).toHaveBeenCalledTimes(2);
       });
 
       it('should not fetch from edge proxy when legacy cookie does not exist but browserId cookie exists', async () => {
