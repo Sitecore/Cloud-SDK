@@ -132,9 +132,19 @@ export class CloudSDKServerInitializer {
   private async handleNextJsMiddlewareCookie() {
     const request = this.request as MiddlewareRequest;
     const response = this.response as MiddlewareNextResponse;
+    const defaultCookieAttributes = getDefaultCookieAttributes(
+      cloudSDKSettings.cookieSettings.expiryDays,
+      cloudSDKSettings.cookieSettings.domain
+    );
 
     const { browserId: browserIdName } = cloudSDKSettings.cookieSettings.name;
-
+    const legacyBrowserIdName = `${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}`;
+    const legacyBrowserIdCookie = getCookieValueFromMiddlewareRequest(request, legacyBrowserIdName);
+    if (legacyBrowserIdCookie) {
+      request.cookies.set(browserIdName, legacyBrowserIdCookie, defaultCookieAttributes);
+      response.cookies.set(browserIdName, legacyBrowserIdCookie, defaultCookieAttributes);
+      return;
+    }
     let browserIdCookieValue = getCookieValueFromMiddlewareRequest(request, browserIdName);
 
     if (!browserIdCookieValue) {
@@ -147,10 +157,6 @@ export class CloudSDKServerInitializer {
       browserIdCookieValue = cookieValues.browserId;
       cookiesValuesFromEdge = cookieValues;
     }
-    const defaultCookieAttributes = getDefaultCookieAttributes(
-      cloudSDKSettings.cookieSettings.expiryDays,
-      cloudSDKSettings.cookieSettings.domain
-    );
 
     request.cookies.set(browserIdName, browserIdCookieValue, defaultCookieAttributes);
     response.cookies.set(browserIdName, browserIdCookieValue, defaultCookieAttributes);
@@ -159,16 +165,24 @@ export class CloudSDKServerInitializer {
   private async handleHttpCookie() {
     const request = this.request as HttpRequest;
     const response = this.response as HttpResponse;
-
-    const browserIdName = cloudSDKSettings.cookieSettings.name.browserId;
-
-    const browserIdCookie = getCookieServerSide(request.headers.cookie, browserIdName);
-    let browserIdCookieValue;
-
     const defaultCookieAttributes = getDefaultCookieAttributes(
       cloudSDKSettings.cookieSettings.expiryDays,
       cloudSDKSettings.cookieSettings.domain
     );
+    const browserIdName = cloudSDKSettings.cookieSettings.name.browserId;
+    const legacyBrowserIdName = `${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}`;
+    const legacyBrowserIdCookie = getCookieServerSide(request.headers.cookie, legacyBrowserIdName);
+
+    if (legacyBrowserIdCookie) {
+      request.headers.cookie = request.headers.cookie?.replace(legacyBrowserIdCookie.name, browserIdName);
+      response.setHeader('Set-Cookie', [
+        createCookieString(browserIdName, legacyBrowserIdCookie.value, defaultCookieAttributes),
+        createCookieString(legacyBrowserIdName, '', { ...defaultCookieAttributes, maxAge: 0 })
+      ]);
+      return;
+    }
+    const browserIdCookie = getCookieServerSide(request.headers.cookie, browserIdName);
+    let browserIdCookieValue;
 
     if (!browserIdCookie) {
       const cookieValues = await fetchBrowserIdFromEdgeProxy(

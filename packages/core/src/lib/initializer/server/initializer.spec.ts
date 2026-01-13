@@ -241,7 +241,9 @@ describe('initializer server', () => {
         mockSettingsParamsPublic.enableServerCookie = true;
         const browserIdCookieName = `sc_${BROWSER_ID_COOKIE_NAME}`;
 
-        getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce('browser_id_from_proxy');
+        getCookieValueFromMiddlewareRequestSpy
+          .mockReturnValueOnce(undefined) // legacy cookie doesn't exist
+          .mockReturnValueOnce('browser_id_from_proxy'); // browserId cookie exists
         isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
         isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
 
@@ -257,7 +259,7 @@ describe('initializer server', () => {
           json: () => Promise.resolve(mockFetchBrowserIdFromEPResponse)
         });
 
-        getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce(undefined);
+        getCookieValueFromMiddlewareRequestSpy.mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
         const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
         global.fetch = jest.fn().mockImplementationOnce(() => mockFetch);
 
@@ -273,6 +275,57 @@ describe('initializer server', () => {
 
         expect(setSpy).toHaveBeenCalledTimes(1);
         expect(setSpy).toHaveBeenCalledWith(mockBrowserIdCookie.name, mockBrowserIdCookie.value, { test: true });
+      });
+
+      it('should migrate legacy cookie to new browserId cookie when legacy cookie exists', async () => {
+        mockSettingsParamsPublic.enableServerCookie = true;
+        const browserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
+        const legacyBrowserIdValue = 'legacy_browser_id_value';
+
+        // First call checks for legacy cookie, second call checks for browserId cookie
+        getCookieValueFromMiddlewareRequestSpy
+          .mockReturnValueOnce(legacyBrowserIdValue) // legacy cookie exists
+          .mockReturnValueOnce(undefined); // browserId cookie doesn't exist yet
+
+        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
+        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
+
+        const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+
+        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
+
+        // Should not fetch from edge proxy
+        expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
+
+        // Should set the new browserId cookie with legacy value in both request and response
+        expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, legacyBrowserIdValue, { test: true });
+        expect(setSpy).toHaveBeenCalledTimes(1);
+      });
+
+      it('should not fetch from edge proxy when legacy cookie does not exist but browserId cookie exists', async () => {
+        mockSettingsParamsPublic.enableServerCookie = true;
+        const browserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
+        const existingBrowserIdValue = 'existing_browser_id_value';
+
+        // Reset and reconfigure the spy
+        getCookieValueFromMiddlewareRequestSpy.mockReset();
+        // First call checks for legacy cookie (returns undefined), second call checks for browserId cookie
+        getCookieValueFromMiddlewareRequestSpy
+          .mockReturnValueOnce(undefined) // legacy cookie doesn't exist
+          .mockReturnValueOnce(existingBrowserIdValue); // browserId cookie exists
+
+        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(true);
+        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(true);
+
+        const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+
+        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
+
+        // Should not fetch from edge proxy since cookie exists
+        expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
+
+        // Should set the existing cookie value
+        expect(setSpy).toHaveBeenCalledWith(browserIdCookieName, existingBrowserIdValue, { test: true });
       });
     });
 
@@ -309,7 +362,7 @@ describe('initializer server', () => {
         expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_cid', '123456789', { test: true });
 
         expect(request.headers.cookie).toBe('sc_cid=123456789');
-        expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', 'sc_bid=123456789');
+        expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', ['sc_bid=123456789', undefined]);
       });
 
       it(`should set the browser ID in the request and response when the cookie is not present`, async () => {
@@ -381,6 +434,100 @@ describe('initializer server', () => {
         });
         // This should test the uncovered line 181 where cookie header is falsy
         expect(request.headers.cookie).toBe('sc_bid=browser_id_from_proxy');
+      });
+
+      it('should migrate legacy cookie to new browserId cookie and remove legacy cookie', async () => {
+        const legacyCookieName = `${COOKIE_NAME_PREFIX}123`;
+        const browserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
+        const legacyBrowserIdValue = 'legacy_browser_id_value';
+
+        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
+        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
+        isHttpRequestSpy.mockReturnValueOnce(true);
+        isHttpResponseSpy.mockReturnValueOnce(true);
+
+        request = {
+          headers: {
+            cookie: `${legacyCookieName}=${legacyBrowserIdValue}`
+          }
+        };
+
+        response = {
+          setHeader: jest.fn()
+        };
+
+        // First call checks for legacy cookie, second call checks for browserId cookie
+        jest
+          .spyOn(utils, 'getCookieServerSide')
+          .mockReturnValueOnce({ name: legacyCookieName, value: legacyBrowserIdValue });
+
+        const createCookieStringSpy = jest
+          .spyOn(utils, 'createCookieString')
+          .mockReturnValueOnce(`${browserIdCookieName}=${legacyBrowserIdValue}`)
+          .mockReturnValueOnce(`${legacyCookieName}=; Max-Age=0`);
+
+        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
+
+        // Should create new browserId cookie with legacy value
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, browserIdCookieName, legacyBrowserIdValue, {
+          test: true
+        });
+
+        // Should delete legacy cookie
+        expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, legacyCookieName, '', { maxAge: 0, test: true });
+
+        // Should set both cookies in response
+        expect(response.setHeader).toHaveBeenCalledWith('Set-Cookie', [
+          `${browserIdCookieName}=${legacyBrowserIdValue}`,
+          `${legacyCookieName}=; Max-Age=0`
+        ]);
+
+        // Request cookie header should be updated with new cookie name
+        expect(request.headers.cookie).toBe(`${browserIdCookieName}=${legacyBrowserIdValue}`);
+      });
+
+      it('should not fetch from edge proxy when legacy cookie does not exist but browserId cookie exists', async () => {
+        const browserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
+        const existingBrowserIdValue = 'existing_browser_id_value';
+
+        isNextJsMiddlewareRequestSpy.mockReturnValueOnce(false);
+        isNextJsMiddlewareResponseSpy.mockReturnValueOnce(false);
+        isHttpRequestSpy.mockReturnValueOnce(true);
+        isHttpResponseSpy.mockReturnValueOnce(true);
+
+        request = {
+          headers: {
+            cookie: `${browserIdCookieName}=${existingBrowserIdValue}`
+          }
+        };
+
+        response = {
+          setHeader: jest.fn()
+        };
+
+        // First call checks for legacy cookie (returns undefined), second call checks for browserId cookie
+        jest
+          .spyOn(utils, 'getCookieServerSide')
+          .mockReturnValueOnce(undefined)
+          .mockReturnValueOnce({ name: browserIdCookieName, value: existingBrowserIdValue });
+
+        const createCookieStringSpy = jest
+          .spyOn(utils, 'createCookieString')
+          .mockReturnValueOnce(`${browserIdCookieName}=${existingBrowserIdValue}`);
+
+        const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+
+        await new initializerModule.CloudSDKServerInitializer(request, response, mockSettingsParamsPublic).initialize();
+
+        // Should not fetch from edge proxy since cookie exists
+        expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
+
+        // Should set the existing cookie in response
+        expect(createCookieStringSpy).toHaveBeenCalledWith(browserIdCookieName, existingBrowserIdValue, { test: true });
+        expect(response.setHeader).toHaveBeenCalledWith(
+          'Set-Cookie',
+          `${browserIdCookieName}=${existingBrowserIdValue}`
+        );
       });
     });
 
