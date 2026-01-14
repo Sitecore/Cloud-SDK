@@ -326,7 +326,7 @@ describe('initializer browser', () => {
       await new Promise((resolve) => setTimeout(resolve, 0));
 
       expect(instance['createCookies']).toHaveBeenCalled();
-      expect(getBrowserIdCookieSpy).toHaveBeenCalledTimes(1);
+      expect(getBrowserIdCookieSpy).toHaveBeenCalledTimes(2);
       expect(getDefaultCookieAttributesSpy).toHaveBeenCalledTimes(1);
       expect(createCookieStringSpy).toHaveBeenCalledTimes(1);
       expect(document.cookie).toBe(
@@ -386,6 +386,30 @@ describe('initializer browser', () => {
         sitecoreEdgeContextId: '123',
         sitecoreEdgeUrl: SITECORE_EDGE_URL
       });
+    });
+
+    it('should not fetch from edge proxy when legacy cookie does not exist but browserId cookie is set', async () => {
+      mockSettingsParamsPublic.enableBrowserCookie = true;
+      const expectedBrowserIdCookieName = `${COOKIE_NAME_PREFIX}${BROWSER_ID_COOKIE_NAME}`;
+
+      const getCookieSpy = jest
+        .spyOn(utils, 'getCookie')
+        .mockReturnValueOnce(undefined) // legacy cookie doesn't exist
+        .mockReturnValueOnce({ name: expectedBrowserIdCookieName, value: 'existing_bid_value' }); // browserId exists
+
+      const createCookieStringSpy = jest.spyOn(utils, 'createCookieString');
+      const fetchBrowserIdFromEdgeProxySpy = jest.spyOn(fetchBrowserIdFromEdgeProxy, 'fetchBrowserIdFromEdgeProxy');
+
+      const instance = new initializerModule.CloudSDKBrowserInitializer(mockSettingsParamsPublic);
+      instance.initialize();
+
+      await new Promise((resolve) => setTimeout(resolve, 0));
+
+      expect(getCookieSpy).toHaveBeenCalledTimes(2);
+      expect(getCookieSpy).toHaveBeenNthCalledWith(1, window.document.cookie, `${COOKIE_NAME_PREFIX}123`);
+      expect(getCookieSpy).toHaveBeenNthCalledWith(2, window.document.cookie, expectedBrowserIdCookieName);
+      expect(createCookieStringSpy).not.toHaveBeenCalled();
+      expect(fetchBrowserIdFromEdgeProxySpy).not.toHaveBeenCalled();
     });
   });
 });

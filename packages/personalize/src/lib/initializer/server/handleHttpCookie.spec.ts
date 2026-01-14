@@ -4,6 +4,8 @@ import * as handleHttpCookieModule from './handleHttpCookie';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
+  COOKIE_NAME_PREFIX: 'sc_',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   getCookieServerSide: jest.fn(),
   getCookiesValuesFromEdgeServer: jest.fn(),
@@ -63,6 +65,7 @@ describe('handleHttpCookie', () => {
 
     jest
       .spyOn(utilsModule, 'getCookieServerSide')
+      .mockReturnValueOnce(undefined) // No legacy cookie
       .mockReturnValueOnce({ name: 'sc_123_personalize', value: 'guest_id_from_proxy' })
       .mockReturnValueOnce(undefined);
 
@@ -94,7 +97,11 @@ describe('handleHttpCookie', () => {
       setHeader: jest.fn()
     };
 
-    jest.spyOn(utilsModule, 'getCookieServerSide').mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
+    jest
+      .spyOn(utilsModule, 'getCookieServerSide')
+      .mockReturnValueOnce(undefined) // No legacy cookie
+      .mockReturnValueOnce(undefined)
+      .mockReturnValueOnce(undefined);
     jest
       .spyOn(internalModule, 'getCookiesValuesFromEdgeServer')
       .mockReturnValueOnce({ browserId: 'browser_id_from_proxy', guestId: 'guest_id_from_proxy' } as any);
@@ -132,6 +139,7 @@ describe('handleHttpCookie', () => {
       .mockReturnValueOnce({ browserId: '', guestId: '' } as any);
     jest
       .spyOn(utilsModule, 'getCookieServerSide')
+      .mockReturnValueOnce(undefined) // No legacy cookie
       .mockReturnValueOnce(undefined)
       .mockReturnValueOnce({ name: 'sc_123', value: 'browser_id_from_proxy' });
 
@@ -168,12 +176,58 @@ describe('handleHttpCookie', () => {
       setHeader: jest.fn()
     };
 
-    jest.spyOn(utilsModule, 'getCookieServerSide').mockReturnValueOnce(undefined).mockReturnValueOnce(undefined);
+    jest
+      .spyOn(utilsModule, 'getCookieServerSide')
+      .mockReturnValueOnce(undefined) // No legacy cookie
+      .mockReturnValueOnce(undefined)
+      .mockReturnValueOnce(undefined);
     jest.spyOn(internalModule, 'getCookiesValuesFromEdgeServer').mockReturnValueOnce(undefined as any);
 
     await handleHttpCookieModule.handleHttpCookie(mockRequest, mockResponse, mockSettings, mockCloudSDKSettings);
 
     expect(mockRequest.headers.cookie).toBe('');
     expect(mockResponse.setHeader).not.toHaveBeenCalled();
+  });
+
+  it('should migrate legacy guestId cookie when legacy cookie exists', async () => {
+    const legacyGuestIdCookieName = 'sc_context-id_personalize';
+    const mockRequest = {
+      headers: {
+        cookie: `${legacyGuestIdCookieName}=legacy_guest_id_value`
+      }
+    };
+
+    const mockResponse = {
+      setHeader: jest.fn()
+    };
+
+    jest
+      .spyOn(utilsModule, 'getCookieServerSide')
+      .mockReturnValueOnce({ name: legacyGuestIdCookieName, value: 'legacy_guest_id_value' });
+
+    const createCookieStringSpy = jest
+      .spyOn(utilsModule, 'createCookieString')
+      .mockReturnValueOnce('sc_123_personalize=legacy_guest_id_value')
+      .mockReturnValueOnce(`${legacyGuestIdCookieName}=; Max-Age=0`);
+
+    await handleHttpCookieModule.handleHttpCookie(mockRequest, mockResponse, mockSettings, mockCloudSDKSettings);
+
+    expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_123_personalize', 'legacy_guest_id_value', {
+      domain: 'test',
+      maxAge: 123345,
+      path: '/',
+      sameSite: 'None',
+      secure: true
+    });
+    expect(createCookieStringSpy).toHaveBeenNthCalledWith(
+      2,
+      legacyGuestIdCookieName,
+      '',
+      expect.objectContaining({ maxAge: 0 })
+    );
+    expect(mockResponse.setHeader).toHaveBeenCalledWith('Set-Cookie', [
+      'sc_123_personalize=legacy_guest_id_value',
+      `${legacyGuestIdCookieName}=; Max-Age=0`
+    ]);
   });
 });

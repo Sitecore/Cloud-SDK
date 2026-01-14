@@ -1,5 +1,6 @@
 // © Sitecore Corporation A/S. All rights reserved. Sitecore® is a registered trademark of Sitecore Corporation A/S.
 import {
+  COOKIE_NAME_PREFIX,
   getCookiesValuesFromEdgeServer,
   getCookieValueFromMiddlewareRequest,
   getDefaultCookieAttributes,
@@ -17,7 +18,20 @@ export async function handleNextJsMiddlewareCookie(
 ) {
   const middlewareRequest = request as MiddlewareRequest;
   const middlewareResponse = response as MiddlewareNextResponse;
-
+  const defaultCookieAttributes = getDefaultCookieAttributes(
+    cloudSDKSettings.cookieSettings.expiryDays,
+    cloudSDKSettings.cookieSettings.domain
+  );
+  const legacyGuestIdCookieName = `${COOKIE_NAME_PREFIX}${cloudSDKSettings.sitecoreEdgeContextId}_personalize`;
+  const legacyGuestIdCookie = getCookieValueFromMiddlewareRequest(middlewareRequest, legacyGuestIdCookieName);
+  if (legacyGuestIdCookie) {
+    middlewareRequest.cookies.set(settings.cookieSettings.name.guestId, legacyGuestIdCookie, defaultCookieAttributes);
+    middlewareResponse.cookies.set(settings.cookieSettings.name.guestId, legacyGuestIdCookie, defaultCookieAttributes);
+    // Remove legacy cookie by setting maxAge to 0
+    middlewareRequest.cookies.set(legacyGuestIdCookieName, '', { ...defaultCookieAttributes, maxAge: 0 });
+    middlewareResponse.cookies.set(legacyGuestIdCookieName, '', { ...defaultCookieAttributes, maxAge: 0 });
+    return;
+  }
   const cookiesValuesFromEdgeServer = getCookiesValuesFromEdgeServer();
 
   const guestIdCookieValue = getCookieValueFromMiddlewareRequest(
@@ -27,11 +41,6 @@ export async function handleNextJsMiddlewareCookie(
   const browserIdCookieValue = getCookieValueFromMiddlewareRequest(
     middlewareRequest,
     cloudSDKSettings.cookieSettings.name.browserId
-  );
-
-  const defaultCookieAttributes = getDefaultCookieAttributes(
-    cloudSDKSettings.cookieSettings.expiryDays,
-    cloudSDKSettings.cookieSettings.domain
   );
 
   let guestIdValue;

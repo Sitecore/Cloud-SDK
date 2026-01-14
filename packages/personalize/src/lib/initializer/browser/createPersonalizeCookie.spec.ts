@@ -5,6 +5,8 @@ import * as createPersonalizeCookieModule from './createPersonalizeCookie';
 
 jest.mock('@sitecore-cloudsdk/core/internal', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
+  COOKIE_NAME_PREFIX: 'sc_',
+  // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   getCookiesValuesFromEdgeBrowser: jest.fn(),
   getDefaultCookieAttributes: jest.fn(),
@@ -21,6 +23,7 @@ jest.mock('@sitecore-cloudsdk/utils', () => ({
   // eslint-disable-next-line @typescript-eslint/naming-convention
   __esModule: true,
   createCookieString: jest.fn(),
+  getCookie: jest.fn(),
   getCookieValueClientSide: jest.fn()
 }));
 
@@ -47,6 +50,7 @@ describe('createPersonalizeCookie', () => {
   it('should return when guestId cookie exists', async () => {
     const createCookieStringSpy = jest.spyOn(utilsModule, 'createCookieString');
 
+    jest.spyOn(utilsModule, 'getCookie').mockReturnValueOnce(undefined);
     jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce('guest_id').mockReturnValueOnce('');
 
     await createPersonalizeCookieModule.createPersonalizeCookie(mockSettings, mockCloudSDKSettings);
@@ -56,6 +60,7 @@ describe('createPersonalizeCookie', () => {
   it('should return when guestId and browserId cookie exists', async () => {
     const createCookieStringSpy = jest.spyOn(utilsModule, 'createCookieString');
 
+    jest.spyOn(utilsModule, 'getCookie').mockReturnValueOnce(undefined);
     jest
       .spyOn(utilsModule, 'getCookieValueClientSide')
       .mockReturnValueOnce('guest_id')
@@ -69,6 +74,7 @@ describe('createPersonalizeCookie', () => {
     jest
       .spyOn(internalModule, 'getCookiesValuesFromEdgeBrowser')
       .mockReturnValueOnce({ browserId: '', guestId: 'guest_id_from_proxy' } as any);
+    jest.spyOn(utilsModule, 'getCookie').mockReturnValueOnce(undefined);
     jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce('').mockReturnValueOnce('');
 
     const createCookieStringSpy = jest
@@ -87,6 +93,7 @@ describe('createPersonalizeCookie', () => {
       .spyOn(utilsModule, 'getCookieValueClientSide')
       .mockReturnValueOnce('')
       .mockReturnValueOnce('browser_id_from_proxy');
+    jest.spyOn(utilsModule, 'getCookie').mockReturnValueOnce(undefined);
     jest.spyOn(internalModule, 'getCookiesValuesFromEdgeBrowser').mockReturnValueOnce(undefined as any);
 
     const getGuestIdSpy = jest.spyOn(browserModule, 'getGuestId').mockResolvedValueOnce('guest_id_from_proxy');
@@ -103,6 +110,7 @@ describe('createPersonalizeCookie', () => {
 
   // eslint-disable-next-line max-len
   it('should do nothing when guestId cookie, guestId (cached) value and browserId cookie does not exist', async () => {
+    jest.spyOn(utilsModule, 'getCookie').mockReturnValueOnce(undefined);
     jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce('').mockReturnValueOnce('');
 
     jest
@@ -116,5 +124,41 @@ describe('createPersonalizeCookie', () => {
 
     expect(getGuestIdSpy).not.toHaveBeenCalled();
     expect(createCookieStringSpy).not.toHaveBeenCalled();
+  });
+
+  it('should create a guestId cookie when legacy guestId cookie exists', async () => {
+    const mockSettings = {
+      cookieSettings: { name: { guestId: 'sc_cid_personalize' } }
+    } as any;
+    const mockCloudSDKSettings = {
+      cookieSettings: { domain: 'example.com', expiryDays: 7, name: 'sc_123' },
+      siteName: 'spinair.com',
+      sitecoreEdgeContextId: '123',
+      sitecoreEdgeUrl: 'https://sitecore.edge.url'
+    } as any;
+
+    jest
+      .spyOn(utilsModule, 'getCookie')
+      .mockReturnValueOnce({ name: 'sc_123_personalize', value: 'guest_id_from_proxy' });
+    jest.spyOn(utilsModule, 'getCookieValueClientSide').mockReturnValueOnce('guest_id_from_proxy');
+
+    const createCookieStringSpy = jest.spyOn(utilsModule, 'createCookieString');
+
+    await createPersonalizeCookieModule.createPersonalizeCookie(mockSettings, mockCloudSDKSettings);
+
+    expect(createCookieStringSpy).toHaveBeenNthCalledWith(1, 'sc_cid_personalize', 'guest_id_from_proxy', {
+      domain: 'test',
+      maxAge: 123345,
+      path: '/',
+      sameSite: 'None',
+      secure: true
+    });
+    expect(createCookieStringSpy).toHaveBeenNthCalledWith(2, 'sc_123_personalize', '', {
+      domain: 'test',
+      maxAge: 0,
+      path: '/',
+      sameSite: 'None',
+      secure: true
+    });
   });
 });
