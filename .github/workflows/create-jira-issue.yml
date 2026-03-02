@@ -1,12 +1,12 @@
 name: Create Jira Issue
 
-on:
-  issues:
-    types:
-      - opened
-  discussion:
-    types:
-      - created
+# on:
+#  issues:
+#    types:
+#      - opened
+#  discussion:
+#    types:
+#      - created
 
 jobs:
   send_webhook:
