@@ -33,17 +33,18 @@ jobs:
           ISSUE_TYPE_FEEDBACK: ${{ secrets.ISSUE_TYPE_FEEDBACK }}
           ISSUE_TYPE_DOCUMENTATION: ${{ secrets.ISSUE_TYPE_DOCUMENTATION }}
 
+          # User-controlled content passed via env to prevent command injection (never interpolate into script)
+          ISSUE_TITLE_JSON: ${{ toJson(github.event.issue.title || github.event.discussion.title || '') }}
+          ISSUE_DESCRIPTION_JSON: ${{ toJson(github.event.issue.body || github.event.discussion.body || '') }}
+          LABELS_JSON: ${{ toJson(github.event.issue.labels || github.event.discussion.labels || fromJson('[]')) }}
+
         run: |
-          # Determine if the event is an issue or a discussion
-          if [[ -n "${{ github.event.issue }}" ]]; then
-            ISSUE_TITLE="${{ github.event.issue.title }}"
-            ISSUE_DESCRIPTION="${{ github.event.issue.body }}"
-            echo '${{ toJson(github.event.issue.labels) }}' > labels.json
-          elif [[ -n "${{ github.event.discussion }}" ]]; then
-            ISSUE_TITLE="${{ github.event.discussion.title }}"
-            ISSUE_DESCRIPTION="${{ github.event.discussion.body }}"
-            echo '${{ toJson(github.event.discussion.labels) }}' > labels.json
-          else
+          # Decode user-controlled content from JSON (passed via env to avoid injection)
+          ISSUE_TITLE=$(echo "$ISSUE_TITLE_JSON" | jq -r '.')
+          ISSUE_DESCRIPTION=$(echo "$ISSUE_DESCRIPTION_JSON" | jq -r '.')
+          printf '%s' "$LABELS_JSON" > labels.json
+
+          if [[ -z "$ISSUE_TITLE" && -z "$ISSUE_DESCRIPTION" ]]; then
             echo "No issue or discussion found, exiting."
             exit 1
           fi
