@@ -8,6 +8,8 @@ on:
     types:
       - created
 
+permissions: {}
+
 jobs:
   send_webhook:
     runs-on: ubuntu-latest
@@ -58,7 +60,7 @@ jobs:
           sed -E 's/^# (.*)/h1. \1/')
           echo "Issue/Discussion Title: $ISSUE_TITLE"
           echo "Issue/Discussion Description: $ISSUE_DESCRIPTION"
-          
+
           # Debug: Show the raw JSON content
           echo "Raw Labels JSON:"
           cat labels.json
