@@ -7,14 +7,12 @@ on:
       - completed
   workflow_dispatch:
 
-# Only read repo contents; avoid running with default broad token
 permissions:
   contents: read
 
 jobs:
   next-app:
     runs-on: ubuntu-latest
-    # Only run on same-repo PRs (not from forks) to avoid checkout/execution of untrusted code
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
