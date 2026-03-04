@@ -1,5 +1,5 @@
 name: Publish all libraries to NPM
-
+permissions: {}
 on:
   workflow_dispatch:
     inputs:

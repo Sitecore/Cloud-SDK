@@ -1,5 +1,5 @@
 name: Pull Request
-
+permissions: {}
 on:
   pull_request:
     branches: ['main']
