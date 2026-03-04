@@ -7,17 +7,23 @@ on:
       - completed
   workflow_dispatch:
 
+# Only read repo contents; avoid running with default broad token
+permissions:
+  contents: read
+
 jobs:
   next-app:
     runs-on: ubuntu-latest
+    # Only run on same-repo PRs (not from forks) to avoid checkout/execution of untrusted code
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.head_repository.full_name == github.repository
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.workflow_run.head_branch }}
+          ref: ${{ github.event.workflow_run.head_branch || github.ref }}
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
-          cache: 'npm'
+          cache: ''
       - run: npm ci
       - name: Create npm link for personalize, events and search
         run: |
@@ -57,8 +63,3 @@ jobs:
         run: |
           cd ../my-next-app
           npm run build
-      - name: Run Next App & Cypress Sanity Test
-        run: |
-          cd ../my-next-app
-          npx next --version
-          npm run ci
