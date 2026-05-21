@@ -1,4 +1,4 @@
-# Sitecore Cloud SDK  ++++
+# Sitecore Cloud SDK  +++
 
 The open-source Sitecore Cloud SDK lets JavaScript/TypeScript developers integrate capabilities from Sitecore CDP, Sitecore Personalize, and Sitecore Search into [Content SDK](https://doc.sitecore.com/xmc/en/developers/content-sdk/sitecore-content-sdk-for-xm-cloud.html) and [JSS](https://doc.sitecore.com/xmc/en/developers/jss/22/jss-xmc/sitecore-javascript-services-sdk--jss--for-xm-cloud.html) applications connected to XM Cloud.
 
